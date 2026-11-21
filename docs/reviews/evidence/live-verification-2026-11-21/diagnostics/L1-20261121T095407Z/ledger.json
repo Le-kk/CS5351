@@ -1,0 +1,94 @@
+{
+  "kind": "real-model targeted diagnostic; AI/contextual review, not C acceptance",
+  "provider": "deepseek",
+  "model": "CS5351/DeepSeek-V4-Flash",
+  "source_revision": "git:9b04330+dirty",
+  "prompt_hash": "204cebcfac87cfefba070a45ab783ff4071c02135563ec1fedfde859e10e3b0a",
+  "trader_source_sha256": "b0051b7dda4783fc598ca4fc43f08fef997051b4af79312c3e2047a0f3e2fd9b",
+  "synthetic_only": true,
+  "credential_files_modified": false,
+  "started": 3,
+  "completed": 3,
+  "attempts": [
+    {
+      "id": "structured-1",
+      "status": "COMPLETED",
+      "started_utc": "2026-11-21T09:54:07.811668+00:00",
+      "output_file": "structured-1.md",
+      "model_calls": 1,
+      "elapsed_seconds": 2.958,
+      "prompt_capture": {
+        "model_calls": 1,
+        "calls": [
+          {
+            "prompt_sha256": "07c2af3d96b2c16e8a8ce2864594dc8776b7b08b9d556f31244f7cabbbc891b2",
+            "prompt_chars": 3595,
+            "messages": 2,
+            "marker_hits": {}
+          }
+        ],
+        "prompt_chars_total": 3595,
+        "distinct_prompt_digests": [
+          "07c2af3d96b2c16e8a8ce2864594dc8776b7b08b9d556f31244f7cabbbc891b2"
+        ],
+        "marker_hits_total": {},
+        "marker_reached_model": {}
+      }
+    },
+    {
+      "id": "structured-2",
+      "status": "COMPLETED",
+      "started_utc": "2026-11-21T09:54:10.771071+00:00",
+      "output_file": "structured-2.md",
+      "model_calls": 1,
+      "elapsed_seconds": 2.065,
+      "prompt_capture": {
+        "model_calls": 1,
+        "calls": [
+          {
+            "prompt_sha256": "c920b9f404595c7bd92eecddf815a5a73d3c38c34f39714c10e4cccbfa20dff2",
+            "prompt_chars": 3595,
+            "messages": 2,
+            "marker_hits": {}
+          }
+        ],
+        "prompt_chars_total": 3595,
+        "distinct_prompt_digests": [
+          "c920b9f404595c7bd92eecddf815a5a73d3c38c34f39714c10e4cccbfa20dff2"
+        ],
+        "marker_hits_total": {},
+        "marker_reached_model": {}
+      }
+    },
+    {
+      "id": "structured-3",
+      "status": "COMPLETED",
+      "started_utc": "2026-11-21T09:54:12.837821+00:00",
+      "output_file": "structured-3.md",
+      "model_calls": 1,
+      "elapsed_seconds": 1.969,
+      "prompt_capture": {
+        "model_calls": 1,
+        "calls": [
+          {
+            "prompt_sha256": "ca2e0a57b1025cfcd8bff2f1b3fc6d211dfcac3a20a8d9f511527bb00307606c",
+            "prompt_chars": 3595,
+            "messages": 2,
+            "marker_hits": {}
+          }
+        ],
+        "prompt_chars_total": 3595,
+        "distinct_prompt_digests": [
+          "ca2e0a57b1025cfcd8bff2f1b3fc6d211dfcac3a20a8d9f511527bb00307606c"
+        ],
+        "marker_hits_total": {},
+        "marker_reached_model": {}
+      }
+    }
+  ],
+  "reference_arithmetic": {
+    "distance": "3.14",
+    "ATR_multiple": "0.7152619589977220956719817768",
+    "status": "reference only; inspect output context; do not treat word matching as formal acceptance"
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "synthetic": true,
+  "ticker": "AAPL",
+  "analysis_cutoff": "2026-01-09",
+  "earnings_release_calendar": "not supplied",
+  "valuation": "not available",
+  "insider_transactions": "not available",
+  "reported_income": [
+    {
+      "fiscal_label": "FY2025 Q1",
+      "period_end": "2024-12-28",
+      "filed": "2025-01-31",
+      "revenue_usd_billions": 124.3,
+      "EPS_USD": 2.4
+    },
+    {
+      "fiscal_label": "FY2025 Q3",
+      "period_end": "2025-06-28",
+      "filed": "2025-08-01",
+      "revenue_usd_billions": 94.0
+    },
+    {
+      "fiscal_label": "FY2026 Q1",
+      "period_end": "2025-12-31",
+      "filed": "2026-01-29",
+      "revenue_usd_billions": 999.0,
+      "availability_note": "after analysis cutoff; must not be used as already known"
+    }
+  ],
+  "balance_sheet": [
+    {
+      "period_end": "2025-09-27",
+      "filed": "2025-10-31",
+      "cash_usd_billions": 35.9
+    }
+  ],
+  "missing_income_periods": [
+    "2025-09-27",
+    "2025-12-31"
+  ],
+  "cashflow": "not supplied"
+}

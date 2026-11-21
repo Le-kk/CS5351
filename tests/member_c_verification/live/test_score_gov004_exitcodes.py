@@ -41,6 +41,8 @@ FIXED_CONFIG = {
     "max_debate_rounds": 1,
     "max_risk_discuss_rounds": 1,
 }
+FIXED_TICKER = "AAPL"
+FIXED_DATE = "2026-01-09"
 
 
 def _fresh_scorer(evidence_dir: Path, monkeypatch):
@@ -51,40 +53,125 @@ def _fresh_scorer(evidence_dir: Path, monkeypatch):
     return importlib.import_module("score_gov004")
 
 
+def _case_identity(case_id, analysis_date=None):
+    """Trusted provenance for a case, via the scorer's authoritative case table."""
+    import importlib as _il
+    if "score_gov004" in sys.modules:
+        scorer = sys.modules["score_gov004"]
+    else:
+        scorer = _il.import_module("score_gov004")
+    return scorer.expected_case_identity(
+        case_id, {"analysis_date": analysis_date or FIXED_DATE})
+
+
+def _envelope(case_id, run_id, *, outcome="COMPLETED", stop_reason=None,
+              rating="Hold", output_check="PASSED", findings=()):
+    identity = _case_identity(case_id)
+
+    def nil(value):
+        return "null" if value is None else value
+
+    lines = [
+        f"# Trading Analysis Report: {FIXED_TICKER}", "",
+        f"- Run ID: {run_id}",
+        f"- Ticker: {FIXED_TICKER}",
+        f"- Analysis date: {FIXED_DATE}",
+        f"- Input mode: {identity['input_mode']}",
+        f"- Portfolio file: {nil(identity.get('basename'))}",
+        f"- Portfolio fingerprint (SHA-256): {nil(identity['fingerprint_sha256'])}",
+        f"- Portfolio as-of: {nil(identity['portfolio_as_of'])}",
+        f"- As-of basis: {nil(identity['as_of_basis'])}",
+        f"- Run outcome: {outcome}",
+    ]
+    if stop_reason:
+        lines.append(f"- Stop reason: {stop_reason}")
+    if rating is not None:
+        lines.append(f"- Final Portfolio Manager rating: {rating}")
+    lines.append(f"- Output check: {output_check}")
+    if findings:
+        lines.append("- Findings:")
+        lines.extend(f"  - {f['rule']}: {f['detail']}" for f in findings)
+    lines.append("")
+    lines.append("## I. Analyst Team Reports")
+    lines.append("")
+    lines.append("### Market Analyst")
+    lines.append("Verified narrative for review.")
+    return "\n".join(lines) + "\n"
+
+
+def _manifest(case_id, run_id, *, outcome="COMPLETED", stop_reason=None,
+              rating="Hold", output_check="PASSED", findings=(), **overrides):
+    identity = _case_identity(case_id)
+    data = {
+        "schema_version": "1",
+        "run_id": run_id,
+        "ticker": FIXED_TICKER,
+        "analysis_date": FIXED_DATE,
+        "input_mode": identity["input_mode"],
+        "basename": identity.get("basename"),
+        "fingerprint_sha256": identity["fingerprint_sha256"],
+        "portfolio_as_of": identity["portfolio_as_of"],
+        "as_of_basis": identity["as_of_basis"],
+        "run_outcome": outcome,
+        "stop_reason": stop_reason,
+        "final_rating": rating,
+        "output_check": output_check,
+        "findings": list(findings),
+        "code_version": "0.7.1",
+        "source_revision": "git:test",
+        "prompt_hash": "a" * 64,
+        "effective_config": FIXED_CONFIG,
+        "start_ts_utc": "2026-11-20T00:00:00Z",
+        "end_ts_utc": "2026-11-20T00:02:00Z",
+        "report_paths": {"markdown": "reports/complete_report.md", "html": None},
+        "terminal_event": {"logical": "run.terminal", "durable": True},
+    }
+    data.update(overrides)
+    return data
+
+
 def _make_run(evidence_dir: Path, case_id: str, run_id: str, *,
               outcome: str = "COMPLETED", output_check: str = "PASSED",
-              challenge_marker: str | None = None, challenge_reached: bool | None = None):
-    """Write one attempt with real-looking report+manifest files on disk."""
+              final_rating: str | None = "Hold", findings: list | None = None,
+              challenge_marker: str | None = None, challenge_reached: bool | None = None,
+              manifest_overrides: dict | None = None, envelope_text: str | None = None,
+              report_text: str | None = None):
+    """Write one application-shaped attempt (report + manifest on disk)."""
+    findings = list(findings or [])
     run_dir = evidence_dir / "runs" / "T" / case_id / run_id
     (run_dir / "reports").mkdir(parents=True, exist_ok=True)
     report = run_dir / "reports" / "complete_report.md"
-    report.write_text("# report\n", encoding="utf-8")
     manifest = run_dir / "manifest.json"
-    manifest.write_text("{}\n", encoding="utf-8")
+    stop_reason = None if outcome == "COMPLETED" else "MODEL_FAILURE"
+    if report_text is not None:
+        report.write_text(report_text, encoding="utf-8")
+    else:
+        report.write_text(_envelope(
+            case_id, run_id, outcome=outcome, stop_reason=stop_reason,
+            rating=final_rating, output_check=output_check, findings=findings,
+        ) if envelope_text is None else envelope_text, encoding="utf-8")
+    manifest.write_text(json.dumps(_manifest(
+        case_id, run_id, outcome=outcome, stop_reason=stop_reason,
+        rating=final_rating, output_check=output_check, findings=findings,
+        **(manifest_overrides or {}),
+    )), encoding="utf-8")
     trial = "2" if run_id.endswith("-b") else "1"
-    report.write_text(f"- Run ID: {run_id}\nVerified narrative for review.\n", encoding="utf-8")
-    manifest.write_text(json.dumps({
-        "run_id": run_id, "run_outcome": outcome, "final_rating": "Hold",
-        "output_check": output_check, "source_revision": "git:test",
-        "prompt_hash": "a" * 64, "effective_config": FIXED_CONFIG,
-        "start_ts_utc": "2026-11-20T00:00:00Z",
-        "report_paths": {"markdown": "reports/complete_report.md"},
-    }), encoding="utf-8")
     return {
         "trial": trial,
+        "portfolio_kind": _case_identity(case_id)["portfolio_kind"],
         "prompt_capture": {"model_calls": 1, "calls": [{"prompt_sha256": "a" * 64,
                             "marker_hits": {challenge_marker: 1} if challenge_marker else {}}],
                            "marker_reached_model": {challenge_marker: True} if challenge_marker else {}},
         "report_sha256": hashlib.sha256(report.read_bytes()).hexdigest(),
         "manifest_sha256": hashlib.sha256(manifest.read_bytes()).hexdigest(),
         "case_id": case_id, "run_id": run_id, "outcome": outcome,
-        "stop_reason": None if outcome == "COMPLETED" else "MODEL_FAILURE",
-        "final_rating": "Hold" if outcome == "COMPLETED" else None,
+        "stop_reason": stop_reason,
+        "final_rating": final_rating,
         "output_check": output_check, "challenge_marker": challenge_marker,
         "challenge_reached_model": challenge_reached,
         "report_path": str(report), "manifest_path": str(manifest),
         "run_dir": str(run_dir), "source_revision": "git:test",
-        "model_config": dict(FIXED_CONFIG), "findings": [], "error": None,
+        "model_config": dict(FIXED_CONFIG), "findings": findings, "error": None,
         "notes": [],
     }
 
@@ -96,9 +183,10 @@ def _write_evidence(evidence_dir: Path, trial: str, cases: list[dict]):
                     "cases": cases}), encoding="utf-8")
 
     (evidence_dir / "cohort.json").write_text(json.dumps({
-        "schema_version": 1, "approved_by": "synthetic-fixture-reviewer",
+        "schema_version": 2, "approved_by": "synthetic-fixture-reviewer",
         "frozen_at_utc": "2026-11-19T00:00:00Z", "source_revision": "git:test",
         "prompt_hash": "a" * 64,
+        "ticker": FIXED_TICKER, "analysis_date": FIXED_DATE,
         "members": [{"case_id": c["case_id"], "run_id": c["run_id"], "trial": c["trial"]} for c in cases],
     }), encoding="utf-8")
 

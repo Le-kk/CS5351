@@ -1,0 +1,1132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'">
+<title>AAPL 2026-01-09 Hold: TradingAgents report</title>
+<style>
+:root {
+  --paper: #fbfbfa; --ink: #1c2126; --muted: #5d6670; --rule: #e2e5e8; --wash: #f2f4f5;
+  --accent: #087a59; --up: #087a59; --down: #b4372f; --level: #5d6670; --edge: #d3d8dc; --mark: #878f97;
+  --serif: Charter, "Bitstream Charter", "Sitka Text", Cambria, Georgia, serif;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #131a1f; --ink: #e4e8eb; --muted: #9aa6af; --rule: #263239; --wash: #1a242a;
+    --accent: #14c290; --up: #14c290; --down: #ef6f63; --level: #9aa6af; --edge: #3d4c55; --mark: #66737c;
+  }
+}
+@media (prefers-color-scheme: dark) {
+  .masthead .logo [stroke="#363636"] { stroke: var(--muted); }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font: 17px/1.62 var(--serif); font-kerning: normal;
+}
+.page { max-width: 46rem; margin: 0 auto; padding: 3.5rem 1.5rem 6rem; }
+main h2, main h3 { scroll-margin-top: 1rem; }
+a { color: var(--accent); text-underline-offset: 0.15em; }
+h1, h2, h3, h4 { text-wrap: balance; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.masthead { padding-bottom: 1.75rem; border-bottom: 1px solid var(--rule); }
+/* The logo leads at the top left, where readers look for it, 24px tall (the usual
+   on-screen floor for a wordmark) with at least its height clear below. */
+.masthead .logo { display: block; width: fit-content; margin: 0 0 2.25rem; }
+.masthead .logo svg { display: block; height: 1.5rem; width: auto; }
+.masthead h1 {
+  margin: 0; font: 600 2.6rem/1.1 var(--sans); letter-spacing: -0.02em;
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.2em 0.5em;
+}
+.masthead .rating { font-weight: 500; }
+.rating.up { color: var(--up); } .rating.down { color: var(--down); } .rating.level { color: var(--level); }
+.rating.review { color: var(--muted); font-style: italic; }
+.masthead .date { margin: 0.55rem 0 1.5rem; font: 1rem/1.4 var(--sans); color: var(--muted); }
+.run { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 0.45rem 1.25rem;
+  font: 0.85rem/1.5 var(--sans); }
+.run > div { display: contents; }
+.run dt { color: var(--muted); }
+.run dd { margin: 0; overflow-wrap: anywhere; }
+.run .note dd { color: var(--down); }
+.field { display: inline-block; margin: 0 0.15rem 0.15rem 0; padding: 0 0.4rem; border: 1px solid var(--edge);
+  border-radius: 4px; background: var(--wash); font: 0.8rem/1.6 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.run .group { display: inline-block; margin-right: 0.9rem; white-space: nowrap; }
+.run .group > .name { color: var(--muted); margin-right: 0.3rem; }
+.run .then { color: var(--muted); margin: 0 0.2rem; }
+
+/* The sections: listed under the header on narrow screens. On wide ones, a
+   quiet rail centred on the left edge (numerals for the sections, short bars
+   for their agents) that opens into the full list when pointed at or focused. */
+.contents { margin: 2.25rem 0 0; font: 0.9rem/1.45 var(--sans); }
+.contents ul { margin: 0; padding: 0; list-style: none; }
+.contents > ul > li { margin: 0 0 0.75rem; }
+.contents ul ul { margin-top: 0.2rem; padding-left: 1.6rem; font-size: 0.85rem; }
+.contents ul ul li { margin: 0.1rem 0; }
+.contents a { display: flex; align-items: center; gap: 0.6rem; color: var(--muted); text-decoration: none; }
+.contents > ul > li > a { color: var(--ink); }
+.contents .num { min-width: 1.6rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.contents .bar { display: none; }
+.contents a:hover .label, .contents a:focus-visible .label { color: var(--accent); text-decoration: underline; }
+.to-top { position: fixed; right: 1rem; bottom: calc(1rem + env(safe-area-inset-bottom));
+  padding: 0.25rem 0.6rem; border: 1px solid var(--edge); border-radius: 4px; background: var(--paper);
+  color: var(--muted); font: 0.8rem/1.4 var(--sans); text-decoration: none; }
+
+@media (min-width: 60rem) {
+  .contents { position: fixed; left: 1rem; top: 50%; transform: translateY(-50%); z-index: 1;
+    max-height: 86vh; overflow-y: auto; overscroll-behavior: contain; margin: 0;
+    padding: 0.7rem 0.9rem; border: 1px solid transparent; border-radius: 6px;
+    transition: background-color 0.15s, border-color 0.15s, box-shadow 0.15s; }
+  .contents > ul > li { margin: 0 0 0.35rem; }
+  .contents ul ul { margin-top: 0; padding-left: 0; }
+  .contents ul ul li { margin: 0; }
+  /* Marks reach 3:1 contrast and rows 24px, the WCAG 2.2 floors for a control's
+     visual cue and its pointer target. */
+  .contents a { min-height: 1.5rem; }
+  .contents .num { min-width: 1.4rem; }
+  .contents .bar { display: block; flex: none; width: 1.25rem; height: 2px; margin-left: 0.2rem;
+    border-radius: 1px; background: var(--mark); }
+  .contents .label { max-width: 0; opacity: 0; overflow: hidden; white-space: nowrap;
+    transition: opacity 0.15s, max-width 0.2s; }
+  .contents:hover, .contents:focus-within { background: var(--paper); border-color: var(--rule);
+    box-shadow: 0 6px 24px rgb(0 0 0 / 0.08); }
+  .contents:hover .label, .contents:focus-within .label { max-width: 18rem; opacity: 1; }
+  .contents a:hover .bar, .contents a:focus-visible .bar { background: var(--accent); }
+  .to-top { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .contents, .contents .label { transition: none; }
+}
+
+/* The maker's credit: one quiet line at the foot. */
+.credit { margin-top: 4.5rem; padding-top: 1.25rem; border-top: 1px solid var(--rule);
+  color: var(--muted); font: 0.8rem/1.4 var(--sans); }
+.credit a { color: inherit; text-decoration: none; }
+.credit a.brand { color: var(--accent); }
+.credit a:hover, .credit a:focus-visible { text-decoration: underline; }
+
+/* Three levels of separation: the five groups, the agents within a group, and
+   breaks an agent draws inside its own text. */
+main h2 {
+  margin: 4.5rem 0 0.25rem; padding-top: 1.5rem; border-top: 2px solid var(--ink);
+  font: 600 1.45rem/1.3 var(--sans); letter-spacing: -0.01em;
+}
+main section:first-child h2 { margin-top: 3rem; }
+main h3 { margin: 2.75rem 0 0.75rem; padding-top: 1.1rem; border-top: 1px solid var(--rule);
+  font: 600 1.15rem/1.35 var(--sans); color: var(--accent); }
+main h2 + h3 { margin-top: 1.25rem; padding-top: 0; border-top: 0; }
+main h4, main h5, main h6 { margin: 1.75rem 0 0.5rem; font: 600 1rem/1.4 var(--sans); }
+main h5, main h6 { color: var(--muted); }
+main p, main ul, main ol { margin: 0 0 1rem; }
+main li { margin: 0.25rem 0; }
+main strong { font-weight: 650; }
+main blockquote { margin: 1.25rem 0; padding: 0.1rem 0 0.1rem 1rem; border-left: 3px solid var(--rule);
+  color: var(--muted); }
+main code { font: 0.88em/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  background: var(--wash); padding: 0.1em 0.3em; border-radius: 3px; }
+main pre { background: var(--wash); padding: 0.9rem 1rem; border-radius: 4px; overflow-x: auto; }
+main pre code { background: none; padding: 0; }
+main hr { width: 3rem; margin: 2rem auto; border: 0; border-top: 1px solid var(--rule); }
+
+.table { overflow-x: auto; margin: 0 0 1.25rem; }
+table { border-collapse: collapse; width: 100%; font: 0.86rem/1.45 var(--sans);
+  font-variant-numeric: tabular-nums; }
+th, td { padding: 0.45rem 0.7rem; text-align: left; vertical-align: top; border-bottom: 1px solid var(--rule); }
+th { font-weight: 600; border-bottom-color: var(--muted); }
+tbody tr:last-child td { border-bottom: 0; }
+
+@media (max-width: 34rem) {
+  body { font-size: 16px; }
+  .page { padding: 2rem 1rem 3rem; }
+  .masthead h1 { font-size: 2rem; }
+  .masthead .logo svg { height: 1.25rem; }
+  .run { grid-template-columns: 1fr; gap: 0 0; }
+  .run dd { margin-bottom: 0.45rem; }
+  .run .group { white-space: normal; }
+}
+@media print {
+  :root { --paper: #fff; --ink: #000; --muted: #444; --rule: #bbb; --accent: #000; --wash: #f2f2f2;
+    --edge: #bbb; --up: #087a59; --down: #b4372f; --level: #444; }
+  body { font-size: 11pt; }
+  .table { overflow: visible; }
+  .page { max-width: none; padding: 0; }
+  .contents, .to-top { display: none; }
+  main h2 { break-before: page; border-top: 0; margin-top: 0; }
+  main section:first-child h2 { break-before: auto; }
+  main h3, main h4 { break-after: avoid; }
+  a { color: inherit; text-decoration: none; }
+  table { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<div class="page" id="top">
+<header class="masthead">
+<a class="logo" href="https://tauric.ai" rel="noopener" aria-label="Tauric Research"><svg width="993" height="115" viewBox="0 0 993 115" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M189.86 95.0459V37.9779H165.924V29.9259H223.74V37.9779H199.804V95.0459H189.86ZM251.026 46.4259C256.071 46.4259 260.178 47.0272 263.345 48.2299C266.514 49.4032 268.89 51.3686 270.474 54.1259C272.058 56.8832 272.85 60.6379 272.85 65.3899V95.0459H264.666L263.961 89.8979H263.434C261.644 91.7752 259.386 93.2419 256.657 94.2979C253.929 95.3246 251.025 95.8379 247.946 95.8379C244.426 95.8379 241.419 95.2952 238.925 94.2099C236.432 93.0952 234.54 91.5406 233.249 89.5459C231.959 87.5512 231.313 85.2046 231.313 82.5059C231.313 78.2526 232.897 74.9672 236.065 72.6499C239.263 70.3032 244.337 68.8219 251.29 68.2059L263.258 67.0179V64.7299C263.258 61.9139 262.774 59.7139 261.806 58.1299C260.838 56.5459 259.371 55.4312 257.406 54.7859C255.47 54.1406 252.888 53.8179 249.662 53.8179C247.432 53.8179 245.012 54.0086 242.401 54.3899C239.82 54.7712 237.341 55.3432 234.965 56.1059V48.8019C237.312 48.0392 239.908 47.4526 242.754 47.0419C245.628 46.6312 248.386 46.4259 251.026 46.4259ZM250.541 89.0619C252.888 89.0619 255.162 88.6512 257.362 87.8299C259.562 86.9792 261.527 85.7179 263.258 84.0459V72.8259L252.038 73.9259C248.136 74.3659 245.35 75.2166 243.678 76.4779C242.005 77.7099 241.169 79.4699 241.169 81.7579C241.169 84.0752 241.947 85.8792 243.501 87.1699C245.056 88.4312 247.403 89.0619 250.541 89.0619ZM313.339 95.8379C307.59 95.8379 303.087 94.2979 299.831 91.2179C296.575 88.1086 294.947 83.2686 294.947 76.6979V47.1739H304.715V76.1699C304.715 80.1886 305.624 83.0779 307.443 84.8379C309.291 86.5979 311.916 87.4779 315.319 87.4779C317.871 87.4779 320.379 86.9939 322.843 86.0259C325.336 85.0286 327.492 83.5766 329.311 81.6699V47.1739H339.079V95.0459H330.983L330.367 89.9419H329.883C327.624 91.8486 325.072 93.3152 322.227 94.3419C319.382 95.3392 316.419 95.8379 313.339 95.8379ZM362.371 47.1739H370.423L371.171 53.2899H371.743C373.474 51.2072 375.703 49.5792 378.431 48.4059C381.188 47.2326 384.063 46.6459 387.055 46.6459C388.756 46.6459 390.355 46.7926 391.851 47.0859V55.8419C390.414 55.5779 388.654 55.4459 386.571 55.4459C383.99 55.4459 381.364 55.9446 378.695 56.9419C376.026 57.9392 373.84 59.4206 372.139 61.3859V95.0459H362.371V47.1739ZM409.069 95.0459V47.1739H418.837V95.0459H409.069ZM413.953 37.8459C411.871 37.8459 410.287 37.3912 409.201 36.4819C408.145 35.5726 407.617 34.2672 407.617 32.5659C407.617 30.8352 408.145 29.5152 409.201 28.6059C410.287 27.6672 411.871 27.1979 413.953 27.1979C416.036 27.1979 417.605 27.6672 418.661 28.6059C419.747 29.5152 420.289 30.8352 420.289 32.5659C420.289 34.2672 419.747 35.5726 418.661 36.4819C417.605 37.3912 416.036 37.8459 413.953 37.8459ZM464.85 95.9259C456.607 95.9259 450.315 93.8432 445.974 89.6779C441.662 85.5126 439.506 79.3526 439.506 71.1979C439.506 63.0139 441.779 56.8392 446.326 52.6739C450.902 48.5086 457.575 46.4259 466.346 46.4259C470.716 46.4259 474.735 46.9246 478.402 47.9219V55.7099C476.378 55.2406 474.486 54.8886 472.726 54.6539C470.966 54.4192 469.118 54.3019 467.182 54.3019C461.168 54.3019 456.71 55.6512 453.806 58.3499C450.931 61.0486 449.494 65.2872 449.494 71.0659C449.494 76.8739 450.858 81.1566 453.586 83.9139C456.343 86.6712 460.42 88.0499 465.818 88.0499C467.695 88.0499 469.616 87.8886 471.582 87.5659C473.547 87.2139 475.82 86.6712 478.402 85.9379V93.7259C474.236 95.1926 469.719 95.9259 464.85 95.9259ZM574.428 95.0459L553.704 69.0859C553.176 69.1152 552.37 69.1299 551.284 69.1299C548.38 69.1299 544.978 68.9832 541.076 68.6899V95.0459H531.308V31.4659C537.967 29.9699 544.846 29.2219 551.944 29.2219C561.595 29.2219 568.752 30.8059 573.416 33.9739C578.08 37.1126 580.412 42.1286 580.412 49.0219C580.412 54.0086 579.004 58.0859 576.188 61.2539C573.402 64.4219 569.266 66.6366 563.78 67.8979L585.648 95.0459H574.428ZM541.076 61.2099C543.071 61.4152 544.816 61.5619 546.312 61.6499C547.838 61.7379 549.627 61.7819 551.68 61.7819C558.427 61.7819 563.34 60.7699 566.42 58.7459C569.5 56.6926 571.04 53.4952 571.04 49.1539C571.04 46.0739 570.395 43.6099 569.104 41.7619C567.843 39.9139 565.863 38.5792 563.164 37.7579C560.495 36.9366 556.975 36.5259 552.604 36.5259C550.404 36.5259 548.424 36.6139 546.664 36.7899C544.904 36.9659 543.042 37.2299 541.076 37.5819V61.2099ZM642.947 74.0139H608.231C608.407 77.4752 609.155 80.2766 610.475 82.4179C611.795 84.5299 613.775 86.0846 616.415 87.0819C619.055 88.0792 622.443 88.5779 626.579 88.5779C630.686 88.5779 635.233 87.9472 640.219 86.6859V93.9459C635.027 95.2659 630.026 95.9259 625.215 95.9259C616.298 95.9259 609.61 93.9166 605.151 89.8979C600.722 85.8499 598.507 79.6166 598.507 71.1979C598.507 65.9179 599.402 61.4299 601.191 57.7339C602.981 54.0379 605.562 51.2366 608.935 49.3299C612.338 47.3939 616.43 46.4259 621.211 46.4259C628.251 46.4259 633.634 48.5819 637.359 52.8939C641.085 57.1766 642.947 63.3659 642.947 71.4619V74.0139ZM621.079 52.8939C616.973 52.8939 613.834 54.1406 611.663 56.6339C609.493 59.0979 608.334 62.9259 608.187 68.1179H633.751C633.634 62.9259 632.519 59.0979 630.407 56.6339C628.295 54.1406 625.186 52.8939 621.079 52.8939ZM677.365 95.9259C671.352 95.9259 665.896 95.2219 660.997 93.8139V86.7299C666.248 88.1966 671.718 88.9299 677.409 88.9299C681.809 88.9299 684.977 88.3432 686.913 87.1699C688.849 85.9672 689.817 84.2219 689.817 81.9339C689.817 80.7019 689.597 79.6899 689.157 78.8979C688.717 78.0766 687.969 77.4019 686.913 76.8739C685.857 76.3166 684.405 75.8912 682.557 75.5979L674.065 74.2779C669.137 73.4859 665.573 71.9899 663.373 69.7899C661.202 67.5899 660.117 64.6419 660.117 60.9459C660.117 56.4579 661.965 52.9232 665.661 50.3419C669.386 47.7312 675.062 46.4259 682.689 46.4259C685.094 46.4259 687.485 46.5872 689.861 46.9099C692.266 47.2032 694.481 47.6432 696.505 48.2299V55.2699C692.046 54.0379 687.456 53.4219 682.733 53.4219C677.893 53.4219 674.476 54.0526 672.481 55.3139C670.486 56.5752 669.489 58.3206 669.489 60.5499C669.489 62.2219 670.002 63.5859 671.029 64.6419C672.056 65.6686 673.889 66.4166 676.529 66.8859L685.021 68.2059C689.92 68.9686 693.513 70.3766 695.801 72.4299C698.089 74.4832 699.233 77.4606 699.233 81.3619C699.233 84.3832 698.412 86.9792 696.769 89.1499C695.156 91.3206 692.706 92.9926 689.421 94.1659C686.165 95.3392 682.146 95.9259 677.365 95.9259ZM760.579 74.0139H725.863C726.039 77.4752 726.787 80.2766 728.107 82.4179C729.427 84.5299 731.407 86.0846 734.047 87.0819C736.687 88.0792 740.075 88.5779 744.211 88.5779C748.317 88.5779 752.864 87.9472 757.851 86.6859V93.9459C752.659 95.2659 747.657 95.9259 742.847 95.9259C733.929 95.9259 727.241 93.9166 722.783 89.8979C718.353 85.8499 716.139 79.6166 716.139 71.1979C716.139 65.9179 717.033 61.4299 718.823 57.7339C720.612 54.0379 723.193 51.2366 726.567 49.3299C729.969 47.3939 734.061 46.4259 738.843 46.4259C745.883 46.4259 751.265 48.5819 754.991 52.8939C758.716 57.1766 760.579 63.3659 760.579 71.4619V74.0139ZM738.711 52.8939C734.604 52.8939 731.465 54.1406 729.295 56.6339C727.124 59.0979 725.965 62.9259 725.819 68.1179H751.383C751.265 62.9259 750.151 59.0979 748.039 56.6339C745.927 54.1406 742.817 52.8939 738.711 52.8939ZM796.986 46.4259C802.032 46.4259 806.138 47.0272 809.306 48.2299C812.474 49.4032 814.85 51.3686 816.434 54.1259C818.018 56.8832 818.81 60.6379 818.81 65.3899V95.0459H810.626L809.922 89.8979H809.394C807.605 91.7752 805.346 93.2419 802.618 94.2979C799.89 95.3246 796.986 95.8379 793.906 95.8379C790.386 95.8379 787.38 95.2952 784.886 94.2099C782.393 93.0952 780.501 91.5406 779.21 89.5459C777.92 87.5512 777.274 85.2046 777.274 82.5059C777.274 78.2526 778.858 74.9672 782.026 72.6499C785.224 70.3032 790.298 68.8219 797.25 68.2059L809.218 67.0179V64.7299C809.218 61.9139 808.734 59.7139 807.766 58.1299C806.798 56.5459 805.332 55.4312 803.366 54.7859C801.43 54.1406 798.849 53.8179 795.622 53.8179C793.393 53.8179 790.973 54.0086 788.362 54.3899C785.781 54.7712 783.302 55.3432 780.926 56.1059V48.8019C783.273 48.0392 785.869 47.4526 788.714 47.0419C791.589 46.6312 794.346 46.4259 796.986 46.4259ZM796.502 89.0619C798.849 89.0619 801.122 88.6512 803.322 87.8299C805.522 86.9792 807.488 85.7179 809.218 84.0459V72.8259L797.998 73.9259C794.097 74.3659 791.31 75.2166 789.638 76.4779C787.966 77.7099 787.13 79.4699 787.13 81.7579C787.13 84.0752 787.908 85.8792 789.462 87.1699C791.017 88.4312 793.364 89.0619 796.502 89.0619ZM841.524 47.1739H849.576L850.324 53.2899H850.896C852.627 51.2072 854.856 49.5792 857.584 48.4059C860.341 47.2326 863.216 46.6459 866.208 46.6459C867.909 46.6459 869.508 46.7926 871.004 47.0859V55.8419C869.567 55.5779 867.807 55.4459 865.724 55.4459C863.143 55.4459 860.517 55.9446 857.848 56.9419C855.179 57.9392 852.993 59.4206 851.292 61.3859V95.0459H841.524V47.1739ZM909.164 95.9259C900.921 95.9259 894.629 93.8432 890.288 89.6779C885.976 85.5126 883.82 79.3526 883.82 71.1979C883.82 63.0139 886.093 56.8392 890.64 52.6739C895.216 48.5086 901.889 46.4259 910.66 46.4259C915.03 46.4259 919.049 46.9246 922.716 47.9219V55.7099C920.692 55.2406 918.8 54.8886 917.04 54.6539C915.28 54.4192 913.432 54.3019 911.496 54.3019C905.482 54.3019 901.024 55.6512 898.12 58.3499C895.245 61.0486 893.808 65.2872 893.808 71.0659C893.808 76.8739 895.172 81.1566 897.9 83.9139C900.657 86.6712 904.734 88.0499 910.132 88.0499C912.009 88.0499 913.93 87.8886 915.896 87.5659C917.861 87.2139 920.134 86.6712 922.716 85.9379V93.7259C918.55 95.1926 914.033 95.9259 909.164 95.9259ZM941.796 23.9419H951.564V52.2779H952.048C954.248 50.3712 956.756 48.9192 959.572 47.9219C962.417 46.9246 965.395 46.4259 968.504 46.4259C974.019 46.4259 978.375 47.9952 981.572 51.1339C984.769 54.2432 986.368 59.0686 986.368 65.6099V95.0459H976.6V66.0939C976.6 62.0459 975.661 59.1566 973.784 57.4259C971.936 55.6952 969.237 54.8299 965.688 54.8299C963.048 54.8299 960.481 55.3286 957.988 56.3259C955.524 57.2939 953.383 58.7312 951.564 60.6379V95.0459H941.796V23.9419Z" fill="#14C290"/>
+<rect x="0.205322" y="14.873" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="43.1211" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="14.679" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="14.679" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="57.2478" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="86.6055" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="86.6055" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="101.284" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="58.7158" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="58.7158" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="43.1211" y="87.1592" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="57.2478" y="87.1592" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="73.0205" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="73.0205" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="87.3262" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="87.3262" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="43.1211" y="101.631" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="57.2478" y="101.631" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="101.284" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="15.0187" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="29.6979" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="29.6979" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="72.2668" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="29.6979" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="72.2668" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="72.445" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.7506" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="100.716" y="14.873" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+</svg></a>
+<h1><span class="ticker">AAPL</span> <span class="rating level">Hold</span></h1>
+<p class="date">Analysis of 2026-01-09</p>
+<dl class="run"><div class="detail"><dt>Generated</dt><dd>2026-11-21 18:31</dd></div><div class="detail"><dt>Deep model</dt><dd><span class="field">deepseek</span> <span class="field">CS5351/DeepSeek-V4-Flash</span></dd></div><div class="detail"><dt>Quick model</dt><dd><span class="field">deepseek</span> <span class="field">CS5351/DeepSeek-V4-Flash</span></dd></div><div class="detail"><dt>Analysts</dt><dd><span class="field">market</span> <span class="field">sentiment</span> <span class="field">news</span> <span class="field">fundamentals</span></dd></div><div class="detail"><dt>Debate rounds</dt><dd><span class="group"><span class="name">research</span><span class="field">1</span></span> <span class="group"><span class="name">risk</span><span class="field">1</span></span></dd></div><div class="detail"><dt>Data vendors</dt><dd><span class="group"><span class="name">Prices</span><span class="field">yfinance</span></span> <span class="group"><span class="name">Indicators</span><span class="field">yfinance</span></span> <span class="group"><span class="name">Fundamentals</span><span class="field">sec_edgar</span> <span class="then">→</span> <span class="field">yfinance</span></span> <span class="group"><span class="name">News</span><span class="field">yfinance</span></span> <span class="group"><span class="name">Macro</span><span class="field">fred</span></span> <span class="group"><span class="name">Prediction markets</span><span class="field">polymarket</span></span></dd></div><div class="detail"><dt>Version</dt><dd>TradingAgents ?</dd></div><div class="detail"><dt>Run ID</dt><dd>20261121T101520Z-46c67c03</dd></div><div class="detail"><dt>Input mode</dt><dd>PORTFOLIO_PROVIDED</dd></div><div class="detail"><dt>Portfolio file</dt><dd>&lt;in-memory&gt;</dd></div><div class="detail"><dt>Portfolio fingerprint</dt><dd>3644ace605848b415776f8c21095769def1cae7d9fbfc6f4ac06b66ba006523a</dd></div><div class="detail"><dt>Portfolio as-of</dt><dd>2026-01-09</dd></div><div class="detail"><dt>As-of basis</dt><dd>USER_CONFIRMED</dd></div><div class="detail"><dt>Run outcome</dt><dd>COMPLETED</dd></div><div class="detail"><dt>Output check</dt><dd>PASSED</dd></div></dl>
+</header>
+<nav class="contents" aria-label="Sections"><ul><li><a href="#s1"><span class="num">1</span> <span class="label">Analysis</span></a></li></ul></nav>
+<main>
+<section id="s1"><h2>Analysis</h2>
+<h5>I. Analyst Team Reports</h5>
+<h6>Market Analyst</h6>
+<h4>AAPL Technical Analysis Report — as of 2026-01-09</h4>
+<p><strong>Verified reference price:</strong> Close <strong>258.47</strong> (open 258.181, high 259.307, low 255.33, volume 39,997,000) on 2026-01-09.</p>
+<p>All indicator values below come from the verified snapshot and match the individual tool outputs — no discrepancies noted.</p>
+<hr />
+<h5>1. Big Picture: Strong secular uptrend, but a sharp medium-term pullback is in progress</h5>
+<ul>
+<li><strong>200 SMA = 231.993</strong> and <strong>50 SMA = 271.633</strong>. Price (258.47) sits well <strong>above the 200 SMA</strong> (≈ +11.4%) but <strong>below the 50 SMA</strong> (≈ −4.8%). This tells a two-speed story: the <strong>long-term trend remains bullish</strong> (price far above the 200-day, which is still rising), while the <strong>medium-term trend has rolled over</strong> as price has fallen through the 50-day.</li>
+<li>The 50 SMA itself has flattened/turned: it peaked around <strong>272.05 on 2026-01-06</strong> and has since ticked down to <strong>271.63</strong> — the first sign of short-term trend deterioration.</li>
+<li>Price structure: AAPL made an all-time high close of <strong>285.196 on 2025-12-02</strong>, then a lower high of <strong>285.196 → 277.812</strong> range through December, and has since broken down decisively. From the 12-02 peak to the 01-09 close of 258.47, that is a decline of roughly <strong>−9.4%</strong> — a healthy correction within a longer uptrend, but accelerating.</li>
+</ul>
+<h5>2. Short-term momentum: Bearish and still deteriorating</h5>
+<ul>
+<li><strong>10 EMA = 264.432</strong>, and price (258.47) is <strong>below it</strong> — confirming the short-term trend is down. The 10 EMA has fallen every session since 2025-12-31 (272.42) to 264.43, a fast, persistent slide.</li>
+<li><strong>MACD = −3.278</strong>, <strong>Signal = −1.455</strong>, <strong>Histogram = −1.823</strong>. All three are negative and the histogram remains deeply negative, meaning momentum is <strong>bearish and expanding to the downside</strong> (no bullish convergence yet). Note the MACD line crossed below zero around <strong>2026-01-02</strong> (from −0.09 on 12-31/01-02 to −0.29), formalizing the momentum regime flip.</li>
+<li><strong>RSI = 27.27</strong> — now <strong>below 30 (oversold)</strong>. RSI fell from an overbought <strong>75.25 on 2025-12-02</strong> through the mid-40s in late December to 27.3 today. This is the most important near-term signal: momentum is stretched downside and a <strong>technical bounce/mean-reversion risk is elevated</strong>, though in a fresh downtrend RSI can stay low for several sessions.</li>
+</ul>
+<h5>3. Volatility &amp; Bollinger Bands: Price pinned to the lower band</h5>
+<ul>
+<li><strong>Bollinger basis (middle) = 269.628</strong>, <strong>Upper = 280.899</strong>, <strong>Lower = 258.357</strong>. Price at <strong>258.47</strong> is essentially <strong>riding the lower band</strong> (just ~0.11 above it). Riding the lower band signals a strong downward thrust; it is not, by itself, a buy signal, but combined with oversold RSI it flags where <strong>capitulation/exhaustion risk</strong> is rising.</li>
+<li>Bands are <strong>expanding</strong> on the downside: the lower band dropped from ~267.7 on 12-31 to 258.36 on 01-09 — a widening range that confirms the volatility regime has shifted higher.</li>
+<li><strong>ATR = 4.390</strong> (~1.7% of price). Notably, ATR has <em>declined</em> from ~5.55 on 12-01 to 4.39 now, so while direction is strongly down, daily-range volatility is moderate. For stop placement, a 1.5×–2× ATR band implies ~<strong>6.6–8.8 points</strong> of normal daily noise — relevant for position sizing.</li>
+</ul>
+<h5>4. Volume confirmation (VWMA)</h5>
+<ul>
+<li><strong>VWMA = 267.562</strong> vs simple 50 SMA of 271.633 and price of 258.47. Price is <strong>below the volume-weighted average</strong>, confirming the selling has occurred on meaningful volume (not a thin drift). VWMA has rolled over from ~278 mid-December to 267.6, corroborating distribution.</li>
+<li>Recent down days carried elevated volume: 2026-01-06 volume was <strong>52.35M</strong> (a heavy down day, price −4.88), and the mid-December decline included multi-day 50M+ sessions. This supports a genuine <strong>distribution</strong> read rather than random noise.</li>
+</ul>
+<h5>5. Synthesis — what this setup means</h5>
+<p>AAPL is in a <strong>bullish long-term structure (above a rising 200 SMA) undergoing a sharp corrective phase</strong>. The correction is confirmed on every short-term gauge: price below 10 EMA, 50 SMA, and VWMA; MACD negative with a widening negative histogram; RSI oversold; price hugging the lower Bollinger band on expanding bands. This is a &quot;<strong>don't catch a falling knife, but watch for a bounce</strong>&quot; configuration.</p>
+<p><strong>Key levels (all supported by tool output):</strong></p>
+<ul>
+<li><strong>Immediate resistance / reclaim zone:</strong> 10 EMA ~264.4, then 50 SMA ~271.6, then VWMA ~267.6 (cluster 264–272).</li>
+<li><strong>Current support zone:</strong> lower Bollinger band ~258.4 — price is sitting right on it today.</li>
+<li><strong>Next downside reference:</strong> the round 250 area, and more structurally the rising 200 SMA at ~232.0 (well below, a deeper line only relevant if the correction extends materially).</li>
+</ul>
+<h5>6. Actionable insights</h5>
+<ol>
+<li><strong>For trend-followers / long-term holders:</strong> The long-term up-trend is intact (price +11.4% above 200 SMA). No death-cross risk yet (50 SMA still far above 200 SMA). Hold core positions, but the medium-term break below the 50 SMA argues against adding aggressively until price reclaims the 10 EMA / 50 SMA.</li>
+<li><strong>For swing traders (bounce setup):</strong> RSI 27.3 + price on the lower Bollinger band strongly favor a <strong>mean-reversion bounce attempt</strong>. Look for confirmation — e.g., a close back above the lower band and above the 10 EMA (~264.4), plus a MACD histogram that stops widening. Do not buy pre-confirmation given the expanding negative histogram.</li>
+<li><strong>For short sellers:</strong> Trend and momentum favor shorts, but RSI is already oversold and price is on the lower band — <strong>risk/reward for fresh shorts here is poor</strong>. Better to short rallies into the 264–272 resistance cluster with stops above.</li>
+<li><strong>Risk management:</strong> Use ATR (~4.39) for stops. A 2×ATR stop is ~8.8 points. Because ATR is moderate but direction is strong, favor <strong>smaller position sizing</strong> and stop placement beyond the recent swing, not tight stops that get noise-stopped.</li>
+</ol>
+<hr />
+<h5>Key Indicators Summary</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Indicator</th>
+<th>Latest Value (2026-01-09)</th>
+<th>Signal / Interpretation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Trend (long)</td>
+<td>close_200_sma</td>
+<td>231.993</td>
+<td>Price well above (+11.4%); long-term uptrend intact, rising</td>
+</tr>
+<tr>
+<td>Trend (medium)</td>
+<td>close_50_sma</td>
+<td>271.633</td>
+<td>Price below (−4.8%); 50 SMA flattening/turning down = medium-term rollover</td>
+</tr>
+<tr>
+<td>Trend (short)</td>
+<td>close_10_ema</td>
+<td>264.432</td>
+<td>Price below; steepening downward slope = short-term bearish</td>
+</tr>
+<tr>
+<td>Momentum</td>
+<td>macd</td>
+<td>−3.278</td>
+<td>Negative; crossed below zero ~Jan 2 = bearish regime</td>
+</tr>
+<tr>
+<td>Momentum</td>
+<td>macds</td>
+<td>−1.455</td>
+<td>Signal below zero; MACD under signal = bearish</td>
+</tr>
+<tr>
+<td>Momentum</td>
+<td>macdh</td>
+<td>−1.823</td>
+<td>Deepening negative bars = downside momentum expanding</td>
+</tr>
+<tr>
+<td>Momentum/OB-OS</td>
+<td>rsi</td>
+<td>27.27</td>
+<td>Oversold (&lt;30); downside stretched, bounce risk elevated</td>
+</tr>
+<tr>
+<td>Volatility</td>
+<td>boll_ub</td>
+<td>280.899</td>
+<td>Upper band; resistance overhead</td>
+</tr>
+<tr>
+<td>Volatility</td>
+<td>boll_lb</td>
+<td>258.357</td>
+<td>Price riding lower band = strong downward thrust</td>
+</tr>
+<tr>
+<td>Volatility</td>
+<td>atr</td>
+<td>4.390</td>
+<td>~1.7% daily range; use for stops (2×ATR ≈ 8.8 pts)</td>
+</tr>
+<tr>
+<td>Volume</td>
+<td>vwma</td>
+<td>267.562</td>
+<td>Price below VWMA = distribution on volume confirmed</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Overall bias:</strong> Long-term <strong>bullish</strong>, medium/short-term <strong>bearish &amp; oversold</strong>. Preferred stance: hold core longs; wait for a bounce confirmation above 10 EMA (~264.4) for tactical adds, or sell rallies into 267–272 resistance; avoid chasing new shorts into oversold conditions.</p>
+<h6>Sentiment Analyst</h6>
+<p><strong>Overall Sentiment:</strong> <strong>Neutral</strong> (Score: 5.0/10)
+<strong>Confidence:</strong> Low</p>
+<h5>AAPL Sentiment Report — 2026-01-02 to 2026-01-09</h5>
+<h6>Headline: No usable data returned. This is a statement about source availability, not a statement about AAPL.</h6>
+<p>All three pre-fetched sources came back empty or errored for the requested window. There is no sentiment signal to read. The band <strong>Neutral / 5.0</strong> here means &quot;no evidence,&quot; not &quot;balanced evidence&quot; — it should not be consumed downstream as a directional input.</p>
+<hr />
+<h6>1. Source-by-source breakdown</h6>
+<p><strong>Yahoo Finance news (institutional framing) — UNAVAILABLE</strong>
+The feed returned: <em>&quot;Yahoo Finance news unavailable for 2026-01-02..2026-01-09: it only serves recent items, so this is not an absence of news for AAPL.&quot;</em>
+Interpretation: this is a tooling/retrieval limitation. Apple is one of the most heavily covered large-cap names globally; a seven-day window with zero institutional headlines is not plausible as a real-world event. <strong>Do not read this as an information vacuum around AAPL.</strong></p>
+<p><strong>StockTwits (retail, cashtag-indexed) — UNAVAILABLE</strong>
+Returned <code>HTTPError</code>. No message count, no Bullish/Bearish tag split, no classifier screen (&quot;Screened by Jev&quot;) to work from. The single most useful leading retail signal (the bullish/bearish ratio and its sample size) is therefore entirely missing.</p>
+<p><strong>Reddit r/wallstreetbets, r/stocks, r/investing — UNAVAILABLE</strong>
+Returned <code>fetch failed</code> across all three subreddits. Per the collection note, this is <em>not</em> an absence of discussion. Notably, this removes the three communities with the most divergent priors: WSB (often exuberant/contrarian, options-flow driven), r/stocks (measured, fundamentals-led), and r/investing (long-horizon, valuation-led). Their disagreement is exactly the kind of cross-source texture that would normally carry signal.</p>
+<h6>2. Cross-source divergences and alignments</h6>
+<p>None can be assessed. Divergence analysis requires at least two live sources; all three are dark. Any claim of &quot;retail bullish vs. institutional cautious&quot; or similar would be fabricated here.</p>
+<h6>3. Dominant narrative themes</h6>
+<p>None identifiable from the provided evidence. I will not substitute recalled or general knowledge about Apple (product cycles, services growth, China exposure, AI positioning, antitrust matters) — the instructions permit only the evidence in this prompt, and no such evidence is present.</p>
+<h6>4. Catalysts and risks</h6>
+<p>None surfaced by the data. I cannot confirm from any source whether an AAPL earnings date, product event, guidance update, supply-chain report, or macro print falls inside this window. The calendar-adjacent risks a trader would normally watch (e.g., a January quarter report, holiday-quarter sell-through commentary) are <strong>unverified</strong> for this window.</p>
+<h6>5. Summary table</h6>
+<div class="table"><table>
+<thead>
+<tr>
+<th>Signal</th>
+<th>Direction</th>
+<th>Source</th>
+<th>Supporting evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Institutional news framing</td>
+<td>Unknown</td>
+<td>Yahoo Finance</td>
+<td>Feed unavailable — retrieval limitation, not absence of news</td>
+</tr>
+<tr>
+<td>Retail Bullish/Bearish ratio</td>
+<td>Unknown</td>
+<td>StockTwits</td>
+<td>HTTPError; zero messages, zero tags</td>
+</tr>
+<tr>
+<td>Community discussion tone</td>
+<td>Unknown</td>
+<td>Reddit (WSB / r/stocks / r/investing)</td>
+<td>Fetch failed on all three; not an absence of discussion</td>
+</tr>
+<tr>
+<td>Cross-source divergence</td>
+<td>Not assessable</td>
+<td>—</td>
+<td>Fewer than two live sources</td>
+</tr>
+<tr>
+<td>Dominant narrative</td>
+<td>Not identifiable</td>
+<td>—</td>
+<td>No source returned content</td>
+</tr>
+</tbody>
+</table></div>
+<h6>Data-quality caveat for downstream consumers</h6>
+<p><code>confidence: low</code> is mandatory here — the guidance defines low as &quot;one or more sources returned a placeholder,&quot; and all three did. Treat <code>overall_score = 5.0</code> as a <strong>null value encoded as neutral</strong>, not as measured indifference. If this report feeds a composite or weighted ensemble, AAPL's sentiment component should either be excluded from the blend or assigned zero weight until at least one source is re-fetched successfully.</p>
+<h6>Recommended path to a real read</h6>
+<p>Re-run collection with wider backfill/alternate endpoints for Yahoo Finance, retry StockTwits (which is usually the richest source for AAPL cashtag volume), and retry Reddit per-subreddit rather than as a bundle so a single failure doesn't zero out the other two. With even StockTwits alone (message count plus tag ratio) this report could move to medium confidence and a directional band.</p>
+<h6>News Analyst</h6>
+<h4>News &amp; Macro Research Report — AAPL (Apple Inc.)</h4>
+<p><strong>As-of date:</strong> 2026-01-09 (trailing window 2026-01-02 → 2026-01-09)</p>
+<h5>0. Data availability — read this first</h5>
+<p>Every data source returned a <em>tooling/vendor</em> failure, not an absence of news. I am reporting this transparently and will not fabricate values.</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Status</th>
+<th>Reason returned</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AAPL company news (<code>get_news</code>)</td>
+<td>❌ Unavailable</td>
+<td>Vendor &quot;only serves recent items&quot;; no vintage covers 2026-01-02..01-09</td>
+</tr>
+<tr>
+<td>Global news (<code>get_global_news</code>)</td>
+<td>❌ Unavailable</td>
+<td>Same vendor limitation</td>
+</tr>
+<tr>
+<td>Macro indicators (CPI, Core PCE, Unemployment, Fed Funds)</td>
+<td>❌ Unavailable</td>
+<td><code>FRED_API_KEY</code> not set — data plumbing, not a macro event</td>
+</tr>
+<tr>
+<td>Prediction markets (Fed cut, recession, Apple AI, tariffs)</td>
+<td>❌ Withheld for 2026-01-09</td>
+<td>Polymarket serves live odds only; tool refuses to back-date live probabilities into a 2026-01-09 view</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Bottom line:</strong> I cannot deliver a fact-grounded, sourced week-in-review for AAPL because no fresh data stream resolved. What I present below is therefore a <strong>framework and watchlist for the trading desk</strong>, explicitly flagged as <em>analytical scaffolding, not reported facts</em>.</p>
+<h5>1. What this failure means for the desk (and how to unblock)</h5>
+<ul>
+<li><strong>News vendor:</strong> the configured Yahoo source is effectively real-time-only. To study a 2026-01-09 window you need a vendor with historical news archive (e.g., a news API with date-range backfill). This is a <strong>configuration fix</strong>, not a market signal.</li>
+<li><strong>FRED:</strong> export <code>FRED_API_KEY</code> in the environment. Until then, all macro prints (CPI ~Jan 13–15 for December, payrolls first-Friday, FOMC late-Jan) are unobservable here.</li>
+<li><strong>Prediction markets:</strong> Polymarket has no historical snapshot. Any &quot;market-implied probability&quot; quoted for a past date would be <strong>look-ahead contaminated</strong> — correctly blocked. For live forward-event pricing, query the tool <em>on the same day</em> you trade the view.</li>
+</ul>
+<h5>2. AAPL thesis checklist (what a trader should be actively monitoring this week)</h5>
+<p>Because I cannot confirm this week's headlines, here are the <strong>highest-signal drivers</strong> to verify against a working news feed before sizing any AAPL position:</p>
+<ol>
+<li><strong>iPhone demand / cycle:</strong> China sell-through commentary, holiday-quarter channel checks, carrier promo intensity, any supply-chain (Asia) order cuts.</li>
+<li><strong>China exposure &amp; geopolitics:</strong> tariff policy, export controls, and any US–China trade escalation — historically AAPL's single largest single-name tail risk. (Prediction-market check on &quot;US–China tariffs&quot; was blocked; verify with live odds before hedging.)</li>
+<li><strong>Services &amp; AI narrative:</strong> Apple Intelligence feature rollout, Google/Gemini-style partnership chatter, App Store regulatory actions (EU DMA, US antitrust), services gross-margin trajectory.</li>
+<li><strong>Valuation vs. rates:</strong> AAPL is a long-duration cash-flow asset — 10Y yield direction and the Fed path (Jan FOMC) are the primary multiple drivers. A hawkish repricing pressures the multiple; a dovish one supports it.</li>
+<li><strong>Capital return:</strong> ongoing buyback cadence supports EPS but signals nothing about demand — treat as a floor, not a catalyst.</li>
+<li><strong>Reflexivity / positioning:</strong> mega-cap concentration means AAPL often trades as an index proxy; check whether moves are idiosyncratic or beta.</li>
+</ol>
+<h5>3. Macro lens (framework only — no printed data)</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>Factor</th>
+<th>Why it matters for AAPL</th>
+<th>Action to take once data is live</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CPI / Core PCE</td>
+<td>Sets the Fed's next move → discount rate → AAPL multiple</td>
+<td>Pull latest prints; compute MoM vs. consensus</td>
+</tr>
+<tr>
+<td>Fed Funds / Jan FOMC</td>
+<td>Direct lever on long-duration tech</td>
+<td>Check live &quot;Fed cut&quot; odds same-day</td>
+</tr>
+<tr>
+<td>10Y Treasury / yield curve</td>
+<td>AAPL is rate-sensitive; curve shape signals growth vs. inflation</td>
+<td>Watch 10Y level + 2s10s slope</td>
+</tr>
+<tr>
+<td>Unemployment / payrolls</td>
+<td>Consumer health → iPhone &amp; services demand</td>
+<td>Confirm labor-market direction</td>
+</tr>
+<tr>
+<td>Recession odds</td>
+<td>Downside scenario for hardware demand</td>
+<td>Only quote <strong>live</strong> recession-market probability</td>
+</tr>
+</tbody>
+</table></div>
+<h5>4. Recommended desk protocol this week</h5>
+<ul>
+<li><strong>Do not trade on this report's macro/news color</strong> — it contains none that is verified. Treat it as a pre-trade due-diligence checklist.</li>
+<li><strong>Re-run the tools same-day</strong> once <code>FRED_API_KEY</code> is set and a date-range news vendor is configured; then I can produce a sourced, numeric week-in-review.</li>
+<li><strong>For any forward event</strong> (FOMC, tariff decision, product launch), pull prediction-market odds <em>on trade date</em>, not retroactively.</li>
+</ul>
+<h5>5. Key points summary</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Item</th>
+<th>Status / Finding</th>
+<th>Trading implication</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Data</td>
+<td>AAPL company news</td>
+<td>❌ Vendor real-time-only; window uncovered</td>
+<td>Cannot confirm this week's catalysts</td>
+</tr>
+<tr>
+<td>Data</td>
+<td>Global macro news</td>
+<td>❌ Same vendor limitation</td>
+<td>No macro headlines verified</td>
+</tr>
+<tr>
+<td>Data</td>
+<td>CPI / Core PCE / Unemployment / Fed Funds</td>
+<td>❌ FRED API key missing</td>
+<td>Macro regime unobservable until fixed</td>
+</tr>
+<tr>
+<td>Data</td>
+<td>Prediction markets (Fed/recession/Apple/tariffs)</td>
+<td>❌ Withheld to avoid look-ahead</td>
+<td>Query live odds on trade date only</td>
+</tr>
+<tr>
+<td>AAPL driver</td>
+<td>China exposure &amp; US–China tariffs</td>
+<td>Framework — highest tail risk</td>
+<td>Verify tariff headlines before sizing</td>
+</tr>
+<tr>
+<td>AAPL driver</td>
+<td>iPhone demand / China sell-through</td>
+<td>Framework</td>
+<td>Needs channel-check data</td>
+</tr>
+<tr>
+<td>AAPL driver</td>
+<td>Services + Apple Intelligence narrative</td>
+<td>Framework</td>
+<td>Watch feature rollouts &amp; partnerships</td>
+</tr>
+<tr>
+<td>AAPL driver</td>
+<td>Rate sensitivity (10Y, Fed path)</td>
+<td>Framework</td>
+<td>Primary multiple driver</td>
+</tr>
+<tr>
+<td>AAPL driver</td>
+<td>Buybacks</td>
+<td>Framework</td>
+<td>EPS floor, not a demand catalyst</td>
+</tr>
+<tr>
+<td>Action</td>
+<td>Unblock data pipeline</td>
+<td>Set <code>FRED_API_KEY</code>; enable date-range news backfill</td>
+<td>Enables a sourced, numeric report</td>
+</tr>
+<tr>
+<td>Action</td>
+<td>Trade protocol</td>
+<td>Do not act on unverified color</td>
+<td>Re-pull same-day before execution</td>
+</tr>
+</tbody>
+</table></div>
+<p><em>Caveat: This report reflects tool failures rather than an absence of news. No figures above are asserted as market data; the &quot;Framework&quot; rows describe analytical considerations, not observed events.</em></p>
+<h6>Fundamentals Analyst</h6>
+<p>I was only able to partially complete the fundamental data gathering from this vendor. Below is what I could and could not retrieve, grounded in the explicit dates and values returned by the tools. Note that profile, valuation, and insider data were explicitly withheld by the vendor for this analysis date, and this must be stated plainly rather than inferred.</p>
+<hr />
+<h4>AAPL — Fundamental Research Report (as of 2026-01-09)</h4>
+<h5>1. Critical scope &amp; data-availability caveats (read first)</h5>
+<ul>
+<li><strong>Profile fundamentals (market cap, P/E, 52-week range, name/sector/industry, TTM metrics): WITHHELD.</strong> The vendor serves only present-day values with no historical vintage, so they would inject post-decision information into a 2026-01-09 analysis. I therefore have <strong>no reliable valuation multiples</strong> and <strong>cannot</strong> state a market cap or price-based valuation.</li>
+<li><strong>Insider transactions: WITHHELD.</strong> The vendor dates trades by execution date with no filing date, so it cannot confirm which trades were public by 2026-01-09. No insider signal can be cited.</li>
+<li><strong>Financial statements: AVAILABLE, served as filed (SEC EDGAR) where filing date is known, on or before 2026-01-09.</strong></li>
+<li><strong>Latest reported quarter: 2025-06-28 (fiscal Q3 FY2025).</strong> The next reported period (2025-09-27, the fiscal Q4/FY close) is present in the source data but its exact filing date is <strong>not confirmed as ≤ 2026-01-09</strong>. Because of the analysis-date cutoff and absence of a confirmed filing date, I treat 2025-09-27 as <strong>of uncertain availability</strong> and do not rely on it as confirmed evidence. <strong>Any upcoming earnings-release date is UNKNOWN from these tools</strong> — I will not infer one.</li>
+<li>Note: Apple's fiscal-year label ≠ calendar year (fiscal year ends late September). All periods below are cited by their reported period-end calendar dates.</li>
+</ul>
+<blockquote>
+<p>⚠️ <strong>Ticker-identity flag:</strong> The values returned (revenue, EPS, cash balances) are <strong>materially larger</strong> than the known Apple Inc. figures (e.g., FY2024 revenue shown at ~$391B vs. Apple's reported ~$391B is broadly consistent, but single-quarter figures like $124.3B in Q ending 2024-12-28 and diluted EPS of $2.40 look directionally right; however several earlier-year EPS/revenue figures do <strong>not</strong> align with Apple's actual filings). The data appears numerically plausible for a mega-cap but I cannot independently reconcile every line to confirmed Apple filings via these tools. Treat precise figures as <strong>vendor-sourced, unverified against a second source.</strong></p>
+</blockquote>
+<hr />
+<h5>2. Company profile</h5>
+<p>Not available (withheld — see §1). Per the resolved instrument identity, the ticker is <strong>AAPL</strong>, but descriptive metadata (sector, industry, business description) was not served for 2026-01-09 and is <strong>not</strong> asserted here beyond the resolved identity.</p>
+<hr />
+<h5>3. Revenue &amp; income trajectory (quarterly, USD millions)</h5>
+<p>Selected recent quarterly revenue, operating income, net income, and diluted EPS:</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>Period end</th>
+<th style="text-align:right">Revenue</th>
+<th style="text-align:right">Gross profit</th>
+<th style="text-align:right">Operating income</th>
+<th style="text-align:right">Net income</th>
+<th style="text-align:right">Diluted EPS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2024-06-29</td>
+<td style="text-align:right">85,777</td>
+<td style="text-align:right">39,678</td>
+<td style="text-align:right">25,352</td>
+<td style="text-align:right">21,448</td>
+<td style="text-align:right">1.40</td>
+</tr>
+<tr>
+<td>2024-12-28</td>
+<td style="text-align:right">124,300</td>
+<td style="text-align:right">58,275</td>
+<td style="text-align:right">42,832</td>
+<td style="text-align:right">36,330</td>
+<td style="text-align:right">2.40</td>
+</tr>
+<tr>
+<td>2025-03-29</td>
+<td style="text-align:right">95,359</td>
+<td style="text-align:right">44,867</td>
+<td style="text-align:right">29,589</td>
+<td style="text-align:right">24,780</td>
+<td style="text-align:right">1.65</td>
+</tr>
+<tr>
+<td><strong>2025-06-28</strong></td>
+<td style="text-align:right"><strong>94,036</strong></td>
+<td style="text-align:right"><strong>43,718</strong></td>
+<td style="text-align:right"><strong>28,202</strong></td>
+<td style="text-align:right"><strong>23,434</strong></td>
+<td style="text-align:right"><strong>1.57</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Observations (actionable):</strong></p>
+<ul>
+<li><strong>Strong seasonal holiday quarter (2024-12-28):</strong> revenue $124.3B, net income $36.3B, EPS $2.40 — a large sequential and YoY step-up consistent with hardware-weighted holiday demand.</li>
+<li><strong>Post-holiday normalization (2025-03-29 and 2025-06-28):</strong> revenue $95.4B → $94.0B; operating income $29.6B → $28.2B; EPS $1.65 → $1.57. This is a mild sequential decline typical of the March→June seasonal softening.</li>
+<li><strong>Gross margin ~46.5%</strong> in the latest quarter (43,718 / 94,036), roughly stable with 2025-03-29 (~47.0%) — margin pressure is modest, not alarming.</li>
+<li><strong>YoY read (latest vs. prior-year June quarter):</strong> 2025-06-28 revenue $94.0B vs. 2024-06-29 $85.8B → <strong>~+9.6% YoY</strong>; operating income $28.2B vs. $25.4B → <strong>~+11.2%</strong>; net income $23.4B vs. $21.4B → <strong>~+9.3%</strong>. This indicates <strong>healthy double-digit-ish operating leverage</strong> into mid-2025.</li>
+<li><strong>Holiday-quarter YoY:</strong> 2024-12-28 ($124.3B) vs. 2023-12-30 ($119.6B) → ~+3.9% revenue — a more modest holiday growth rate, suggesting the growth acceleration seen in H1 FY2025 was partly seasonal/mix-driven.</li>
+</ul>
+<p><strong>Long-run context:</strong> Revenue over the last ~4 years shows a clear secular uptrend (e.g., 2021-12-25 $123.9B peak holiday quarter, 2022-12-31 $117.2B, 2023-12-30 $119.6B, 2024-12-28 $124.3B) — steady high-single-digit compounding with EPS expanding faster than revenue due to margin management and buybacks (see §5).</p>
+<hr />
+<h5>4. Balance sheet (quarterly, USD millions)</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>Period end</th>
+<th style="text-align:right">Total assets</th>
+<th style="text-align:right">Current assets</th>
+<th style="text-align:right">Cash &amp; equivalents</th>
+<th style="text-align:right">Total liabilities</th>
+<th style="text-align:right">Current liabilities</th>
+<th style="text-align:right">Stockholders' equity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2024-12-28</td>
+<td style="text-align:right">344,085</td>
+<td style="text-align:right">133,240</td>
+<td style="text-align:right">30,299</td>
+<td style="text-align:right">277,327</td>
+<td style="text-align:right">144,365</td>
+<td style="text-align:right">66,758</td>
+</tr>
+<tr>
+<td>2025-03-29</td>
+<td style="text-align:right">331,233</td>
+<td style="text-align:right">118,674</td>
+<td style="text-align:right">28,162</td>
+<td style="text-align:right">264,437</td>
+<td style="text-align:right">144,571</td>
+<td style="text-align:right">66,796</td>
+</tr>
+<tr>
+<td><strong>2025-06-28</strong></td>
+<td style="text-align:right"><strong>331,495</strong></td>
+<td style="text-align:right"><strong>122,491</strong></td>
+<td style="text-align:right"><strong>36,269</strong></td>
+<td style="text-align:right"><strong>265,665</strong></td>
+<td style="text-align:right"><strong>141,120</strong></td>
+<td style="text-align:right"><strong>65,830</strong></td>
+</tr>
+<tr>
+<td>2025-09-27 <em>(uncertain availability)</em></td>
+<td style="text-align:right">359,241</td>
+<td style="text-align:right">147,957</td>
+<td style="text-align:right">35,934</td>
+<td style="text-align:right">285,508</td>
+<td style="text-align:right">165,631</td>
+<td style="text-align:right">73,733</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Observations:</strong></p>
+<ul>
+<li><strong>Liability-heavy structure but stable:</strong> total liabilities ~$266B vs. equity ~$66B at 2025-06-28 — equity is a small fraction of assets, characteristic of Apple's leveraged buyback strategy. Debt/equity is structurally high but supported by massive cash generation.</li>
+<li><strong>Current ratio (2025-06-28):</strong> current assets $122.5B / current liabilities $141.1B ≈ <strong>0.87x</strong> — below 1.0, indicating working capital deficit, common for Apple where short-term debt/obligations are managed against huge off-balance-sheet liquid assets (not fully visible in this extract).</li>
+<li><strong>Cash &amp; equivalents rose to $36.3B</strong> at 2025-06-28 (from $28.2B at 2025-03-29) — improving liquidity into the June quarter.</li>
+<li>Equity is essentially flat around $66–67B, showing heavy return of capital offsetting earnings accumulation.</li>
+</ul>
+<hr />
+<h5>5. Cash flow (quarterly, USD millions)</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>Period end</th>
+<th style="text-align:right">Operating CF</th>
+<th style="text-align:right">Investing CF</th>
+<th style="text-align:right">Financing CF</th>
+<th style="text-align:right">Capex</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2024-12-28</td>
+<td style="text-align:right">29,935</td>
+<td style="text-align:right">9,792</td>
+<td style="text-align:right">-39,371</td>
+<td style="text-align:right">2,940</td>
+</tr>
+<tr>
+<td>2025-03-29 (6 mo)</td>
+<td style="text-align:right">53,887</td>
+<td style="text-align:right">12,709</td>
+<td style="text-align:right">-68,377</td>
+<td style="text-align:right">6,011</td>
+</tr>
+<tr>
+<td>2025-06-28 (9 mo)</td>
+<td style="text-align:right">81,754</td>
+<td style="text-align:right">17,782</td>
+<td style="text-align:right">-93,210</td>
+<td style="text-align:right">9,473</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Observations (actionable):</strong></p>
+<ul>
+<li><strong>Massive operating cash generation:</strong> 9-month FY2025 (through 2025-06-28) OCF of <strong>$81.8B</strong>; the holiday-quarter alone (2024-12-28) generated <strong>$29.9B</strong> OCF.</li>
+<li><strong>Heavy negative financing CF (~-$93B over 9 months)</strong> — consistent with very large <strong>dividends + buybacks + debt service</strong>, a hallmark return-of-capital profile that supports EPS growth (share count shrinking) even as it keeps book equity low.</li>
+<li><strong>Positive investing CF</strong> in recent quarters (a departure from historical negative investing CF) — indicates net proceeds from investments/maturities rather than heavy deployment; typically reflects rotation of the large securities portfolio. Note in earlier years (2012–2013, 2021–2022) investing CF was strongly negative, reflecting large portfolio deployments.</li>
+<li><strong>Capex modest (~$9.5B over 9 months)</strong> relative to OCF — low capex intensity for a mega-cap, implying high free cash flow conversion (FCF ≈ OCF − capex ≈ $72B over 9 months).</li>
+<li><strong>Financing CF magnitude is a key structural signal:</strong> the company funds buybacks substantially through cash flow and, historically, debt — the small book equity and sub-1 current ratio are the visible footprint.</li>
+</ul>
+<hr />
+<h5>6. Insider activity</h5>
+<p><strong>Unavailable.</strong> Vendor withheld insider transactions with no public-filing-date basis for this analysis date. No insider buying/selling signal can be reported. Traders should not assume any insider trend.</p>
+<hr />
+<h5>7. Synthesis &amp; actionable takeaways for traders</h5>
+<ol>
+<li><strong>Fundamental momentum is positive but moderating:</strong> ~9–11% YoY growth in revenue and operating income through the June 2025 quarter, with stable ~46–47% gross margins — a constructive efficiency story.</li>
+<li><strong>October quarter (holiday) is structurally the strong quarter</strong> ($124B+ revenue, $2.40 EPS class). Whether the <em>next</em> holiday quarter has reported is <strong>unknown/uncertain</strong> from these tools — the 2025-09-27 data point exists but its filing date is unconfirmed as ≤ 2026-01-09, so <strong>do not trade on it as confirmed.</strong></li>
+<li><strong>Cash engine is the anchor:</strong> ~$82B OCF and ~$72B FCF over 9 months, with ~$93B returned via financing outflows. This underpins buyback-driven EPS growth and low book equity.</li>
+<li><strong>Balance sheet leverage is structural, not distressed:</strong> sub-1.0 current ratio and ~$266B liabilities are characteristic and supported by FCF — not a red flag on its own, but warrants monitoring for rising short-term obligations (current liabilities edged up at 2025-06-28 recovery).</li>
+<li><strong>Valuation/position-sizing cannot be set from these tools</strong> — no market cap, P/E, or 52-week context was available as of 2026-01-09. Any valuation-based trade thesis must source price data elsewhere.</li>
+<li><strong>Event timing is UNKNOWN.</strong> No earnings-release date could be established from available (pre-cutoff) evidence; do not assume a scheduled report.</li>
+</ol>
+<h6>Data integrity note</h6>
+<p>Figures are <strong>vendor-sourced SEC-filed values</strong> but could not be independently reconciled to a second source within these tools; a few historical EPS/revenue lines warrant spot-checking against primary filings before being used in models. Profile, valuation, and insider datasets were <strong>explicitly withheld</strong> and are absent, not zero.</p>
+<hr />
+<h5>8. Key points summary table</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Status / Finding</th>
+<th>Evidence (period end / note)</th>
+<th>Trading implication</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ticker identity</td>
+<td>AAPL resolved</td>
+<td>Instrument context</td>
+<td>Mega-cap identity assumed</td>
+</tr>
+<tr>
+<td>Profile (mkt cap, P/E, 52-wk, sector)</td>
+<td><strong>Withheld</strong></td>
+<td>Vendor note, point-in-time 2026-01-09</td>
+<td>No valuation multiples available</td>
+</tr>
+<tr>
+<td>Latest confirmed quarter</td>
+<td>2025-06-28 (FQ3 FY2025)</td>
+<td>Filed ≤ cutoff</td>
+<td>Use as base for trend</td>
+</tr>
+<tr>
+<td>2025-09-27 (FQ4/FY close)</td>
+<td><strong>Availability uncertain</strong></td>
+<td>Present in data; filing date unconfirmed</td>
+<td>Do NOT treat as reported</td>
+</tr>
+<tr>
+<td>Upcoming earnings date</td>
+<td><strong>Unknown</strong></td>
+<td>No pre-cutoff evidence</td>
+<td>Do not assume timing</td>
+</tr>
+<tr>
+<td>Latest revenue</td>
+<td>$94.0B, +~9.6% YoY</td>
+<td>2025-06-28 vs 2024-06-29</td>
+<td>Positive growth</td>
+</tr>
+<tr>
+<td>Latest operating income</td>
+<td>$28.2B, +~11.2% YoY</td>
+<td>2025-06-28</td>
+<td>Operating leverage intact</td>
+</tr>
+<tr>
+<td>Latest EPS (diluted)</td>
+<td>$1.57</td>
+<td>2025-06-28</td>
+<td>Solid, post-holiday normalization</td>
+</tr>
+<tr>
+<td>Holiday quarter peak</td>
+<td>Revenue $124.3B, EPS $2.40</td>
+<td>2024-12-28</td>
+<td>Strong seasonality</td>
+</tr>
+<tr>
+<td>Gross margin</td>
+<td>~46.5%</td>
+<td>2025-06-28</td>
+<td>Stable</td>
+</tr>
+<tr>
+<td>Total assets</td>
+<td>$331.5B</td>
+<td>2025-06-28</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Stockholders' equity</td>
+<td>$65.8B</td>
+<td>2025-06-28</td>
+<td>Low equity (buyback-driven)</td>
+</tr>
+<tr>
+<td>Current ratio</td>
+<td>~0.87x</td>
+<td>2025-06-28</td>
+<td>Structural working-capital deficit</td>
+</tr>
+<tr>
+<td>Cash &amp; equivalents</td>
+<td>$36.3B</td>
+<td>2025-06-28</td>
+<td>Improving liquidity</td>
+</tr>
+<tr>
+<td>OCF (9 mo FY2025)</td>
+<td>$81.8B</td>
+<td>2025-06-28 (9 mo)</td>
+<td>Strong cash engine</td>
+</tr>
+<tr>
+<td>Capex (9 mo FY2025)</td>
+<td>$9.5B</td>
+<td>2025-06-28 (9 mo)</td>
+<td>Low capex, high FCF</td>
+</tr>
+<tr>
+<td>Implied FCF (9 mo)</td>
+<td>~$72B</td>
+<td>OCF − capex</td>
+<td>High FCF conversion</td>
+</tr>
+<tr>
+<td>Financing CF (9 mo)</td>
+<td>-$93.2B</td>
+<td>2025-06-28 (9 mo)</td>
+<td>Heavy buyback/dividend</td>
+</tr>
+<tr>
+<td>Insider transactions</td>
+<td><strong>Withheld</strong></td>
+<td>No filing-date basis</td>
+<td>No insider signal</td>
+</tr>
+<tr>
+<td>Data reconciliation</td>
+<td>Unverified against 2nd source</td>
+<td>Vendor-sourced</td>
+<td>Spot-check before modeling</td>
+</tr>
+</tbody>
+</table></div>
+<p><em>Prepared 2026-01-09. All figures USD millions unless noted. Withheld fields are absent (not zero).</em></p>
+<h5>II. Research Team Decision</h5>
+<h6>Bull Researcher</h6>
+<p>Bull Analyst: ## Bull Case for AAPL — Opening Statement</p>
+<p>Alright, let me lay out the bull thesis — and I'll confront the bear's most likely objections head-on, because they're real but they're being misread.</p>
+<h6>The Core Setup: This Is a Pullback Inside a Secular Uptrend, Not a Trend Reversal</h6>
+<p>The single most important data point in the technical report: <strong>price at 258.47 sits 11.4% ABOVE the rising 200 SMA (231.99)</strong>. That's not a broken chart — that's one of the most durable uptrends in the mega-cap universe pausing. The bear will scream &quot;below the 50 SMA, below the 10 EMA, MACD negative, RSI oversold, riding the lower Bollinger band!&quot; And every single one of those is <em>true</em> — but they describe a <strong>~9.4% correction off an all-time high</strong>, which is textbook healthy consolidation territory, not distribution at the top of a cycle. Corrections of 8–12% happen routinely inside multi-year bull runs. Nothing here breaks the long-term structure.</p>
+<h6>The Bear's Oversold Concern Actually Cuts the Bull's Way</h6>
+<p>Here's where the bear logic unravels. The bear will point to RSI at 27.3 and say &quot;momentum is broken.&quot; I say: <strong>RSI at 27 with price pinned to the lower Bollinger band (258.47 vs. 258.36 band) on expanding bands is the textbook fingerprint of downside exhaustion.</strong> That's not a sell signal — that's a <em>mean-reversion spring loading</em>. The technical report itself concedes &quot;risk/reward for fresh shorts here is poor.&quot; If the bear's own framing admits shorts have poor R/R at these levels, they've handed me the floor: the downside is already priced. A close back above the 10 EMA (~264.4) flips the tactical picture, and the reclaim zone to watch is a modest 2–5% move up — very achievable.</p>
+<h6>Fundamentals: The Cash Engine Is the Real Story</h6>
+<p>The bear will wave around the low current ratio (0.87x) and liability-heavy balance sheet. That's a <strong>strawman</strong>. Let me put real numbers on it:</p>
+<ul>
+<li><strong>~$81.8B operating cash flow over 9 months</strong>, ~<strong>$72B implied free cash flow</strong> on only ~$9.5B capex. That's a low-capex, high-FCF-conversion machine.</li>
+<li><strong>~$93.2B returned via financing outflows</strong> — dividends + buybacks. That's the reason book equity is low (~$66B) and the current ratio sits under 1.0. <strong>This is a capital-return signature, not a solvency problem.</strong> The &quot;sub-1 current ratio&quot; only reads as scary if you ignore the $36.3B cash balance and the massive off-balance-sheet securities portfolio the extract can't fully see.</li>
+<li><strong>YoY growth is intact:</strong> latest June quarter revenue +9.6% YoY, operating income +11.2% — genuine <strong>operating leverage</strong> with stable ~46.5% gross margins. Revenue and earnings are <em>expanding</em>, not decaying.</li>
+</ul>
+<h6>Competitive Advantages the Bear Cannot Replicate</h6>
+<p>The bear can short a chart, but they cannot short the moat: dominant hardware install base, a services annuity layered on top, and a buyback that structurally shrinks share count and compounds EPS faster than revenue. That's why net income grew ~9.3% YoY while the company returned $93B to shareholders — the math works <em>because</em> the franchise is that durable.</p>
+<h6>What About the &quot;No News / No Sentiment&quot; Data Gaps?</h6>
+<p>Let me pre-empt the bear's favorite crutch: <strong>&quot;the sentiment and news feeds are empty, so we're flying blind.&quot;</strong> Wrong framing. Those are <strong>vendor tooling failures</strong> — the reports explicitly say so — not an information vacuum around Apple. An analyst who interprets a broken data pipe as a bearish signal is committing a category error. The absence of retrieved headlines is <em>not</em> the absence of a franchise. I'll concede it: it means I don't get to cite a fresh catalyst in this window — but it does <strong>not</strong> weaken the fundamental and technical evidence I <em>do</em> have.</p>
+<h6>Directly Answering the Likely Bear Points</h6>
+<div class="table"><table>
+<thead>
+<tr>
+<th>Bear claim</th>
+<th>Bull rebuttal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&quot;Below 50 SMA, 10 EMA, VWMA = downtrend&quot;</td>
+<td>True for the <em>medium-term</em>; long-term 200 SMA rising and price +11.4% above it. Correction, not reversal.</td>
+</tr>
+<tr>
+<td>&quot;MACD negative, histogram deepening&quot;</td>
+<td>Momentum lags price at exhaustion points; RSI 27 + lower-band pin argues the <em>downside thrust is late-stage</em>, not early.</td>
+</tr>
+<tr>
+<td>&quot;Current ratio 0.87, $266B liabilities&quot;</td>
+<td>Buyback-driven structure funded by ~$72B FCF; cash rose to $36.3B. Not distressed.</td>
+</tr>
+<tr>
+<td>&quot;Sentiment/news empty = negative&quot;</td>
+<td>Tooling failure, explicitly flagged as null — not a signal.</td>
+</tr>
+</tbody>
+</table></div>
+<h6>The Bull Verdict</h6>
+<p>Hold core longs. The secular uptrend (rising 200 SMA, +11.4%) plus a genuine FCF/buyback engine plus double-digit-ish operating income growth make <strong>AAPL a accumulate-on-confirmation, not abandon</strong> name. The tactical trigger is a close above the 10 EMA (~264.4), which would validate the oversold bounce and open the 267–272 resistance cluster. The bear can point at the correction — I'll point at the <strong>11.4% cushion above a rising 200-day and $72B of free cash flow</strong> and ask which is the stronger structural fact.</p>
+<p><strong>Over to you, bear.</strong> Show me the reversal signal that actually breaks the 200 SMA — because a 9.4% dip off an all-time high with a $72B FCF engine underneath isn't it.</p>
+<h6>Bear Researcher</h6>
+<p>Bear Analyst: ## Bear Case for AAPL — Rebuttal</p>
+<p>Alright, let me take the bull's framing apart piece by piece, because the bull's entire case rests on a sleight of hand: <strong>treating a &quot;long-term uptrend is intact&quot; mantra as if it were a reason to own a stock that is bleeding on every tactical and structural measure that matters right now.</strong></p>
+<p>Let me be precise about what the data actually says, because the bull keeps quoting the 200 SMA like it's a shield.</p>
+<hr />
+<h6>1. The &quot;11.4% above the 200 SMA&quot; is a Warning, Not a Cushion</h6>
+<p>The bull calls the +11.4% cushion above the 200 SMA &quot;the strongest structural fact.&quot; I call it <strong>the single biggest risk in the setup.</strong> Think about it: AAPL is still <strong>11.4% above a rising 200-day line</strong> <em>after</em> already falling 9.4% from its all-time high. That means the mean-reversion trade has <strong>barely begun</strong>. If price simply reverts to its long-term mean — a completely normal event in a correction — that's another <strong>~10% downside</strong> to the 200 SMA at 232. The bull is celebrating how far AAPL has to fall before it even touches its long-term trend line. That's not a cushion; that's a <strong>trapdoor with headroom.</strong></p>
+<p>And note the bull's own numbers: the 50 SMA has <strong>already rolled over</strong> — it peaked on 2026-01-06 and is now ticking down. The bull waves this away as &quot;medium-term.&quot; But a flattening-then-declining 50 SMA while price sits below it is the classic <strong>early-stage breakdown</strong> sequence. Death crosses don't announce themselves on day one — they build through exactly this kind of 50-SMA rollover.</p>
+<hr />
+<h6>2. The Bull's &quot;Oversold Spring&quot; Is Actually a Falling Knife</h6>
+<p>This is where the bull's logic is most dangerous. Their claim: &quot;RSI 27 + lower Bollinger band = downside exhaustion, buy the bounce.&quot; Let me read the report back to them, because it says the opposite of what the bull wants:</p>
+<ul>
+<li><strong>&quot;Riding the lower band signals a strong downward thrust&quot;</strong> — not exhaustion.</li>
+<li><strong>&quot;Bands are expanding on the downside... confirms the volatility regime has shifted higher.&quot;</strong></li>
+<li><strong>MACD histogram = −1.823, &quot;deeply negative... downside momentum is expanding.&quot;</strong></li>
+<li>The report explicitly warns: <strong>&quot;in a fresh downtrend RSI can stay low for several sessions&quot;</strong> and <strong>&quot;do not buy pre-confirmation.&quot;</strong></li>
+</ul>
+<p>The bull is doing exactly what the technical report tells them <em>not</em> to do: buying a knife mid-fall because the oscillator looks cheap. RSI at 27.3 yesterday can be RSI at 22 tomorrow — and the price can be at 252, not 264. The bull's &quot;mean-reversion spring&quot; has <strong>no confirmation</strong> — no reclaim of the 10 EMA, no MACD histogram turn, nothing. It's a hope trade dressed up as analysis.</p>
+<p>And here's the tell: <strong>the bull's own tactical trigger is a close above the 10 EMA at ~264.4 — that's 2.3% HIGHER than today's price.</strong> So even the bull is saying &quot;don't buy here.&quot; If the entry is above 264.4, then the entire argument for owning at 258 evaporates. The bull has just told you to wait — which is the definition of a market where the risk/reward doesn't favor the long right now.</p>
+<hr />
+<h6>3. The &quot;Cash Engine&quot; Doesn't Fix a Broken Tape — And It's Not New Information</h6>
+<p>The bull leans hard on $72B FCF and $93B of buybacks. Two problems:</p>
+<p><strong>First — none of that is a catalyst.</strong> AAPL's cash generation is the most <em>priced-in, well-telegraphed</em> fact in the entire mega-cap universe. The market has known about this FCF machine for a decade. It does not explain a 9.4% drawdown, and it will not stop one. When the tape is distributing — and the report confirms <strong>distribution on volume</strong> (price below VWMA of 267.6, the 52.35M volume down day at −4.88) — the cash engine is irrelevant to near-term price. The bull is answering a question about <em>next quarter's business</em> when the market is asking a question about <em>the next 5% of price</em>.</p>
+<p><strong>Second — the bull is editorializing the balance sheet into safety.</strong> They wave away the <strong>0.87x current ratio</strong> and <strong>$266B liabilities</strong> by saying &quot;look at the off-balance-sheet securities portfolio the extract can't fully see.&quot; That's the problem, bull — <strong>you can't see it.</strong> You're asserting a safety cushion from data you admit is invisible. The current ratio is a real, measured <strong>working-capital deficit</strong>. The bull is asking you to take on faith what the filings don't show them.</p>
+<hr />
+<h6>4. The Bull's &quot;Moat&quot; Is the Bull's Biggest Blind Spot</h6>
+<p>&quot;Dominant hardware install base, services annuity, buybacks compound EPS faster than revenue.&quot; Fine — none of that is being <em>disputed or challenged</em> by this data. But here's what the bull conveniently ignores: <strong>a great business at the wrong price and the wrong moment is a bad investment.</strong> The report couldn't even retrieve a valuation multiple — <strong>no P/E, no market cap, no 52-week context.</strong> The bull is making a valuation-agnostic &quot;quality compounder&quot; argument while <em>admitting they have no valuation data.</em> How can you call a stock an &quot;accumulate&quot; without knowing what you're paying for it? You can't. That's not a thesis; that's a slogan.</p>
+<p>And on the moat — the fundamentals report flags that the <strong>2025-09-27 quarter's filing date is unconfirmed for this analysis date.</strong> So the bull's &quot;latest confirmed quarter&quot; (June 2025) is <strong>six months stale.</strong> The most recent data they're citing as &quot;intact growth&quot; is half a year old, and the holiday-quarter print — the one that actually matters — is <strong>unverifiable.</strong> The bull is extrapolating a growth trend from a stale snapshot into a live tape that's pricing in something worse.</p>
+<hr />
+<h6>5. The Bull's &quot;Tooling Failure&quot; Defense Actually Cuts Against Them</h6>
+<p>The bull says: &quot;empty sentiment/news feeds are tooling failures, not a signal.&quot; I agree — they're <strong>null.</strong> But watch what the bull does with that: they treat null data as <em>neutral-to-positive</em> for the bull case, when the honest read is <strong>there is no positive catalyst in evidence for this window whatsoever.</strong> No product event, no earnings confirmation, no fresh institutional framing, no retail positioning data — <em>nothing</em> to support buying into a falling knife. The bull is standing on a floor of <strong>zero supporting catalyst evidence</strong> and calling it a solid foundation. The difference between &quot;no bearish news&quot; and &quot;no news&quot; is enormous, and the bull is conflating them.</p>
+<hr />
+<h6>6. The Bull's Own Framework Is a &quot;Don't Buy&quot;</h6>
+<p>Let me close with the bull's own words: <strong>&quot;accumulate-on-confirmation,&quot; with a trigger at 264.4.</strong> That's it. Even the bull isn't arguing you should be buying AAPL at 258.47 — they're arguing you should wait for a bounce that hasn't happened. So let's be honest about what the two of us are actually debating:</p>
+<ul>
+<li>The bull says &quot;hold and wait for confirmation above 264.4.&quot;</li>
+<li>I say &quot;hold core if you must, but the tactical setup is bearish, the medium-term trend has rolled over below a flattening 50 SMA, momentum is expanding to the downside, distribution is confirmed on volume, and the stock still sits 11% above a 200-day line that represents a legitimate downside target.&quot;</li>
+</ul>
+<p><strong>Those are the same trade.</strong> The difference is the bull wants to spin a distribution-phase correction into &quot;spring-loaded upside,&quot; and I'm calling it what the report calls it: a <strong>&quot;don't catch a falling knife&quot;</strong> configuration with <strong>poor risk/reward for fresh longs at these levels.</strong></p>
+<hr />
+<h6>The Bear Verdict</h6>
+<p><strong>Don't add, don't chase, don't call this a spring.</strong> The evidence — 50 SMA rollover, MACD expanding negative, price below 10 EMA and VWMA, distribution on volume, a stale-and-unverified fundamentals snapshot, no valuation data, and zero catalyst evidence — all point the same direction: <strong>this correction has room, the downside target below is the 250 round number and ultimately the rising 200 SMA at 232, and the &quot;buy the oversold bounce&quot; trade is unconfirmed and premature.</strong></p>
+<p>The bull asked me for the reversal signal that breaks the 200 SMA. <strong>I don't need it</strong> — the bull's case already depends on a bounce that hasn't printed, an entry price above today's close, and fundamentals six months stale. That's not a bull case. That's a wait-and-see wearing a bull costume. <strong>Sell rallies into 264–272. Pass on new longs until the trend actually turns.</strong></p>
+<h6>Research Manager</h6>
+<p><strong>Recommendation</strong>: Hold</p>
+<p><strong>Rationale</strong>: Both sides made real points, but neither established a decisive edge large enough to justify a directional change on AAPL, so I'm landing on Hold — maintain the existing 40-unit long, no adds, no trims.</p>
+<p>Where the bear won: The bear's strongest move was turning the bull's own +11.4% cushion above the 200 SMA into a downside target — price at 258.47 sits ~10% above a rising 200-day at 231.99, meaning mean reversion has barely started, not finished. The bull never answered this convincingly; calling the distance-to-support a &quot;cushion&quot; is a framing trick and the bear correctly labeled it headroom to fall through. The bear also won the momentum read by quoting the technical report directly against the bull: &quot;riding the lower band signals a strong downward thrust,&quot; bands expanding, MACD histogram −1.823 expanding negative, and the report's own explicit &quot;do not buy pre-confirmation.&quot; The bull's &quot;oversold spring&quot; is an inference; the report's language is a warning. The bear is right that RSI 27.3 with no reclaim of the 10 EMA and no histogram turn is a knife, not a bounce.</p>
+<p>Where the bull won: The bear overreached on two counts. First, the bear's entire prescriptive output — &quot;hold core if you must,&quot; &quot;pass on new longs,&quot; &quot;sell rallies into 264–272&quot; — is functionally identical to the bull's &quot;don't buy at 258, wait for confirmation above 264.4.&quot; The bear essentially conceded there is no fresh-short case at these levels (the technical report itself says R/R for new shorts is poor), so the bear is not actually arguing for a directional short — it's arguing against adding. That's a Hold, not a Sell. Second, the bear's valuation criticism cuts both ways: it faults the bull for making a quality argument without a P/E or market cap, but the bear's own downside targets (250 round number, then 232) are equally valuation-agnostic and rooted in the same absent data. Neither side has the valuation evidence to call this expensive or cheap.</p>
+<p>On fundamentals the debate is a stalemate, not a bear win. The bull's FCF/buyback point (~$81.8B operating cash flow over 9 months, ~$72B implied FCF, ~$93.2B returned via financing outflows) genuinely explains the 0.87x current ratio as a capital-return signature rather than distress — the bear never rebutted that mechanism, only complained that the off-balance-sheet securities are unverifiable. Fair, but that's an admission of uncertainty, not evidence of impairment. Conversely, the bull's growth claims rest on a June 2025 quarter that is genuinely stale against a 2026-01-09 analysis date, with the more recent 2025-09-27 filing unconfirmed — so &quot;growth is intact and current&quot; is not established. Both sides are leaning on incomplete fundamental data, and both correctly flagged sentiment and news as vendor tooling failures — null, not signal. Neither side gets to convert null into a catalyst.</p>
+<p>Why Hold rather than the bear's implied lean: the bear needed to show the medium-term breakdown is real and accelerating, and it did show 50-SMA rollover and volume distribution — that's meaningful and it justifies not adding. But it did not show anything that invalidates the long-term structure or makes holding a 190-cost-basis position a mistake. And the &quot;quality business, wrong moment&quot; argument is an argument about timing, not about exiting. With the technical report itself flagging poor R/R for fresh shorts, the honest posture is to sit with the position, not to press either way.</p>
+<p>What decided it: the bear won the tactical argument (don't buy here, momentum expanding, 50 SMA rolling, distribution on volume, meaningful downside air below to 250/232), but the bull won the framing battle on what to actually do (a correction inside a rising 200 SMA with a real FCF engine is not a sell, and the bear's own prescription matched the bull's). Net: bearish on adding, not bearish enough to exit. Conflict alone isn't a reason to Hold — but here the conflict is genuinely asymmetric in a way that resolves to a single action: maintain, don't add, don't short.</p>
+<p><strong>Strategic Actions</strong>: Maintain the existing long without modification. No adding, no trimming, no hedging.</p>
+<ol>
+<li>
+<p>Hold the 40 units at the 190.00 average cost. Do not add at 258.47. The bear's tactical case for not buying here is the stronger one and both analysts independently landed on &quot;wait for confirmation,&quot; so there is no basis to grow exposure at current levels.</p>
+</li>
+<li>
+<p>Do not trim and do not short. The technical report itself flags poor risk/reward for fresh shorts at these levels, and the long-term structure (price +11.4% above a rising 200 SMA at 231.99) is unbroken. Voluntarily reducing a profitable long into an oversold print with no confirmation of further breakdown would be acting on the bear's timing argument without the bear's evidence for it.</p>
+</li>
+<li>
+<p>Define the two-sided triggers explicitly, sized against a standard allocation. Treat a standard allocation as the reference unit; the current 40 units is the entire AAPL position and should be managed as such.</p>
+<ul>
+<li>Upside confirmation / permitted add: a daily close above the 10 EMA (~264.4). If that prints, add up to 25% of a standard allocation (i.e., roughly 10 units on a 40-unit base), staged in halves, with the add invalidated on a close back below 264.4. Next resistance to manage into is the 267–272 cluster; do not chase above 272 without a fresh review.</li>
+<li>Downside deterioration / reduce: a daily close below the 250 round number on expanding volume. If that prints, trim 25% of the position (about 10 units) and re-review. A decisive break of the rising 200 SMA at ~232 would argue for cutting further, but that is a separate decision requiring a new debate — do not pre-commit to it now.</li>
+</ul>
+</li>
+<li>
+<p>Data gaps to close before the next review, stated plainly as unknowns rather than assumed: no valuation multiple (P/E, market cap, 52-week range) was available to either analyst; the June 2025 quarter is the last confirmed print and the 2025-09-27 filing is unconfirmed against a 2026-01-09 analysis date; sentiment and news feeds returned null due to vendor tooling failure, not absence of news. Any add decision under trigger (3) should be preceded by confirming the most recent quarterly filing if it can be retrieved. Cash and portfolio-level available funds were not supplied, so affordability of any add is unknown — the trader must confirm funding before executing.</p>
+</li>
+<li>
+<p>Do not treat this as a green light to pyramid on the 190 cost basis. The position is already in profit; the discipline here is to let the tape resolve rather than average into a downtrend without confirmation.</p>
+</li>
+</ol>
+<h5>III. Trading Team Plan</h5>
+<h6>Trader</h6>
+<p><strong>Action</strong>: Hold</p>
+<p><strong>Reasoning</strong>: The plan's Hold resolves the debate correctly: bearish tactics (price 258.47 below the 10 EMA at 264.432, below 50 SMA 271.633 and VWMA 267.562, MACD histogram −1.823 and widening, riding the lower band at 258.357 on expanding bands, 50 SMA rolling over) argue against adding, while the unbroken long-term structure (price ~11.4% above a rising 200 SMA at 231.993) and the report's own note that short risk/reward is poor at oversold RSI 27.27 argue against exiting or shorting. With 40 units held at 190.00 average cost, the position is already well in profit and no confirmation of a bounce or of a fresh breakdown has printed, so no transaction is warranted. Stops are held structurally rather than tight: ATR is 4.390, and the distance from the 258.47 close down to the 250 round-number trigger is 8.47 points, about 1.93 ATR, so a stop a little beyond it (~248–249) sits clear of normal daily noise without abandoning the position on a routine wick. No cash or available funds were supplied, so any future add's affordability is unknown.</p>
+<p><strong>Entry Price</strong>: 264.43</p>
+<p><strong>Stop Loss</strong>: 248.5</p>
+<p><strong>Position Sizing</strong>: Hold existing 40 units (full position); add nothing now. Only if a daily close prints above 264.43 (10 EMA), add a maximum of 10 units (25% of the 40-unit base) in two halves, pending confirmation of funding. Trim ~10 units on a daily close below 250 on expanding volume.</p>
+<p>FINAL TRANSACTION PROPOSAL: <strong>HOLD</strong></p>
+<h5>IV. Risk Management Team Decision</h5>
+<h6>Aggressive Analyst</h6>
+<p>Aggressive Analyst: Let me open this the right way, because I think both the conservative and neutral camps are about to make the same mistake from opposite directions — and the trader's HOLD is actually the boldest, smartest play on the table.</p>
+<p>Here's my core thesis: this isn't a &quot;sit still out of fear&quot; hold. This is a hold that <em>keeps a 40-unit position at a 190 average cost — a 36% embedded gain — fully deployed into a secular uptrend</em>, while refusing to dump shares at the exact moment the downside is most stretched and the risk/reward for <em>both</em> chasing and panicking is worst. That's not caution. That's disciplined aggression. The trader is staying in the fight while everyone else wants to either retreat to cash or freeze.</p>
+<p>Now, let me preempt the conservative analyst before they even speak, because I know the script. You're going to tell me: price is below the 10 EMA at 264.43, below the 50 SMA at 271.63, below the 267.56 VWMA, MACD histogram at −1.823 and widening, riding the lower Bollinger band on expanding bands. &quot;Distribution! Trend rollover! Reduce exposure!&quot; And I'll concede every single print — then tell you why your conclusion is backwards.</p>
+<p>First, you're citing a <em>−9.4% correction</em> like it's a catastrophe. From the 285.20 all-time high to 258.47 is a healthy pullback inside a structure where price sits 11.4% <em>above</em> a still-rising 200 SMA at 231.99. There's no death cross. The 50 SMA is still far above the 200. You don't de-risk a 36% winner in a secular uptrend because of a normal shakeout — that's how you turn a compounding position into a tax-and-friction donation. Your &quot;reduce exposure&quot; instinct liquidates exactly the shares that have been working.</p>
+<p>Second — and this is the part that should embarrass the caution camp — RSI is 27.27. Oversold. Price is 0.11 above the lower band. The report itself says fresh short risk/reward is <em>poor</em> here. So what does the conservative analyst want to do? Trim into the most washed-out, capitulation-prone moment of the entire move? You'd be selling to the mean-reversion buyers who are about to bid this thing back toward 264 and 267. Your caution <em>is the risk</em>. The real risk isn't holding — it's getting shaken out one day before a bounce and then chasing it 6 points higher.</p>
+<p>And to the trims-below-250 rule the trader built in — I'll defend that hard, because it's the <em>right</em> kind of risk control. ATR is 4.39. The distance from 258.47 down to the 250 trigger is 8.47 points — about 1.93 ATR. The stop at 248.5 sits <em>clear</em> of normal daily noise. That's not a tight stop that gets wicked out; that's a structural line that only fires on a genuine breakdown with expanding volume. The trader is letting the position breathe through routine volatility — which is exactly what the conservative camp never does, and why they always get stopped out at the bottom.</p>
+<p>Now the neutral analyst. Your &quot;neutral, 5.0/10, low confidence&quot; sentiment score is a <em>null value</em> and you know it — the report literally says treat it as &quot;no evidence,&quot; not &quot;balanced evidence.&quot; So don't you dare use it as a reason to sit frozen. &quot;No signal&quot; is not the same as &quot;no opportunity.&quot; And here's where your neutrality quietly kills returns: you want to wait for confirmation of a bounce — a daily close above 264.43, MACD histogram flattening — before adding. Fine, that's the trader's own add trigger, 10 units max, in two halves. But understand what &quot;waiting for confirmation&quot; costs you: the first 6 points of the move. The trader's plan captures the <em>core</em> of the trend with the existing 40 units and only scales in <em>after</em> confirmation — that's not reckless, that's the optimal blend. Your version — do nothing, add nothing, commit to nothing — isn't neutral. It's a decision to forfeit upside, and it pretends otherwise.</p>
+<p>And on fundamentals, the neutral and conservative camps want to hide behind &quot;data withheld, valuation unknown, earnings date unconfirmed.&quot; Let me flip that. What <em>is</em> confirmed through June 2025: revenue +9.6% YoY, operating income +11.2% YoY, ~46.5% gross margins, $81.8B operating cash flow over nine months, ~$72B implied free cash flow, and ~$93B returned via financing outflows. That's a cash engine funding a shrinking share count that mechanically lifts EPS. You don't abandon that on a 1.7% daily-range pullback. The &quot;withheld valuation&quot; caveat is a reason to <em>not size up aggressively without funding</em> — which the trader already respects by capping adds at 10 units pending confirmation. It is <em>not</em> a reason to liquidate a profitable core.</p>
+<p>Here's the asymmetry both of you keep missing. Downside: the 248.5 stop caps the loss on the <em>position</em> to a level 1.93 ATR away, well above the rising 200 SMA — the secular floor. Upside: reclaim the 10 EMA at 264.43 and you're back through a cluster to 267.56 and then 271.63. The trader isn't betting on a moonshot; they're holding a winner with a defined floor and <em>optional</em> upside participation via the two-stage add. That is the textbook high-reward structure — keep the base, define the risk, scale into strength. The conservative analyst wants to surrender the optionality. The neutral analyst wants to delay it into irrelevance.</p>
+<p>So my verdict is unambiguous: the HOLD is correct, and it's correct <em>because</em> it's aggressive — it refuses to abandon a 36%-in-profit position in a rising long-term trend over short-term noise, it defines risk structurally rather than with panic-tight stops, and it keeps a loaded spring for a confirmed breakout above 264.43. Both the conservative and neutral stances are, in their own ways, decisions to underperform. Stay long. Stay patient. Scale in on confirmation. That's how you outpace the market — by not flinching when everyone else blinks.</p>
+<h6>Conservative Analyst</h6>
+<p>Conservative Analyst: Let me be direct with you, because I think the aggressive case is built on a foundation of selective reading, and the neutral &quot;wait and see&quot; posture is a luxury we can't actually verify we can afford.</p>
+<p>Start with the aggressive analyst's central claim: that this is a &quot;36% embedded gain&quot; and therefore we shouldn't touch it. I want to challenge that framing head-on. An embedded gain is a <em>tax and accounting</em> fact, not a risk fact. The market does not care what we paid at 190. What matters for the firm's assets is what the position is worth <em>from here</em> and what could erode it. A 40-unit position that has run from 190 to 258 has accumulated roughly 2,720 points of unrealized profit per the math — and every one of those points is exposed to the full downside of the current distribution regime. The aggressive analyst treats &quot;we're up&quot; as a reason to hold with no adjustment. I treat &quot;we're up&quot; as a reason we have <em>something to protect</em>. Those are opposite conclusions from the same fact, and ours is the one that survives a bad week.</p>
+<p>Now the momentum case. He concedes every print and then dismisses them. Let me not wave them away. Price is below the 10 EMA at 264.43, below the 50 SMA at 271.63, below the VWMA at 267.56. The 50 SMA has literally rolled over — it peaked at 272.05 on January 6th and is now ticking down. The MACD histogram is negative at minus 1.823 and <em>widening</em>, and the MACD line crossed below zero around January 2nd. That is not noise. That is a regime flip with confirmation across trend, momentum, and volume. The aggressive analyst says &quot;no death cross, still above the 200 SMA.&quot; True — and also irrelevant to the next four to six weeks, which is the horizon over which we actually manage risk. Being 11.4% above a rising 200 SMA at 232 tells you the secular trend is intact; it tells you nothing about whether the next 8 to 15 points are down. And on every measure that governs the near term, the answer is down and accelerating.</p>
+<p>Then the oversold argument. He says RSI at 27.27 means we're about to bounce, so trimming here is selling to mean-reversion buyers. I want to push back hard on that. The report itself says, and I quote the substance, that in a fresh downtrend RSI can stay low for several sessions. Oversold is a <em>condition</em>, not a <em>timing signal</em>. Price is riding the lower Bollinger band with bands <em>expanding</em> — that is the signature of a volatility regime that has shifted higher, and expanding bands mean the lower band keeps moving down. The lower band dropped from roughly 267.7 on December 31st to 258.36 on January 9th. If price is pinned to a band that is falling, &quot;riding the band&quot; is not exhaustion — it's the mechanism of the decline. He's treating a falling floor as if it were a trampoline.</p>
+<p>Now to his defense of the stop placement, because this is where I think his risk math quietly breaks. He says the stop at 248.5 sits about 1.93 ATR below the close, clear of daily noise. Fine. But let's look at what that actually means for the firm. ATR is 4.39 — that's 1.7% of price <em>per day</em>. Over five trading sessions, the cumulative expected move is roughly 3.9 ATR, or about 17 points. So a stop 8.47 points below current price is roughly <em>two days</em> of normal-range movement away. He calls that &quot;letting the position breathe.&quot; What it actually means is that on a two-standard-deviation down day — which happens with regularity in an expanding-band regime — we get stopped out at 248.5 and the position exits not on a &quot;genuine breakdown&quot; but on exactly the kind of volatility the current regime is producing. Worse: if price gaps through 248.5, the realized loss is worse than the stop implies, because the stop is not a guaranteed fill. He's presenting a defined floor, but the floor has a trapdoor in a high-ATR, gap-prone market.</p>
+<p>And here's the point neither of them addresses: the trim-below-250 rule and the 248.5 stop are <em>redundant and conflicting</em>. If we trim 10 units on a daily close below 250, we're acting on a close, which is disciplined. But the 248.5 stop fires intraday — potentially the same day, before any close confirms anything. So the plan says &quot;only act on confirmation&quot; and simultaneously says &quot;we will be stopped out intraday.&quot; Those two rules can force us to exit at the worst possible point — intraday wick, before the close-based confirmation the trader's own reasoning demands. That's not a risk-management design; that's two competing designs layered on top of each other, and the one that fires first is the cruder one.</p>
+<p>Now the aggressive analyst's add plan. He wants to add 10 units on a daily close above 264.43, in two halves. Let's stress-test that. A close above 264.43 means price has reclaimed the 10 EMA — but the 50 SMA at 271.63 is still falling and directly overhead, and the VWMA at 267.56 is also overhead. So we'd be adding into a pocket where price is sandwiched between a reclaimed short-term average and a falling, declining medium-term average and a volume-weighted resistance level. That is exactly the &quot;sell rallies into the 264–272 cluster&quot; zone the report flags. He calls it a &quot;loaded spring.&quot; I call it buying into the most congested resistance in the chart. And note: he wants to do this with <em>no confirmed funding</em> — the plan itself admits available funds weren't supplied. Adding size while the affordability is unknown is not risk management; it's optimism with an IOU attached.</p>
+<p>Then the fundamentals deflection. He lists revenue plus 9.6%, operating income plus 11.2%, 46.5% gross margin, 81.8 billion operating cash flow, 72 billion implied free cash flow. I don't dispute any of those numbers. But notice what they are: they are <em>through June 2025</em>. The fundamentals report explicitly says the September 2025 quarter's filing date is unconfirmed as of January 9th, meaning we do not have the fiscal-year-close data in hand, and the upcoming earnings date is <em>unknown</em>. So we are being asked to hold full size and even contemplate adds based on fundamentals that are six months stale and with an unverified event on the horizon. The aggressive analyst says the cash engine is confirmed — it's confirmed <em>as of the last quarter we can see</em>. What it will look like after a holiday quarter we can't date is precisely the uncertainty he's waving off. And valuation is entirely withheld — no P/E, no market cap, no 52-week context. He wants to hold a full position and add into that void. That is not disciplined aggression. That is running a position on a chart pattern while blindfolded on price and event risk.</p>
+<p>Now let me deal with the neutral analyst before they speak, because I suspect I know the shape of their argument. They'll say sentiment is 5.0 out of 10 — neutral. But the report is explicit and I'll hold them to it: that score is a null value. All three sources — Yahoo, StockTwits, Reddit — failed to return data. That is not &quot;balanced sentiment,&quot; that is &quot;no evidence.&quot; So the neutral analyst cannot rest on sentiment as a reason to do nothing. And here's my challenge to them: doing nothing <em>is</em> a decision. It is a decision to hold full 40-unit exposure into a confirmed short-term downtrend with a stop that can be tripped intraday by normal volatility. &quot;Neutral&quot; is not risk-free — it is fully exposed to the exact downside the aggressive analyst keeps calling a &quot;shakeout.&quot; So I'll be asking the neutral analyst to justify why their non-decision is any safer than the aggressive analyst's active patience, because in my view they're making the same bet with different branding — they're both assuming the correction will resolve upward without requiring us to defend capital.</p>
+<p>Which brings me to what a conservative adjustment actually looks like, and why it's the steadiest path for the firm. I'm not asking to liquidate a secular winner. I'm asking to <em>down-risk in proportion to a confirmed regime change</em>. Here's the concrete adjustment: trim the position modestly — say 8 to 10 units — into any strength toward the 264 to 267 zone, not sell into the washed-out 258 print. That reduces our exposure while the trend is still down, banks a slice of the gain, and keeps 30 to 32 units participating in the secular trend. Then, raise the stop to a <em>volatility-aware</em> level that sits beyond roughly two and a half to three ATR from the close — call it 245 to 246, not 248.5 — so we are not tripped by a routine two-ATR day, and explicitly accept that if price closes below 250 on expanding volume, we trim further to roughly 20 units. That is a tiered de-risking ladder, not a binary stop. It protects the bulk of the 190-basis profit while keeping meaningful upside participation.</p>
+<p>And crucially, I want to fix the redundancy. Make the trigger <em>close-based only</em>. No intraday stop that fires before confirmation. That aligns the design with the trader's own stated principle — act on confirmation, not on wicks. If we're going to be disciplined, be disciplined consistently.</p>
+<p>Let me also put a number on the downside protection. At full 40 units, a move from 258.47 to the aggressive analyst's 248.5 stop is about 10 points times 40 units — roughly 400 points of exposure surrendered if that line breaks. On a conservative trim to 30 units and a stop at 245.5, a move to that level from 258.47 is about 13 points times 30 units, roughly 390 points — but with 10 units already banked near the top of the trim zone at 264-plus, capturing about 47 points of value relative to holding. So the conservative ladder banks something, reduces the exposure that can be wiped in a gap, and keeps 30 units working. That is not abandoning the trend — it is <em>harvesting</em> it responsibly.</p>
+<p>And the aggressive analyst's claim that trimming is a &quot;tax-and-friction donation&quot; — I'll concede friction exists, but the tax question is <em>not established</em> in any of the provided data. None of the reports confirm our basis, holding period, or tax lot treatment. So he cannot cite tax as a reason to hold, and I won't cite it as a reason to trim. We should decide on risk, not on an assumed tax efficiency he hasn't proven.</p>
+<p>Bottom line: the HOLD direction is defensible, but the <em>mechanics</em> of the trader's plan are too aggressive for the situation — full 40-unit exposure into a confirmed downtrend, an intraday stop subject to gap risk, an add plan that buys into overhead resistance without confirmed funding, and a redundancy between the trim rule and the stop that can exit us at the worst possible point. The conservative adjustment is to keep the core, trim modestly into strength, widen and make the stop close-based, tier the de-risking, and defer any adds until we have both confirmation <em>and</em> verified affordability. That is not surrendering optionality — it's refusing to gamble the firm's realized gains on a chart pattern while the trend, the volatility regime, the sentiment void, and the event calendar all point to uncertainty we don't need to eat at full size.</p>
+<h6>Neutral Analyst</h6>
+<p>Neutral Analyst: Let me step in here, because I think both of them are making the same category error in opposite directions: they're each treating a partial-information situation as if it were a full-information situation, and then building a confident recommendation on top of it. That's the thing a balanced read has to call out first.</p>
+<p>Start with the aggressive case, because it's the more seductive one. His core move is to concede every bearish print and then wave it off as &quot;short-term noise&quot; — but he can't have it both ways. He leans on the secular structure (11.4% above a rising 200 SMA) to justify holding full size, and then defends the mechanics with a stop only 1.93 ATR away. That's internally inconsistent. If your thesis is genuinely long-horizon and secular, you don't place your exit less than two days of normal range from the current price — you either commit to the secular view with a structurally distant stop, or you acknowledge the near-term downtrend is real and manage to it. The conservative analyst is actually right that 8.47 points is roughly two sessions of expected movement in a high-ATR, expanding-band regime. So the aggressive analyst's &quot;structural floor&quot; is fine rhetoric but thin risk math. He's also right that the &quot;36% gain&quot; framing is a tax fact, not a risk fact — being up doesn't immunize the position from giving back points.</p>
+<p>But the aggressive case gets one thing crucially right that the conservative camp keeps underweighting: the asymmetry. RSI at 27.3, price hugging the lower band, and the report's own explicit statement that fresh short risk/reward is poor. That is real. The downside is stretched, and selling the washed-out print at 258 is genuinely the worst place to reduce. So the aggressive analyst's instinct — don't panic-sell the capitulation print — is correct. The error is in the sizing and in the add plan, not in the refusal to dump.</p>
+<p>Now the conservative case. The regime-flip read is solid, and I'll grant the redundancy critique completely — the intraday 248.5 stop and the close-below-250 trim rule genuinely conflict, and having two competing triggers where the cruder one fires first is a design flaw, not a feature. That's a legitimate fix the trader should adopt: make the primary trigger close-based. Good catch.</p>
+<p>But here's where the conservative analyst overreaches. First, the &quot;two-day expected move&quot; argument is technically true but practically misleading — over five sessions the cumulative expected move is larger, yes, but that doesn't mean a stop gets hit; it means the <em>range</em> is wide. Applying that logic consistently would argue for a stop so wide it barely protects anything, or for never holding a position through a volatile regime at all. Second, and more importantly, the conservative recommendation to trim 8-10 units into the 264-267 zone is quietly making the <em>same</em> directional bet the aggressive analyst is — it assumes a bounce to 264-267 arrives to trim into. If the trend is genuinely down and accelerating, as he insists, that bounce may not come, and the &quot;trim into strength&quot; plan becomes a trim that never executes. So his ladder is conditional on a rally he doesn't actually believe in. That's not de-risking; that's an aspiration.</p>
+<p>And the deepest problem with both: they're each drawing high-conviction conclusions from fundamentals that are demonstrably stale and event risk that is demonstrably unknown. The aggressive analyst cites June 2025 cash flows as if they're current; the conservative says &quot;don't trust them&quot; — but neither of them is weighting the actual fact that we have no valuation, no market cap, no confirmed fiscal-Q4 filing, and no known earnings date. That's not a detail to argue about; it's the governing constraint. When the information set is this asymmetric — strong technicals-to-the-downside, oversold conditions, and a capital-markets blindspot — the balanced answer is not &quot;full size and add&quot; and not &quot;trim into a rally that may not come.&quot; It's &quot;hold the core, define the real risk, and earn the right to change size on confirmation.&quot;</p>
+<p>So here's the moderate adjustment I'd put on the table, and it genuinely borrows the best of both. Keep the 40-unit core — the aggressive analyst is right that abandoning a secular winner into an oversold print is value-destructive, and the conservative analyst is right that we have something worth protecting. So don't sell the washed-out print. But resolve the trigger conflict the way the conservative analyst correctly demands: make the primary risk rule close-based. A daily close below 250 on expanding volume trims roughly 10 units — that's the trader's own rule, and it should <em>replace</em> the intraday 248.5 stop, not sit beneath it. For catastrophic gap protection, keep a hard stop but place it meaningfully wider, in the 244-245 zone, so it only fires on genuine structural failure rather than routine volatility. That gives you a defined floor without the trapdoor the conservative analyst correctly flagged.</p>
+<p>On the add: the aggressive analyst is wrong to frame it as a loaded spring into the 264-272 cluster, and the conservative analyst is right that 264.43 is the <em>bottom</em> of a congested resistance band, not a clean breakout. So don't change size at 264.43. Require a daily close above the <em>cluster</em> — call it 267.5, the VWMA, with the MACD histogram flattening — before the first 5-unit half, and only add the second half above 271.6 on continued confirmation. That respects the aggressive analyst's &quot;scale into strength&quot; principle while conceding the conservative analyst's point that the zone overhead is resistance, not runway. And both camps are right that funding is unverified — so the add is explicitly contingent on confirming affordability first. No IOU.</p>
+<p>That's the balanced path: keep the core, fix the conflicting triggers via a close-based primary rule and a wider catastrophic stop, refuse to add into the resistance cluster, and stage any add above confirmed clearance with verified funding. It beats the aggressive plan because it won't get noise-stopped or buy into overhead supply without funding. It beats the conservative plan because it doesn't depend on a bounce that may never arrive to reduce risk, and it doesn't surrender the secular participation. Growth potential stays intact; the tail risk gets capped on confirmation rather than on a wick. That's not a hedge between the two — it's the design that actually survives whichever way the next two weeks break.</p>
+<h5>V. Portfolio Manager Decision</h5>
+<h6>Portfolio Manager</h6>
+<p><strong>Rating</strong>: Hold</p>
+<p><strong>Executive Summary</strong>: Maintain the existing 40-unit AAPL long at the 190.00 average cost; no adds, no trims, no hedge. The near-term tape is a confirmed downtrend (price 258.47 below the 10 EMA 264.43, 50 SMA 271.63 rolling over from a 272.05 peak, VWMA 267.56, MACD histogram −1.823 and widening, price pinned to an expanding lower band at 258.36), so buying here is unjustified — but the secular structure is unbroken (price ~11.4% above a rising 200 SMA at 231.99) and the report itself flags poor risk/reward for fresh shorts at RSI 27.3, so exiting or shorting is equally unjustified. Keep the core, replace the conflicting intraday 248.5 stop with a close-based primary rule (trim ~10 units on a daily close below 250 on expanding volume) plus a widermunication catastrophic stop near 244.5, and require a daily close above the 267.5 VWMA with the MACD histogram flattening — not 264.43 — before committing any add, contingent on confirmed funding.</p>
+<p><strong>Investment Thesis</strong>: The three-way debate resolves to maintain-and-do-not-add, with the neutral analyst supplying the mechanics and the aggressive and conservative analysts each winning one honest point.</p>
+<p>What the bears won, and it is decisive against adding: the conservative analyst's regime-flip read is evidence-backed and was never rebutted on the data. The 50 SMA peaked at 272.05 on January 6 and is now ticking down; the MACD line crossed below zero around January 2 with the histogram at −1.823 and widening; price is below the 10 EMA, the 50 SMA, and the VWMA simultaneously; and the lower Bollinger band itself fell from ~267.7 on December 31 to 258.36 on January 9. That last point is the decisive one against the aggressive analyst's &quot;oversold spring&quot;: when price is pinned to a <em>falling</em> expanding band, riding the band is the mechanism of the decline, not exhaustion. The report's own &quot;do not buy pre-confirmation&quot; language is a warning, not a buy signal. So no capital goes in at 258.47.</p>
+<p>What the bulls won, and it is decisive against trimming or shorting: the neutral analyst correctly identified the asymmetry — RSI 27.3, price 0.11 above the lower band, and the report's explicit statement that fresh short risk/reward is poor. Selling the washed-out print is the worst available entry for a reduction. The aggressive analyst is also right that the 36% embedded gain is not a risk fact in either direction — the conservative analyst conceded as much by dropping the tax-efficiency argument — but the secular structure is real: price sits ~11.4% above a rising 200 SMA at 231.99 with no death cross, and the conservative analyst himself conceded that tells you the secular trend is intact. That justifies holding a 190-basis position, not capitulating in it.</p>
+<p>Where the conservative analyst genuinely improved the plan, and I adopt it: the redundancy critique is correct and unanswered. A 248.5 intraday stop sitting <em>beneath</em> a close-below-250 trim rule means the cruder rule fires first — potentially on a wick, before the close-based confirmation the plan's own logic demands. Making the primary trigger close-based fixes a real design flaw. He is also correct that 8.47 points is only ~1.93 ATR against 4.39 ATR daily, roughly two sessions of normal range in an expanding-band regime.</p>
+<p>Where the conservative analyst overreached: his prescriptive core — &quot;trim 8–10 units into the 264–267 zone&quot; — is conditional on a bounce he says won't come. The neutral analyst caught this cleanly: if the downtrend is genuinely accelerating, the trim never executes and the plan is an aspiration, not de-risking. His arithmetic (10 units banked at 264-plus capturing ~47 points) assumes the fill.</p>
+<p>Where the aggressive analyst overreached, and I reject it: adding 10 units on a close above 264.43 buys into the <em>bottom</em> of a congested resistance band with the falling 50 SMA at 271.63 and VWMA at 267.56 directly overhead — the report's own &quot;sell rallies into 264–272&quot; zone — and does so with funding explicitly unverified. The neutral analyst's staged version (first half only above a close over the 267.5 VWMA with the histogram flattening, second half above 271.6, funding confirmed first) is strictly better on the same principle.</p>
+<p>The fundamental debate is a stalemate on incomplete data, and I will not force a directional read from it: revenue +9.6% YoY, operating income +11.2%, ~46.5% gross margin, $81.8B nine-month operating cash flow and ~$72B implied FCF through June 2025 are real and explain the 0.87x current ratio as a capital-return signature — but the 2025-09-27 fiscal-Q4 filing is unconfirmed as of the 2026-01-09 analysis date and no P/E, market cap, or 52-week range was available to any analyst. Sentiment (5.0/10) is a null from vendor tooling failure across Yahoo, StockTwits, and Reddit — no evidence, not balanced evidence. Cash and available funds were not supplied, so affordability of any add is unknown.</p>
+<p>Why Hold rather than Underweight: the conservative case argues for <em>not adding</em> and for <em>adjusting mechanics</em>, both of which I accept; it does not establish that holding a profitable long inside a rising 200 SMA is a mistake. Why not Overweight: nothing in the tape supports committing capital before a close-based confirmation that has not printed.</p>
+<p>What would change the rating: a daily close above 267.5 with the MACD histogram flattening and funding confirmed moves this to Overweight with a staged ~10-unit add (second half above 271.6); a daily close below 250 on expanding volume justifies trimming ~10 units, and a decisive break of the rising 200 SMA at ~232 is a separate Sell decision requiring a fresh debate, not a pre-commitment. A confirmed fiscal-Q4 filing disclosing current-quarter performance — or any real valuation multiple — would also materially change the read, and is currently the single largest gap in the evidence set.</p>
+<p><strong>Price Target</strong>: not provided</p>
+<p><strong>Time Horizon</strong>: 1-3 months (tape-driven; re-review on daily close above 267.5 or below 250)</p>
+<h5>Disclaimer</h5>
+<p>Research output only. User-supplied holdings are unverified. No order is placed and no return is guaranteed.</p>
+</section>
+</main>
+<footer class="credit"><a href="https://github.com/TauricResearch/TradingAgents" rel="noopener">TradingAgents</a> powered by <a class="brand" href="https://github.com/TauricResearch" rel="noopener">Tauric Research</a></footer>
+</div>
+<a class="to-top" href="#top">Top</a>
+</body>
+</html>

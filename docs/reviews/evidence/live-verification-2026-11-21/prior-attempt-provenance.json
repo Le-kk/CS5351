@@ -1,0 +1,7 @@
+{
+  "retained_attempts": 5,
+  "reason": "Earlier same-provider source frozen before the dummy-key fixture fix; all five completed attempts retained, not selected for final-source quality.",
+  "scope": "Prior trial2 did not start because the source-inventory guard refused dispatch. Earlier immutable artifacts retained unchanged; only evidence paths relocated.",
+  "prior_cohort_file": "prior-cohort.json",
+  "prior_inventory_file": "prior-source-inventory.json"
+}

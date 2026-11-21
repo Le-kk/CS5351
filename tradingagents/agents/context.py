@@ -81,7 +81,14 @@ def resolve_instrument_identity(ticker: str) -> dict:
     try:
         return _identity(ticker)
     except Exception as exc:  # noqa: BLE001 — fail open, never block the run
-        logger.debug("Could not resolve instrument identity for %s: %s", ticker, exc)
+        # A vendor/identity exception can echo a credential; redact before logging.
+        from tradingagents.runapi.redact import Redactor
+
+        try:
+            detail = Redactor().diagnostic(exc)
+        except Exception:  # pragma: no cover - defensive only
+            detail = f"{type(exc).__name__}: [redaction unavailable]"
+        logger.debug("Could not resolve instrument identity for %s: %s", ticker, detail)
         return {}
 
 

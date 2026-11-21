@@ -5,6 +5,7 @@ from __future__ import annotations
 from tradingagents.agents.context import (
     get_instrument_context_from_state,
     get_language_instruction,
+    get_portfolio_context_from_state,
     protect_context,
 )
 from tradingagents.agents.schemas import ResearchPlan, render_research_plan
@@ -20,6 +21,10 @@ def create_research_manager(llm):
 
     def research_manager_node(state) -> dict:
         instrument_context = protect_context(get_instrument_context_from_state(state))
+        # The same trusted, user-supplied book the Trader and PM receive. Supplying
+        # the facts and a corrective instruction reduces the chance of an ownership
+        # error in the plan; it does not guarantee the model's wording (R4).
+        portfolio_context = protect_context(get_portfolio_context_from_state(state))
         has_portfolio = bool((state.get("portfolio_context") or "").strip())
         hold_meaning = ("maintain only an explicitly supplied nonzero target position; if flat, remain flat" if has_portfolio else
                         "the evidence supports no new directional action; do not interpret Hold as maintaining an assumed position")
@@ -31,6 +36,8 @@ def create_research_manager(llm):
 
 {instrument_context}
 
+{portfolio_context}
+
 ---
 
 **Rating Scale** (use exactly one):
@@ -41,6 +48,8 @@ def create_research_manager(llm):
 - **Sell**: Strong conviction in the bear thesis; recommend exiting or avoiding the position
 
 The debate always contains conflicting arguments; deciding which side is stronger is the job, so conflict alone is not a reason to Hold. Commit to the side with the stronger case, sized by how decisively it wins. Choose Hold only when the evidence is still balanced after that weighing, or too thin to support a call; do not manufacture a direction to appear decisive. Weigh the bull and bear cases on their merits, independent of which side spoke first or last.
+
+The supplied portfolio facts above are authoritative over any ownership premise stated in the debate or later stages: do not assume a position the caller does not hold, do not describe trimming or retaining a nonexistent position, and state cash or holdings the caller did not supply as unknown rather than zero.
 
 ---
 

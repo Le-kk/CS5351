@@ -110,6 +110,24 @@ def _default_engine_runner(graph, context, config):
     return state
 
 
+def _emit_terminal_once(event_sink, run_context, outcome: str) -> None:
+    """Publish the final terminal to the caller sink after a failed commit (R5).
+
+    A critical publication failure discards the staged tentative terminal, so the
+    sink has no terminal yet; emit the corrected (INCOMPLETE) outcome so the
+    caller sees exactly one terminal that matches the returned result. A sink
+    that already exposed a terminal is left untouched to preserve the
+    single-terminal rule.
+    """
+    if any(entry.get("event") == "run.terminal" for entry in event_sink.events):
+        return
+    # Clear any leftover tentative marker so the terminal check does not reject it.
+    discard = getattr(event_sink, "discard_tentative_terminal", None)
+    if discard is not None:
+        discard()
+    event_sink.emit("output", "run.terminal", outcome)
+
+
 def run_analysis_api(
     run_context,
     *,
@@ -295,11 +313,14 @@ def run_analysis_api(
             analysis_date=run_context.analysis_date, input_mode=run_context.mode.value,
             reason="PERSISTENCE_ERROR",
         )
+        _emit_terminal_once(event_sink, run_context, failed.run_outcome)
         return failed
     except Exception as exc:
         logger.warning("Run artifact rendering or publication failed: %s", redactor.diagnostic(exc))
-        return finalizer.incomplete(
+        failed = finalizer.incomplete(
             run_id=run_context.run_id, ticker=run_context.ticker,
             analysis_date=run_context.analysis_date, input_mode=run_context.mode.value,
             reason="PERSISTENCE_ERROR",
         )
+        _emit_terminal_once(event_sink, run_context, failed.run_outcome)
+        return failed

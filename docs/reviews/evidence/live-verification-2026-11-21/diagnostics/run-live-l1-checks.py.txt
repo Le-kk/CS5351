@@ -1,0 +1,84 @@
+"""Private real-model regression orchestration; no product source modification."""
+from pathlib import Path
+from datetime import UTC, datetime
+from decimal import Decimal
+import hashlib
+import io
+import json
+import logging
+import os
+import sys
+import time
+import argparse
+
+parser=argparse.ArgumentParser();parser.add_argument('--vary-three',action='store_true');args=parser.parse_args()
+root=Path('/home/brian/projects/CS5351');os.chdir(root);os.umask(0o077)
+sys.path.insert(0,str(root/'tests/member_c_verification/live'))
+from dotenv import load_dotenv
+load_dotenv(root/'.env',override=True)
+from tradingagents.default_config import build_default_config
+from tradingagents.llm_clients import create_tier_client
+from tradingagents.llm_clients.api_key_env import get_api_key_env
+from tradingagents.runapi.redact import Redactor
+from tradingagents.runapi.execution import _source_revision,_prompt_hash
+from tradingagents.agents.trader.trader import create_trader
+from tradingagents.portfolio import PortfolioContext
+from runner import PromptCapture
+
+config=build_default_config()
+saved_key=os.getenv(get_api_key_env(config['llm_provider']) or '')
+if not saved_key: raise RuntimeError('Saved school credential unavailable')
+os.environ['DEEPSEEK_API_KEY']=saved_key
+config.update(llm_provider='deepseek',deep_think_provider='deepseek',quick_think_provider='deepseek',
+              llm_max_retries=0,max_tokens=2048,deep_think_backend_url=None,quick_think_backend_url=None)
+redactor=Redactor()
+base=root/'.local-review/live-review-2026-11-21'/('L1-'+datetime.now(UTC).strftime('%Y%m%dT%H%M%SZ'))
+base.mkdir(parents=True,exist_ok=False)
+ledger={'kind':'real-model targeted diagnostic; AI/contextual review, not C acceptance',
+    'provider':'deepseek','model':config['quick_think_llm'],'source_revision':_source_revision(),
+    'prompt_hash':_prompt_hash(['market','social','news','fundamentals']),
+    'trader_source_sha256':hashlib.sha256((root/'tradingagents/agents/trader/trader.py').read_bytes()).hexdigest(),
+    'synthetic_only':True,'credential_files_modified':False,'started':0,'completed':0,'attempts':[]}
+def save():
+    temp=base/'ledger.json.tmp';temp.write_text(json.dumps(redactor.scrub(ledger),indent=2)+'\n');os.replace(temp,base/'ledger.json')
+class NoStructured:
+    def __init__(self,llm): self.llm=llm
+    def with_structured_output(self,*a,**k): raise NotImplementedError('synthetic forcing of unsupported structured binding')
+    def invoke(self,*a,**k): return self.llm.invoke(*a,**k)
+class SafeFormatter(logging.Formatter):
+    def format(self,record): return redactor.scrub(super().format(record))
+book=PortfolioContext.model_validate({'positions':[{'ticker':'AAPL','quantity':40,'average_price':190}]})
+print('PRIVATE_L1_DIRECTORY='+str(base),flush=True);save()
+selected=('structured-1','structured-2','structured-3') if args.vary_three else ('structured-1','structured-2','structured-3','forced-freetext','missing-ATR','zero-ATR')
+for index,kind in enumerate(selected,1):
+    row={'id':kind,'status':'STARTED','started_utc':datetime.now(UTC).isoformat()};ledger['attempts'].append(row);ledger['started']+=1;save()
+    capture=PromptCapture();start=time.monotonic();log=io.StringIO();handler=logging.StreamHandler(log);handler.setFormatter(SafeFormatter())
+    logger=logging.getLogger();prior=logger.handlers[:];logger.handlers=[handler]
+    try:
+        llm=create_tier_client(config,'quick',timeout=60,callbacks=[capture]).get_llm()
+        if kind=='forced-freetext': llm=NoStructured(llm)
+        atr='unavailable; do not infer a value' if kind=='missing-ATR' else ('0 (nonpositive/unusable for ATR ratios)' if kind=='zero-ATR' else '4.39')
+        market=f'SYNTHETIC regression evidence, AAPL as of 2026-01-09. Current close: 258.47 USD. Structural candidate stop: 255.33 USD. ATR(14): {atr}. No other technical or fundamental evidence is supplied.'
+        plan=('**Recommendation**: Hold\nMaintain only the supplied 40 AAPL units; cash is unknown. '
+              'A deliberately defective prior draft labels stop 255.33 as 1.5×ATR (6.6 points) below current close 258.47. '
+              'Check that claim against the technical evidence rather than repeat an unsupported figure. '
+              'State a clear Hold proposal, a structural stop reference and explain any calculated distance; no new orders or outside data.')
+        tag=f' Replay reference {base.name}-{index}; reference is not a financial input.' if args.vary_three else ''
+        state={'company_of_interest':'AAPL','instrument_context':'AAPL, synthetic numerical regression; no external data calls.'+tag,
+               'market_report':market,'investment_plan':plan,'portfolio_context':book.render('AAPL')}
+        output=create_trader(llm)(state)['trader_investment_plan']
+        target=base/(kind+'.md');target.write_text(redactor.scrub(output))
+        row.update(status='COMPLETED',output_file=target.name,model_calls=capture.summary()['model_calls'],
+            elapsed_seconds=round(time.monotonic()-start,3),prompt_capture=capture.summary())
+        ledger['completed']+=1
+    except BaseException as exc:
+        row.update(status='ERROR',error_type=type(exc).__name__,model_calls=capture.summary()['model_calls'])
+        save()
+        if isinstance(exc,(KeyboardInterrupt,SystemExit)): raise
+    finally:
+        logger.handlers=prior;(base/(kind+'.log')).write_text(redactor.scrub(log.getvalue()));save()
+    print(json.dumps({k:row.get(k) for k in ('id','status','model_calls','elapsed_seconds','error_type')}),flush=True)
+ledger['reference_arithmetic']={'distance':str(Decimal('258.47')-Decimal('255.33')),
+    'ATR_multiple':str((Decimal('258.47')-Decimal('255.33'))/Decimal('4.39')),
+    'status':'reference only; inspect output context; do not treat word matching as formal acceptance'}
+save();print('L1_LIVE_CHECKS_FINISHED',flush=True)

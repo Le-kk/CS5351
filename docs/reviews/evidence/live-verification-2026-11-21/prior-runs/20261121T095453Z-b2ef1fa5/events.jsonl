@@ -1,0 +1,6 @@
+{"run_id": "20261121T095453Z-b2ef1fa5", "ticker": "AAPL", "node": "input", "ts": "2026-11-21T10:00:23.596649Z", "elapsed_ms": 0, "event": "input.mode_resolved", "event_outcome": "PORTFOLIO_PROVIDED"}
+{"run_id": "20261121T095453Z-b2ef1fa5", "ticker": "AAPL", "node": "input", "ts": "2026-11-21T10:00:23.596696Z", "elapsed_ms": 0, "event": "input.consent", "event_outcome": "CONFIRMED"}
+{"run_id": "20261121T095453Z-b2ef1fa5", "ticker": "AAPL", "node": "engine", "ts": "2026-11-21T10:00:23.596726Z", "elapsed_ms": 0, "event": "run.started", "event_outcome": "STARTED"}
+{"run_id": "20261121T095453Z-b2ef1fa5", "ticker": "AAPL", "node": "output", "ts": "2026-11-21T10:02:35.426753Z", "elapsed_ms": 131830, "event": "output.check", "event_outcome": "NEEDS_REVIEW"}
+{"run_id": "20261121T095453Z-b2ef1fa5", "ticker": "AAPL", "node": "output", "ts": "2026-11-21T10:02:35.619527Z", "elapsed_ms": 132022, "event": "output.persist", "event_outcome": "STAGED"}
+{"run_id": "20261121T095453Z-b2ef1fa5", "ticker": "AAPL", "node": "output", "ts": "2026-11-21T10:02:35.619616Z", "elapsed_ms": 132022, "event": "run.terminal", "event_outcome": "COMPLETED"}

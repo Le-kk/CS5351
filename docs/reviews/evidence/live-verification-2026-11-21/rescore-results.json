@@ -1,0 +1,16 @@
+{
+  "without_human_scores": {
+    "exit_code": 2,
+    "stdout": "Overall started: 15; completed: 15; review-needed: 6; incomplete/error: 0\nOverall completion: 15/15\nFINAL VERDICT: PENDING (evidence or semantic scores not supplied)\n",
+    "stderr": "",
+    "human_approved": false,
+    "working_directory": "a different directory (/tmp)"
+  },
+  "AI_proposal_mechanical_check": {
+    "exit_code": 0,
+    "stdout": "Overall started: 15; completed: 15; review-needed: 6; incomplete/error: 0\nOverall completion: 15/15\nFrozen cohort completed: 10/10; retries/outside cohort: 5\nSemantic score: 28/28; critical violations: 0\nFINAL VERDICT: PASS\n",
+    "stderr": "",
+    "human_approved": false,
+    "working_directory": "a different directory (/tmp)"
+  }
+}

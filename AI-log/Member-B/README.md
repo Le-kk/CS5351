@@ -9,3 +9,4 @@ These team AI-use records do not, by themselves, establish that the course's aut
 | First message (Hong Kong) | Record | Work covered |
 |---|---|---|
 | 2026-11-18 17:10:54 | [Full available review interaction](2026-11-18_17-10-54.md) | WSL launcher/private configuration, project review, offline verification, live diagnostics, F9 ownership defect, and human decisions. |
+| 2026-11-21 16:17:01 | [Full available OpenCode repair interaction](2026-11-21_16-17-01.md) | R1–R5 implementation and reviews, approved L1/L2 prompt repairs, live-harness corrections, numeric-extension planning; 701 native messages in refreshed snapshot. |

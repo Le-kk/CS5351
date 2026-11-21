@@ -1,0 +1,89 @@
+{
+  "kind": "real-model synthetic dated-tool-packet diagnostic; not C acceptance",
+  "provider": "deepseek",
+  "model": "CS5351/DeepSeek-V4-Flash",
+  "analysis_date": "2026-01-09",
+  "source_revision": "git:9b04330+dirty",
+  "prompt_hash": "e2a2cf0009aa5ae498b232c77b7fefa11a549118802eece6332fb59c1cd0b864",
+  "analyst_source_sha256": "fe68c66e5215b37b3fabf5ab6337763b168ab8ff2ec9324102fc1055fe9c52e4",
+  "path": "actual Fundamentals Analyst + existing tool-round WRAP_UP path; no external financial-data requests",
+  "started": 3,
+  "completed": 3,
+  "attempts": [
+    {
+      "id": "post-cutoff-filing-1",
+      "status": "COMPLETED",
+      "started_utc": "2026-11-21T10:13:20.594775+00:00",
+      "report_file": "post-cutoff-filing-1.md",
+      "model_calls": 1,
+      "elapsed_seconds": 13.551,
+      "prompt_capture": {
+        "model_calls": 1,
+        "calls": [
+          {
+            "prompt_sha256": "c9070adca18fd80e422894959d1c196b19d6ebc84ab8cbbad29c7ff4d1132315",
+            "prompt_chars": 7175,
+            "messages": 8,
+            "marker_hits": {}
+          }
+        ],
+        "prompt_chars_total": 7175,
+        "distinct_prompt_digests": [
+          "c9070adca18fd80e422894959d1c196b19d6ebc84ab8cbbad29c7ff4d1132315"
+        ],
+        "marker_hits_total": {},
+        "marker_reached_model": {}
+      }
+    },
+    {
+      "id": "post-cutoff-filing-2",
+      "status": "COMPLETED",
+      "started_utc": "2026-11-21T10:13:34.146594+00:00",
+      "report_file": "post-cutoff-filing-2.md",
+      "model_calls": 1,
+      "elapsed_seconds": 10.957,
+      "prompt_capture": {
+        "model_calls": 1,
+        "calls": [
+          {
+            "prompt_sha256": "1695c85f9dd86a58f36035fad2b59b25defa2773907512da8cd89bc8d9fffd55",
+            "prompt_chars": 7175,
+            "messages": 8,
+            "marker_hits": {}
+          }
+        ],
+        "prompt_chars_total": 7175,
+        "distinct_prompt_digests": [
+          "1695c85f9dd86a58f36035fad2b59b25defa2773907512da8cd89bc8d9fffd55"
+        ],
+        "marker_hits_total": {},
+        "marker_reached_model": {}
+      }
+    },
+    {
+      "id": "post-cutoff-filing-3",
+      "status": "COMPLETED",
+      "started_utc": "2026-11-21T10:13:45.115485+00:00",
+      "report_file": "post-cutoff-filing-3.md",
+      "model_calls": 1,
+      "elapsed_seconds": 9.068,
+      "prompt_capture": {
+        "model_calls": 1,
+        "calls": [
+          {
+            "prompt_sha256": "6df8473c6d9c56636dfa6fef7cd20219ff710442c2473cc6dc361b6963d8c410",
+            "prompt_chars": 7175,
+            "messages": 8,
+            "marker_hits": {}
+          }
+        ],
+        "prompt_chars_total": 7175,
+        "distinct_prompt_digests": [
+          "6df8473c6d9c56636dfa6fef7cd20219ff710442c2473cc6dc361b6963d8c410"
+        ],
+        "marker_hits_total": {},
+        "marker_reached_model": {}
+      }
+    }
+  ]
+}

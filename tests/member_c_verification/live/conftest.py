@@ -83,6 +83,30 @@ def _restore_live_env():
     for name, value in values.items():
         if name.startswith("TRADINGAGENTS_") and value:
             os.environ[name] = value
+    _apply_llm_provider_override(os.environ)
+
+
+def _apply_llm_provider_override(environ):
+    """Apply ``GOV004_LLM_PROVIDER`` AFTER the saved config is restored.
+
+    A small, explicit harness-only control so a caller can select the live
+    *provider* (e.g. the already-saved school endpoint via the ``deepseek``
+    adapter) without editing ``.env``. It changes the provider only: the base
+    provider is set and both tier overrides are aligned to it so the effective
+    adapter for every tier is the requested provider. It does **not** rewrite the
+    model IDs -- saved or caller-selected IDs still reach the strict fixed-config
+    validation, so a bad ID causes zero dispatch rather than being silently
+    repaired. It never copies/migrates credentials and never lowers thresholds;
+    when unset the saved settings are used unchanged.
+    """
+    provider = environ.get("GOV004_LLM_PROVIDER", "").strip()
+    if not provider:
+        return
+    environ["TRADINGAGENTS_LLM_PROVIDER"] = provider
+    # Align both tier providers explicitly so a stale saved tier override cannot
+    # keep a different adapter while the base provider reports the requested one.
+    environ["TRADINGAGENTS_DEEP_THINK_PROVIDER"] = provider
+    environ["TRADINGAGENTS_QUICK_THINK_PROVIDER"] = provider
 
 
 @pytest.fixture(autouse=True)

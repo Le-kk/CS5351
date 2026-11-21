@@ -69,6 +69,13 @@ Brian selected **C2** because of its **explicit input/snapshot boundary, test se
 Positive: single provenance source; deterministic check authority; consent is an explicit transition; shared execution service gives full-coverage API path; preserved engine signature.
 Negative/risks: the raw low-level engine primitive can bypass the boundary and its product use requires A's approval (R-API); full-64 fingerprint canonicalization must be exactly implemented (`interface-contracts.md` §2.2); prompt/context wording changes are required (not optional).
 
+## Repairs (2026-11-21, R1–R5)
+
+These bounded repairs keep the selected architecture; see [remediation record](../../reviews/remediation-r1-r5-2026-11-21.md).
+
+- **R4:** the Research Manager now receives the same protected `get_portfolio_context_from_state` block as the Trader and Portfolio Manager, so its investment plan cannot assert a nonexistent position or treat unknown input as flat. It adds a stage-appropriate instruction to correct conflicting upstream ownership premises; the five-tier research vocabulary and three-action Trader vocabulary are unchanged and no rating is forced.
+- **R5:** publication stages a private tentative terminal on the `EventSink` and only commits the caller-visible terminal after the single directory rename succeeds; a critical publication failure exposes exactly one matching `INCOMPLETE` terminal. Terminal-append failure alone still preserves the logical outcome with `terminal_event.durable=false`; report/manifest remain critical and the single-terminal rule is preserved.
+
 ## Reopening conditions
 
 - Instructor mandates a single orchestration façade → revisit C3.

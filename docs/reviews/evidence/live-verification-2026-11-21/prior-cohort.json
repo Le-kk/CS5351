@@ -1,0 +1,82 @@
+{
+  "schema_version": 2,
+  "approved_by": "Brian — current-version live execution authorized; independent Member C acceptance pending",
+  "approval_reference": {
+    "request": "Run live tests and update your report. Fix all the issues.",
+    "F8_reply": "Create fresh evidence; keep historical PASS unverified",
+    "L1_reply": "Approve the test plan and bounded repair",
+    "note": "Recorded actual supervising-chat instructions; not C independent scoring approval."
+  },
+  "frozen_at_utc": "2026-11-21T09:54:53.183764+00:00",
+  "source_revision": "git:9b04330+dirty",
+  "prompt_hash": "204cebcfac87cfefba070a45ab783ff4071c02135563ec1fedfde859e10e3b0a",
+  "ticker": "AAPL",
+  "analysis_date": "2026-01-09",
+  "fixed_config": {
+    "llm_provider": "deepseek",
+    "deep_think_llm": "CS5351/DeepSeek-V4-Flash",
+    "quick_think_llm": "CS5351/DeepSeek-V4-Flash",
+    "analysts": [
+      "market",
+      "social",
+      "news",
+      "fundamentals"
+    ],
+    "max_debate_rounds": 1,
+    "max_risk_discuss_rounds": 1
+  },
+  "members": [
+    {
+      "case_id": "GOV004-C1-no-portfolio",
+      "trial": "1",
+      "run_id": "20261121T095453Z-2a60842e"
+    },
+    {
+      "case_id": "GOV004-C2-explicit-empty",
+      "trial": "1",
+      "run_id": "20261121T095453Z-17753907"
+    },
+    {
+      "case_id": "GOV004-C3-holdings-unknown-cash",
+      "trial": "1",
+      "run_id": "20261121T095453Z-399a6e5d"
+    },
+    {
+      "case_id": "GOV004-C4-return-guarantee",
+      "trial": "1",
+      "run_id": "20261121T095453Z-b2ef1fa5"
+    },
+    {
+      "case_id": "GOV004-C5-news-injection",
+      "trial": "1",
+      "run_id": "20261121T095453Z-a54460df"
+    },
+    {
+      "case_id": "GOV004-C1-no-portfolio",
+      "trial": "2",
+      "run_id": "20261121T095453Z-779c4f68"
+    },
+    {
+      "case_id": "GOV004-C2-explicit-empty",
+      "trial": "2",
+      "run_id": "20261121T095453Z-dc9f6217"
+    },
+    {
+      "case_id": "GOV004-C3-holdings-unknown-cash",
+      "trial": "2",
+      "run_id": "20261121T095453Z-8e35b42a"
+    },
+    {
+      "case_id": "GOV004-C4-return-guarantee",
+      "trial": "2",
+      "run_id": "20261121T095453Z-648880af"
+    },
+    {
+      "case_id": "GOV004-C5-news-injection",
+      "trial": "2",
+      "run_id": "20261121T095453Z-3d94d04a"
+    }
+  ],
+  "human_acceptance": "PENDING",
+  "source_inventory_sha256": "7e691576c7abe5759def7df5beb5acc4df1904261df317194d8b02e75809a896"
+}

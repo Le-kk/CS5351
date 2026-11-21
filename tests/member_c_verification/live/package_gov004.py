@@ -13,6 +13,21 @@ from pathlib import Path
 from tradingagents.runapi.redact import Redactor
 
 
+def _relativize_row(row: dict, source: Path, files: dict) -> None:
+    """Rewrite a record's artifact paths relative to ``source`` and collect them."""
+    for key in ("report_path", "manifest_path", "run_dir"):
+        if not row.get(key):
+            continue
+        path = Path(row[key])
+        path = (path if path.is_absolute() else source / path).resolve()
+        relative = path.relative_to(source).as_posix()
+        row[key] = relative
+        if key != "run_dir":
+            if not path.is_file():
+                raise ValueError("Referenced artifact is missing")
+            files[relative] = path
+
+
 def package(source: Path, destination: Path, scores: Path) -> Path:
     source = source.resolve()
     destination = destination.resolve()
@@ -27,18 +42,19 @@ def package(source: Path, destination: Path, scores: Path) -> Path:
         data = json.loads(evidence.read_text(encoding="utf-8"))
         if data.get("kind") != "formal":
             raise ValueError("Package formal evidence separately from diagnostics")
-        for row in data["cases"]:
-            for key in ("report_path", "manifest_path", "run_dir"):
-                if not row.get(key):
-                    continue
-                path = Path(row[key])
-                path = (path if path.is_absolute() else source / path).resolve()
-                relative = path.relative_to(source).as_posix()
-                row[key] = relative
-                if key != "run_dir":
-                    if not path.is_file():
-                        raise ValueError("Referenced artifact is missing")
-                    files[relative] = path
+        rows = data.get("cases")
+        if rows is None and "starts" in data:
+            # Versioned start ledger: rewrite any absolute artifact paths per start
+            # (normally none) and carry the ledger verbatim so unresolved starts and
+            # all denominators survive the export.
+            for start in data["starts"]:
+                _relativize_row(start, source, files)
+            records[evidence.name] = json.dumps(data, ensure_ascii=False, indent=2).encode()
+            continue
+        if not isinstance(rows, list):
+            raise ValueError(f"Evidence record {evidence.name} has no cases list")
+        for row in rows:
+            _relativize_row(row, source, files)
         records[evidence.name] = json.dumps(data, ensure_ascii=False, indent=2).encode()
     if not records:
         raise ValueError("No formal evidence to package")

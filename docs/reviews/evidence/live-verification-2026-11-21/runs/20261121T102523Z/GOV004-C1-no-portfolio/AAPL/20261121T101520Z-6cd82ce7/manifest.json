@@ -1,0 +1,58 @@
+{
+  "analysis_date": "2026-01-09",
+  "as_of_basis": null,
+  "basename": null,
+  "code_version": "0.7.1",
+  "effective_config": {
+    "analysts": [
+      "market",
+      "social",
+      "news",
+      "fundamentals"
+    ],
+    "compaction_threshold_tokens": 19200,
+    "context_cap_tokens": 24000,
+    "data_vendors": {
+      "core_stock_apis": "yfinance",
+      "fundamental_data": "sec_edgar,yfinance",
+      "macro_data": "fred",
+      "news_data": "yfinance",
+      "prediction_markets": "polymarket",
+      "technical_indicators": "yfinance"
+    },
+    "deep_think_llm": "CS5351/DeepSeek-V4-Flash",
+    "deep_think_provider": "deepseek",
+    "llm_provider": "deepseek",
+    "max_debate_rounds": 1,
+    "max_risk_discuss_rounds": 1,
+    "max_tokens": null,
+    "output_language": "English",
+    "quick_think_llm": "CS5351/DeepSeek-V4-Flash",
+    "quick_think_provider": "deepseek",
+    "temperature": null,
+    "tool_vendors": {}
+  },
+  "end_ts_utc": "2026-11-21T10:27:15.767381Z",
+  "final_rating": "Underweight",
+  "findings": [],
+  "fingerprint_sha256": null,
+  "input_mode": "NO_PORTFOLIO",
+  "output_check": "PASSED",
+  "portfolio_as_of": null,
+  "prompt_hash": "e2a2cf0009aa5ae498b232c77b7fefa11a549118802eece6332fb59c1cd0b864",
+  "report_paths": {
+    "html": "reports/complete_report.html",
+    "markdown": "reports/complete_report.md"
+  },
+  "run_id": "20261121T101520Z-6cd82ce7",
+  "run_outcome": "COMPLETED",
+  "schema_version": "1",
+  "source_revision": "git:9b04330+dirty",
+  "start_ts_utc": "2026-11-21T10:25:23.528669Z",
+  "stop_reason": null,
+  "terminal_event": {
+    "durable": true,
+    "logical": "run.terminal"
+  },
+  "ticker": "AAPL"
+}

@@ -38,6 +38,17 @@ def create_trader(llm):
                 "Ground concrete price levels (entry, stop-loss, position sizing) in the technical "
                 "market report's price structure -- current price, support/resistance, ATR, and "
                 "volatility -- and use the research plan for direction and strategy. "
+                "When you state a distance or an ATR multiple, compute it yourself from the "
+                "explicit quoted values: distance = abs(anchor price - level) and multiple = "
+                "distance / positive ATR; do not copy an inconsistent figure from the research "
+                "plan or other upstream prose (correct it instead of repeating it). Compare the "
+                "level with the anchor before calling it above or below: a level below the anchor "
+                "is below it, and a level above the anchor is above it. If a needed "
+                "input such as ATR is missing or nonpositive, omit the multiple or say it cannot "
+                "be calculated rather than inventing one. Do not describe unrealised "
+                "mark-to-market gains as locked, guaranteed, or risk-free. Keep derived numbers "
+                "to the ones you actually need for the proposal; avoid unnecessary extra "
+                "calculations. "
             )
             report_section = f"Technical Market Report:\n{market_report}\n\n"
         else:

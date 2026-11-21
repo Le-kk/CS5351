@@ -1,0 +1,169 @@
+{
+  "kind": "real-model targeted diagnostic; AI/contextual review, not C acceptance",
+  "provider": "deepseek",
+  "model": "CS5351/DeepSeek-V4-Flash",
+  "source_revision": "git:9b04330+dirty",
+  "prompt_hash": "204cebcfac87cfefba070a45ab783ff4071c02135563ec1fedfde859e10e3b0a",
+  "trader_source_sha256": "b0051b7dda4783fc598ca4fc43f08fef997051b4af79312c3e2047a0f3e2fd9b",
+  "synthetic_only": true,
+  "credential_files_modified": false,
+  "started": 6,
+  "completed": 6,
+  "attempts": [
+    {
+      "id": "structured-1",
+      "status": "COMPLETED",
+      "started_utc": "2026-11-21T09:52:44.583605+00:00",
+      "output_file": "structured-1.md",
+      "model_calls": 1,
+      "elapsed_seconds": 3.163,
+      "prompt_capture": {
+        "model_calls": 1,
+        "calls": [
+          {
+            "prompt_sha256": "bb0f96d0cf9e138abe972005ceac638f77ded6f3760ae474dedf1b7d1b3729c7",
+            "prompt_chars": 3519,
+            "messages": 2,
+            "marker_hits": {}
+          }
+        ],
+        "prompt_chars_total": 3519,
+        "distinct_prompt_digests": [
+          "bb0f96d0cf9e138abe972005ceac638f77ded6f3760ae474dedf1b7d1b3729c7"
+        ],
+        "marker_hits_total": {},
+        "marker_reached_model": {}
+      }
+    },
+    {
+      "id": "structured-2",
+      "status": "COMPLETED",
+      "started_utc": "2026-11-21T09:52:47.748248+00:00",
+      "output_file": "structured-2.md",
+      "model_calls": 1,
+      "elapsed_seconds": 0.193,
+      "prompt_capture": {
+        "model_calls": 1,
+        "calls": [
+          {
+            "prompt_sha256": "bb0f96d0cf9e138abe972005ceac638f77ded6f3760ae474dedf1b7d1b3729c7",
+            "prompt_chars": 3519,
+            "messages": 2,
+            "marker_hits": {}
+          }
+        ],
+        "prompt_chars_total": 3519,
+        "distinct_prompt_digests": [
+          "bb0f96d0cf9e138abe972005ceac638f77ded6f3760ae474dedf1b7d1b3729c7"
+        ],
+        "marker_hits_total": {},
+        "marker_reached_model": {}
+      }
+    },
+    {
+      "id": "structured-3",
+      "status": "COMPLETED",
+      "started_utc": "2026-11-21T09:52:47.954325+00:00",
+      "output_file": "structured-3.md",
+      "model_calls": 1,
+      "elapsed_seconds": 0.175,
+      "prompt_capture": {
+        "model_calls": 1,
+        "calls": [
+          {
+            "prompt_sha256": "bb0f96d0cf9e138abe972005ceac638f77ded6f3760ae474dedf1b7d1b3729c7",
+            "prompt_chars": 3519,
+            "messages": 2,
+            "marker_hits": {}
+          }
+        ],
+        "prompt_chars_total": 3519,
+        "distinct_prompt_digests": [
+          "bb0f96d0cf9e138abe972005ceac638f77ded6f3760ae474dedf1b7d1b3729c7"
+        ],
+        "marker_hits_total": {},
+        "marker_reached_model": {}
+      }
+    },
+    {
+      "id": "forced-freetext",
+      "status": "COMPLETED",
+      "started_utc": "2026-11-21T09:52:48.130797+00:00",
+      "output_file": "forced-freetext.md",
+      "model_calls": 1,
+      "elapsed_seconds": 3.073,
+      "prompt_capture": {
+        "model_calls": 1,
+        "calls": [
+          {
+            "prompt_sha256": "bb0f96d0cf9e138abe972005ceac638f77ded6f3760ae474dedf1b7d1b3729c7",
+            "prompt_chars": 3519,
+            "messages": 2,
+            "marker_hits": {}
+          }
+        ],
+        "prompt_chars_total": 3519,
+        "distinct_prompt_digests": [
+          "bb0f96d0cf9e138abe972005ceac638f77ded6f3760ae474dedf1b7d1b3729c7"
+        ],
+        "marker_hits_total": {},
+        "marker_reached_model": {}
+      }
+    },
+    {
+      "id": "missing-ATR",
+      "status": "COMPLETED",
+      "started_utc": "2026-11-21T09:52:51.205884+00:00",
+      "output_file": "missing-ATR.md",
+      "model_calls": 1,
+      "elapsed_seconds": 2.236,
+      "prompt_capture": {
+        "model_calls": 1,
+        "calls": [
+          {
+            "prompt_sha256": "38317c4c2d8266971b4f32c5315a9427bd010d71bc8d7e7d92ed9c178825dbfe",
+            "prompt_chars": 3548,
+            "messages": 2,
+            "marker_hits": {}
+          }
+        ],
+        "prompt_chars_total": 3548,
+        "distinct_prompt_digests": [
+          "38317c4c2d8266971b4f32c5315a9427bd010d71bc8d7e7d92ed9c178825dbfe"
+        ],
+        "marker_hits_total": {},
+        "marker_reached_model": {}
+      }
+    },
+    {
+      "id": "zero-ATR",
+      "status": "COMPLETED",
+      "started_utc": "2026-11-21T09:52:53.454950+00:00",
+      "output_file": "zero-ATR.md",
+      "model_calls": 1,
+      "elapsed_seconds": 2.491,
+      "prompt_capture": {
+        "model_calls": 1,
+        "calls": [
+          {
+            "prompt_sha256": "4fd28ac86790531e6566a32e7d3c7562a6e15a14ef1c0d15ffffd01f92b09607",
+            "prompt_chars": 3554,
+            "messages": 2,
+            "marker_hits": {}
+          }
+        ],
+        "prompt_chars_total": 3554,
+        "distinct_prompt_digests": [
+          "4fd28ac86790531e6566a32e7d3c7562a6e15a14ef1c0d15ffffd01f92b09607"
+        ],
+        "marker_hits_total": {},
+        "marker_reached_model": {}
+      }
+    }
+  ],
+  "reference_arithmetic": {
+    "distance": "3.14",
+    "ATR_multiple": "0.7152619589977220956719817768",
+    "status": "reference only; inspect output context; do not treat word matching as formal acceptance"
+  }
+}

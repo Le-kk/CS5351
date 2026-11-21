@@ -28,11 +28,13 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from cases import CASES  # noqa: E402
-from runner import outcome_to_dict, run_case  # noqa: E402
+from replay_store import dispatch_slots  # noqa: E402
+from runner import _model_config_from_env, _source_revision, outcome_to_dict, run_case  # noqa: E402
 
 pytestmark = pytest.mark.live
 
-EVIDENCE_ROOT = Path(__file__).resolve().parent / "evidence"
+EVIDENCE_ROOT = Path(os.environ.get(
+    "GOV004_EVIDENCE_DIR", Path(__file__).resolve().parent / "evidence")).resolve()
 
 
 def _require_live_config():
@@ -79,39 +81,90 @@ def test_gov004_live_replay(request):
 
     cohort = None
     if trial:
+        from score_gov004 import (
+            FIXED_CONFIG,
+            _tier_providers_match_fixed,
+            validate_formal_cohort,
+        )
         cohort_path = EVIDENCE_ROOT / "cohort.json"
         if not cohort_path.is_file():
             pytest.fail("Formal replay requires a reviewed cohort.json frozen before starting")
         cohort = json.loads(cohort_path.read_text(encoding="utf-8"))
+        # Validate the full frozen cohort (schema/controls/slots/IDs) BEFORE any
+        # graph call, comparing the declared source revision/prompt hash with the
+        # actual current source inventory, so a stale cohort spends zero calls.
+        from tradingagents.runapi.execution import _prompt_hash
+        try:
+            controls = validate_formal_cohort(
+                cohort,
+                expected_source_revision=_source_revision(),
+                expected_prompt_hash=_prompt_hash(list(_model_config_from_env()["analysts"])),
+            )
+        except ValueError as exc:
+            pytest.fail(f"Formal cohort rejected before dispatch: {exc}")
+        # The declared controls are authoritative; refuse to run a different date.
+        if (ticker, analysis_date) != (controls["ticker"], controls["analysis_date"]):
+            pytest.fail(
+                "GOV004_TICKER/GOV004_DATE disagree with the frozen cohort controls; "
+                "refusing to spend calls the scorer will reject")
+        model_config = _model_config_from_env()
+        if any(model_config.get(k) != v for k, v in FIXED_CONFIG.items()):
+            pytest.fail("Live provider/model configuration disagrees with the fixed formal config")
+        if not _tier_providers_match_fixed(model_config):
+            pytest.fail("A model tier uses a different provider than the fixed formal config; "
+                        "refusing to spend calls")
     cases = _selected_cases()
-    outcomes = []
+
+    # Build the whole planned cohort before dispatch so preflight can validate it.
+    planned = []
     for case in cases:
-        case_dir = run_root / case.case_id
-        case_dir.mkdir(parents=True, exist_ok=True)
         planned_id = None
         if cohort:
-            members = [m for m in cohort["members"] if m["case_id"] == case.case_id and str(m["trial"]) == trial]
+            members = [m for m in cohort["members"]
+                       if m["case_id"] == case.case_id and str(m["trial"]) == trial]
             if len(members) != 1:
                 pytest.fail("Cohort must contain exactly one slot for each case and trial")
             planned_id = members[0]["run_id"]
-            # Replaying the same slot must not replace a prior started attempt.
-            for saved in EVIDENCE_ROOT.glob("gov004_*.json"):
-                if any(row.get("run_id") == planned_id for row in json.loads(saved.read_text()).get("cases", [])):
-                    pytest.fail("Cohort slot was already started; record retries separately")
+        planned.append({"case_id": case.case_id, "trial": str(trial or "1"),
+                        "run_id": planned_id, "case": case,
+                        "model_config": _model_config_from_env() if trial else None,
+                        "controls": {
+                            "ticker": controls["ticker"],
+                            "analysis_date": controls["analysis_date"],
+                            "source_revision": controls.get("source_revision"),
+                            "prompt_hash": controls.get("prompt_hash"),
+                        } if trial else None})
+
+    def _run_slot(slot):
+        case_dir = run_root / slot["case_id"]
+        case_dir.mkdir(parents=True, exist_ok=True)
         outcome = run_case(
-            case, results_dir=str(case_dir), ticker=ticker, analysis_date=analysis_date, run_id=planned_id,
+            slot["case"], results_dir=str(case_dir), ticker=ticker,
+            analysis_date=analysis_date, run_id=slot["run_id"],
         )
-        record = outcome_to_dict(outcome)
-        if trial is not None:
-            record["trial"] = trial
-        outcomes.append(record)
-        # Emit a short, body-free line per case for the console.
+        return outcome_to_dict(outcome, evidence_root=EVIDENCE_ROOT)
+
+    # Formal replays use durable per-attempt accounting (R3): preflight the whole
+    # cohort before any case runs, claim each start before dispatch and record
+    # outcomes independently. Pilots are diagnostics and stay outside this system.
+    if trial is not None:
+        try:
+            outcomes = dispatch_slots(EVIDENCE_ROOT, planned, _run_slot,
+                                      started_at_fn=lambda: datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ"))
+        except Exception as exc:  # preflight failure: nothing dispatched
+            pytest.fail(f"Cohort preflight rejected the replay: {exc}")
+    else:
+        outcomes = []
+        for slot in planned:
+            outcomes.append(_run_slot({**slot, "run_id": None}))
+
+    for record in outcomes:
         print(
-            f"[GOV-004] {outcome.case_id} run={outcome.run_id} "
-            f"outcome={outcome.outcome} stop={outcome.stop_reason} "
-            f"rating={outcome.final_rating} check={outcome.output_check} "
-            f"challenge_reached={outcome.challenge_reached_model} "
-            f"calls={outcome.prompt_capture.get('model_calls')} trial={trial}"
+            f"[GOV-004] {record['case_id']} run={record['run_id']} "
+            f"outcome={record['outcome']} stop={record['stop_reason']} "
+            f"rating={record['final_rating']} check={record['output_check']} "
+            f"challenge_reached={record.get('challenge_reached_model')} "
+            f"calls={(record.get('prompt_capture') or {}).get('model_calls')} trial={trial}"
         )
 
     evidence = {

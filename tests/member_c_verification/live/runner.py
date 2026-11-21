@@ -132,19 +132,36 @@ class CaseOutcome:
     notes: list[str] = field(default_factory=list)
 
 
+def _safe_backend_host(backend: str | None) -> str | None:
+    """The backend URL's hostname only -- never userinfo, port, path or query.
+
+    Uses a real URL parser so ``user:password@host`` credentials, query strings
+    (which may carry keys) and paths never reach the recorded config. A missing or
+    malformed URL records ``None`` rather than echoing the raw value.
+    """
+    if not backend:
+        return None
+    from urllib.parse import urlsplit
+
+    try:
+        host = urlsplit(backend).hostname
+    except ValueError:
+        return None
+    return host or None
+
+
 def _model_config_from_env() -> dict[str, Any]:
     """The supplied live configuration, read from the environment.
 
-    Records only *safe* identifiers (provider, model IDs, whether a backend URL
-    is set) -- never the URL itself with embedded credentials, never a key.
+    Records only *safe* identifiers (provider, model IDs, the backend hostname)
+    -- never the URL with embedded credentials, query or path, never a key.
     """
-    backend = os.getenv("TRADINGAGENTS_LLM_BACKEND_URL")
-    backend_host = None
-    if backend:
-        match = re.match(r"https?://([^/]+)", backend)
-        backend_host = match.group(1) if match else "<unparsed>"
+    backend_host = _safe_backend_host(os.getenv("TRADINGAGENTS_LLM_BACKEND_URL"))
+    provider = os.getenv("TRADINGAGENTS_LLM_PROVIDER")
     return {
-        "llm_provider": os.getenv("TRADINGAGENTS_LLM_PROVIDER"),
+        "llm_provider": provider,
+        "deep_think_provider": os.getenv("TRADINGAGENTS_DEEP_THINK_PROVIDER") or provider,
+        "quick_think_provider": os.getenv("TRADINGAGENTS_QUICK_THINK_PROVIDER") or provider,
         "deep_think_llm": os.getenv("TRADINGAGENTS_DEEP_THINK_LLM"),
         "quick_think_llm": os.getenv("TRADINGAGENTS_QUICK_THINK_LLM"),
         "backend_host": backend_host,
@@ -161,6 +178,12 @@ def _live_config(results_dir: str) -> dict[str, Any]:
     config["llm_provider"] = os.getenv("TRADINGAGENTS_LLM_PROVIDER")
     config["deep_think_llm"] = os.getenv("TRADINGAGENTS_DEEP_THINK_LLM")
     config["quick_think_llm"] = os.getenv("TRADINGAGENTS_QUICK_THINK_LLM")
+    # Set the tier providers explicitly from the environment so the effective
+    # adapter matches the recorded config, even if DEFAULT_CONFIG (imported
+    # before any provider override) folded a stale tier override. An empty value
+    # means "inherit the base provider".
+    config["deep_think_provider"] = os.getenv("TRADINGAGENTS_DEEP_THINK_PROVIDER") or None
+    config["quick_think_provider"] = os.getenv("TRADINGAGENTS_QUICK_THINK_PROVIDER") or None
     backend = os.getenv("TRADINGAGENTS_LLM_BACKEND_URL")
     if backend:
         config["backend_url"] = backend
@@ -248,6 +271,9 @@ def run_case(case: Case, *, results_dir: str, ticker: str, analysis_date: str, r
                 selected_analysts=config["selected_analysts"],
                 callbacks=[capture],
             )
+    except (KeyboardInterrupt, SystemExit):
+        # An operator stop must propagate; it is not a case "error" to be retried.
+        raise
     except BaseException as exc:  # retain exposure/engine failures, never drop them
         error = _scrub(f"{type(exc).__name__}: {exc}")
     wall = time.monotonic() - started
@@ -305,13 +331,25 @@ def _source_revision() -> str:
         return "unknown"
 
 
-def outcome_to_dict(outcome: CaseOutcome) -> dict[str, Any]:
+def outcome_to_dict(outcome: CaseOutcome, evidence_root: str | Path | None = None) -> dict[str, Any]:
+    """Serialize one outcome with relative artifact paths and integrity hashes.
+
+    ``evidence_root`` selects the directory that relative paths are computed
+    against; it defaults to the adjacent ``evidence/`` for backward compatibility.
+    A caller replaying into an isolated root (e.g. ``GOV004_EVIDENCE_DIR``) passes
+    that root so artifacts from another folder still normalize correctly. Any
+    artifact path outside the chosen root is rejected.
+    """
     record = asdict(outcome)
-    root = Path(__file__).resolve().parent / "evidence"
+    root = Path(evidence_root) if evidence_root is not None else (
+        Path(__file__).resolve().parent / "evidence")
+    root = root.resolve()
     for key in ("report_path", "manifest_path", "run_dir"):
         if record.get(key):
             path = Path(record[key]).resolve()
-            record[key] = path.relative_to(root.resolve()).as_posix()
+            if not path.is_relative_to(root):
+                raise ValueError(f"{key} is outside the evidence root")
+            record[key] = path.relative_to(root).as_posix()
             if key != "run_dir":
                 record[key.replace("_path", "_sha256")] = hashlib.sha256(path.read_bytes()).hexdigest()
     from tradingagents.runapi.redact import Redactor

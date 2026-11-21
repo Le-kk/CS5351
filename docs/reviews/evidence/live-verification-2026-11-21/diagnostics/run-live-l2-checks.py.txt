@@ -1,0 +1,80 @@
+"""Private live source-vintage regressions through the real analyst wrap-up path."""
+from pathlib import Path
+from datetime import UTC, datetime
+import hashlib
+import json
+import os
+import sys
+import time
+import argparse
+
+parser=argparse.ArgumentParser();parser.add_argument('--future-three',action='store_true');args=parser.parse_args()
+root=Path('/home/brian/projects/CS5351');os.chdir(root);os.umask(0o077)
+sys.path.insert(0,str(root/'tests/member_c_verification/live'))
+from dotenv import load_dotenv
+load_dotenv(root/'.env',override=True)
+from tradingagents.default_config import build_default_config
+from tradingagents.llm_clients import create_tier_client
+from tradingagents.llm_clients.api_key_env import get_api_key_env
+from tradingagents.runapi.redact import Redactor
+from tradingagents.runapi.execution import _source_revision,_prompt_hash
+from tradingagents.agents.analysts.fundamentals_analyst import create_fundamentals_analyst
+from tradingagents.agents.analysts.turn import WRAP_UP
+from langchain_core.messages import HumanMessage,ToolMessage
+from runner import PromptCapture
+
+config=build_default_config();saved_key=os.getenv(get_api_key_env(config['llm_provider']) or '')
+if not saved_key: raise RuntimeError('Saved school credential unavailable')
+os.environ['DEEPSEEK_API_KEY']=saved_key
+config.update(llm_provider='deepseek',deep_think_provider='deepseek',quick_think_provider='deepseek',
+    deep_think_backend_url=None,quick_think_backend_url=None,llm_max_retries=0,max_tokens=3072)
+redactor=Redactor()
+base=root/'.local-review/live-review-2026-11-21'/('L2-'+datetime.now(UTC).strftime('%Y%m%dT%H%M%SZ'))
+base.mkdir(parents=True,exist_ok=False)
+ledger={'kind':'real-model synthetic dated-tool-packet diagnostic; not C acceptance','provider':'deepseek',
+    'model':config['quick_think_llm'],'analysis_date':'2026-01-09','source_revision':_source_revision(),
+    'prompt_hash':_prompt_hash(['market','social','news','fundamentals']),
+    'analyst_source_sha256':hashlib.sha256((root/'tradingagents/agents/analysts/fundamentals_analyst.py').read_bytes()).hexdigest(),
+    'path':'actual Fundamentals Analyst + existing tool-round WRAP_UP path; no external financial-data requests',
+    'started':0,'completed':0,'attempts':[]}
+def save():
+    temp=base/'ledger.json.tmp';temp.write_text(json.dumps(redactor.scrub(ledger),indent=2)+'\n');os.replace(temp,base/'ledger.json')
+tools=('get_fundamentals','get_balance_sheet','get_cashflow','get_income_statement','get_insider_transactions')
+print('PRIVATE_L2_DIRECTORY='+str(base),flush=True);save()
+selected=('post-cutoff-filing-1','post-cutoff-filing-2','post-cutoff-filing-3') if args.future_three else ('old-period-1','old-period-2','old-period-3','missing-period','post-cutoff-filing')
+for index,kind in enumerate(selected,1):
+    row={'id':kind,'status':'STARTED','started_utc':datetime.now(UTC).isoformat()};ledger['attempts'].append(row);ledger['started']+=1;save()
+    capture=PromptCapture();start=time.monotonic()
+    try:
+        llm=create_tier_client(config,'quick',timeout=60,callbacks=[capture]).get_llm()
+        packet={'synthetic':True,'ticker':'AAPL','analysis_cutoff':'2026-01-09','earnings_release_calendar':'not supplied',
+            'valuation':'not available','insider_transactions':'not available',
+            'reported_income':[{'fiscal_label':'FY2025 Q1','period_end':'2024-12-28','filed':'2025-01-31',
+                'revenue_usd_billions':124.3,'EPS_USD':2.40},
+                {'fiscal_label':'FY2025 Q3','period_end':'2025-06-28','filed':'2025-08-01','revenue_usd_billions':94.0}],
+            'balance_sheet':[{'period_end':'2025-09-27','filed':'2025-10-31','cash_usd_billions':35.9}],
+            'missing_income_periods':['2025-09-27','2025-12-31'],
+            'cashflow':'not supplied'}
+        if kind=='missing-period':
+            packet.update(reported_income=[],balance_sheet=[],cashflow='unavailable',
+                missing_income_periods=['all requested periods unavailable'])
+        if kind.startswith('post-cutoff-filing'):
+            packet['reported_income'].append({'fiscal_label':'FY2026 Q1','period_end':'2025-12-31',
+                'filed':'2026-01-29','revenue_usd_billions':999.0,'availability_note':'after analysis cutoff; must not be used as already known'})
+        (base/(kind+'-input.json')).write_text(json.dumps(packet,indent=2)+'\n')
+        messages=[HumanMessage(content=f'Synthetic source-vintage regression reference {base.name}-{index}. Analyze AAPL as of 2026-01-09 using only the supplied tool results. This reference is not a financial fact.')]
+        messages.extend(ToolMessage(content=json.dumps(packet),name=name,tool_call_id=f'L2-{index}-{j}') for j,name in enumerate(tools))
+        messages.append(HumanMessage(content=WRAP_UP))
+        state={'company_of_interest':'AAPL','trade_date':'2026-01-09',
+            'instrument_context':'AAPL, synthetic source-vintage regression; no external data requests.',
+            'messages':messages}
+        report=create_fundamentals_analyst(llm)(state)['fundamentals_report']
+        target=base/(kind+'.md');target.write_text(redactor.scrub(report))
+        row.update(status='COMPLETED',report_file=target.name,model_calls=capture.summary()['model_calls'],
+            elapsed_seconds=round(time.monotonic()-start,3),prompt_capture=capture.summary());ledger['completed']+=1
+    except BaseException as exc:
+        row.update(status='ERROR',error_type=type(exc).__name__);save()
+        if isinstance(exc,(KeyboardInterrupt,SystemExit)): raise
+    finally: save()
+    print(json.dumps({k:row.get(k) for k in ('id','status','model_calls','elapsed_seconds','error_type')}),flush=True)
+print('L2_LIVE_CHECKS_FINISHED',flush=True)

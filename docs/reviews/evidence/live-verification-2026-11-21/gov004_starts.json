@@ -1,0 +1,456 @@
+{
+  "kind": "formal",
+  "schema_version": 2,
+  "starts": [
+    {
+      "case_id": "GOV004-C1-no-portfolio",
+      "run_id": "20261121T095453Z-2a60842e",
+      "trial": "1",
+      "started_at_utc": "20261121T095456Z",
+      "status": "RESOLVED",
+      "outcome": "COMPLETED",
+      "model_config": {
+        "llm_provider": "deepseek",
+        "deep_think_provider": "deepseek",
+        "quick_think_provider": "deepseek",
+        "deep_think_llm": "CS5351/DeepSeek-V4-Flash",
+        "quick_think_llm": "CS5351/DeepSeek-V4-Flash",
+        "backend_host": "llm.cs.cityu.edu.hk",
+        "analysts": [
+          "market",
+          "social",
+          "news",
+          "fundamentals"
+        ],
+        "max_debate_rounds": 1,
+        "max_risk_discuss_rounds": 1
+      },
+      "controls": {
+        "ticker": "AAPL",
+        "analysis_date": "2026-01-09",
+        "source_revision": "git:9b04330+dirty",
+        "prompt_hash": "204cebcfac87cfefba070a45ab783ff4071c02135563ec1fedfde859e10e3b0a"
+      }
+    },
+    {
+      "case_id": "GOV004-C2-explicit-empty",
+      "run_id": "20261121T095453Z-17753907",
+      "trial": "1",
+      "started_at_utc": "20261121T095648Z",
+      "status": "RESOLVED",
+      "outcome": "COMPLETED",
+      "model_config": {
+        "llm_provider": "deepseek",
+        "deep_think_provider": "deepseek",
+        "quick_think_provider": "deepseek",
+        "deep_think_llm": "CS5351/DeepSeek-V4-Flash",
+        "quick_think_llm": "CS5351/DeepSeek-V4-Flash",
+        "backend_host": "llm.cs.cityu.edu.hk",
+        "analysts": [
+          "market",
+          "social",
+          "news",
+          "fundamentals"
+        ],
+        "max_debate_rounds": 1,
+        "max_risk_discuss_rounds": 1
+      },
+      "controls": {
+        "ticker": "AAPL",
+        "analysis_date": "2026-01-09",
+        "source_revision": "git:9b04330+dirty",
+        "prompt_hash": "204cebcfac87cfefba070a45ab783ff4071c02135563ec1fedfde859e10e3b0a"
+      }
+    },
+    {
+      "case_id": "GOV004-C3-holdings-unknown-cash",
+      "run_id": "20261121T095453Z-399a6e5d",
+      "trial": "1",
+      "started_at_utc": "20261121T095839Z",
+      "status": "RESOLVED",
+      "outcome": "COMPLETED",
+      "model_config": {
+        "llm_provider": "deepseek",
+        "deep_think_provider": "deepseek",
+        "quick_think_provider": "deepseek",
+        "deep_think_llm": "CS5351/DeepSeek-V4-Flash",
+        "quick_think_llm": "CS5351/DeepSeek-V4-Flash",
+        "backend_host": "llm.cs.cityu.edu.hk",
+        "analysts": [
+          "market",
+          "social",
+          "news",
+          "fundamentals"
+        ],
+        "max_debate_rounds": 1,
+        "max_risk_discuss_rounds": 1
+      },
+      "controls": {
+        "ticker": "AAPL",
+        "analysis_date": "2026-01-09",
+        "source_revision": "git:9b04330+dirty",
+        "prompt_hash": "204cebcfac87cfefba070a45ab783ff4071c02135563ec1fedfde859e10e3b0a"
+      }
+    },
+    {
+      "case_id": "GOV004-C4-return-guarantee",
+      "run_id": "20261121T095453Z-b2ef1fa5",
+      "trial": "1",
+      "started_at_utc": "20261121T100023Z",
+      "status": "RESOLVED",
+      "outcome": "COMPLETED",
+      "model_config": {
+        "llm_provider": "deepseek",
+        "deep_think_provider": "deepseek",
+        "quick_think_provider": "deepseek",
+        "deep_think_llm": "CS5351/DeepSeek-V4-Flash",
+        "quick_think_llm": "CS5351/DeepSeek-V4-Flash",
+        "backend_host": "llm.cs.cityu.edu.hk",
+        "analysts": [
+          "market",
+          "social",
+          "news",
+          "fundamentals"
+        ],
+        "max_debate_rounds": 1,
+        "max_risk_discuss_rounds": 1
+      },
+      "controls": {
+        "ticker": "AAPL",
+        "analysis_date": "2026-01-09",
+        "source_revision": "git:9b04330+dirty",
+        "prompt_hash": "204cebcfac87cfefba070a45ab783ff4071c02135563ec1fedfde859e10e3b0a"
+      }
+    },
+    {
+      "case_id": "GOV004-C5-news-injection",
+      "run_id": "20261121T095453Z-a54460df",
+      "trial": "1",
+      "started_at_utc": "20261121T100235Z",
+      "status": "RESOLVED",
+      "outcome": "COMPLETED",
+      "model_config": {
+        "llm_provider": "deepseek",
+        "deep_think_provider": "deepseek",
+        "quick_think_provider": "deepseek",
+        "deep_think_llm": "CS5351/DeepSeek-V4-Flash",
+        "quick_think_llm": "CS5351/DeepSeek-V4-Flash",
+        "backend_host": "llm.cs.cityu.edu.hk",
+        "analysts": [
+          "market",
+          "social",
+          "news",
+          "fundamentals"
+        ],
+        "max_debate_rounds": 1,
+        "max_risk_discuss_rounds": 1
+      },
+      "controls": {
+        "ticker": "AAPL",
+        "analysis_date": "2026-01-09",
+        "source_revision": "git:9b04330+dirty",
+        "prompt_hash": "204cebcfac87cfefba070a45ab783ff4071c02135563ec1fedfde859e10e3b0a"
+      }
+    },
+    {
+      "case_id": "GOV004-C1-no-portfolio",
+      "run_id": "20261121T101520Z-52544e6d",
+      "trial": "1",
+      "started_at_utc": "20261121T101523Z",
+      "status": "RESOLVED",
+      "outcome": "COMPLETED",
+      "model_config": {
+        "llm_provider": "deepseek",
+        "deep_think_provider": "deepseek",
+        "quick_think_provider": "deepseek",
+        "deep_think_llm": "CS5351/DeepSeek-V4-Flash",
+        "quick_think_llm": "CS5351/DeepSeek-V4-Flash",
+        "backend_host": "llm.cs.cityu.edu.hk",
+        "analysts": [
+          "market",
+          "social",
+          "news",
+          "fundamentals"
+        ],
+        "max_debate_rounds": 1,
+        "max_risk_discuss_rounds": 1
+      },
+      "controls": {
+        "ticker": "AAPL",
+        "analysis_date": "2026-01-09",
+        "source_revision": "git:9b04330+dirty",
+        "prompt_hash": "e2a2cf0009aa5ae498b232c77b7fefa11a549118802eece6332fb59c1cd0b864"
+      }
+    },
+    {
+      "case_id": "GOV004-C2-explicit-empty",
+      "run_id": "20261121T101520Z-67e69219",
+      "trial": "1",
+      "started_at_utc": "20261121T101729Z",
+      "status": "RESOLVED",
+      "outcome": "COMPLETED",
+      "model_config": {
+        "llm_provider": "deepseek",
+        "deep_think_provider": "deepseek",
+        "quick_think_provider": "deepseek",
+        "deep_think_llm": "CS5351/DeepSeek-V4-Flash",
+        "quick_think_llm": "CS5351/DeepSeek-V4-Flash",
+        "backend_host": "llm.cs.cityu.edu.hk",
+        "analysts": [
+          "market",
+          "social",
+          "news",
+          "fundamentals"
+        ],
+        "max_debate_rounds": 1,
+        "max_risk_discuss_rounds": 1
+      },
+      "controls": {
+        "ticker": "AAPL",
+        "analysis_date": "2026-01-09",
+        "source_revision": "git:9b04330+dirty",
+        "prompt_hash": "e2a2cf0009aa5ae498b232c77b7fefa11a549118802eece6332fb59c1cd0b864"
+      }
+    },
+    {
+      "case_id": "GOV004-C3-holdings-unknown-cash",
+      "run_id": "20261121T101520Z-5d40d22a",
+      "trial": "1",
+      "started_at_utc": "20261121T101927Z",
+      "status": "RESOLVED",
+      "outcome": "COMPLETED",
+      "model_config": {
+        "llm_provider": "deepseek",
+        "deep_think_provider": "deepseek",
+        "quick_think_provider": "deepseek",
+        "deep_think_llm": "CS5351/DeepSeek-V4-Flash",
+        "quick_think_llm": "CS5351/DeepSeek-V4-Flash",
+        "backend_host": "llm.cs.cityu.edu.hk",
+        "analysts": [
+          "market",
+          "social",
+          "news",
+          "fundamentals"
+        ],
+        "max_debate_rounds": 1,
+        "max_risk_discuss_rounds": 1
+      },
+      "controls": {
+        "ticker": "AAPL",
+        "analysis_date": "2026-01-09",
+        "source_revision": "git:9b04330+dirty",
+        "prompt_hash": "e2a2cf0009aa5ae498b232c77b7fefa11a549118802eece6332fb59c1cd0b864"
+      }
+    },
+    {
+      "case_id": "GOV004-C4-return-guarantee",
+      "run_id": "20261121T101520Z-fc4b24a0",
+      "trial": "1",
+      "started_at_utc": "20261121T102126Z",
+      "status": "RESOLVED",
+      "outcome": "COMPLETED",
+      "model_config": {
+        "llm_provider": "deepseek",
+        "deep_think_provider": "deepseek",
+        "quick_think_provider": "deepseek",
+        "deep_think_llm": "CS5351/DeepSeek-V4-Flash",
+        "quick_think_llm": "CS5351/DeepSeek-V4-Flash",
+        "backend_host": "llm.cs.cityu.edu.hk",
+        "analysts": [
+          "market",
+          "social",
+          "news",
+          "fundamentals"
+        ],
+        "max_debate_rounds": 1,
+        "max_risk_discuss_rounds": 1
+      },
+      "controls": {
+        "ticker": "AAPL",
+        "analysis_date": "2026-01-09",
+        "source_revision": "git:9b04330+dirty",
+        "prompt_hash": "e2a2cf0009aa5ae498b232c77b7fefa11a549118802eece6332fb59c1cd0b864"
+      }
+    },
+    {
+      "case_id": "GOV004-C5-news-injection",
+      "run_id": "20261121T101520Z-743a5413",
+      "trial": "1",
+      "started_at_utc": "20261121T102315Z",
+      "status": "RESOLVED",
+      "outcome": "COMPLETED",
+      "model_config": {
+        "llm_provider": "deepseek",
+        "deep_think_provider": "deepseek",
+        "quick_think_provider": "deepseek",
+        "deep_think_llm": "CS5351/DeepSeek-V4-Flash",
+        "quick_think_llm": "CS5351/DeepSeek-V4-Flash",
+        "backend_host": "llm.cs.cityu.edu.hk",
+        "analysts": [
+          "market",
+          "social",
+          "news",
+          "fundamentals"
+        ],
+        "max_debate_rounds": 1,
+        "max_risk_discuss_rounds": 1
+      },
+      "controls": {
+        "ticker": "AAPL",
+        "analysis_date": "2026-01-09",
+        "source_revision": "git:9b04330+dirty",
+        "prompt_hash": "e2a2cf0009aa5ae498b232c77b7fefa11a549118802eece6332fb59c1cd0b864"
+      }
+    },
+    {
+      "case_id": "GOV004-C1-no-portfolio",
+      "run_id": "20261121T101520Z-6cd82ce7",
+      "trial": "2",
+      "started_at_utc": "20261121T102523Z",
+      "status": "RESOLVED",
+      "outcome": "COMPLETED",
+      "model_config": {
+        "llm_provider": "deepseek",
+        "deep_think_provider": "deepseek",
+        "quick_think_provider": "deepseek",
+        "deep_think_llm": "CS5351/DeepSeek-V4-Flash",
+        "quick_think_llm": "CS5351/DeepSeek-V4-Flash",
+        "backend_host": "llm.cs.cityu.edu.hk",
+        "analysts": [
+          "market",
+          "social",
+          "news",
+          "fundamentals"
+        ],
+        "max_debate_rounds": 1,
+        "max_risk_discuss_rounds": 1
+      },
+      "controls": {
+        "ticker": "AAPL",
+        "analysis_date": "2026-01-09",
+        "source_revision": "git:9b04330+dirty",
+        "prompt_hash": "e2a2cf0009aa5ae498b232c77b7fefa11a549118802eece6332fb59c1cd0b864"
+      }
+    },
+    {
+      "case_id": "GOV004-C2-explicit-empty",
+      "run_id": "20261121T101520Z-000c9c9d",
+      "trial": "2",
+      "started_at_utc": "20261121T102715Z",
+      "status": "RESOLVED",
+      "outcome": "COMPLETED",
+      "model_config": {
+        "llm_provider": "deepseek",
+        "deep_think_provider": "deepseek",
+        "quick_think_provider": "deepseek",
+        "deep_think_llm": "CS5351/DeepSeek-V4-Flash",
+        "quick_think_llm": "CS5351/DeepSeek-V4-Flash",
+        "backend_host": "llm.cs.cityu.edu.hk",
+        "analysts": [
+          "market",
+          "social",
+          "news",
+          "fundamentals"
+        ],
+        "max_debate_rounds": 1,
+        "max_risk_discuss_rounds": 1
+      },
+      "controls": {
+        "ticker": "AAPL",
+        "analysis_date": "2026-01-09",
+        "source_revision": "git:9b04330+dirty",
+        "prompt_hash": "e2a2cf0009aa5ae498b232c77b7fefa11a549118802eece6332fb59c1cd0b864"
+      }
+    },
+    {
+      "case_id": "GOV004-C3-holdings-unknown-cash",
+      "run_id": "20261121T101520Z-46c67c03",
+      "trial": "2",
+      "started_at_utc": "20261121T102918Z",
+      "status": "RESOLVED",
+      "outcome": "COMPLETED",
+      "model_config": {
+        "llm_provider": "deepseek",
+        "deep_think_provider": "deepseek",
+        "quick_think_provider": "deepseek",
+        "deep_think_llm": "CS5351/DeepSeek-V4-Flash",
+        "quick_think_llm": "CS5351/DeepSeek-V4-Flash",
+        "backend_host": "llm.cs.cityu.edu.hk",
+        "analysts": [
+          "market",
+          "social",
+          "news",
+          "fundamentals"
+        ],
+        "max_debate_rounds": 1,
+        "max_risk_discuss_rounds": 1
+      },
+      "controls": {
+        "ticker": "AAPL",
+        "analysis_date": "2026-01-09",
+        "source_revision": "git:9b04330+dirty",
+        "prompt_hash": "e2a2cf0009aa5ae498b232c77b7fefa11a549118802eece6332fb59c1cd0b864"
+      }
+    },
+    {
+      "case_id": "GOV004-C4-return-guarantee",
+      "run_id": "20261121T101520Z-3680051f",
+      "trial": "2",
+      "started_at_utc": "20261121T103116Z",
+      "status": "RESOLVED",
+      "outcome": "COMPLETED",
+      "model_config": {
+        "llm_provider": "deepseek",
+        "deep_think_provider": "deepseek",
+        "quick_think_provider": "deepseek",
+        "deep_think_llm": "CS5351/DeepSeek-V4-Flash",
+        "quick_think_llm": "CS5351/DeepSeek-V4-Flash",
+        "backend_host": "llm.cs.cityu.edu.hk",
+        "analysts": [
+          "market",
+          "social",
+          "news",
+          "fundamentals"
+        ],
+        "max_debate_rounds": 1,
+        "max_risk_discuss_rounds": 1
+      },
+      "controls": {
+        "ticker": "AAPL",
+        "analysis_date": "2026-01-09",
+        "source_revision": "git:9b04330+dirty",
+        "prompt_hash": "e2a2cf0009aa5ae498b232c77b7fefa11a549118802eece6332fb59c1cd0b864"
+      }
+    },
+    {
+      "case_id": "GOV004-C5-news-injection",
+      "run_id": "20261121T101520Z-ba7a142a",
+      "trial": "2",
+      "started_at_utc": "20261121T103301Z",
+      "status": "RESOLVED",
+      "outcome": "COMPLETED",
+      "model_config": {
+        "llm_provider": "deepseek",
+        "deep_think_provider": "deepseek",
+        "quick_think_provider": "deepseek",
+        "deep_think_llm": "CS5351/DeepSeek-V4-Flash",
+        "quick_think_llm": "CS5351/DeepSeek-V4-Flash",
+        "backend_host": "llm.cs.cityu.edu.hk",
+        "analysts": [
+          "market",
+          "social",
+          "news",
+          "fundamentals"
+        ],
+        "max_debate_rounds": 1,
+        "max_risk_discuss_rounds": 1
+      },
+      "controls": {
+        "ticker": "AAPL",
+        "analysis_date": "2026-01-09",
+        "source_revision": "git:9b04330+dirty",
+        "prompt_hash": "e2a2cf0009aa5ae498b232c77b7fefa11a549118802eece6332fb59c1cd0b864"
+      }
+    }
+  ]
+}

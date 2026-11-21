@@ -1,0 +1,139 @@
+{
+  "kind": "real-model synthetic dated-tool-packet diagnostic; not C acceptance",
+  "provider": "deepseek",
+  "model": "CS5351/DeepSeek-V4-Flash",
+  "analysis_date": "2026-01-09",
+  "source_revision": "git:9b04330+dirty",
+  "prompt_hash": "bbc9032c3235658ebddb28dab899937125b320f74a74ede7665dcfc6e50585e8",
+  "analyst_source_sha256": "9962efc908e3ef687c3b6f2b8d77cd3e48faf5d574306fcefa40a00e3c711ffe",
+  "path": "actual Fundamentals Analyst + existing tool-round WRAP_UP path; no external financial-data requests",
+  "started": 5,
+  "completed": 5,
+  "attempts": [
+    {
+      "id": "old-period-1",
+      "status": "COMPLETED",
+      "started_utc": "2026-11-21T10:09:15.151352+00:00",
+      "report_file": "old-period-1.md",
+      "model_calls": 1,
+      "elapsed_seconds": 11.415,
+      "prompt_capture": {
+        "model_calls": 1,
+        "calls": [
+          {
+            "prompt_sha256": "a80831415396443b0b37a29aef18255474856dc740c79e1bebd3d19e8910293f",
+            "prompt_chars": 5824,
+            "messages": 8,
+            "marker_hits": {}
+          }
+        ],
+        "prompt_chars_total": 5824,
+        "distinct_prompt_digests": [
+          "a80831415396443b0b37a29aef18255474856dc740c79e1bebd3d19e8910293f"
+        ],
+        "marker_hits_total": {},
+        "marker_reached_model": {}
+      }
+    },
+    {
+      "id": "old-period-2",
+      "status": "COMPLETED",
+      "started_utc": "2026-11-21T10:09:26.567692+00:00",
+      "report_file": "old-period-2.md",
+      "model_calls": 1,
+      "elapsed_seconds": 9.007,
+      "prompt_capture": {
+        "model_calls": 1,
+        "calls": [
+          {
+            "prompt_sha256": "3bf8421ef845a7efca5f674fc640498e9d3d07335a0ee80973caf01e943ad0ab",
+            "prompt_chars": 5824,
+            "messages": 8,
+            "marker_hits": {}
+          }
+        ],
+        "prompt_chars_total": 5824,
+        "distinct_prompt_digests": [
+          "3bf8421ef845a7efca5f674fc640498e9d3d07335a0ee80973caf01e943ad0ab"
+        ],
+        "marker_hits_total": {},
+        "marker_reached_model": {}
+      }
+    },
+    {
+      "id": "old-period-3",
+      "status": "COMPLETED",
+      "started_utc": "2026-11-21T10:09:35.576077+00:00",
+      "report_file": "old-period-3.md",
+      "model_calls": 1,
+      "elapsed_seconds": 12.698,
+      "prompt_capture": {
+        "model_calls": 1,
+        "calls": [
+          {
+            "prompt_sha256": "0f3115a170bee0a75d3fff5f5d35d52fe8a654d5c934d59d4f483325de50ac57",
+            "prompt_chars": 5824,
+            "messages": 8,
+            "marker_hits": {}
+          }
+        ],
+        "prompt_chars_total": 5824,
+        "distinct_prompt_digests": [
+          "0f3115a170bee0a75d3fff5f5d35d52fe8a654d5c934d59d4f483325de50ac57"
+        ],
+        "marker_hits_total": {},
+        "marker_reached_model": {}
+      }
+    },
+    {
+      "id": "missing-period",
+      "status": "COMPLETED",
+      "started_utc": "2026-11-21T10:09:48.292724+00:00",
+      "report_file": "missing-period.md",
+      "model_calls": 1,
+      "elapsed_seconds": 6.499,
+      "prompt_capture": {
+        "model_calls": 1,
+        "calls": [
+          {
+            "prompt_sha256": "27bcfa59ecef1781ad0d46bc4570c5a37e03a47e67540217d605e0d879b144a5",
+            "prompt_chars": 4279,
+            "messages": 8,
+            "marker_hits": {}
+          }
+        ],
+        "prompt_chars_total": 4279,
+        "distinct_prompt_digests": [
+          "27bcfa59ecef1781ad0d46bc4570c5a37e03a47e67540217d605e0d879b144a5"
+        ],
+        "marker_hits_total": {},
+        "marker_reached_model": {}
+      }
+    },
+    {
+      "id": "post-cutoff-filing",
+      "status": "COMPLETED",
+      "started_utc": "2026-11-21T10:09:54.793552+00:00",
+      "report_file": "post-cutoff-filing.md",
+      "model_calls": 1,
+      "elapsed_seconds": 9.475,
+      "prompt_capture": {
+        "model_calls": 1,
+        "calls": [
+          {
+            "prompt_sha256": "d2107d553a683bcf0bd5be5113960c5ac28eb6469fd9f172f9715999d63a7760",
+            "prompt_chars": 6794,
+            "messages": 8,
+            "marker_hits": {}
+          }
+        ],
+        "prompt_chars_total": 6794,
+        "distinct_prompt_digests": [
+          "d2107d553a683bcf0bd5be5113960c5ac28eb6469fd9f172f9715999d63a7760"
+        ],
+        "marker_hits_total": {},
+        "marker_reached_model": {}
+      }
+    }
+  ]
+}

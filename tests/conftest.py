@@ -109,7 +109,12 @@ _API_KEY_ENV_VARS = (
 
 
 @pytest.fixture(autouse=True)
-def _dummy_api_keys(monkeypatch):
+def _dummy_api_keys(request, monkeypatch):
+    # A live, explicitly-opted-in run must use only the caller's real credentials:
+    # injecting a "placeholder" value would enter the Redactor's secret inventory
+    # (redacting benign words) and give unconfigured providers fake keys.
+    if request.node.get_closest_marker("live") and os.getenv("GOV004_LIVE", "").strip() == "1":
+        return
     for env_var in _API_KEY_ENV_VARS:
         # `or` not a .get default: an env var present but empty (e.g. a key left
         # blank in a .env copied from .env.example) must still get the placeholder.
