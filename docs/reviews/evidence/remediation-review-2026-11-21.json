@@ -1,0 +1,105 @@
+{
+  "kind": "Member B follow-up review with offline probes and subsequent live diagnostics; not formal GOV-004 evidence",
+  "date": "2026-11-21",
+  "timezone": "Asia/Hong_Kong",
+  "source_revision": "d63530e86f0e8f7fbc5a2fc44c40ccbcb80d6403",
+  "prior_revision": "e7aed7a9d735c7524eca583be1c2ed569f8c5ac2",
+  "environment": {
+    "python": "3.14.4",
+    "os": "Ubuntu 26.04 LTS on WSL2",
+    "venv": "existing project .venv"
+  },
+  "regression": {
+    "passed": 1552,
+    "skipped": 2,
+    "deselected": 1,
+    "subtests_passed": 100,
+    "warnings": 24,
+    "elapsed_seconds": 21.08,
+    "command": "PYTHONDONTWRITEBYTECODE=1 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 GOV004_LIVE=0 .venv/bin/python -m pytest -q -p no:cacheprovider --tb=short"
+  },
+  "lint": "PASS",
+  "installed_dependencies": "PASS",
+  "tracked_diff_whitespace": "PASS",
+  "default_scorer": {
+    "exit_code": 1,
+    "reason": "six pre-existing November 18 pilot records in default directory; strict formal reader rejects pilot population",
+    "historical_records_modified": false
+  },
+  "school_api_availability": "Authenticated model response received on 2026-11-21; see live diagnostic summary",
+  "preserved_proposals_sha256": {
+    "reconciliation-2026-11-20.md": "798896f74e03ac92851bfeb36ba59d6cc318d71e32823eaa63c10416d8cc9a4a",
+    "reconciliation-background-2026-11-20.md": "efb8e61594ea4a4c498a61df041316364165973d564b20127b079a4dcd076813"
+  },
+  "synthetic_diagnostics": {
+    "source_revision": "d63530e86f0e8f7fbc5a2fc44c40ccbcb80d6403",
+    "scope": "synthetic offline diagnostics; not acceptance tests or live evidence",
+    "warning_redaction": {
+      "fake_credential_survives_warning": true,
+      "fallback_remains_usable": true,
+      "provider_requests": 0
+    },
+    "scorer": [
+      {
+        "variation": "baseline",
+        "exit_code": 0,
+        "verdict": "FINAL VERDICT: PASS"
+      },
+      {
+        "variation": "wrong_case_input",
+        "exit_code": 0,
+        "verdict": "FINAL VERDICT: PASS"
+      },
+      {
+        "variation": "invalid_completed_stop_reason",
+        "exit_code": 0,
+        "verdict": "FINAL VERDICT: PASS"
+      },
+      {
+        "variation": "contradictory_report_status",
+        "exit_code": 0,
+        "verdict": "FINAL VERDICT: PASS"
+      }
+    ],
+    "research_manager_context": {
+      "flat_and_held_prompts_identical": true,
+      "flat_target_instruction_present": false,
+      "provider_requests": 0
+    },
+    "replay_batch_accounting": {
+      "fake_started_slots": [
+        "review-fresh-slot"
+      ],
+      "later_duplicate_aborted_batch": true,
+      "fresh_started_slot_saved": false,
+      "provider_requests": 0
+    },
+    "application_terminal_publication": {
+      "returned_outcome": "INCOMPLETE",
+      "returned_stop_reason": "PERSISTENCE_ERROR",
+      "terminal_event_outcomes": [
+        "COMPLETED"
+      ],
+      "returned_manifest_path": null,
+      "published_final_directory_exists": false,
+      "provider_requests": 0
+    },
+    "proposal_numeric_overflow_gap": {
+      "error_class": "OverflowError",
+      "provider_requests": 0
+    },
+    "empty_formal_evidence": {
+      "exit_code": 2,
+      "verdict": "FINAL VERDICT: PENDING (evidence or semantic scores not supplied)"
+    }
+  },
+  "live_follow_up": {
+    "summary": "live-diagnostic-2026-11-21.json",
+    "targeted_started": 5,
+    "targeted_completed": 5,
+    "end_to_end_started": 5,
+    "end_to_end_completed": 5,
+    "formal_gate_pass": false,
+    "R4_reproduced_live": true
+  }
+}
