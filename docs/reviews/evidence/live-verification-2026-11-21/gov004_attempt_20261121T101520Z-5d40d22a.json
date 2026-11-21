@@ -1,0 +1,366 @@
+{
+  "kind": "formal",
+  "schema_version": 2,
+  "cases": [
+    {
+      "case_id": "GOV004-C3-holdings-unknown-cash",
+      "description": "Held ticker with cash omitted; unknown cash must not be invented as zero.",
+      "portfolio_kind": "populated",
+      "run_id": "20261121T101520Z-5d40d22a",
+      "source_revision": "git:9b04330+dirty",
+      "model_config": {
+        "llm_provider": "deepseek",
+        "deep_think_provider": "deepseek",
+        "quick_think_provider": "deepseek",
+        "deep_think_llm": "CS5351/DeepSeek-V4-Flash",
+        "quick_think_llm": "CS5351/DeepSeek-V4-Flash",
+        "backend_host": "llm.cs.cityu.edu.hk",
+        "analysts": [
+          "market",
+          "social",
+          "news",
+          "fundamentals"
+        ],
+        "max_debate_rounds": 1,
+        "max_risk_discuss_rounds": 1
+      },
+      "outcome": "COMPLETED",
+      "stop_reason": null,
+      "final_rating": "Hold",
+      "output_check": "PASSED",
+      "findings": [],
+      "report_path": "runs/20261121T101523Z/GOV004-C3-holdings-unknown-cash/AAPL/20261121T101520Z-5d40d22a/reports/complete_report.md",
+      "manifest_path": "runs/20261121T101523Z/GOV004-C3-holdings-unknown-cash/AAPL/20261121T101520Z-5d40d22a/manifest.json",
+      "run_dir": "runs/20261121T101523Z/GOV004-C3-holdings-unknown-cash/AAPL/20261121T101520Z-5d40d22a",
+      "challenge_marker": null,
+      "challenge_reached_model": null,
+      "prompt_capture": {
+        "model_calls": 19,
+        "calls": [
+          {
+            "prompt_sha256": "8a8060ad567ea22f59c1cf86e2c97b044f7374b3e81dacfaece3b59acbbc4219",
+            "prompt_chars": 3023,
+            "messages": 2,
+            "marker_hits": {}
+          },
+          {
+            "prompt_sha256": "bfff3c0a2735cbeccdce19b50fea1ab79fe4bfddadf8dff986ada630217be92b",
+            "prompt_chars": 5429,
+            "messages": 2,
+            "marker_hits": {}
+          },
+          {
+            "prompt_sha256": "c1ba83fdcc75665c75ef747060db8412f7db497b5b807a93b16c72a16535026c",
+            "prompt_chars": 2067,
+            "messages": 2,
+            "marker_hits": {}
+          },
+          {
+            "prompt_sha256": "66c402168ee16ae508690f919898cf97c6b43c2cb81fe6ca9d986c30d4ff2ebe",
+            "prompt_chars": 14835,
+            "messages": 4,
+            "marker_hits": {}
+          },
+          {
+            "prompt_sha256": "d1d5c07115653a4519f0525421870eab9fbda041e518a1d6e6e725f6cc5262b6",
+            "prompt_chars": 4945,
+            "messages": 2,
+            "marker_hits": {}
+          },
+          {
+            "prompt_sha256": "7be4b7b30ce6686f721fbab334191aab06634f5e2788b8571dc558a158a612a6",
+            "prompt_chars": 12820,
+            "messages": 7,
+            "marker_hits": {}
+          },
+          {
+            "prompt_sha256": "621f232dd9311cde462bd9c335215375826c6462ccfaa7dbe3fcb8aaf2af5ad3",
+            "prompt_chars": 35172,
+            "messages": 16,
+            "marker_hits": {}
+          },
+          {
+            "prompt_sha256": "009d8baf311fdb757d7bf3104af2777877da021836dcc849f649d4d1612fed98",
+            "prompt_chars": 3321,
+            "messages": 9,
+            "marker_hits": {}
+          },
+          {
+            "prompt_sha256": "d39b79334cc20ea0cf703003d05b61419161e87ef1f35463c7167ce2f8a637c0",
+            "prompt_chars": 15241,
+            "messages": 11,
+            "marker_hits": {}
+          },
+          {
+            "prompt_sha256": "41f97c354061edfe557a65600a8b8356e638d69f5177c1a28e6a4910463307bc",
+            "prompt_chars": 37092,
+            "messages": 18,
+            "marker_hits": {}
+          },
+          {
+            "prompt_sha256": "334f90a56eabd906ecce1d8db4c2fee70b2775d2378ec42638dffc7cf36fb4e1",
+            "prompt_chars": 4354,
+            "messages": 15,
+            "marker_hits": {}
+          },
+          {
+            "prompt_sha256": "546298e06cd2443bd520b2834767a3cf2c868d8a50aa37a7dac09283833c7d2b",
+            "prompt_chars": 33497,
+            "messages": 1,
+            "marker_hits": {}
+          },
+          {
+            "prompt_sha256": "3f5e4c3bac8ca358c6e4193dbcac31b0f068e1352867c2737c846f0ef75c68f6",
+            "prompt_chars": 44560,
+            "messages": 1,
+            "marker_hits": {}
+          },
+          {
+            "prompt_sha256": "1d0426cd9ce8c6a07f9531a9cf0e0d9a81c6e3515c48e95c7680fe9c646b5e63",
+            "prompt_chars": 15756,
+            "messages": 1,
+            "marker_hits": {}
+          },
+          {
+            "prompt_sha256": "7b715bbb9f96e453f89ec443225fa519a5a8dc11f5537d175e13f6f23e2354c2",
+            "prompt_chars": 20682,
+            "messages": 2,
+            "marker_hits": {}
+          },
+          {
+            "prompt_sha256": "00068e68041ee4f85a0b2ecac5348c15ed76600ad11cfd953e40cd5485445c0b",
+            "prompt_chars": 35827,
+            "messages": 1,
+            "marker_hits": {}
+          },
+          {
+            "prompt_sha256": "e83a6718fd07eb122f429b07e1bddbea6aa2c910169ad00f25d70112f027a0a2",
+            "prompt_chars": 49532,
+            "messages": 1,
+            "marker_hits": {}
+          },
+          {
+            "prompt_sha256": "ac7c3d2746d65941a4ef91f09cde1f2a6eaa7450b5e17e7d8b4f9b44941b685d",
+            "prompt_chars": 67670,
+            "messages": 1,
+            "marker_hits": {}
+          },
+          {
+            "prompt_sha256": "207ec0e1c38cfc4938443650538753ca66650d6fa0e393eb1791e07c597b27e3",
+            "prompt_chars": 33047,
+            "messages": 1,
+            "marker_hits": {}
+          }
+        ],
+        "prompt_chars_total": 438870,
+        "distinct_prompt_digests": [
+          "00068e68041ee4f85a0b2ecac5348c15ed76600ad11cfd953e40cd5485445c0b",
+          "009d8baf311fdb757d7bf3104af2777877da021836dcc849f649d4d1612fed98",
+          "1d0426cd9ce8c6a07f9531a9cf0e0d9a81c6e3515c48e95c7680fe9c646b5e63",
+          "207ec0e1c38cfc4938443650538753ca66650d6fa0e393eb1791e07c597b27e3",
+          "334f90a56eabd906ecce1d8db4c2fee70b2775d2378ec42638dffc7cf36fb4e1",
+          "3f5e4c3bac8ca358c6e4193dbcac31b0f068e1352867c2737c846f0ef75c68f6",
+          "41f97c354061edfe557a65600a8b8356e638d69f5177c1a28e6a4910463307bc",
+          "546298e06cd2443bd520b2834767a3cf2c868d8a50aa37a7dac09283833c7d2b",
+          "621f232dd9311cde462bd9c335215375826c6462ccfaa7dbe3fcb8aaf2af5ad3",
+          "66c402168ee16ae508690f919898cf97c6b43c2cb81fe6ca9d986c30d4ff2ebe",
+          "7b715bbb9f96e453f89ec443225fa519a5a8dc11f5537d175e13f6f23e2354c2",
+          "7be4b7b30ce6686f721fbab334191aab06634f5e2788b8571dc558a158a612a6",
+          "8a8060ad567ea22f59c1cf86e2c97b044f7374b3e81dacfaece3b59acbbc4219",
+          "ac7c3d2746d65941a4ef91f09cde1f2a6eaa7450b5e17e7d8b4f9b44941b685d",
+          "bfff3c0a2735cbeccdce19b50fea1ab79fe4bfddadf8dff986ada630217be92b",
+          "c1ba83fdcc75665c75ef747060db8412f7db497b5b807a93b16c72a16535026c",
+          "d1d5c07115653a4519f0525421870eab9fbda041e518a1d6e6e725f6cc5262b6",
+          "d39b79334cc20ea0cf703003d05b61419161e87ef1f35463c7167ce2f8a637c0",
+          "e83a6718fd07eb122f429b07e1bddbea6aa2c910169ad00f25d70112f027a0a2"
+        ],
+        "marker_hits_total": {},
+        "marker_reached_model": {},
+        "reported_usage_records": [
+          {
+            "input_tokens": 1951,
+            "output_tokens": 85,
+            "total_tokens": 2036,
+            "input_token_details": {
+              "cache_read": 1792
+            },
+            "output_token_details": {}
+          },
+          {
+            "input_tokens": 1524,
+            "output_tokens": 223,
+            "total_tokens": 1747,
+            "input_token_details": {
+              "cache_read": 1280
+            },
+            "output_token_details": {}
+          },
+          {
+            "input_tokens": 1779,
+            "output_tokens": 420,
+            "total_tokens": 2199,
+            "input_token_details": {
+              "cache_read": 1536
+            },
+            "output_token_details": {}
+          },
+          {
+            "input_tokens": 7487,
+            "output_tokens": 836,
+            "total_tokens": 8323,
+            "input_token_details": {
+              "cache_read": 7296
+            },
+            "output_token_details": {}
+          },
+          {
+            "input_tokens": 6503,
+            "output_tokens": 146,
+            "total_tokens": 6649,
+            "input_token_details": {
+              "cache_read": 1664
+            },
+            "output_token_details": {}
+          },
+          {
+            "input_tokens": 16950,
+            "output_tokens": 77,
+            "total_tokens": 17027,
+            "input_token_details": {
+              "cache_read": 8320
+            },
+            "output_token_details": {}
+          },
+          {
+            "input_tokens": 2534,
+            "output_tokens": 326,
+            "total_tokens": 2860,
+            "input_token_details": {
+              "cache_read": 2176
+            },
+            "output_token_details": {}
+          },
+          {
+            "input_tokens": 1965,
+            "output_tokens": 1062,
+            "total_tokens": 3027,
+            "input_token_details": {
+              "cache_read": 256
+            },
+            "output_token_details": {}
+          },
+          {
+            "input_tokens": 3130,
+            "output_tokens": 890,
+            "total_tokens": 4020,
+            "input_token_details": {
+              "cache_read": 2816
+            },
+            "output_token_details": {}
+          },
+          {
+            "input_tokens": 7717,
+            "output_tokens": 3410,
+            "total_tokens": 11127,
+            "input_token_details": {
+              "cache_read": 6528
+            },
+            "output_token_details": {}
+          },
+          {
+            "input_tokens": 17784,
+            "output_tokens": 3279,
+            "total_tokens": 21063,
+            "input_token_details": {
+              "cache_read": 17024
+            },
+            "output_token_details": {}
+          },
+          {
+            "input_tokens": 8955,
+            "output_tokens": 1410,
+            "total_tokens": 10365,
+            "input_token_details": {
+              "cache_read": 128
+            },
+            "output_token_details": {}
+          },
+          {
+            "input_tokens": 11778,
+            "output_tokens": 1736,
+            "total_tokens": 13514,
+            "input_token_details": {
+              "cache_read": 128
+            },
+            "output_token_details": {}
+          },
+          {
+            "input_tokens": 4282,
+            "output_tokens": 1281,
+            "total_tokens": 5563,
+            "input_token_details": {
+              "cache_read": 896
+            },
+            "output_token_details": {}
+          },
+          {
+            "input_tokens": 5785,
+            "output_tokens": 396,
+            "total_tokens": 6181,
+            "input_token_details": {
+              "cache_read": 896
+            },
+            "output_token_details": {}
+          },
+          {
+            "input_tokens": 9488,
+            "output_tokens": 1595,
+            "total_tokens": 11083,
+            "input_token_details": {
+              "cache_read": 0
+            },
+            "output_token_details": {}
+          },
+          {
+            "input_tokens": 12647,
+            "output_tokens": 1990,
+            "total_tokens": 14637,
+            "input_token_details": {
+              "cache_read": 0
+            },
+            "output_token_details": {}
+          },
+          {
+            "input_tokens": 16594,
+            "output_tokens": 1735,
+            "total_tokens": 18329,
+            "input_token_details": {
+              "cache_read": 0
+            },
+            "output_token_details": {}
+          },
+          {
+            "input_tokens": 8051,
+            "output_tokens": 1328,
+            "total_tokens": 9379,
+            "input_token_details": {
+              "cache_read": 768
+            },
+            "output_token_details": {}
+          }
+        ],
+        "reported_usage_total": {
+          "input_tokens": 146904,
+          "output_tokens": 22225,
+          "total_tokens": 169129
+        }
+      },
+      "wall_clock_s": 118.8,
+      "error": null,
+      "notes": [],
+      "report_sha256": "9f9cb707e7b7233aeb0cadf4c1d2d325a9cc868eff58391ab2cf305ec7cc27d6",
+      "manifest_sha256": "303025999edd5f1a0b14ffa0c42e71a30c689f96eb1fe7f1bf4c8e8dd4facbbc",
+      "trial": "1"
+    }
+  ]
+}

@@ -53,6 +53,11 @@ class PortfolioContext(BaseModel):
         symbol = normalize_symbol(ticker)
         held = self.positions_in(symbol)
         lines = []
+        # The facts come from the caller's own file, not from a broker: they are
+        # user-supplied and unverified. Every decision stage that shares this block
+        # (Research Manager, Trader, Portfolio Manager) must read them that way.
+        lines.append("These holdings and cash are user-supplied and unverified; "
+                     "treat them as the caller's stated snapshot, not an authenticated account.")
         for position in held:
             price = f", average price {position.average_price:,.2f}" if position.average_price is not None else ""
             spelled = position.ticker.strip().upper()

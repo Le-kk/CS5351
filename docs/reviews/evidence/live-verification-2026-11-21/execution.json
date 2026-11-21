@@ -1,0 +1,27 @@
+{
+  "kind": "fresh actual fixed-profile execution; human semantic acceptance pending",
+  "provider": "deepseek",
+  "model": "CS5351/DeepSeek-V4-Flash",
+  "source_revision": "git:9b04330+dirty",
+  "prompt_hash": "e2a2cf0009aa5ae498b232c77b7fefa11a549118802eece6332fb59c1cd0b864",
+  "synthetic_only": true,
+  "formal_gate_pass": false,
+  "historical_F8": "UNVERIFIED",
+  "retained_prior_attempts": 5,
+  "trials": [
+    {
+      "trial": "1",
+      "started_utc": "2026-11-21T10:15:20.370680+00:00",
+      "status": "FINISHED",
+      "exit_code": 0,
+      "finished_utc": "2026-11-21T10:25:20.408385+00:00"
+    },
+    {
+      "trial": "2",
+      "started_utc": "2026-11-21T10:25:20.412864+00:00",
+      "status": "FINISHED",
+      "exit_code": 0,
+      "finished_utc": "2026-11-21T10:35:20.463556+00:00"
+    }
+  ]
+}

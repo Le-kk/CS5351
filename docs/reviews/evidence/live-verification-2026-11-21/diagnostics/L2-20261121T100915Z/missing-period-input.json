@@ -1,0 +1,14 @@
+{
+  "synthetic": true,
+  "ticker": "AAPL",
+  "analysis_cutoff": "2026-01-09",
+  "earnings_release_calendar": "not supplied",
+  "valuation": "not available",
+  "insider_transactions": "not available",
+  "reported_income": [],
+  "balance_sheet": [],
+  "missing_income_periods": [
+    "all requested periods unavailable"
+  ],
+  "cashflow": "unavailable"
+}

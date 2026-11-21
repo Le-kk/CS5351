@@ -25,10 +25,27 @@ from typing import Any, TypeVar
 from pydantic import BaseModel
 
 from tradingagents.agents.context import ContextBudgetError, bound_agent_prompt
+from tradingagents.runapi.redact import Redactor
 
 logger = logging.getLogger(__name__)
 
 T = TypeVar("T", bound=BaseModel)
+
+
+def _diagnostic(exc: BaseException) -> str:
+    """Redact provider error detail before it reaches any logging sink.
+
+    A provider exception can echo an ``API_KEY=…`` assignment, a bearer token or
+    a configured value. These warnings fire before report/event redaction, so the
+    shared :class:`Redactor` is applied here at the callsite (R1). Redaction is
+    tolerant: if the environment-snapshot redactor cannot be built, the error
+    text is dropped rather than logged raw.
+    """
+    try:
+        return Redactor().diagnostic(exc)
+    except Exception:  # pragma: no cover - defensive only
+        return f"{type(exc).__name__}: [redaction unavailable]"
+
 
 # Schema-only structured output binds exactly one tool (the schema itself), so a
 # model that reaches for a search tool emits an unknown tool call and the whole
@@ -53,7 +70,7 @@ def bind_structured(llm: Any, schema: type[T], agent_name: str) -> Any | None:
         logger.warning(
             "%s: provider does not support with_structured_output (%s); "
             "falling back to free-text generation",
-            agent_name, exc,
+            agent_name, _diagnostic(exc),
         )
         return None
 
@@ -81,7 +98,7 @@ def invoke_structured(structured_llm: Any | None, prompt: Any, agent_name: str) 
     except Exception as exc:
         logger.warning(
             "%s: structured-output invocation failed (%s); retrying once as free text",
-            agent_name, exc,
+            agent_name, _diagnostic(exc),
         )
         return None
 
