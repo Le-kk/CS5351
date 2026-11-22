@@ -294,9 +294,9 @@ clean-install smoke, and `ruff check .`. E must add/extend the following.
 | E3 | Upstream zero-regression | `pytest -q` + parse failures against the approved-exception list (§4) | yes (fail closed) | summary + failed IDs; exception must be reproduced, not allowlisted |
 | E4 | Bedrock exception handling | proxy-unset reproduction step; or a skip guarded on proxy env, **only after A/E approval** | conditional | reproduction log; approval reference |
 | E5 | Lint (already present) | `ruff check .` | yes | ruff output |
-| E6 | Type/dependency checks (GOV-003) | e.g. `python -m pyflakes`/typing step; `pip check` after install | yes | tool output |
+| E6 | Dependency check (GOV-003). Type check is not this gate. | `pip check`, then `python scripts/ci/check_dependencies.py` after `pip install -e ".[dev]"` and `pip install pip-audit` | yes | pip check output, pip-audit result, review diff |
 | E7 | Registry schema validation (GOV-002) | validate `docs/req/requirements.yaml` against `docs/req/req-schema.json` | yes | validator output — **blocked: A schema not delivered** |
-| E8 | AI-use log gate (GOV-005) | block code/prompt PR without an `AI-log/` update | yes | diff check — **not installed** |
+| E8 | AI-use log update (GOV-005). Format and content are not checked. | `python scripts/ci/check_ai_log_updated.py` | yes | critical-path diff must also update `AI-log/` — **installed** |
 | E9 | Semantic gate (GOV-004) | on prompt/model PRs: run opt-in live replay (2 attempts/case) + `score_gov004.py`; gate on its exit code (0=PASS, 1=FAIL, 2=PENDING), not stdout parsing. GOV-004 currently **PASS** (exit 0) | yes (on prompt/model change) | evidence JSON + `gov004_scores.json` + exit code |
 | E10 | Permission / denied-write (GOV-006) | default-deny whitelist check; denied write blocked + logged | yes | denial log — **not installed** |
 | E11 | Traceability presence | mapping rows exist for every in-scope `SEL-TA-*` (§5.1) | yes | mapping validation |
@@ -304,8 +304,13 @@ clean-install smoke, and `ruff check .`. E must add/extend the following.
 Minimum CI shape: **E1–E3, E5–E6, E11** are immediately wireable with the
 evidence in this checkout. **E4** requires the A/E exception decision. **E9** is
 now satisfiable (GOV-004 PASS recorded) but must be wired as an opt-in job on
-prompt/model PRs. **E7, E8, E10** are blocked on the stated inputs (A schema /
-E tooling / B-E permission design) and must not be faked as passing.
+prompt/model PRs. **E6** dependency checks and **E8** log-update check are wired
+in `ci.yml`. The pytest matrix and clean-install smoke are summarized as the
+fixed check `required tests`. The four merge-gate categories are test and
+install verification, Lint, dependency check, and AI-log update; they are not
+four workflow jobs. **E7 and E10** remain blocked (A schema / permission design) and
+must not be faked as passing. The type-check half of E6 is not installed.
+Live model semantic acceptance is not one of the four default gates.
 
 Live runs (E9) must never run on ordinary PRs by default — they cost provider
 budget and need the endpoint. Gate them behind a labelled/opt-in job.
@@ -319,9 +324,10 @@ flagged here rather than silently assumed:
    is officially allowlisted as environmental for GOV-003, and how CI detects it
    each run. Until approved, the zero-regression gate is "known exception
    pending".
-2. **Type/dependency check tooling (A/B/E).** The exact commands for E6
-   (pyflakes? mypy? `pip check`?) are not fixed in this checkout; propose and
-   confirm before E wires them.
+2. **Type check tooling (A/B/E).** Dependency checks are wired: `pip check`,
+   `pip-audit` with `docs/code-governance/dependency-audit-exceptions.txt`, and
+   new-package review against `docs/code-governance/dependency-reviews.md`.
+   A type checker is still not chosen. Do not treat the dependency gate as the type gate.
 3. **Semantic rubric/threshold re-freeze on change (C/A).** The rubric (R1–R7,
    1/0/N/A) and thresholds (≥9/10 completed, ≥1 report per case, ≥90% score,
    zero critical) are applied for the current GOV-004 PASS. If A/C revise the

@@ -1,5 +1,18 @@
 name: CI
 
+# This project sets four categories of merge gates: test and install verification,
+# Lint, dependency check, and AI-log update. Test and install verification is
+# performed by the Python test jobs and the clean-install job, then summarized
+# as the fixed check "required tests". The four gate categories are therefore
+# not the same as four workflow jobs. Contract tests remain inside pytest and
+# are not a separate gate. Live model semantic acceptance is not included in
+# these four default gates.
+#
+# After these check names have appeared on a GitHub run, an admin can require
+# exactly: required tests; ruff (strict, full repo); dependency check; ai-log updated.
+# "required tests" passes only when its upstream jobs succeeded. A failed,
+# cancelled, or skipped upstream job makes that check fail.
+
 on:
   push:
     branches: [main, 'v[0-9]+.[0-9]+.[0-9]+']
@@ -51,6 +64,24 @@ jobs:
           # install must import the package and the CLI module.
           python -c "import tradingagents, cli.main; print('clean-install import OK')"
 
+  required-tests:
+    name: required tests
+    needs: [test, smoke-install]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Self-test the summary rule
+        run: python scripts/ci/check_required_tests.py --self-test
+      - name: Require pytest and clean-install smoke to succeed
+        env:
+          PYTEST_RESULT: ${{ needs.test.result }}
+          SMOKE_RESULT: ${{ needs.smoke-install.result }}
+        run: python scripts/ci/check_required_tests.py
+
   lint:
     name: ruff (strict, full repo)
     runs-on: ubuntu-latest
@@ -65,3 +96,62 @@ jobs:
         # The repo is fully clean under the strict select, so we lint everything
         # (generated results/ is excluded via pyproject extend-exclude).
         run: ruff check .
+
+  dependency-check:
+    name: dependency check
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Fetch pull request commits
+        if: github.event_name == 'pull_request'
+        run: |
+          git fetch --no-tags origin ${{ github.event.pull_request.base.sha }}
+          git fetch --no-tags origin ${{ github.event.pull_request.head.sha }} \
+            || git fetch --no-tags ${{ github.event.pull_request.head.repo.clone_url }} ${{ github.event.pull_request.head.sha }}
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Self-test the dependency rules
+        run: python scripts/ci/check_dependencies.py --self-test
+      - name: Install the project and the vulnerability auditor
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+          pip install pip-audit
+      - name: Check dependencies
+        env:
+          GATE_EVENT: ${{ github.event_name }}
+          GATE_BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+          GATE_HEAD: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+        run: python scripts/ci/check_dependencies.py
+
+  ai-log-updated:
+    name: ai-log updated
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Fetch pull request commits
+        if: github.event_name == 'pull_request'
+        run: |
+          git fetch --no-tags origin ${{ github.event.pull_request.base.sha }}
+          git fetch --no-tags origin ${{ github.event.pull_request.head.sha }} \
+            || git fetch --no-tags ${{ github.event.pull_request.head.repo.clone_url }} ${{ github.event.pull_request.head.sha }}
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Self-test the update rule
+        run: python scripts/ci/check_ai_log_updated.py --self-test
+      - name: Require an AI-log update when code or prompts change
+        env:
+          GATE_EVENT: ${{ github.event_name }}
+          GATE_BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+          GATE_HEAD: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+        run: python scripts/ci/check_ai_log_updated.py

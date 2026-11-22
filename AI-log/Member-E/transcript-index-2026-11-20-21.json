@@ -1,0 +1,751 @@
+{
+  "schema_version": 1,
+  "timezone": "Asia/Hong_Kong",
+  "requested_dates": [
+    "2026-11-20",
+    "2026-11-21"
+  ],
+  "archive_owner": "Member E",
+  "original_authorship_preserved": true,
+  "scope": "Original user questions, assistant replies and public progress from 43 selected repair-related turns on 20–21 November 2026, with verified file-change summaries. Not complete lifetime transcripts.",
+  "exclusions": [
+    "Unrelated recruitment turn",
+    "Dates outside 20 and 21 November 2026",
+    "System/developer instructions and internal reasoning",
+    "Usage and runtime control records",
+    "Binary image/audio data (hash/size markers retained)"
+  ],
+  "sources": [
+    {
+      "thread_id": "01a1c35d-c9c8-78a3-92d0-8144beb3579f",
+      "title": "请阅读week3中cs5351-2026-2027-RE.pdf文件",
+      "local_source": ".codex/sessions/2026/11/10/rollout-2026-11-10T10-51-06-01a1c35d-c9c8-78a3-92d0-8144beb3579f.jsonl",
+      "source_snapshot_sha256": "e2245849e7081099d07be496abc742eabb27c2eb7900ea606717b6f384c738dc",
+      "source_snapshot_bytes": 37092896,
+      "original_first_user_timestamp": "2026-11-10T10:51:06.056000+08:00",
+      "selected_turns": 15
+    },
+    {
+      "thread_id": "01a1f87a-64d8-7530-9b8d-1dc3066eabf0",
+      "title": "理解 Project integration review 问题",
+      "local_source": ".codex/sessions/2026/11/20/rollout-2026-11-20T18-22-13-01a1f87a-64d8-7530-9b8d-1dc3066eabf0.jsonl",
+      "source_snapshot_sha256": "219a88539fa969213aa859d740ddf1d1706a94135b35b36ddc09536fc867ec47",
+      "source_snapshot_bytes": 16232647,
+      "original_first_user_timestamp": "2026-11-20T18:23:52.744000+08:00",
+      "selected_turns": 28
+    }
+  ],
+  "exports": [
+    {
+      "file": "2026-11-20_00-56-11.md",
+      "thread_id": "01a1c35d-c9c8-78a3-92d0-8144beb3579f",
+      "date": "2026-11-20",
+      "first_included_user_timestamp": "2026-11-20T00:56:11.534000+08:00",
+      "last_included_record_timestamp": "2026-11-20T18:21:33.789000+08:00",
+      "selected_turns": 15,
+      "counts": {
+        "user_messages": 15,
+        "assistant_messages": 22,
+        "tool_records": 48
+      },
+      "source_line_ranges": [
+        [
+          5523,
+          5569
+        ],
+        [
+          5576,
+          5594
+        ],
+        [
+          5601,
+          5613
+        ],
+        [
+          5620,
+          5641
+        ],
+        [
+          5648,
+          5660
+        ],
+        [
+          5668,
+          5672
+        ],
+        [
+          5691,
+          5708
+        ],
+        [
+          5709,
+          5714
+        ],
+        [
+          5721,
+          5724
+        ],
+        [
+          5731,
+          5734
+        ],
+        [
+          5741,
+          5837
+        ],
+        [
+          5844,
+          5847
+        ],
+        [
+          5854,
+          5867
+        ],
+        [
+          5874,
+          5877
+        ],
+        [
+          5885,
+          5889
+        ]
+      ],
+      "selected_original_records_sha256": "d2042bead52843fa107329ef7ef34438baa3d3d4987903e472e333569e41b65c",
+      "sanitized_markdown_sha256": "a10516c372a9a826f45d339898eb88c28337b512ab62715477c8d00c9ab4a9b7",
+      "bytes": 22068,
+      "redactions": {},
+      "omitted_media": {},
+      "before_code_omission_sha256": "47202720e4217fda482790841b5e766f3645137f908b7d8ff9e19a52acecbd9c",
+      "code_omissions": [
+        {
+          "kind": "model_tool_call_code",
+          "lines": 43,
+          "characters": 4895,
+          "sha256": "52c7b76f2ff85e83bbd193c85d2e82740fce9bc53049b81f499f129c3deabe3f"
+        },
+        {
+          "kind": "model_tool_call_code",
+          "lines": 102,
+          "characters": 4725,
+          "sha256": "c206f608290330058dbbccd1c873b82ded73cd3b1e340c81eaee9744aa9040e9"
+        }
+      ],
+      "before_replies_only_sha256": "ee6752c1271d019db21f16fc76725df86b9829281f7ade4e8fc3cc113d2ed159",
+      "change_summary": {
+        "files": [
+          {
+            "path": "tradingagents/runapi/context.py",
+            "status": "modified"
+          },
+          {
+            "path": "tradingagents/runapi/persist.py",
+            "status": "modified"
+          },
+          {
+            "path": "tests/member_d_verification/test_f1_publish_run.py",
+            "status": "added"
+          }
+        ],
+        "tracked_files": 2,
+        "tracked_added_lines": 24,
+        "tracked_deleted_lines": 6,
+        "total_files_identified": 3,
+        "new_test_not_in_line_total": true,
+        "basis": "Original F1 tool results at source lines 5818 and 5834"
+      },
+      "displayed_assistant_messages": 22,
+      "displayed_user_messages": 15,
+      "displayed_tool_records": 0,
+      "assistant_code_omissions": [],
+      "before_user_restore_sha256": "69d92524630e41d3cff844a1be997a49c58fc7e921f1e2b57252fa42e86e1a2b",
+      "restored_user_question_sha256": [
+        "54c362608f866cc9afebf1c3f606219d0da066318f4b4e1a0f4033be73302e0e",
+        "f2e904b3bf116d2f6e850384f6867bde0eb999329fbf38216337798a1d049e09",
+        "c37d0095f0bae3590297c7a2769f4f7905e380325454d1fb41435661510d8dad",
+        "53771e38a71bcbaead908a3276751de38e162f51fdbd091b147dfb2c2633f367",
+        "62c4fd973d398d61bbcfb446825df93c83dfe7e21b1e104f29d3f730eaf4d607",
+        "e4b604cbfd27d44e6889fa3ac46fcb0981f5e27ce03a525406400af08c836720",
+        "f1088440ce78b5e4011d6c8d517b49feba7272a53b4bba060fdd1f8e174061a4",
+        "1abbcebcce495fe5117418d8d0294f5a54f505b834f8184188288bbac0156c5d",
+        "7aa58516702514771aaf71f4377a1090159c632722b5b4578c3eb0007ac0ff80",
+        "5d251e0e7fdbe74d82c064d502e82ce76047276c01adb3c0d0a030adb1586adb",
+        "0a78ddde4da3d68c92d9c5b2cd4380a39cc18ad26e1d2f1d34c5a9ccf2cd8819",
+        "df6b722a82583a793dc150e311c089f6656bf161afd5385717c567e10307050e",
+        "1994943d132d17562b99309fec9962c1824983278061280e7e02f90d8df8a956",
+        "e5018774673779d22efa07b0ab0fcc53f23e254886a19baae559bbc3b97e63b8",
+        "e59db68fecdc369e2276d53e52eda7a6ce5b79bca45a596a4a21c3dafb0c02e5"
+      ]
+    },
+    {
+      "file": "2026-11-20_18-23-52.md",
+      "thread_id": "01a1f87a-64d8-7530-9b8d-1dc3066eabf0",
+      "date": "2026-11-20",
+      "first_included_user_timestamp": "2026-11-20T18:23:52.744000+08:00",
+      "last_included_record_timestamp": "2026-11-20T19:44:35.623000+08:00",
+      "selected_turns": 15,
+      "counts": {
+        "user_messages": 15,
+        "assistant_messages": 27,
+        "tool_records": 76
+      },
+      "source_line_ranges": [
+        [
+          13,
+          61
+        ],
+        [
+          62,
+          74
+        ],
+        [
+          82,
+          143
+        ],
+        [
+          150,
+          160
+        ],
+        [
+          167,
+          170
+        ],
+        [
+          177,
+          180
+        ],
+        [
+          187,
+          190
+        ],
+        [
+          197,
+          200
+        ],
+        [
+          207,
+          210
+        ],
+        [
+          217,
+          229
+        ],
+        [
+          236,
+          248
+        ],
+        [
+          255,
+          376
+        ],
+        [
+          383,
+          386
+        ],
+        [
+          393,
+          431
+        ],
+        [
+          438,
+          441
+        ]
+      ],
+      "selected_original_records_sha256": "27653d2c00dcff361bd622399a899cf269425db11c26732e417ab4be1d7b3714",
+      "sanitized_markdown_sha256": "d383e203a0648d61097428e2116e2d922ef849a842240c59c164109009ab1548",
+      "bytes": 36670,
+      "redactions": {},
+      "omitted_media": {
+        "binary_media_blocks": 23
+      },
+      "before_code_omission_sha256": "d60b8df3ebaa005f8a3c668fd9f0ff56109106e2080633d2e1a4b065352a252a",
+      "code_omissions": [
+        {
+          "kind": "model_tool_call_code",
+          "lines": 1,
+          "characters": 4822,
+          "sha256": "cb085c54b59ab509df886ba8a18a99c97c131a890e50495618e06ad7686a2797"
+        },
+        {
+          "kind": "model_tool_call_code",
+          "lines": 1,
+          "characters": 23109,
+          "sha256": "72ecd6c3bbba3c2c1a34b999a7f084e24e32e0eb34f7f1ea96da5337a1e24207"
+        },
+        {
+          "kind": "model_tool_call_code",
+          "lines": 1,
+          "characters": 2627,
+          "sha256": "8eec88e69256e7c4479335e62435fa104847cf1f9065f7d93bae535625e10e4f"
+        }
+      ],
+      "before_replies_only_sha256": "f209677287054dee378c8782886beb9613d834c38eaf4db7e9da69b220b5615e",
+      "change_summary": {
+        "files": [
+          {
+            "path": "tradingagents/runapi/redact.py",
+            "status": "modified"
+          },
+          {
+            "path": "tests/member_d_verification/test_f2_redaction.py",
+            "status": "added"
+          }
+        ],
+        "total_files_identified": 2,
+        "day_only_line_totals": null,
+        "additional_docx_outputs": 1,
+        "basis": "Original F2 mutation calls and document outputs in the selected turns"
+      },
+      "displayed_assistant_messages": 27,
+      "displayed_user_messages": 15,
+      "displayed_tool_records": 0,
+      "assistant_code_omissions": [],
+      "before_user_restore_sha256": "502da984f03851a454f7858f48fa7cf9b28d3cc9c86927eb01e5e2210ceeebc3",
+      "restored_user_question_sha256": [
+        "1a32f6136e415fff2356cb6631e4c2b6bc041df81067941166b4e1d850453b7b",
+        "e74121d500d98746133cb7cccce81cd876f170f45a251bb26db5322059b44e06",
+        "a405d18d43d47c3273b0ecf971549be53158d669c368f254bbd56ae3fccda499",
+        "745e0049bf44c5bcdf8e5906f20cb966e5cb5b49699029a6be88fca83e242320",
+        "553ad10967becf95ea1838107556d132123c74a0772c398e00ac9282e9fd0f05",
+        "498a0084e26100bcd53568d919eeecfcdef618c25cefcd3a3064a40e278c78b4",
+        "ee670d00b0dad5ea69acbaa3d025c45f57645a6c74787cda07fb668407934374",
+        "039894ae80dc38eb894d28590ed5ac9865226ef751fd8a5b49913d7dee8a4e64",
+        "41073e9e673975f647dab078d538ec4848bf69510015cb46c21bca84f8faa51b",
+        "cc75caac3b5ecf737cd577f6926d36a6d1d99c127742cb5de4a9f56159f59ae4",
+        "442091ae4eb9f8e169f199b12b1e99e5a673d1aed0a6362c387179912bb93cb2",
+        "46b77ec4c54d96b92fd2ff538a30cce9f1463ca3936db458a1ea89338bc6af17",
+        "ba348a7c2854ed4b8039d02397e0cd120ca4af11e887e8b7995c9c16104c40fe",
+        "520499d089095907300da2781c4a8d8ca3b4c0808ae1ed683d67ff9249d7bc33",
+        "5afe52970d620eb51011b7548274138af7e5f967cecd3bea1d06ea785a8397c7"
+      ]
+    },
+    {
+      "file": "2026-11-21_02-59-22.md",
+      "thread_id": "01a1f87a-64d8-7530-9b8d-1dc3066eabf0",
+      "date": "2026-11-21",
+      "first_included_user_timestamp": "2026-11-21T02:59:22.330000+08:00",
+      "last_included_record_timestamp": "2026-11-21T20:09:20.779000+08:00",
+      "selected_turns": 13,
+      "counts": {
+        "user_messages": 13,
+        "assistant_messages": 33,
+        "tool_records": 186
+      },
+      "source_line_ranges": [
+        [
+          452,
+          804
+        ],
+        [
+          811,
+          856
+        ],
+        [
+          863,
+          891
+        ],
+        [
+          898,
+          901
+        ],
+        [
+          908,
+          969
+        ],
+        [
+          976,
+          979
+        ],
+        [
+          986,
+          1091
+        ],
+        [
+          1098,
+          1101
+        ],
+        [
+          1108,
+          1125
+        ],
+        [
+          1126,
+          1169
+        ],
+        [
+          1170,
+          1187
+        ],
+        [
+          1194,
+          1204
+        ],
+        [
+          1211,
+          1214
+        ]
+      ],
+      "selected_original_records_sha256": "27b02e36cff95b410018bf7df48f7070abad8f7e818405f25df009f559dff11e",
+      "sanitized_markdown_sha256": "35a0859e01a9f85805c22544c906734820b18bd3d1e4340f040890da09d2cfc5",
+      "bytes": 36214,
+      "redactions": {},
+      "omitted_media": {},
+      "before_code_omission_sha256": "0b20b0721a60a752000054b780d31cb90d05de351b868501cf3c4bec7fbb32d2",
+      "code_omissions": [
+        {
+          "kind": "model_tool_call_code",
+          "lines": 2,
+          "characters": 12269,
+          "sha256": "effc3d4d32c1f9615e27021137df2a2a7ebf222b6f78384f35f233982d1cff59"
+        },
+        {
+          "kind": "model_tool_call_code",
+          "lines": 1,
+          "characters": 14851,
+          "sha256": "d45b851eaaa53b970f2dd507a791fb79eb435a424ea53189482bf55353a0293a"
+        },
+        {
+          "kind": "model_tool_call_code",
+          "lines": 1,
+          "characters": 14057,
+          "sha256": "24297e48174b60d5e1360e9ffb86e7e71d66dcd6d9ed211ab6f7f17f9c5ac515"
+        },
+        {
+          "kind": "model_tool_call_code",
+          "lines": 1,
+          "characters": 5130,
+          "sha256": "286d58e76fa70539f198b86f8da6a8270d26ff2856868901052491c79381db17"
+        },
+        {
+          "kind": "model_tool_call_code",
+          "lines": 1,
+          "characters": 10313,
+          "sha256": "74c149521b8da6b8ac8a53d17863b2fc0459aea46741cf26c14e5a69d2be67f3"
+        },
+        {
+          "kind": "model_tool_call_code",
+          "lines": 1,
+          "characters": 6752,
+          "sha256": "cec288dd598fb2ce35ef3943f8a30207e35c0cdd3740ecfc0bf6e29cd55390e7"
+        },
+        {
+          "kind": "model_tool_call_code",
+          "lines": 1,
+          "characters": 4297,
+          "sha256": "f471ba956cbd73fe895bb12839a928501b3285718591d134bf62dcc9e9e2ac02"
+        },
+        {
+          "kind": "model_tool_call_code",
+          "lines": 1,
+          "characters": 3920,
+          "sha256": "c54a35b5080ea8cc93568f1dd50214ff32e60b02ec8d5813be29e90ae8f10193"
+        },
+        {
+          "kind": "model_tool_call_code",
+          "lines": 1,
+          "characters": 9645,
+          "sha256": "ec458cea4e0bf36550f03aa06b9b5e861ebe5d26b0aba033b101dcdf1c0d33e4"
+        },
+        {
+          "kind": "model_tool_call_code",
+          "lines": 1,
+          "characters": 2308,
+          "sha256": "6449654b9f1ff1d20310c2ef746885c6c5f5829e3559befbba3bec80a1d6c83e"
+        },
+        {
+          "kind": "model_tool_call_code",
+          "lines": 3,
+          "characters": 3265,
+          "sha256": "7e42373ad152633bdaf3e4729bc8d493015f35ef8704a8b623bfb98108f6dde3"
+        }
+      ],
+      "before_replies_only_sha256": "b0676d69c6e2cfe95d0170cec3a6433a53d03567c1c7155220e89aa06e6c74c1",
+      "change_summary": {
+        "base": "385f002",
+        "head": "f1b7689",
+        "cumulative_not_day_only": true,
+        "total_files": 39,
+        "added_files": 7,
+        "modified_files": 32,
+        "deleted_files": 0,
+        "added_lines": 1244,
+        "deleted_lines": 287,
+        "files": [
+          {
+            "path": ".gitignore",
+            "status": "M",
+            "added_lines": 4,
+            "deleted_lines": 0
+          },
+          {
+            "path": "cli/input_ui.py",
+            "status": "M",
+            "added_lines": 3,
+            "deleted_lines": 1
+          },
+          {
+            "path": "docs/code-governance/verification-constraints.md",
+            "status": "M",
+            "added_lines": 2,
+            "deleted_lines": 0
+          },
+          {
+            "path": "docs/reviews/remediation-2026-11-21.md",
+            "status": "A",
+            "added_lines": 49,
+            "deleted_lines": 0
+          },
+          {
+            "path": "docs/verification/gov004-evidence-package.md",
+            "status": "A",
+            "added_lines": 39,
+            "deleted_lines": 0
+          },
+          {
+            "path": "docs/verification/requirement-test-mapping.md",
+            "status": "M",
+            "added_lines": 2,
+            "deleted_lines": 0
+          },
+          {
+            "path": "docs/verification/semantic-evaluation.md",
+            "status": "M",
+            "added_lines": 2,
+            "deleted_lines": 0
+          },
+          {
+            "path": "docs/verification/test-plan.md",
+            "status": "M",
+            "added_lines": 2,
+            "deleted_lines": 0
+          },
+          {
+            "path": "docs/verification/verification-report.md",
+            "status": "M",
+            "added_lines": 2,
+            "deleted_lines": 0
+          },
+          {
+            "path": "tests/member_c_verification/live/package_gov004.py",
+            "status": "A",
+            "added_lines": 85,
+            "deleted_lines": 0
+          },
+          {
+            "path": "tests/member_c_verification/live/runner.py",
+            "status": "M",
+            "added_lines": 17,
+            "deleted_lines": 6
+          },
+          {
+            "path": "tests/member_c_verification/live/score_gov004.py",
+            "status": "M",
+            "added_lines": 235,
+            "deleted_lines": 173
+          },
+          {
+            "path": "tests/member_c_verification/live/test_gov004_live.py",
+            "status": "M",
+            "added_lines": 17,
+            "deleted_lines": 1
+          },
+          {
+            "path": "tests/member_c_verification/live/test_score_gov004_exitcodes.py",
+            "status": "M",
+            "added_lines": 32,
+            "deleted_lines": 5
+          },
+          {
+            "path": "tests/member_c_verification/offline/test_nfr005_layering.py",
+            "status": "M",
+            "added_lines": 22,
+            "deleted_lines": 8
+          },
+          {
+            "path": "tests/member_d_verification/live_f9_probe.py",
+            "status": "A",
+            "added_lines": 85,
+            "deleted_lines": 0
+          },
+          {
+            "path": "tests/member_d_verification/test_f1_publish_run.py",
+            "status": "A",
+            "added_lines": 58,
+            "deleted_lines": 0
+          },
+          {
+            "path": "tests/member_d_verification/test_f2_redaction.py",
+            "status": "A",
+            "added_lines": 56,
+            "deleted_lines": 0
+          },
+          {
+            "path": "tests/member_d_verification/test_review_regressions.py",
+            "status": "A",
+            "added_lines": 334,
+            "deleted_lines": 0
+          },
+          {
+            "path": "tradingagents/agents/analysts/fundamentals_analyst.py",
+            "status": "M",
+            "added_lines": 6,
+            "deleted_lines": 2
+          },
+          {
+            "path": "tradingagents/agents/analysts/market_analyst.py",
+            "status": "M",
+            "added_lines": 6,
+            "deleted_lines": 2
+          },
+          {
+            "path": "tradingagents/agents/analysts/news_analyst.py",
+            "status": "M",
+            "added_lines": 6,
+            "deleted_lines": 2
+          },
+          {
+            "path": "tradingagents/agents/analysts/sentiment_analyst.py",
+            "status": "M",
+            "added_lines": 6,
+            "deleted_lines": 2
+          },
+          {
+            "path": "tradingagents/agents/analysts/turn.py",
+            "status": "M",
+            "added_lines": 4,
+            "deleted_lines": 2
+          },
+          {
+            "path": "tradingagents/agents/context.py",
+            "status": "M",
+            "added_lines": 74,
+            "deleted_lines": 52
+          },
+          {
+            "path": "tradingagents/agents/managers/portfolio_manager.py",
+            "status": "M",
+            "added_lines": 5,
+            "deleted_lines": 4
+          },
+          {
+            "path": "tradingagents/agents/managers/research_manager.py",
+            "status": "M",
+            "added_lines": 8,
+            "deleted_lines": 4
+          },
+          {
+            "path": "tradingagents/agents/researchers/bear_researcher.py",
+            "status": "M",
+            "added_lines": 2,
+            "deleted_lines": 1
+          },
+          {
+            "path": "tradingagents/agents/researchers/bull_researcher.py",
+            "status": "M",
+            "added_lines": 2,
+            "deleted_lines": 1
+          },
+          {
+            "path": "tradingagents/agents/risk_mgmt/aggressive_debator.py",
+            "status": "M",
+            "added_lines": 3,
+            "deleted_lines": 2
+          },
+          {
+            "path": "tradingagents/agents/risk_mgmt/conservative_debator.py",
+            "status": "M",
+            "added_lines": 3,
+            "deleted_lines": 2
+          },
+          {
+            "path": "tradingagents/agents/risk_mgmt/neutral_debator.py",
+            "status": "M",
+            "added_lines": 3,
+            "deleted_lines": 2
+          },
+          {
+            "path": "tradingagents/agents/trader/trader.py",
+            "status": "M",
+            "added_lines": 7,
+            "deleted_lines": 3
+          },
+          {
+            "path": "tradingagents/graph/trading_graph.py",
+            "status": "M",
+            "added_lines": 2,
+            "deleted_lines": 0
+          },
+          {
+            "path": "tradingagents/portfolio.py",
+            "status": "M",
+            "added_lines": 11,
+            "deleted_lines": 0
+          },
+          {
+            "path": "tradingagents/runapi/context.py",
+            "status": "M",
+            "added_lines": 13,
+            "deleted_lines": 2
+          },
+          {
+            "path": "tradingagents/runapi/execution.py",
+            "status": "M",
+            "added_lines": 7,
+            "deleted_lines": 3
+          },
+          {
+            "path": "tradingagents/runapi/persist.py",
+            "status": "M",
+            "added_lines": 13,
+            "deleted_lines": 4
+          },
+          {
+            "path": "tradingagents/runapi/redact.py",
+            "status": "M",
+            "added_lines": 17,
+            "deleted_lines": 3
+          }
+        ]
+      },
+      "displayed_assistant_messages": 33,
+      "displayed_user_messages": 13,
+      "displayed_tool_records": 0,
+      "assistant_code_omissions": [],
+      "before_user_restore_sha256": "9adea6cde100ed7134e48b24bd1357867215dfa9eed67297485cecb7be236cf4",
+      "restored_user_question_sha256": [
+        "9045aa50bc93f3b773b19587458ead7855306c3066b567ddd15828a2791509e3",
+        "b3b8781891b4c14e19ec848768123f976fda7c265c2165c3c90f8c37c37fe432",
+        "344812f7a8bc2d4434c66615cd3328414228695c1eb98c4f51742b47e75af4ed",
+        "23957a727bac5e8cc75ab24f6eb4fe1e2b732833e7149a0259ed7ab274db7430",
+        "0034c41b9973731231371ac27b1e026f8c7afc4ae4f07c3cfbac72db61ffad73",
+        "29b161b5b85e6d3ff7f646992287131dc71f67cc52a9e55dd972049b8282c54f",
+        "a2d23c919c07772556ba584724f28fa3d3b1cd1db0c4985e29f426cef894f40f",
+        "50b48bbfe76a5ee4ef8d0cb2b9126d47303db29d691f9f9af2fed7df51f0356c",
+        "4a3617a3ab21484edba6b878536bcf99fdea823c77d1cb7b77b2db200ea8a06f",
+        "dd8d4f883b3a4030ec45052ff4aa66f6017503d48e1521c0bb7000a929d7f0ee",
+        "11806fb46bfcfb4e38390604ba9be6c985374a8e36fa77a4961931f4d9747dbc",
+        "9772ec8734b3da94fe331b8d010f26d29683de254116ce46a70f9396d89536f5",
+        "de1457f9b39d89ef1406b1eae023bb99b401b61b56b4610b44472e4916c1bf33"
+      ]
+    }
+  ],
+  "text_policy": "Original wording and language retained; no path, email, or endpoint rewriting. Only actual configured credentials may be redacted.",
+  "redactions_total": {},
+  "omitted_media_total": {
+    "binary_media_blocks": 27
+  },
+  "code_display_policy": {
+    "threshold": "more than 20 lines or 2000 characters",
+    "applies_to": "assistant reply code only; all tool material omitted",
+    "original_session_files_unchanged": true
+  },
+  "display_policy": {
+    "assistant_replies_and_public_progress_only": false,
+    "user_prompts_displayed": true,
+    "tool_calls_displayed": false,
+    "tool_results_displayed": false,
+    "write_payloads_displayed": false,
+    "internal_reasoning_displayed": false,
+    "file_change_summaries_added": true,
+    "user_and_assistant_conversation": true
+  }
+}

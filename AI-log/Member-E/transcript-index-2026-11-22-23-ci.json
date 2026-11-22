@@ -1,0 +1,193 @@
+{
+  "schema_version": 1,
+  "timezone": "Asia/Hong_Kong",
+  "scope": "CI gate planning, implementation and review on 22 November, with separately dated implementation follow-up on 23 November. Selected original conversation extracts, not lifetime transcripts.",
+  "display_policy": {
+    "user_prompts_displayed": true,
+    "assistant_replies_and_public_progress_displayed": true,
+    "tool_calls_displayed": false,
+    "tool_results_displayed": false,
+    "write_payloads_displayed": false,
+    "internal_reasoning_displayed": false,
+    "original_language_preserved": true
+  },
+  "sources": [
+    {
+      "file": "rollout-2026-11-20T18-22-13-01a1f87a-64d8-7530-9b8d-1dc3066eabf0.jsonl",
+      "snapshot_sha256": "ec422ba57989beebaf078530be499828a6317c3455ab81b9bd8afd23541ae767",
+      "snapshot_bytes": 16321970
+    },
+    {
+      "file": "rollout-2026-11-22T22-06-01-01a1f87a-64d8-7530-9b8d-1dc3066eabf0_01a20394-0255-7143-87d4-cc26188383c5.jsonl",
+      "snapshot_sha256": "fe72683067247c19876808043965bcfd931156aaac4a41aa4af922c20e2ced23",
+      "snapshot_bytes": 581238
+    },
+    {
+      "file": "71bcbb1b-9b9d-4fc9-b599-2f095fcc8276.jsonl",
+      "snapshot_sha256": "87ae483a937b894796eb1573d97d6a6046bba101d712937cf6117b94d893b901",
+      "snapshot_bytes": 340430
+    }
+  ],
+  "implementation_snapshot": {
+    "basis": "Local CI implementation diff against c0081cb; snapshot at export, not per-day attribution. Log/archive changes excluded.",
+    "files": [
+      {
+        "path": ".github/workflows/ci.yml",
+        "status": "modified",
+        "added_lines": 90,
+        "deleted_lines": 0
+      },
+      {
+        "path": "docs/code-governance/verification-constraints.md",
+        "status": "modified",
+        "added_lines": 13,
+        "deleted_lines": 7
+      },
+      {
+        "path": "docs/code-governance/dependency-audit-exceptions.txt",
+        "status": "added",
+        "added_lines": 7,
+        "deleted_lines": 0
+      },
+      {
+        "path": "docs/code-governance/dependency-reviews.md",
+        "status": "added",
+        "added_lines": 7,
+        "deleted_lines": 0
+      },
+      {
+        "path": "scripts/ci/check_dependencies.py",
+        "status": "added",
+        "added_lines": 526,
+        "deleted_lines": 0
+      },
+      {
+        "path": "scripts/ci/check_ai_log_updated.py",
+        "status": "added",
+        "added_lines": 289,
+        "deleted_lines": 0
+      },
+      {
+        "path": "scripts/ci/check_required_tests.py",
+        "status": "added",
+        "added_lines": 81,
+        "deleted_lines": 0
+      }
+    ]
+  },
+  "exports": [
+    {
+      "file": "2026-11-22_CI-CD-gates.md",
+      "user_messages": 7,
+      "assistant_messages": 15,
+      "sha256": "edcd54de7b34ea0aea5d887e6d9a1953e3766dbb2b2321762319e6842f82ad00",
+      "user_text_sha256": [
+        "ae5ae4fade081c572590f4c201061ea51b5e1d0df1a9fc6b8dbcf8bc53d7629e",
+        "8be664d824130e7a108424ab440a5f31d52b763554c069272eb01dd5bf944627",
+        "c0017b190520205689a39943836077d90c8818f5de6b55aef145e278520cdc28",
+        "2a13fcef5405b82d945a525f4d5ed6ca201ec234dcfc3b7dc376446d1c5533cf",
+        "ebf602529959528c0b75e5e5e51df311237e5608fd73f73c89ae5058f75f48af",
+        "9a5d95052a29be9a281b6eab32e74409a6437ccd0f020f7b34d03be1a25693be",
+        "ad36fac317395d0c6389102ae5f845be7c8f2ec1f66c647d8c11ca1caff08e92"
+      ],
+      "source_turns": [
+        {
+          "source": "rollout-2026-11-20T18-22-13-01a1f87a-64d8-7530-9b8d-1dc3066eabf0.jsonl",
+          "user_line": 1328,
+          "displayed_record_lines": [
+            1328,
+            1331,
+            1363,
+            1375
+          ]
+        },
+        {
+          "source": "rollout-2026-11-22T22-06-01-01a1f87a-64d8-7530-9b8d-1dc3066eabf0_01a20394-0255-7143-87d4-cc26188383c5.jsonl",
+          "user_line": 93,
+          "displayed_record_lines": [
+            93,
+            98,
+            127,
+            147
+          ]
+        },
+        {
+          "source": "rollout-2026-11-22T22-06-01-01a1f87a-64d8-7530-9b8d-1dc3066eabf0_01a20394-0255-7143-87d4-cc26188383c5.jsonl",
+          "user_line": 154,
+          "displayed_record_lines": [
+            154,
+            157
+          ]
+        },
+        {
+          "source": "71bcbb1b-9b9d-4fc9-b599-2f095fcc8276.jsonl",
+          "user_line": 172,
+          "displayed_record_lines": [
+            172
+          ]
+        },
+        {
+          "source": "71bcbb1b-9b9d-4fc9-b599-2f095fcc8276.jsonl",
+          "user_line": 173,
+          "displayed_record_lines": [
+            173,
+            174,
+            176
+          ]
+        },
+        {
+          "source": "71bcbb1b-9b9d-4fc9-b599-2f095fcc8276.jsonl",
+          "user_line": 178,
+          "displayed_record_lines": [
+            178,
+            179,
+            180
+          ]
+        },
+        {
+          "source": "71bcbb1b-9b9d-4fc9-b599-2f095fcc8276.jsonl",
+          "user_line": 182,
+          "displayed_record_lines": [
+            182,
+            183,
+            187,
+            188,
+            198
+          ]
+        }
+      ]
+    },
+    {
+      "file": "2026-11-23_CI-CD-gates.md",
+      "user_messages": 2,
+      "assistant_messages": 6,
+      "sha256": "2e05d55897fda2d0e5e6a66201f7855365d4d2bc82aaa41138a0c44fa67fd81e",
+      "user_text_sha256": [
+        "a425075d2d81763ed8f0c7bc55877d4100179dc14d6774f190ee3dba10816e12",
+        "c0728d69648d4579571935e033063d3e60412f6199064871170767c5afbb11d4"
+      ],
+      "source_turns": [
+        {
+          "source": "71bcbb1b-9b9d-4fc9-b599-2f095fcc8276.jsonl",
+          "user_line": 200,
+          "displayed_record_lines": [
+            200,
+            201,
+            205,
+            207
+          ]
+        },
+        {
+          "source": "71bcbb1b-9b9d-4fc9-b599-2f095fcc8276.jsonl",
+          "user_line": 209,
+          "displayed_record_lines": [
+            209,
+            210,
+            213,
+            218
+          ]
+        }
+      ]
+    }
+  ]
+}
