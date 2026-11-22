@@ -312,6 +312,13 @@ four workflow jobs. **E7 and E10** remain blocked (A schema / permission design)
 must not be faked as passing. The type-check half of E6 is not installed.
 Live model semantic acceptance is not one of the four default gates.
 
+The dependency job checks the installed project's declared requirements with
+`pip check`, then uninstalls only the local `tradingagents` distribution before
+auditing the remaining installed packages. Uninstallation leaves its runtime
+and dev dependencies installed. This avoids treating this repository as a
+public-index dependency; repository code remains covered by tests and Lint.
+Any remaining package skipped by `pip-audit` still fails the gate.
+
 Live runs (E9) must never run on ordinary PRs by default — they cost provider
 budget and need the endpoint. Gate them behind a labelled/opt-in job.
 

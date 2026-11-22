@@ -26,6 +26,11 @@
       "file": "71bcbb1b-9b9d-4fc9-b599-2f095fcc8276.jsonl",
       "snapshot_sha256": "87ae483a937b894796eb1573d97d6a6046bba101d712937cf6117b94d893b901",
       "snapshot_bytes": 340430
+    },
+    {
+      "file": "rollout-2026-11-23T00-03-43-01a1f87a-64d8-7530-9b8d-1dc3066eabf0_01a203ff-c468-7120-8c6d-822fd47f1a0d.jsonl",
+      "snapshot_sha256": "a84e582e5342f5b13436375f1d5ae41ae032ef0da6fb4515588574a6e3b4fa38",
+      "snapshot_bytes": 4398522
     }
   ],
   "implementation_snapshot": {
@@ -188,6 +193,32 @@
           ]
         }
       ]
+    },
+    {
+      "file": "2026-11-23_CI-dependency-audit-follow-up.md",
+      "user_messages": 1,
+      "assistant_messages": 2,
+      "sha256": "c4d71e6e936ab8207851b7944126816a38100360b1c6dc257a9252b8eed00e49",
+      "user_text_sha256": [
+        "fa6f4d99ea22f07fe2ea8b150ec7cb526a4b66e3adc294e9100c63f40357c1cd"
+      ],
+      "source_turns": [
+        {
+          "source": "rollout-2026-11-23T00-03-43-01a1f87a-64d8-7530-9b8d-1dc3066eabf0_01a203ff-c468-7120-8c6d-822fd47f1a0d.jsonl",
+          "user_line": 359,
+          "displayed_record_lines": [
+            359,
+            364,
+            399
+          ]
+        }
+      ],
+      "change_summary": {
+        "basis": "229824f..local working tree; implementation only",
+        "files": 2,
+        "added_lines": 14,
+        "deleted_lines": 1
+      }
     }
   ]
 }

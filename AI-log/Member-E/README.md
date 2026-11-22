@@ -17,3 +17,5 @@ The following original-language extracts preserve all selected user questions an
 - [2026-11-22_CI-CD-gates.md](2026-11-22_CI-CD-gates.md) — planning, implementation and review on 22 November.
 - [2026-11-23_CI-CD-gates.md](2026-11-23_CI-CD-gates.md) — audit hardening, critical-path coverage and stable required-check follow-up.
 - [CI source and integrity index](transcript-index-2026-11-22-23-ci.json) — source snapshots, selected record lines, user-message hashes and exported-file hashes.
+
+- [2026-11-23_CI-dependency-audit-follow-up.md](2026-11-23_CI-dependency-audit-follow-up.md) — original screenshot question and public replies for the first real CI audit failure; local project distribution is removed only after checking its declared requirements.

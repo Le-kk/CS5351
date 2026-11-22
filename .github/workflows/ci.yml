@@ -117,11 +117,17 @@ jobs:
           python-version: "3.12"
       - name: Self-test the dependency rules
         run: python scripts/ci/check_dependencies.py --self-test
-      - name: Install the project and the vulnerability auditor
+      - name: Install and verify the project dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -e ".[dev]"
           pip install pip-audit
+          # Check the project's declared requirements before removing only its
+          # local distribution. pip uninstall leaves runtime/dev dependencies
+          # installed for the audit; this repository is checked by tests/lint,
+          # not by looking up an unrelated public package with the same name.
+          python -m pip check
+          python -m pip uninstall --yes tradingagents
       - name: Check dependencies
         env:
           GATE_EVENT: ${{ github.event_name }}
