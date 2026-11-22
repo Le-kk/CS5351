@@ -1,0 +1,7 @@
+# Vulnerability exceptions for the dependency gate.
+# One exception per line:
+# package | vulnerability-id | YYYY-MM-DD | approver | reason
+# The date is inclusive and is compared in UTC.
+# A line waives only that package and that id. pip check cannot be waived.
+# An expired or malformed line fails the gate. This file does not upgrade packages.
+# There are no exceptions yet.
