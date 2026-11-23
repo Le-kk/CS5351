@@ -14,11 +14,28 @@
 # approvals for it.
 
 schema_version: "1"
+# Explicit user decision: test-plan self-approval is allowed and identified as
+# self_review in receipt schema 2. Timing, scope, hashes and roster still apply.
+# Self-review is labelled explicitly; it does not fabricate native GitHub Review.
+allow_self_test_approval: true
+allow_self_governance_approval: true
 roster_confirmed: true
 approvers:
   - github_login: "kelepawuqiusi"
     name: "kelepawuqiusi"
     role: "E"
+  - github_login: "May-del21"
+    name: "May-del21"
+    role: "Team reviewer"
+  - github_login: "hedyliu-574"
+    name: "hedyliu-574"
+    role: "Team reviewer"
+  - github_login: "tanpoporo"
+    name: "tanpoporo"
+    role: "Team reviewer"
+  - github_login: "Le-kk"
+    name: "Le-kk"
+    role: "Team reviewer"
 
 # Paths whose changes are feature implementation. They must appear only after
 # the test approval commit.
@@ -70,10 +87,22 @@ revoke_command: "/revoke-tests"
 
 # Reviewers who may approve a change to this policy, the verifier, or workflows.
 # This list is distinct from the feature-test roster. Both currently contain
-# the same user-confirmed account; self-approval remains forbidden.
+# all five user-authorized collaborators; self-review is explicitly enabled.
 governance_roster_confirmed: true
 governance_reviewers:
   - github_login: "kelepawuqiusi"
     name: "kelepawuqiusi"
     role: "E"
+  - github_login: "May-del21"
+    name: "May-del21"
+    role: "Team reviewer"
+  - github_login: "hedyliu-574"
+    name: "hedyliu-574"
+    role: "Team reviewer"
+  - github_login: "tanpoporo"
+    name: "tanpoporo"
+    role: "Team reviewer"
+  - github_login: "Le-kk"
+    name: "Le-kk"
+    role: "Team reviewer"
 governance_command: "/approve-governance"
