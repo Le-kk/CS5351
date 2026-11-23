@@ -42,7 +42,7 @@ def completion(gate, tmp_path, monkeypatch):
     plan = {"feature_id": "sample", "requirements": ["REQ-1"],
             "implementation_paths": ["tradingagents/feature.py"]}
     record = gate.build_record(policy, "docs/verification/plans/sample.md", plan,
-                               "c" * 64, [{"path": "tests/test_sample.py", "sha256": "d" * 64}], comment, run)
+                               "c" * 64, [{"path": "tests/test_sample.py", "sha256": "d" * 64}], comment, run, "owner")
     receipt = gate.dump_record(record)
     raw = {"id": 9, "path": policy.trusted_workflow, "event": "issue_comment",
            "status": "completed", "conclusion": "success", "display_title": "gate-comment-100",

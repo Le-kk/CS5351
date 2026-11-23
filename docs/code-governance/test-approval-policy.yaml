@@ -14,6 +14,10 @@
 # approvals for it.
 
 schema_version: "1"
+# Explicit user decision: test-plan self-approval is allowed and identified as
+# self_review in receipt schema 2. Timing, scope, hashes and roster still apply.
+# This does not replace native GitHub Review or allow governance self-approval.
+allow_self_test_approval: true
 roster_confirmed: true
 approvers:
   - github_login: "kelepawuqiusi"
