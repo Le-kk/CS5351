@@ -181,10 +181,11 @@ jobs:
           CHECK_RUN_ID: ${{ steps.open.outputs.check_run_id }}
           GITHUB_TOKEN: ${{ github.token }}
           GITHUB_REPOSITORY: ${{ github.repository }}
+          JOB_STATUS: ${{ job.status }}
         run: |
           if [ "${{ steps.self.outcome }}" = "failure" ]; then
             message="the baseline verifier self-test failed"
-          elif [ "${{ cancelled() }}" = "true" ]; then
+          elif [ "$JOB_STATUS" = "cancelled" ]; then
             message="the test-approval workflow was cancelled"
           else
             message="the test-approval workflow did not finish successfully"
