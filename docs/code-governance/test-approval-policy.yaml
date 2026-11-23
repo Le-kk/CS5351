@@ -16,8 +16,9 @@
 schema_version: "1"
 # Explicit user decision: test-plan self-approval is allowed and identified as
 # self_review in receipt schema 2. Timing, scope, hashes and roster still apply.
-# This does not replace native GitHub Review or allow governance self-approval.
+# Self-review is labelled explicitly; it does not fabricate native GitHub Review.
 allow_self_test_approval: true
+allow_self_governance_approval: true
 roster_confirmed: true
 approvers:
   - github_login: "kelepawuqiusi"
@@ -86,7 +87,7 @@ revoke_command: "/revoke-tests"
 
 # Reviewers who may approve a change to this policy, the verifier, or workflows.
 # This list is distinct from the feature-test roster. Both currently contain
-# all five user-authorized collaborators; self-approval remains forbidden.
+# all five user-authorized collaborators; self-review is explicitly enabled.
 governance_roster_confirmed: true
 governance_reviewers:
   - github_login: "kelepawuqiusi"

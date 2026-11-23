@@ -311,6 +311,12 @@ install verification, Lint, dependency check, and AI-log update; they are not
 four workflow jobs. **E7 and E10** remain blocked (A schema / permission design) and
 must not be faked as passing. The type-check half of E6 is not installed.
 Live model semantic acceptance is not one of the four default gates.
+User policy update 2026-11-23: roster-authorized members may self-approve test
+plans and governance changes under the explicit policy flags. Schema-2 receipts
+identify the PR author and label self-review. The user requested zero mandatory
+native GitHub approving Reviews, while retaining PRs and required CI; this
+removes the former independent-review guarantee, not the evidence obligations.
+The fifth required check is added only after deployed positive/negative tests.
 Test approval is a separate check, `test approval`, implemented by
 `.github/workflows/test-approval.yml`. It reads the protected baseline policy
 and verifier, and it does not backfill or retrospectively verify work merged

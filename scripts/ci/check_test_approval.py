@@ -53,6 +53,7 @@ class Policy:
     governance_reviewers: dict[str, dict[str, str]]
     governance_command: str
     allow_self_test_approval: bool = False
+    allow_self_governance_approval: bool = False
 
 
 @dataclass(frozen=True)
@@ -252,6 +253,7 @@ def load_policy(text: str) -> Policy:
         governance_reviewers=people(data.get("governance_reviewers")),
         governance_command=str(data.get("governance_command") or "/approve-governance"),
         allow_self_test_approval=data.get("allow_self_test_approval") is True,
+        allow_self_governance_approval=data.get("allow_self_governance_approval") is True,
     )
 
 
@@ -587,28 +589,36 @@ def normalize_governance(data: dict) -> dict:
         "approval_id",
         "pull_request",
         "reviewer",
+        "pr_author",
+        "review_kind",
         "approved_at",
         "approved_commit",
         "files",
         "evidence",
     }
-    if set(data) != keys or data["schema_version"] != "1" or data.get("kind") != "governance":
+    if set(data) != keys or data["schema_version"] != "2" or data.get("kind") != "governance":
         raise ValueError("governance receipt schema does not match")
     if not GOVERNANCE_ID.fullmatch(str(data["approval_id"])):
         raise ValueError("governance approval id does not match")
     reviewer = data["reviewer"]
     if set(reviewer) != {"github_login", "name", "role"}:
         raise ValueError("governance reviewer fields do not match")
+    author = data["pr_author"]
+    expected_kind = "self_review" if reviewer["github_login"] == author else "peer_review"
+    if not isinstance(author, str) or not author or data["review_kind"] != expected_kind:
+        raise ValueError("governance review kind does not match the PR author")
     files = []
     for item in data["files"]:
         if set(item) != {"path", "sha256"}:
             raise ValueError("governance fingerprint fields do not match")
         files.append({"path": str(item["path"]), "sha256": str(item["sha256"])})
     return {
-        "schema_version": "1",
+        "schema_version": "2",
         "kind": "governance",
         "approval_id": str(data["approval_id"]),
         "pull_request": int(data["pull_request"]),
+        "pr_author": author,
+        "review_kind": expected_kind,
         "reviewer": {key: str(reviewer[key]) for key in ("github_login", "name", "role")},
         "approved_at": str(data["approved_at"]),
         "approved_commit": str(data["approved_commit"]),
@@ -640,10 +650,12 @@ def dump_governance(record: dict) -> str:
     reviewer = record["reviewer"]
     evidence = record["evidence"]
     lines = [
-        'schema_version: "1"',
+        'schema_version: "2"',
         'kind: "governance"',
         f'approval_id: "{record["approval_id"]}"',
         f"pull_request: {record['pull_request']}",
+        f'pr_author: "{record["pr_author"]}"',
+        f'review_kind: "{record["review_kind"]}"',
         "reviewer:",
         f'  github_login: "{reviewer["github_login"]}"',
         f'  name: "{reviewer["name"]}"',
@@ -925,13 +937,13 @@ def assess_governance(
         if comment.body.strip() != receipt["evidence"]["comment_body"]:
             errors.append("governance approval comment was edited after the trusted workflow accepted it")
             continue
-        if comment.user == author:
+        if comment.user == author and not policy.allow_self_governance_approval:
             errors.append("self-approval is not accepted")
             continue
         if comment.user not in policy.governance_reviewers:
             errors.append("approver is not on the protected governance roster")
             continue
-        problem = validate_governance(repo, policy, commits, touched, kinds, comment, receipt, head)
+        problem = validate_governance(repo, policy, commits, touched, kinds, comment, receipt, head, author)
         if problem is None:
             return Result("passed", head, (f"Governance review {receipt['approval_id']} matches {receipt['approved_commit']}.",))
         errors.append(problem)
@@ -947,6 +959,7 @@ def validate_governance(
     comment: Comment,
     receipt: dict,
     head: str,
+    author: str,
 ) -> str | None:
     approved = receipt["approved_commit"]
     if comment.user != receipt["reviewer"]["github_login"]:
@@ -962,7 +975,7 @@ def validate_governance(
     for path, recorded in fingerprinted.items():
         if content_fingerprint(repo, approved, path) != recorded or content_fingerprint(repo, head, path) != recorded:
             return f"governance file changed after approval: {path}"
-    rebuilt = governance_record(policy, comment, receipt["evidence"]["workflow_run_id"], approved, governed, repo)
+    rebuilt = governance_record(policy, comment, receipt["evidence"]["workflow_run_id"], approved, governed, repo, author)
     if rebuilt != receipt:
         return "governance receipt does not match the approved commit"
     return None
@@ -975,14 +988,17 @@ def governance_record(
     approved: str,
     paths: list[str],
     repo: Path,
+    author: str,
 ) -> dict:
     reviewer = policy.governance_reviewers[comment.user]
     files = [{"path": path, "sha256": content_fingerprint(repo, approved, path)} for path in sorted(paths)]
     return {
-        "schema_version": "1",
+        "schema_version": "2",
         "kind": "governance",
         "approval_id": f"tg-{approved[:12]}-{comment.comment_id}",
         "pull_request": comment.pull_request,
+        "pr_author": author,
+        "review_kind": "self_review" if comment.user == author else "peer_review",
         "reviewer": reviewer,
         "approved_at": comment.created_at,
         "approved_commit": approved,
@@ -1180,7 +1196,7 @@ def prepare_governance(
         return None, "the governance command must be /approve-governance followed by the full 40-character commit SHA"
     if comment.pull_request != pull_request:
         return None, "approval belongs to another pull request"
-    if comment.user == author:
+    if comment.user == author and not policy.allow_self_governance_approval:
         return None, "self-approval is not accepted"
     if comment.user not in policy.governance_reviewers or not policy.governance_roster_confirmed:
         return None, "approver is not on the protected governance roster"
@@ -1199,8 +1215,8 @@ def prepare_governance(
     governed = [path for path in touched if kinds[path] == "governance"]
     if not governed:
         return None, "the command does not approve a gate change"
-    record = governance_record(policy, comment, workflow_run_id, approved, governed, repo)
-    problem = validate_governance(repo, policy, commits, touched, kinds, comment, record, head)
+    record = governance_record(policy, comment, workflow_run_id, approved, governed, repo, author)
+    problem = validate_governance(repo, policy, commits, touched, kinds, comment, record, head, author)
     if problem:
         return None, problem
     return record, None
@@ -2198,7 +2214,7 @@ def self_test() -> int:
             12,
         )
         gov_record = governance_record(
-            policy, gov_comment, "801", gov, [".github/workflows/test-approval.yml"], repo
+            policy, gov_comment, "801", gov, [".github/workflows/test-approval.yml"], repo, "owner"
         )
         gov_run = WorkflowRun(
             "801",
@@ -2251,7 +2267,7 @@ def self_test() -> int:
             12,
         )
         owner_record = governance_record(
-            policy, owner_comment, "803", gov, [".github/workflows/test-approval.yml"], repo
+            policy, owner_comment, "803", gov, [".github/workflows/test-approval.yml"], repo, "owner"
         )
         owner_run = WorkflowRun(
             "803",
@@ -2267,6 +2283,14 @@ def self_test() -> int:
             "governance self-approval fails",
             failures,
         )
+        self_governance_policy = replace(policy, allow_self_governance_approval=True)
+        owner_evidence = Evidence((owner_comment,), (owner_run,))
+        expect(
+            assess(repo, self_governance_policy, base, gov, 12, "owner", owner_evidence).status == "passed",
+            "explicitly enabled governance self-review passes with a labelled receipt",
+            failures,
+        )
+        expect(owner_record["review_kind"] == "self_review", "governance self-review is not labelled as peer review", failures)
         put(".github/workflows/test-approval.yml", "name: Changed\n")
         changed_gate = commit("change the gate again")
         expect(
