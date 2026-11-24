@@ -70,9 +70,9 @@ The `RunBudgetController` (interface-contracts §15) holds **mutable per-run bud
 
 **Resume identity remains a separate, undecided contract** (ADR 002 D5): this selection uses a fresh `run_id` per invocation (INV-12) and immutable artifacts; a logical-run + attempt model is **not** adopted here and does not conflict-resolve automatically. Interruption (`INTERRUPTED`) semantics are unchanged and do not themselves settle resume.
 
-## 9. Intermediate context assembly and rollback — concise mode (feature `9102759`; pending integration)
+## 9. Intermediate context assembly and rollback — concise mode (integrated at `adb4dfc`, PR #18)
 
-Status: describes behaviour **implemented on feature branch `9102759caaa59d778ba49cd57a1306f5f2ee5d88` (PR #18), not yet on main**. It bears on this document's owned state (prompt/context assembly) but does not alter retention/privacy or the input-snapshot contracts.
+Status: describes behaviour **integrated into main via PR #18 (merge `adb4dfc`, ancestor of current HEAD)**; the dangling-reference boundary and quality acceptance remain open. It bears on this document's owned state (prompt/context assembly) but does not alter retention/privacy or the input-snapshot contracts.
 
 - **Assembly location.** Intermediate analyst and debate prompts are assembled in `agents/analysts/turn.py` and the Bull/Bear/risk agents during the analysis-execution stage (blueprint §5 step 6). Concise mode's brevity guidance is appended to the **assembled system message** in the analyst tool loop (`turn.py`) but to the **assembled prompt strings** in the Bull/Bear researchers and risk debaters; a duplicated opponent argument may additionally be replaced with a reference.
 - **Exact reference, not semantic dedup.** A reference is emitted only when the exact stripped opponent text already occurs in debate history; otherwise the explicit copy is kept. This is **exact Python string-substring matching**, not summarization.
@@ -82,3 +82,13 @@ Status: describes behaviour **implemented on feature branch `9102759caaa59d778ba
 - **Effective configuration and rollback.** `concise_intermediate_reports` defaults to `True`; `TRADINGAGENTS_CONCISE_INTERMEDIATE_REPORTS=false` (or programmatic `False`) restores legacy verbosity for a new process. The flag is recorded in `run_settings()`/`EffectiveConfig` (interface-contracts §3.7) and is **not** part of `prompt_hash`; the touched prompt source files are (§3.8), so new runs' `prompt_hash` differs from pre-feature runs.
 - **Legacy artifacts.** An existing run record that lacks `concise_intermediate_reports` is **legacy/unknown mode**, not today's `True` default and not `False`; historical runs are not relabeled.
 - **Separation from budgets.** This is not the existing per-prompt guard contract change and not ADR-002's proposed run-wide `CALL_CAP`/`BUDGET` controller (Slice C, unimplemented). Observed token savings do not satisfy `REQ-TA-NFR-COST-002`.
+
+## 10. Cumulative token-admission state (proposed; not implemented)
+
+The token-admission controller (interface-contracts §15A, ADR-004, Alt-B) holds **mutable per-run ledger state** — buckets K (known actual), R (reserved/in-flight), U (UNKNOWN retained), plus monotonic `cumulative_admitted`/`cumulative_consumed_known` and the held tickets. This state:
+- is **separate from the frozen input snapshot** (`RunContext` is immutable and never carries budget counters);
+- is **one per run** (coordinated with the §15 call cap through `AdmissionCoordinator`), never a global counter shared across runs;
+- is **not persisted** in the immutable manifest beyond safe audit counts (`K/R/U`, budget, denied/violation flags) — no prompts/secrets;
+- **does not** resolve UNKNOWN late: `U` remains until finalization in this version (no `U→K` conversion), and a bound/protocol violation is recorded truthfully (never clamped), not hidden inside the manifest.
+
+**Independence preserved:** this is distinct from the existing per-prompt character/4 guard and the concise-context feature (ADR-003); it is the run-wide cumulative-token design that sits beside ADR-002's call-cap (§15), not a replacement for it.

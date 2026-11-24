@@ -30,7 +30,7 @@ Constraints from the current selection (treated as fixed working decisions): CLI
 #### Operational budget and compaction design (B3-07, F6; proposed, unmeasured)
 All numbers are **proposed design values (ESTIMATE)**, not measured. C/D later verify/measure.
 
-> **Historical-vs-current clarification (2026-11-24).** This subsection is the *originally proposed* per-agent compaction design (target `T_compact`, optional summarizing call, `context.compact` event). The **actual implemented guard** (`bound_agent_prompt` in `agents/context.py`) is narrower: it estimates `ceil(len/4)`, trims low-priority narrative against `context_cap_tokens`/`compaction_threshold_tokens`, and protects `<protected_context>` regions — it does **not** implement the full target/threshold/re-injection pipeline below as such, and it adds no summarizing model call. E's concise intermediate-context feature (ADR-003, feature `9102759`, unmerged) is a **separate** change that restores explicit debate copies before this guard. The proposed design here is retained as design intent; the implemented behaviour is authoritative where they differ. C2 selection and rationale below are unchanged.
+> **Historical-vs-current clarification (2026-11-24).** This subsection is the *originally proposed* per-agent compaction design (target `T_compact`, optional summarizing call, `context.compact` event). The **actual implemented guard** (`bound_agent_prompt` in `agents/context.py`) is narrower: it estimates `ceil(len/4)`, trims low-priority narrative against `context_cap_tokens`/`compaction_threshold_tokens`, and protects `<protected_context>` regions — it does **not** implement the full target/threshold/re-injection pipeline below as such, and it adds no summarizing model call. E's concise intermediate-context feature (ADR-003; integrated at `adb4dfc`, PR #18) is a **separate** change that restores explicit debate copies before this guard; its dangling-reference boundary and quality acceptance remain open. The proposed design here is retained as design intent; the implemented behaviour is authoritative where they differ. C2 selection and rationale below are unchanged.
 
 - **Estimator:** token counts approximated by `ceil(len(prompt_chars)/4)` (cheap, provider-agnostic; **explicitly estimated**, no guarantee against provider tokenizer; no tokenizer dependency added).
 - **Per-agent context cap** `C_cap = 24,000` estimated tokens (proposed): bounds the **assembled prompt context** for one agent, not an aggregate run budget.
@@ -70,7 +70,7 @@ Brian selected **C2** because of its **explicit input/snapshot boundary, test se
 
 Positive: single provenance source; deterministic check authority; consent is an explicit transition; shared execution service gives full-coverage API path; preserved engine signature.
 Negative/risks: the raw low-level engine primitive can bypass the boundary and its product use requires A's approval (R-API); full-64 fingerprint canonicalization must be exactly implemented (`interface-contracts.md` §2.2); prompt/context wording changes are required (not optional).
-Scope note: the implemented optional-portfolio flow is retained here. The broader `REQ-TA-*` candidate's scope statement excludes portfolio files while its fixture profiles include them; that replacement-scope disagreement is **unresolved (A/C/team)** and does not change this ADR's decision.
+Scope note: the implemented optional-portfolio flow is retained here. The current registry's scope **includes** optional portfolio input (profiles A-A/A-B/A-C), consistent with the implemented flow, though adoption and confirmation-flow ownership (OQ-16) remain open; this does not change this ADR's decision.
 
 ## Repairs (2026-11-21, R1–R5)
 
@@ -94,7 +94,7 @@ The uploaded `docs/req/requirements.yaml` (`status: proposed_for_adoption`) and 
 - **`BUDGET` stop reason** and a run-wide **single-use call-reservation** controller (`REQ-TA-RUN-001`, `REQ-TA-NFR-COST-002`): would add a sixth serialized `StopReason`, a shared budget component consulted before every model dispatch, and updates to every reader. The current five-value literal (`runapi/result.py:12-14`) has no `BUDGET`.
 - **R1–R8 output check** (`REQ-TA-ARCH-002`) and **corrected-only `PASSED`** (R5): R2 (evidence-ID resolution) and R4–R7 (sentiment/coverage) require new data fields and registry components the checker does not inspect; R5 would change `Finding.status`/`CheckResult` so `PASSED` can carry corrected findings — a coordinated type change across checks/report/scorer if retained.
 - **Evidence and coverage registries** (`REQ-TA-FR-001`, `REQ-TA-FR-005`, `REQ-TA-INV-002/007`), **aggregate budgets/resume** (`REQ-TA-NFR-PERF-002`, `COST-001/002`, D-5): new components and a resume contract that currently conflicts with `INV-11`/`INV-12`.
-- **`REQ-TA-INV-014` / `REQ-TA-GOV-004`** are pending publication; the existing design already covers input freezing (`INV-04/05/05b`) and treats schema validation as a governance/CI boundary, so their absence does not change C2's data flow.
+- **`REQ-TA-INV-014` / `REQ-TA-GOV-004`** are present in the 36-entry registry (`status: proposed`); the existing design already covers input freezing (`INV-04/05/05b`) and treats schema validation as a governance/CI boundary, so their presence does not change C2's data flow (adoption still open).
 
 ## Reopening conditions
 
