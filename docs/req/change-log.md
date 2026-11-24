@@ -549,3 +549,15 @@ entry-shape sweep                            missing id / null / string / list e
 
 - **No requirement invents a token-admission design.** The review's §4 is right: counting input+output, reserve-before-dispatch, concurrency, retries and `UNKNOWN` reservations are substantive contracts needing a B/D design and approved tests. They are stated as proposed requirements with no claim of implementation; they are not narrowed to pretend the call cap covers them.
 - **Nothing was wired into CI**, no application or test code changed, and `requirements-draft-v4.md` is untouched (`542f382c…`).
+
+---
+
+## 2026-11-24 (fourth) — one residual contradiction in COST-001
+
+A further note from the reviewer: `REQ-TA-NFR-COST-001`'s **first** comparison paragraph still carried an older blanket prohibition that contradicted the corrected controlled-comparison section added in the same round. Confirmed by reading the entry: the paragraph said
+
+> A figure produced under one configuration shall not be compared with a figure produced under a different one, and no budget or saving percentage shall be derived from such a comparison.
+
+while the later section deliberately permits exactly that, provided the experimental factor is named and everything else is frozen (F24-02). A reader following the earlier sentence would reject every controlled comparison, including the optimisation evidence the same entry now requires. **That sentence is removed.** The paragraph keeps the six settings that must be held constant and adds one clause pointing to the exception, so the two sections no longer disagree. `fit_criterion` already stated the corrected rule ("0 comparisons accepted where a setting differs without being named as a changed factor") and needed no change; a scan for the old wording finds no other copy.
+
+Verified after the change: `validate.py` 36/3 with 0 errors and 0 warnings; 31 negative fixtures pass; `ruff check .` passes; `rebuild_registry.py` reproduces the committed registry byte-for-byte.
