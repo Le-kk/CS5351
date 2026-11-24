@@ -1,0 +1,78 @@
+{
+  "review_date_hkt": "2026-11-24",
+  "reviewer": "Codex, supervising review",
+  "before": "daa9caa68870a2d81ec035c9b1eb58f4c9cac241",
+  "after": "2efbf0fdedeb488a3fe9eb28f8c0daf7af3b06b0",
+  "incoming_files": [
+    ".github/workflows/ci.yml",
+    "AI-log/Member-E/2026-11-24_requirements-schema-gate.md",
+    "docs/code-governance/dependency-reviews.md",
+    "docs/code-governance/requirements-schema-gate.md",
+    "pyproject.toml",
+    "scripts/ci/check_requirement_schema.py",
+    "tests/member_d_verification/test_requirement_schema_gate.py"
+  ],
+  "pre_existing_local_files_preserved": 17,
+  "requirements_registry_schema_validator_changed": false,
+  "tradingagents_and_cli_changed": false,
+  "schema_requirement": "REQ-TA-GOV-004",
+  "selected_counterpart": "SEL-TA-GOV-002",
+  "distinct_semantic_gate": "SEL-TA-GOV-004 / REQ-TA-GOV-001",
+  "local_verification": {
+    "schema_gate": {
+      "passed": true,
+      "requirements": 36,
+      "withdrawn": 3,
+      "errors": 0,
+      "warnings": 0
+    },
+    "targeted_tests": {
+      "passed": 16,
+      "file": "tests/member_d_verification/test_requirement_schema_gate.py"
+    },
+    "pip_check_passed": true,
+    "targeted_ruff_passed": true,
+    "initial_local_issue": "Existing virtual environment lacked jsonschema; installed newly declared PyYAML/jsonschema dev dependencies. No tracked dependency declarations edited.",
+    "live_model_calls": 0
+  },
+  "github": {
+    "merged_pr": "https://github.com/kelepawuqiusi/CS5351/pull/26",
+    "main_schema_check": {
+      "conclusion": "success",
+      "url": "https://github.com/kelepawuqiusi/CS5351/actions/runs/45426035382/job/138558179212"
+    },
+    "negative_probe": {
+      "pr": "https://github.com/kelepawuqiusi/CS5351/pull/27",
+      "state": "closed",
+      "merged": false,
+      "schema_conclusion": "failure",
+      "url": "https://github.com/kelepawuqiusi/CS5351/actions/runs/45426291403/job/138559098065"
+    },
+    "main_required_settings": {
+      "direct_admin_api_http_status": 401,
+      "independently_read": false,
+      "owner_report_source": "https://github.com/kelepawuqiusi/CS5351/pull/26",
+      "owner_report": "E reports requirements schema required alongside the four original checks, strict up-to-date protection retained, negative probe observed blocked, test approval not made required.",
+      "rulesets_endpoint_empty_is_not_evidence_of_absent_classic_branch_protection": true
+    }
+  },
+  "architecture_files_needing_factual_alignment": [
+    "architecture-blueprint.md",
+    "docs/architecture/permission-model.md",
+    "docs/architecture/risk-list.md",
+    "docs/architecture/traceability-inputs-member-b.md",
+    "docs/architecture/evaluation-logbook.md",
+    "docs/architecture/interface-contracts.md",
+    "docs/req/README.md"
+  ],
+  "source_sha256": {
+    ".github/workflows/ci.yml": "308755778b9453a7d5e6216e7c4339a7fa95060adf4723fa6641418f112e73c3",
+    "AI-log/Member-E/2026-11-24_requirements-schema-gate.md": "cf7c9b32b0cfb637bd29e0e56745c6a8ebd1089e64d9253e875cb8842d090baf",
+    "docs/code-governance/dependency-reviews.md": "a818c8ce0275f343a964240c9807fd668155942b62db5ffebd9a41a82d601874",
+    "docs/code-governance/requirements-schema-gate.md": "a284dcf32a052334e73075991622a2ba7b1d7d7de03f865f5f38ab771ce66ba5",
+    "pyproject.toml": "02e1e782f91ab9df668c64052e7f01a23ba6fa06fb16733111d3afacdb95b6c9",
+    "scripts/ci/check_requirement_schema.py": "2b53fe7317037e2acb3f27ac9211983a5f08488d1410c1d85e1212a85adc1811",
+    "tests/member_d_verification/test_requirement_schema_gate.py": "4082e5a6baec36b1713443b1c3044bf25a5dfd977181e8c1d29d8dac8e8e08b5"
+  },
+  "scope": "Read-only review plus branch fast-forward and local dev dependency installation; no canonical architecture edits, commits, pushes, live calls or requirement adoption."
+}
