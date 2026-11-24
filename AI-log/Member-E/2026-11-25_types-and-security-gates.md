@@ -29,3 +29,7 @@ Observed before the final three suppression-negative probes: mypy passed all 14 
 ## Final local verification
 
 Full offline regression: 1,840 passed, 2 skipped, 1 deselected, 100 subtests passed. Targeted type/security/RSS tests passed; the final three added probes reject new or blanket scanner suppressions. Mypy: 14 files, zero issues. Bandit wrapper: 105 application files, zero medium/high findings and complete coverage. Workflow checks: five files passed. Ruff, actionlint and the existing 36-entry requirements gate passed. GitHub deployment remains pending at this commit; pre-approval is not re-enabled.
+
+## CI compatibility correction
+
+The first GitHub security/dependency checks passed. The type job failed parsing a current NumPy stub using Python 3.12 syntax while mypy targeted 3.11. Aligned the type target with the existing Python 3.12 type-job interpreter; did not suppress the error or weaken runtime 3.11 regression coverage. This configuration-only correction is checked locally and rerun in GitHub before activation.

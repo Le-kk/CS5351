@@ -77,7 +77,7 @@ filterwarnings = [
 # Incremental coverage: all shared run boundary modules, portfolio and output contracts.
 # Third-party typing and legacy modules are not claimed as fully checked.
 files = ["tradingagents/runapi", "tradingagents/portfolio.py", "tradingagents/agents/schemas.py", "tradingagents/agents/rating.py"]
-python_version = "3.11"
+python_version = "3.12"
 follow_imports = "silent"
 ignore_missing_imports = true
 check_untyped_defs = true

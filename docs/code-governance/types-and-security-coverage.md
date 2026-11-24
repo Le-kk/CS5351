@@ -10,7 +10,7 @@ Keep `required tests`, `ruff (strict, full repo)`, `dependency check`, `ai-log u
 
 `python -m mypy --config-file pyproject.toml` checks all files in `tradingagents/runapi/`, plus `portfolio.py`, `agents/schemas.py` and `agents/rating.py`: currently 14 files. Function bodies without annotations are checked where mypy can infer types. In-scope errors block; there is no in-scope error baseline or ignore-all override. Imported legacy modules use `follow_imports=silent`; missing third-party typing is tolerated. This is incremental typing, not strict typing of the whole repository.
 
-An initial exploratory scan of all 105 application files reported 187 errors in 38 files. Broad legacy/CLI/vendor typing remains a backlog rather than being silently marked fixed. Nine errors in the selected boundary were addressed through precise literal aliases/annotations and narrowing optional values. Runtime formats and existing valid-input behavior are retained. Real mypy fixtures accept `COMPLETED` and reject both an unknown outcome and an integer outcome.
+An initial exploratory scan of all 105 application files reported 187 errors in 38 files. Broad legacy/CLI/vendor typing remains a backlog rather than being silently marked fixed. Nine errors in the selected boundary were addressed through precise literal aliases/annotations and narrowing optional values. Runtime formats and existing valid-input behavior are retained. Real mypy fixtures accept `COMPLETED` and reject both an unknown outcome and an integer outcome. The type job targets Python 3.12, matching its CI interpreter and current NumPy dependency stubs; runtime compatibility on Python 3.11–3.14 remains covered by the regression matrix.
 
 ## Contract and API surface coverage
 
