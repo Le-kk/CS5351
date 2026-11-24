@@ -1,0 +1,69 @@
+{
+  "record_type": "Supervising integration review; not a live measurement rerun",
+  "recorded_utc": "2026-11-24T03:55:05.855037+00:00",
+  "main": "8bf739565d42c7d8ea972779ffd754c0d065b830",
+  "feature": "9102759caaa59d778ba49cd57a1306f5f2ee5d88",
+  "feature_branch": "perf/token-context-code-only-20261124",
+  "related_prs": [
+    {
+      "number": 18,
+      "title": "perf: reduce repeated intermediate analysis context",
+      "state": "open",
+      "merged_at": null,
+      "html_url": "https://github.com/kelepawuqiusi/CS5351/pull/18",
+      "head_ref": "perf/token-context-code-only-20261124",
+      "head_sha": "9102759caaa59d778ba49cd57a1306f5f2ee5d88",
+      "base_ref": "main"
+    },
+    {
+      "number": 13,
+      "title": "token update ",
+      "state": "closed",
+      "merged_at": "2026-11-23T12:16:20Z",
+      "html_url": "https://github.com/kelepawuqiusi/CS5351/pull/13",
+      "head_ref": "tanpoporo-patch-1",
+      "head_sha": "2a6963a4c907a493631d44c14c8577d255ddfaef",
+      "base_ref": "main"
+    }
+  ],
+  "source_report": {
+    "filename": "token-optimization-architecture-and-measurement-report-2026-11-24.md",
+    "sha256": "cbed455094d5836cf59f9e9d110d7e5441eb8fd132cbfb75f4ffc63aeadb21b1",
+    "available_on_inspected_main": false,
+    "available_on_inspected_feature": false
+  },
+  "referenced_measurement_json_available_on_feature": false,
+  "sync": {
+    "previous_local_main": "71bd50125f1e12fb9247dae6f4672d7b1068e2bd",
+    "new_main": "8bf739565d42c7d8ea972779ffd754c0d065b830",
+    "preexisting_draft_files": 10,
+    "draft_hashes_preserved": true,
+    "feature_merged_locally": false
+  },
+  "focused_regression": {
+    "revision": "9102759caaa59d778ba49cd57a1306f5f2ee5d88",
+    "source": "isolated git archive; existing virtual environment",
+    "test_files": [
+      "tests/member_d_verification/test_token_input_reduction.py",
+      "tests/test_portfolio_context.py",
+      "tests/member_b_remediation/test_r4_research_manager_context.py"
+    ],
+    "exit_code": 0,
+    "output": ".................................................                        [100%]\n49 passed in 1.94s\n",
+    "paid_model_calls": false
+  },
+  "reported_live_measurements": {
+    "source": "E supplied report and PR body; not independently rerun; raw artifacts absent from PR",
+    "optimized_tokens": [
+      99532,
+      103120,
+      110725
+    ],
+    "optimized_mean": 104459,
+    "historical_mean": 138896.5,
+    "same_day_control": 160826,
+    "historical_saving_pct": 24.793641308456294,
+    "same_day_saving_pct": 35.04843744170719,
+    "quality_acceptance": "not established"
+  }
+}

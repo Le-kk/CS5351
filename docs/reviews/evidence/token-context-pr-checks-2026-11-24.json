@@ -1,0 +1,99 @@
+{
+  "record_type": "Selected fields projected from public GitHub API; not an unmodified API export",
+  "recorded_utc": "2026-11-24T03:55:05.855113+00:00",
+  "source_url": "https://api.github.com/repos/kelepawuqiusi/CS5351/commits/9102759caaa59d778ba49cd57a1306f5f2ee5d88/check-runs",
+  "revision": "9102759caaa59d778ba49cd57a1306f5f2ee5d88",
+  "check_runs": [
+    {
+      "name": "required tests",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/kelepawuqiusi/CS5351/actions/runs/45318943407/job/138193074947",
+      "summary": null
+    },
+    {
+      "name": "tests (py3.14)",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/kelepawuqiusi/CS5351/actions/runs/45318943407/job/138192619762",
+      "summary": null
+    },
+    {
+      "name": "tests (py3.11)",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/kelepawuqiusi/CS5351/actions/runs/45318943407/job/138192619754",
+      "summary": null
+    },
+    {
+      "name": "tests (py3.13)",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/kelepawuqiusi/CS5351/actions/runs/45318943407/job/138192619672",
+      "summary": null
+    },
+    {
+      "name": "clean-install smoke",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/kelepawuqiusi/CS5351/actions/runs/45318943407/job/138192619646",
+      "summary": null
+    },
+    {
+      "name": "ai-log updated",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/kelepawuqiusi/CS5351/actions/runs/45318943407/job/138192619604",
+      "summary": null
+    },
+    {
+      "name": "tests (py3.12, America/New_York)",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/kelepawuqiusi/CS5351/actions/runs/45318943407/job/138192619568",
+      "summary": null
+    },
+    {
+      "name": "dependency check",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/kelepawuqiusi/CS5351/actions/runs/45318943407/job/138192619567",
+      "summary": null
+    },
+    {
+      "name": "ruff (strict, full repo)",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/kelepawuqiusi/CS5351/actions/runs/45318943407/job/138192619220",
+      "summary": null
+    },
+    {
+      "name": "test approval",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/kelepawuqiusi/CS5351/runs/138192497983",
+      "summary": "test approval: failed for 9102759caaa59d778ba49cd57a1306f5f2ee5d88\nthe test-approval workflow did not finish successfully"
+    },
+    {
+      "name": "record-approval",
+      "status": "completed",
+      "conclusion": "skipped",
+      "html_url": "https://github.com/kelepawuqiusi/CS5351/actions/runs/45318940622/job/138192466494",
+      "summary": null
+    },
+    {
+      "name": "recheck-comment",
+      "status": "completed",
+      "conclusion": "skipped",
+      "html_url": "https://github.com/kelepawuqiusi/CS5351/actions/runs/45318940622/job/138192466326",
+      "summary": null
+    },
+    {
+      "name": "test-approval",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/kelepawuqiusi/CS5351/actions/runs/45318940622/job/138192464568",
+      "summary": null
+    }
+  ]
+}

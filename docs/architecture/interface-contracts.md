@@ -215,15 +215,30 @@ EffectiveConfig {
   output_language: str,
   temperature: float | null, max_tokens: int | null,          # behaviour-affecting (baseline keys if set)
   context_cap_tokens: int, compaction_threshold_tokens: int,  # the designed context budget (ADR §Context)
+  concise_intermediate_reports: bool,                         # concise-mode flag (feature 9102759); see §3.11/§3.8
   data_vendors: map, tool_vendors: map
 }
 ```
-Derived from `run_settings()` (`trading_graph.py:255-275`) **plus** the behaviour-affecting keys this design introduces (`temperature`, `max_tokens`, context cap/threshold). `backend_url`, keys, OAuth tokens, local paths are **never** included. `source_revision` is recorded **separately** from `code_version` (upstream `version` stays `0.7.1`; the revision id identifies the actual source state and is `"unknown"` when unavailable).
+Derived from `run_settings()` (`trading_graph.py:255-275`) **plus** the behaviour-affecting keys this design introduces (`temperature`, `max_tokens`, context cap/threshold, and the concise-mode flag). `backend_url`, keys, OAuth tokens, local paths are **never** included. `source_revision` is recorded **separately** from `code_version` (upstream `version` stays `0.7.1`; the revision id identifies the actual source state and is `"unknown"` when unavailable).
 
-### 3.8 `prompt_hash` (deterministic input spec) — F3
-- Inventory: the **template set** actually used = (a) identity/context instruction templates, (b) selected analyst templates, (c) trader + research/portfolio-manager templates, (d) frozen notice/disclaimer strings, (e) the mode-aware legend variants selected for this run.
-- Serialization: an ordered list `[(template_id, template_text), …]` sorted by `template_id`; each entry serialized as `template_id + "\n" + template_text`; entries joined by `"\n\n"`; UTF-8, no BOM, no trailing newline; `prompt_hash = SHA-256(bytes)` (64 hex).
-- **Dynamic holdings/evidence are excluded** (they vary per run and are captured by the fingerprint/state, not the prompt template). Editing any template or frozen string changes `prompt_hash`. `template_id` values are stable identifiers (e.g., `analyst.market`, `trader`, `manager.portfolio`, `frozen.disclaimer`, `legend.no_portfolio`).
+- **Concise-mode recording (feature `9102759`):** the flag is recorded in `run_settings()` and `_effective_config()` with default `True`. An **old artifact that lacks the field** must NOT be read as having run with today's `True` default; absence is `unknown/legacy`, not `False` and not `True`. Do not infer historical mode from a missing field.
+- **Mode is recorded separately from `prompt_hash`** (§3.8): the flag itself does not enter the hash material, but the feature's prompt-source edits do.
+
+### 3.8 `prompt_hash` (deterministic input spec) — reconciled to the actual implementation
+
+The implemented `_prompt_hash` (`tradingagents/runapi/execution.py`) hashes **selected source-file contents plus frozen strings**, not an extracted active runtime template/legend variant:
+
+- **Inventory:** a fixed, selected set of prompt/source files — `agents/structured.py`, `agents/analysts/turn.py`, `portfolio.py`, `agents/context.py`, `agents/managers/research_manager.py`, `agents/managers/portfolio_manager.py`, `agents/trader/trader.py`, `agents/researchers/bull_researcher.py`, `agents/researchers/bear_researcher.py`, `agents/risk_mgmt/aggressive_debator.py`, `agents/risk_mgmt/conservative_debator.py`, `agents/risk_mgmt/neutral_debator.py`, plus the registered source file for each **selected** analyst (`market → agents/analysts/market_analyst.py`, `social → agents/analysts/sentiment_analyst.py`, `news → agents/analysts/news_analyst.py`, `fundamentals → agents/analysts/fundamentals_analyst.py`), plus the two frozen strings `frozen.disclaimer` (`DISCLAIMER`) and `frozen.no_portfolio_notice` (`NO_PORTFOLIO_NOTICE`). Identifiers such as `agents/context.py` are **relative to the `tradingagents` package directory** (the implementation resolves them as `Path(__file__).resolve().parents[1] / relative`); **their exact strings are preserved** in the hash material.
+- **Source reading:** contents are read with `Path.read_text(encoding="utf-8")`, which opens in text mode and therefore applies **universal-newline translation** (`CRLF` and lone `CR` are translated to `LF` in the returned `str`). The returned text is hashed as-is; the implementation performs **no additional stripping or newline cleanup** beyond that text-mode translation. Characters already in the returned text remain included (no separate BOM removal or newline insertion outside the literal construction below). A file that raises `OSError` when read is **skipped** (not hashed) — see `risk-list.md` R-HASH.
+- **Serialization (exact byte construction):**
+  ```
+  material = "\n\n".join(f"{identifier}\n{text}" for identifier, text in sorted(pairs))
+  digest   = SHA256(material.encode("utf-8")).hexdigest()   # 64 lowercase hex
+  ```
+  where each `pairs` entry is `(identifier, text)` — `identifier` is the package-relative path (e.g. `agents/context.py`, preserved exactly) or the frozen-string key; `text` is the read (universal-newline-translated) file content or frozen string. `sorted(pairs)` sorts by the tuple (identifier first). The implementation adds no separate BOM or newline outside this literal construction; characters already in the returned text (including any leading BOM passed through by the decoder) remain included. This is the actual `_prompt_hash` construction, not a generic "joined deterministically" description. (The concise-context feature edits several included files, so it **changes `prompt_hash` for new runs even when concise mode is disabled** — the hash tracks source content, not the flag.)
+- **Scope:** it hashes selected **source-file contents** and frozen strings; it does **not** serialize only the active template/legend variant actually rendered for this run.
+- **Excluded:** dynamic holdings/evidence and the frozen portfolio **fingerprint** (separate identity, INV-04/05). Editing any included source file or frozen string changes `prompt_hash`.
+- **Historical artifacts:** older `prompt_hash` values remain valid for their runs; do not recompute or relabel them with today's sources.
 
 ### 3.9 `Event` (JSONL)
 ```
@@ -256,7 +271,7 @@ Completed, portfolio-provided (fingerprint from §2.2.1 Reason E):
  "portfolio_as_of":"2026-11-12","as_of_basis":"USER_CONFIRMED",
  "run_outcome":"COMPLETED","stop_reason":null,"final_rating":"Overweight","output_check":"PASSED","findings":[],
  "code_version":"0.7.1","source_revision":"git:abc1234","prompt_hash":"<64hex>",
- "effective_config":{"llm_provider":"openai","deep_think_llm":"gpt-x","quick_think_llm":"gpt-y","analysts":["market","news"],"max_debate_rounds":2,"max_risk_discuss_rounds":2,"output_language":"English","temperature":0.2,"max_tokens":4096,"context_cap_tokens":24000,"compaction_threshold_tokens":19200,"data_vendors":{},"tool_vendors":{}},
+ "effective_config":{"llm_provider":"openai","deep_think_llm":"gpt-x","quick_think_llm":"gpt-y","analysts":["market","news"],"max_debate_rounds":2,"max_risk_discuss_rounds":2,"output_language":"English","temperature":0.2,"max_tokens":4096,"context_cap_tokens":24000,"compaction_threshold_tokens":19200,"concise_intermediate_reports":true,"data_vendors":{},"tool_vendors":{}},
  "start_ts_utc":"2026-11-12T10:15:00Z","end_ts_utc":"2026-11-12T10:18:22Z",
  "report_paths":{"markdown":"reports/complete_report.md","html":"reports/complete_report.html"},
  "terminal_event":{"logical":"run.terminal","durable":true}}
@@ -271,6 +286,17 @@ Incomplete, no-portfolio (persistence failure example):
  "report_paths":{"markdown":null,"html":null},"terminal_event":{"logical":"run.terminal","durable":true}}
 ```
 (Conditional rules hold: COMPLETED has a rating and `stop_reason=null`; INCOMPLETE has `final_rating=null`, `output_check=NOT_RUN`, `findings=[]`, a `stop_reason`, and null report paths.)
+
+### 3.11 Concise intermediate context assembly (feature `9102759`; contract scope, not implemented on main)
+
+Scoped to **intermediate context assembly** during analysis execution (blueprint §5 step 6). This section does **not** change checker/evidence/budget semantics.
+
+- **`concise_analysis_instruction(stage)`** returns advisory evidence-first brevity text (~450 words for `analyst`, ~220 for `debate`) when `concise_intermediate_reports` is enabled, else `""`. **Placement differs by path:** in `analysts/turn.py` it is appended to the **assembled system message** (preserving tool schemas, call IDs and original input messages) on both tool-bound and wrap-up paths; in the Bull/Bear researchers and three risk debaters it is appended to their **assembled prompt strings**. It is advisory; it does not truncate and does not replace the existing guard.
+- **Reference substitution** — `opponent_argument_or_opening(text, opponent, history)`: when `text.strip()` is non-empty, concise mode is enabled, and the exact stripped text occurs in `history`, return a reference notice instead of repeating it; an empty opponent yields an explicit opening notice. This is **exact Python string-substring matching**, not semantic deduplication.
+- **Compaction safeguard** — `bound_debate_prompt(prompt, history, arguments)`: reconstruct the explicit copies; compute `threshold = min(context_cap_tokens, compaction_threshold_tokens) * 4`; if the reconstructed-original length exceeds `threshold`, pass the **restored** form to the existing `bound_agent_prompt` guard, else pass the reference form. **No unconditional no-dangling guarantee:** the reference notice can be longer than the argument it replaces, so the reference form can exceed the guard target even when the restored-original length fits; checking only the restored-original length can miss compaction of the reference form (and its cited history). The safeguard reduces but does not eliminate dangling-reference risk. See `docs/reviews/evidence/token-context-reference-probe-2026-11-24.json`; follow-up for E/C (risk `R-CONCISE`). It is **not** a guarantee every evidence item survives compaction.
+- **No new forced truncation:** the feature adds no truncation of output or tool payloads; the existing per-prompt character/4 guard still trims narrative when a prompt exceeds its limit.
+- **Kept separate:** the existing per-prompt guard (`bound_agent_prompt`, character/4 estimate — described in blueprint §5 and ADR-001's historical-vs-current clarification) and the proposed run-wide `CALL_CAP`/`BUDGET` controller (ADR-002 D3) are distinct; concise mode is neither.
+- **Config/rollback:** `concise_intermediate_reports` default `True`; `TRADINGAGENTS_CONCISE_INTERMEDIATE_REPORTS=false` or programmatic `False` restores legacy. Recorded in `run_settings()`/`EffectiveConfig` (§3.7); the flag is not part of `prompt_hash`, but the touched prompt sources are (§3.8).
 
 ---
 

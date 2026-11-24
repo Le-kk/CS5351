@@ -30,6 +30,8 @@ Constraints from the current selection (treated as fixed working decisions): CLI
 #### Operational budget and compaction design (B3-07, F6; proposed, unmeasured)
 All numbers are **proposed design values (ESTIMATE)**, not measured. C/D later verify/measure.
 
+> **Historical-vs-current clarification (2026-11-24).** This subsection is the *originally proposed* per-agent compaction design (target `T_compact`, optional summarizing call, `context.compact` event). The **actual implemented guard** (`bound_agent_prompt` in `agents/context.py`) is narrower: it estimates `ceil(len/4)`, trims low-priority narrative against `context_cap_tokens`/`compaction_threshold_tokens`, and protects `<protected_context>` regions — it does **not** implement the full target/threshold/re-injection pipeline below as such, and it adds no summarizing model call. E's concise intermediate-context feature (ADR-003, feature `9102759`, unmerged) is a **separate** change that restores explicit debate copies before this guard. The proposed design here is retained as design intent; the implemented behaviour is authoritative where they differ. C2 selection and rationale below are unchanged.
+
 - **Estimator:** token counts approximated by `ceil(len(prompt_chars)/4)` (cheap, provider-agnostic; **explicitly estimated**, no guarantee against provider tokenizer; no tokenizer dependency added).
 - **Per-agent context cap** `C_cap = 24,000` estimated tokens (proposed): bounds the **assembled prompt context** for one agent, not an aggregate run budget.
 - **Critical reserve** `R_reserve = 4,000` estimated tokens (proposed) planned for identity + standing constraints + state/authority + frozen notice/disclaimer; never compacted.

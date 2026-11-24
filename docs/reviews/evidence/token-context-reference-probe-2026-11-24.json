@@ -1,0 +1,37 @@
+{
+  "record_type": "Independent synthetic reviewer probe, not application implementation or formal acceptance",
+  "paid_model_calls": false,
+  "source": "Unmodified isolated git archive of feature 9102759",
+  "cases": [
+    {
+      "feature": "9102759caaa59d778ba49cd57a1306f5f2ee5d88",
+      "config": {
+        "concise_intermediate_reports": true,
+        "context_cap_tokens": 24000,
+        "compaction_threshold_tokens": 19200
+      },
+      "argument": "Conservative Analyst: Wait.",
+      "opponent": "conservative analyst",
+      "construction": {
+        "history_prefix_text": "Old narrative. ",
+        "history_prefix_repetitions": 36,
+        "history_after_argument_prefix": "\nNeutral Analyst: ",
+        "filler_text": "risk discussion. ",
+        "filler_characters": 76142,
+        "prompt_head": "History:\n",
+        "latest_label": "\nLatest conservative argument: ",
+        "prompt_end": "\nEnd.",
+        "target_restored_original_characters": 76799
+      },
+      "restored_original_characters": 76799,
+      "reference_form_characters": 76875,
+      "threshold_characters": 76800,
+      "guard_result_characters": 76800,
+      "reference_survives": true,
+      "argument_survives": false,
+      "counterexample": true,
+      "result_sha256": "c3a6047a9acd700e26d5133dd04f141da90840c0872dfab474e4ae502cef5d40",
+      "interpretation": "Deterministic synthetic boundary counterexample, not a live-run failure or a frequency estimate. Original length fits; replacing the short argument with a longer notice makes the reference form exceed the guard target, which can remove its cited text."
+    }
+  ]
+}
