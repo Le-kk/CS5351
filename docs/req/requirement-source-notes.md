@@ -234,7 +234,11 @@ Still undecided for A: `SEL-TA-GOV-003` (static analysis and regression gates) a
 
 **Baseline check, 2026-11-23.** `.github/workflows/ci.yml` at `c0081cb` has three jobs — `test`, `smoke-install`, `lint` — and **no** AI-log gate, dependency gate, schema gate, semantic-evaluation gate or approval gate. `grep -rn "ai-log\|dependency" .github/workflows/` returns nothing.
 
-**OQ-12 — Is schema validation itself a requirement? — OPEN, raised by Member B on 2026-11-23.**
+**OQ-12 — Is schema validation itself a requirement? — CLOSED 2026-11-23: YES, on Member B's reply.**
+
+Member B answered directly: the obligation must be explicitly represented by a machine-readable governance requirement with its own fit and trace links, and "CI implementation alone is insufficient". A had been holding this open to avoid sweeping it in on one person's objection; B's answer asserts the obligation rather than a preference, so A added **`REQ-TA-GOV-004`** at Must / `proposed`. Total 34 → 36 together with `REQ-TA-INV-014`.
+
+**The old text below is kept as the record of why it was open.** It no longer describes the current state.
 
 B objected to the crosswalk row that mapped the team's `SEL-TA-GOV-002` ("registry validates against its schema") to `REQ-TA-GOV-001` plus `validate.py`. B is right on both counts: `REQ-TA-GOV-001` is the semantic-suite requirement, and a validator script is not a requirement. A has **withdrawn** that mapping and left `SEL-TA-GOV-002` as `B-only as a requirement`.
 
@@ -242,7 +246,31 @@ The substance is real: course page 10 lists schema validation as a blocking gate
 
 **Status: open.** No requirement added; count unchanged at 34.
 
-**OQ-13 — Input scope: is the optional portfolio snapshot in range? — OPEN, raised by Member B 2026-11-23, A revised its position.**
+**OQ-13 — Input scope. CLOSED 2026-11-24, on one basis: portfolio input is IN scope.**
+
+It had been left "for team adoption". That was not neutral: the published `scope.statement` said portfolio files were outside project scope and every fixture ran without one, while Appendix A required a confirmed snapshot for profiles `A-B` and `A-C`, and the implementation accepts one. An independent review (I24 02) called this what it was — **two contradictory scopes in one document**, not an open question.
+
+The resolution, which A has made and offers for the team to reject: **an optional user-supplied portfolio snapshot is in scope.** A run without one and a run with one are both in scope; a supplied snapshot enters the run only after explicit confirmation; `FR-002`, `FR-003`, `FR-004` and `FR-006` each state their obligations for both inputs. The research-only boundary is preserved by what the system does **not** claim: it places no orders, assumes no account ownership, treats holdings as unverified user input, and does not validate position size or exposure. `TraderProposal.position_sizing` is recorded as a model suggestion carried in the report, **not** a validated size.
+
+**Still open (item 15): whether a conditional sizing suggestion should be permitted at all.** The implementation produces the field; the research-only scope says no sizing is validated. A did not resolve this by deleting the field from a description.
+
+**OQ-15 — What sets `TOKEN_BUDGET`? — OPEN, but the rule for accepting a figure is now CLOSED.**
+
+Two measurement series exist for NVDA on 2026-01-09 and **disagree in direction**: D reports +6.8% (138,897 → 148,392, via `propagate()`), E reports −24.8% (to 104,459, via `run_transient()` with an empty memory log). A checked rather than chose: the entry points share one code path and differ only in a `persist` flag that makes no model request, so the entry point is not the cause; the memory-log difference is real but is one call of ~17 and cannot explain a ~44,000-token gap. Full reading in `token-measurement-comparability-2026-11-24.md`.
+
+**Closed part:** what a figure must satisfy before it may set a budget. `REQ-TA-NFR-COST-001` now requires six settings to be held constant and named — entry point, analyst set, round counts, ticker and date, model and provider, memory-log state — and forbids deriving a budget or a saving percentage from a comparison where one differs unnamed.
+
+**Still open:** the value itself, and which series is reproducible. That is D's measurement and E's control to settle; A will not set `TOKEN_BUDGET` from either figure as they stand.
+
+**OQ-14 — Which `GOV-004` is meant? — NAMED AND GUARDED, not closed.**
+
+Two different things now answer to "GOV-004": the team's `SEL-TA-GOV-004` (the semantic-evaluation gate, which is A's `REQ-TA-GOV-001`) and A's new `REQ-TA-GOV-004` (registry schema validation). `docs/architecture/invariants.md` and `docs/architecture/risk-list.md` in the team repository use the first meaning; A's registry now uses the second.
+
+A did **not** renumber to avoid this, because a gap in `REQ-TA-GOV-*` would read as a reserved or deleted ID and would be indistinguishable from the withdrawn-ID accidents this registry has already had. Instead both entries carry an in-text naming warning, and this note exists so that the collision is discoverable rather than silent.
+
+**Open for the crosswalk:** C's X1–X6 review needs to state, per row, which numbering is meant. A will not resolve this by fiat.
+
+**OQ-13 — Input scope: is the optional portfolio snapshot in range? — SUPERSEDED 2026-11-24; see the CLOSED entry above. The text below is the record of how it got there and still describes the fixture-profile defect accurately.**
 
 B's point: "research-only output" does not imply "no portfolio input". The supported product accepts either no portfolio or a user-supplied snapshot, and that path's consent, validation, freezing and provenance behaviour is already implemented and tested, which is much of the team's engineering evidence.
 

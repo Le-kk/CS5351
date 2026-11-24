@@ -22,10 +22,19 @@ document:
     does not inspect, and R2 has no enforcing component, so the table states what a compliant system must
     do, not what the baseline does.'
 scope:
-  statement: 'Research-only. The system produces research and a rating about an instrument. It does not
-    size positions and does not check exposure against an account. A portfolio file, which v0.7.1 accepts,
-    is outside project scope: no requirement here makes a claim about runs that use one, and every fixture
-    runs without one.'
+  statement: "Research-only. The system produces research and a rating about an instrument. It places\
+    \ no orders and does not check exposure against an account.\n\n**Portfolio input is in scope, on one\
+    \ consistent basis.** The system accepts an optional user-supplied portfolio snapshot. A run without\
+    \ one and a run with one are both in scope and are both required to behave correctly; a supplied snapshot\
+    \ enters the run only after explicit confirmation. `REQ-TA-FR-002` (consent), `REQ-TA-FR-003` (freezing\
+    \ and fingerprint), `REQ-TA-FR-004` (channels) and `REQ-TA-FR-006` (provenance) state their obligations\
+    \ for both inputs. Fixture profiles `A-A`, `A-B` and `A-C` in Appendix A exist precisely so that each\
+    \ obligation is exercised under the input it needs: nothing here claims that every fixture runs without\
+    \ a portfolio.\n\n**What remains outside scope:** account ownership is never assumed, holdings are\
+    \ treated as unverified user input, and no requirement here validates position size or exposure. v0.7.1's\
+    \ `TraderProposal.position_sizing` field is a model suggestion carried in the report; it is not a\
+    \ validated or checked size, and no requirement asserts it is correct. Whether a conditional sizing\
+    \ suggestion should be permitted at all is open item 15."
   prd_narrative: 'This single YAML serves as both the machine-readable PRD and the consolidated requirements
     registry. Basis: the CS5351 project PDF p.5 asks for a machine-readable product requirements document
     and a consolidated requirements registry, both in YAML, under ./docs/req/, and p.9 lists exactly one
@@ -518,20 +527,32 @@ requirements:
   type: quality_reproducibility
   priority: Should
   status: partial
-  statement: 'Every run, including each rerun, shall write exactly one run record and one report folder,
-    both named by a unique `run_id`. The record contains: start and end time, code version, every configuration
-    key that can change what the run produces, a hash of the prompt templates, and the RUN-001 fields.
-    A later run shall never overwrite or change an earlier run''s record or report.'
+  statement: "Every run that returns a logical result, including each rerun, shall write exactly one run\
+    \ record and one report folder, both named by a unique `run_id`. The record contains: start and end\
+    \ time, code version, every configuration key that can change what the run produces, a hash of the\
+    \ prompt templates, and the RUN-001 fields. A later run shall never overwrite or change an earlier\
+    \ run's record or report.\n\n**Conditional fields.** Which RUN-001 fields are present and which may\
+    \ be null is determined by RUN-001's validity table, not by a blanket non-null rule: an incomplete\
+    \ run has no rating, and a completed run has no stop reason. A record is non-conforming if it carries\
+    \ a null field that its own validity-table row requires to be present, or invents a value to fill\
+    \ one.\n\n**Persistence failure.** If a critical artifact (the report or the manifest) fails during\
+    \ staging or commit, the run shall not report that the artifact was written. That case is governed\
+    \ by `REQ-TA-INV-012`; this requirement does not promise a record or report in a state where the artifact\
+    \ could not be published, and does not count such a run as a silent success."
   fit_criterion: Given the offline profile, when (a) two runs of the same ticker and *D* execute one after
     the other, then 2 distinct records and 2 distinct report folders exist, and the first run's files
-    are byte-identical before and after the second; (b) each record has non-null `run_id`, `started_at`,
-    `ended_at`, `version`, `prompt_hash`, `config` and the RUN-001 fields; (c) for each of the 10 keys
-    v0.7.1 leaves out of `run_settings()` (`temperature`, `max_tokens`, `max_tool_rounds`, `news_article_limit`,
-    `global_news_article_limit`, `global_news_lookback_days`, `holding_period_days`, `google_thinking_level`,
-    `openai_reasoning_effort`, `anthropic_effort`), changing only that key makes the two records differ
-    in exactly that key (10/10); (d) recorded keys = `DEFAULT_CONFIG` keys minus the excluded set (0 missing,
-    0 extra); (e) editing one prompt template changes `prompt_hash`, and leaving templates unchanged keeps
-    it the same; (f) the SEC-002 scan finds 0 planted secrets.
+    are byte-identical before and after the second; (b) every record carries non-null `run_id`, `started_at`,
+    `ended_at`, `version`, `prompt_hash` and `config`, and its RUN-001 fields are checked against the
+    validity table rather than for blanket non-nullness — 0 completed records carry a stop reason, 0 incomplete
+    records carry a rating, and 0 records omit a field their validity-table row requires (each such instance
+    is 1 blocking finding); (c) for each of the 10 keys v0.7.1 leaves out of `run_settings()` (`temperature`,
+    `max_tokens`, `max_tool_rounds`, `news_article_limit`, `global_news_article_limit`, `global_news_lookback_days`,
+    `holding_period_days`, `google_thinking_level`, `openai_reasoning_effort`, `anthropic_effort`), changing
+    only that key makes the two records differ in exactly that key (10/10); (d) recorded keys = `DEFAULT_CONFIG`
+    keys minus the excluded set (0 missing, 0 extra); (e) editing one prompt template changes `prompt_hash`,
+    and leaving templates unchanged keeps it the same; (f) the SEC-002 scan finds 0 planted secrets; (g)
+    with a critical staging/commit failure injected before rename, 0 runs report a published record or
+    report, and the outcome is the persistence failure named by REQ-TA-INV-012.
   tradeoff: '`results_dir` grows faster; no automatic clean-up is proposed.'
   metric: run-record fields recorded per run; determinism of the record after publication
   threshold: 100% of runs have a run record with every listed field non-empty (or explicitly null); 0
@@ -541,13 +562,19 @@ requirements:
   dependencies:
   - REQ-TA-RUN-001
   - REQ-TA-SEC-002
-  baseline: 'Re-verified 2026-11-23 against `Le-kk/CS5351@c0081cb`. The run boundary now records reproducibility
-    facts in the run manifest: `run_id`, `code_version`, `source_revision`, `prompt_hash`, `effective_config`,
-    `start_ts_utc`/`end_ts_utc` and `fingerprint_sha256` (`runapi/execution.py` `_source_revision`/`_prompt_hash`,
-    `runapi/reporting.py`; see a real manifest under `docs/reviews/evidence/live-verification-2026-11-21/`).
-    The graph-level `run_settings()` (`graph/trading_graph.py`) remains an allowlist with no run id, timing
-    or prompt hash, and the state log is still named `full_states_log_<D>.json`. The baseline closes this
-    requirement at the `runapi` boundary, not in the raw graph path.'
+  baseline: "Re-verified 2026-11-23 against `Le-kk/CS5351@c0081cb`. The run boundary now records reproducibility\
+    \ facts in the run manifest: `run_id`, `code_version`, `source_revision`, `prompt_hash`, `effective_config`,\
+    \ `start_ts_utc`/`end_ts_utc` and `fingerprint_sha256` (`runapi/execution.py` `_source_revision`/`_prompt_hash`,\
+    \ `runapi/reporting.py`; see a real manifest under `docs/reviews/evidence/live-verification-2026-11-21/`).\
+    \ The graph-level `run_settings()` (`graph/trading_graph.py`) remains an allowlist with no run id,\
+    \ timing or prompt hash, and the state log is still named `full_states_log_<D>.json`. The baseline\
+    \ closes this requirement at the `runapi` boundary, not in the raw graph path.\n\n**Corrected 2026-11-24\
+    \ on an independent integration review (I24 07).** Fit (b) previously required the RUN-001 fields\
+    \ to be non-null in every record, which cannot hold: RUN-001 makes the stop reason present only for\
+    \ incomplete runs and the rating only for completed runs. The statement previously promised a record\
+    \ and report for every run with no exception, which contradicts REQ-TA-INV-012's persistence-failure\
+    \ rule. Both were A's own errors. The v4 baseline text is unchanged because it is a read-only recorded\
+    \ artefact; the override is dated here and in change-log.md."
   open: Widen the record, add run id, timing and prompt hash, and name files by run id.
   source:
   - kind: team_document
@@ -619,12 +646,23 @@ requirements:
   type: cost
   priority: Should
   status: proposed
-  statement: A run shall use at most `TOKEN_BUDGET` tokens in total, counted from provider usage data.
-    A run that would exceed it ends `INCOMPLETE(BUDGET)`. If a provider returns no usage data, the run
-    is not stopped; its record marks token usage as `UNKNOWN`.
+  statement: "A run shall use at most `TOKEN_BUDGET` tokens in total, counted from provider usage data.\
+    \ A run that would exceed it ends `INCOMPLETE(BUDGET)`. If a provider returns no usage data, the run\
+    \ is not stopped; its record marks token usage as `UNKNOWN`.\n\n**Measurement comparability.** `TOKEN_BUDGET`\
+    \ shall be set only from measurements that hold the following constant across the baseline and the\
+    \ candidate: the entry point used (`run_analysis_api`, CLI, `run_transient` or `propagate` — these\
+    \ are not interchangeable), the analyst set, the debate round counts, the ticker and analysis date,\
+    \ the model and provider, and the state of the memory log (a run with past-decision context and a\
+    \ run without it do not measure the same thing). A figure produced under one configuration shall not\
+    \ be compared with a figure produced under a different one, and no budget or saving percentage shall\
+    \ be derived from such a comparison. The record of a measurement shall state each of these six settings\
+    \ so that a later reader can tell whether two figures are comparable."
   fit_criterion: Given the live profile, when 20 runs execute one after another, then 20/20 have known
     usage ≤ `TOKEN_BUDGET`, and the GOV-001 score over these runs is ≥ `QUALITY_THRESHOLD`. A run with
-    `UNKNOWN` usage counts as a failure of this criterion, not as zero cost.
+    `UNKNOWN` usage counts as a failure of this criterion, not as zero cost. Given any two measurements
+    offered as a before/after comparison, then the record of each states all six comparability settings
+    and 0 comparisons are accepted where a setting differs without being named as a changed factor (1
+    such comparison = 1 blocking finding).
   tradeoff: A budget forces shorter prompts or debates, which the quality threshold partly forbids.
   metric: tokens consumed per run against TOKEN_BUDGET
   threshold: tokens_used <= TOKEN_BUDGET; a run that exhausts the budget ends INCOMPLETE with stop_reason
@@ -644,6 +682,16 @@ requirements:
   - kind: baseline_observation
     ref: Le-kk/CS5351@c0081cb
     locator: baseline statement verified against the team repository
+  note: Added 2026-11-24 after an integration review of two measurement series (I24 05). The earlier series
+    reported total tokens rising ~6.8% over 138,897, measured through `propagate()`; the later series
+    reported a ~24.8% fall to 104,459, measured through `run_transient()` with `memory_log_path` pinned
+    to an empty file. `propagate()` and `run_transient()` share one code path and differ only in a `persist`
+    flag, so the entry point alone does not change token use; but `persist=True` writes a decision to
+    the memory log, and the memory log supplies `past_context` to the Portfolio Manager prompt (`graph/trading_graph.py`
+    reading it, `agents/managers/portfolio_manager.py` consuming it). A run with a populated memory log
+    therefore sends the Portfolio Manager more input than a run with an empty one. Neither series is claimed
+    here as wrong, and this entry does not assert which figure is closer to the truth. It asserts only
+    that a budget must not be derived from incomparable figures. **TOKEN_BUDGET remains unset.**
 - id: REQ-TA-NFR-COST-002
   title: Run-wide LLM call cap
   type: cost
@@ -1401,6 +1449,98 @@ requirements:
   - kind: team_document
     ref: docs/req/selected-requirements.md
     locator: SEL-TA-GOV-005
+- id: REQ-TA-INV-014
+  title: Immutable input snapshot
+  type: invariant
+  priority: Must
+  status: proposed
+  zero_tolerance: true
+  statement: "Once validated input is frozen, later source-file changes or consumer mutations shall not\
+    \ change the normalized snapshot or canonical fingerprint used by that run. Execution and provenance\
+    \ shall derive from that frozen selection; confirmation authorizes use and does not reload a different\
+    \ snapshot. No-portfolio and explicitly empty portfolios remain distinct.\n\n**Naming warning.** `REQ-TA-INV-014`\
+    \ is **not** the architecture register's `INV-14`. Architecture `INV-14` is the persistence-failure\
+    \ rule mapped by `REQ-TA-INV-012`. This entry maps architecture `INV-04` / `INV-05` / `INV-05b`."
+  fit_criterion: Given a synthetic portfolio A frozen and confirmed with its full 64-character fingerprint
+    and normalized contents recorded, when its source file is altered or replaced and a consumer-facing
+    derived object is mutated, then the frozen contents and fingerprint remain identical to the recorded
+    values (2/2 intact). Given the same frozen selection, when a run executes with a synthetic engine,
+    then model-input construction and the authoritative report and manifest provenance both derive from
+    A's frozen snapshot, and 0 authoritative values are taken from model prose. Given portfolio B is selected
+    instead, then B's identity is recorded and A's is not (1/1). Given a no-portfolio selection versus
+    an explicitly empty supplied portfolio, then the first records null snapshot provenance and the second
+    records provided mode with a real fingerprint, and 0 instances are confused (2/2). A single observed
+    violation is 1 blocking finding.
+  enforced_by: REQ-TA-INV-014
+  dependencies: []
+  tradeoff: A separate entry adds a sixth invariant and a fingerprint comparison to every run's evidence.
+    It is accepted because an immutable published report does not cover an input that changes after confirmation,
+    and because folding it into REQ-TA-INV-011 would tie it to the unresolved resume design that D has
+    not answered.
+  amended_by: []
+  note: 'Added 2026-11-23 on Member B''s answer to Q-8c, option (1). B''s reason: input mutation, artifact
+    isolation and publication fail differently and have different evidence, so coupling input immutability
+    to the resume question would make one property depend on another''s open decision. The statement and
+    fit are B''s text. C can reuse the existing FR-003 and FR-006 tests and map any remaining confirmation
+    and mutation cases before claiming coverage; this is an explicit machine-readable constraint on an
+    existing design, not a new canonicalization algorithm. Relationship to REQ-TA-FR-003 (Should) and
+    REQ-TA-NFR-REPRO-001 (Should) is recorded here as prose, not as a dependency edge: a Must entry depending
+    on a Should entry is a priority inversion, and the validator rejects the reverse ordering. The coverage
+    of this invariant is Must while the requirements it constrains remain Should; that gap is recorded,
+    not hidden by a dependency. Not verified: no test currently asserts that a source-file change after
+    confirmation leaves the frozen fingerprint intact, and no existing test is claimed here as covering
+    it.'
+  source:
+  - kind: team_document
+    ref: docs/architecture/invariants.md
+    locator: INV-04, INV-05, INV-05b
+  - kind: team_document
+    ref: requirements-draft-v4.md
+    locator: FR-003, FR-006
+- id: REQ-TA-GOV-004
+  title: Requirement registry validates against its schema
+  type: governance
+  priority: Must
+  status: proposed
+  statement: "The requirement registry shall be validated against the declared schema by a blocking check\
+    \ before a governed change merges. The valid registry passes with a zero exit code; invalid or missing\
+    \ required fields, a missing file, or a validator execution error produce a non-zero outcome and block\
+    \ the change. Schema conformance does not establish semantic adequacy, implementation or human adoption\
+    \ of the requirements.\n\n**Naming warning.** `REQ-TA-GOV-004` is **not** the team's `SEL-TA-GOV-004`,\
+    \ which is the semantic evaluation gate and is A's `REQ-TA-GOV-001`. This entry is schema validation\
+    \ only. The team's `SEL-TA-GOV-002` states the same obligation; this entry is its `REQ-TA-*` counterpart."
+  fit_criterion: Given the current `docs/req/requirements.yaml` and its declared `req-schema.json`, when
+    the check runs, then it exits 0 and reports 0 errors (1/1). Given 5 negative fixtures - a missing
+    required top-level key, an invalid MoSCoW priority value, a missing schema file, a registry file that
+    does not parse as YAML, and a validator whose own execution raises - then each produces a non-zero
+    exit and exactly 1 named finding (5/5), and the corresponding required CI check blocks the governed
+    change. A green schema result accompanied by a failing cross-record check is reported as a failure,
+    not a pass.
+  enforced_by: REQ-TA-GOV-003
+  dependencies:
+  - REQ-TA-GOV-001
+  tradeoff: A blocking schema gate rejects every governed change while the schema and registry disagree,
+    including changes to unrelated files. That cost is accepted because the course names the machine-readable
+    registry and its schema as a D1 deliverable and the validation as a blocking gate.
+  amended_by: []
+  note: 'Added 2026-11-23. Member B stated the position plainly: the obligation must be explicitly represented
+    by a machine-readable governance requirement with its own fit and trace links, and a CI implementation
+    alone is insufficient. A had previously left this as OQ-12 because adding it on one person''s objection
+    repeated an earlier mistake; B''s answer removes that objection by asserting the obligation rather
+    than a personal preference. The ID is GOV-004 because 001-003 are used and numbering must not skip;
+    it is NOT the team''s GOV-004. Neither the gate nor the schema job exists: at 916d8a6, no job in .github/workflows/
+    reads docs/req/, so a green CI run says nothing about whether the registry validates. B did not confirm
+    any total count.'
+  source:
+  - kind: team_document
+    ref: cs5351-2026-2027-project.pdf
+    locator: p5 D1, p10 gate 3
+  - kind: team_document
+    ref: docs/req/selected-requirements.md
+    locator: SEL-TA-GOV-002
+  - kind: team_document
+    ref: docs/req/validate.py
+    locator: validating command
 fixture_profiles:
   note: 'Added 2026-11-23 to correct a contradiction in A''s own Appendix A. The offline profile pinned
     `Portfolio: None (research-only scope)` while 11 test modules supply a portfolio and test_nfr003_privacy.py
@@ -1435,15 +1575,16 @@ fixture_profiles:
     - REQ-TA-INV-006
     - REQ-TA-INV-007
     - REQ-TA-INV-008
+    A-B and A-C:
+    - REQ-TA-SEC-002
+    A-C: []
     A-B:
     - REQ-TA-NFR-002
     - REQ-TA-FR-003
     - REQ-TA-FR-004
     - REQ-TA-FR-006
     - REQ-TA-NFR-REPRO-001
-    A-B and A-C:
-    - REQ-TA-SEC-002
-    A-C: []
+    - REQ-TA-INV-014
     live profile:
     - REQ-TA-NFR-PERF-001
     - REQ-TA-NFR-COST-001
@@ -1454,6 +1595,7 @@ fixture_profiles:
     - REQ-TA-ARCH-001
     - REQ-TA-GOV-002
     - REQ-TA-GOV-003
+    - REQ-TA-GOV-004
   both: REQ-TA-FR-002 is exercised under A-A for the no-portfolio input and A-B for the portfolio-present
     input
   candidate_only: The holdings-minimisation clause lives in candidate entry INV-010, which is NOT in the
@@ -1463,10 +1605,11 @@ fixture_profiles:
     \ The offline profile is defined in three variants. A requirement is exercised under the variant its\
     \ obligation needs, and each requirement's row below names it. **A-A** is the default: no portfolio\
     \ supplied, which is the narrower of the two supported inputs. **A-B** and **A-C** supply a user-supplied\
-    \ snapshot and exist because the optional-input scope (NFR-FR-003, SEC-002, FR-004, FR-006, NFR-REPRO-001)\
-    \ and the privacy rule (`REQ-TA-INV-010` clause 2) cannot be exercised without one.\n\n| Element |\
-    \ A-A: no portfolio | A-B: portfolio, no holding | A-C: portfolio with an unrelated holding |\n|---|---|---|---|\n\
-    | Code version | `tradingagents.__version__ == \"0.7.1\"` | same | same |\n| Model | Scripted chat\
+    \ snapshot and exist because the optional-input scope (REQ-TA-FR-003, REQ-TA-SEC-002, REQ-TA-FR-004,\
+    \ REQ-TA-FR-006, REQ-TA-NFR-REPRO-001) and the holdings-minimisation clause of candidate entry INV-010\
+    \ (which is NOT in this registry) cannot be exercised without one.\n\n| Element | A-A: no portfolio\
+    \ | A-B: portfolio, no holding | A-C: portfolio with an unrelated holding |\n|---|---|---|---|\n|\
+    \ Code version | `tradingagents.__version__ == \"0.7.1\"` | same | same |\n| Model | Scripted chat\
     \ model patched over `create_tier_client` (`ScriptedModel` in `tests/test_graph_end_to_end.py`) |\
     \ same | same |\n| Data | Offline fixtures; network refused by the autouse `_no_network` fixture |\
     \ same | same |\n| **Portfolio** | **None selected** | **Confirmed snapshot, selected instrument absent\

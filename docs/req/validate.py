@@ -5,9 +5,11 @@ cross-record rules JSON Schema cannot express. Owner: Member A; CI hookup is E's
 Exit code 0 = valid, 1 = invalid. Designed to fail loudly on negative fixtures,
 so a green run means the checks are actually doing work.
 """
+import argparse
 import json
 import re
 import sys
+from pathlib import Path
 
 try:
     import yaml
@@ -15,17 +17,81 @@ except ImportError:
     sys.exit("PyYAML is required: python3 -m pip install pyyaml jsonschema")
 from jsonschema import Draft202012Validator
 
-YAML_PATH = "docs/req/requirements.yaml"
-SCHEMA_PATH = "docs/req/req-schema.json"
+# Defaults are resolved relative to this file, so the command works from any
+# working directory and from any clone — which is what made the documented
+# `python3 docs/req/validate.py` fail when run from the repository root.
+HERE = Path(__file__).resolve().parent
+YAML_PATH = HERE / "requirements.yaml"
+SCHEMA_PATH = HERE / "req-schema.json"
+
+# The withdrawn set is recorded by identity, not by count. Rule 13 previously
+# only checked `len(withdrawn) >= 3`, so replacing FR-002 with a made-up ID kept
+# the count and passed. Found by an independent review on 2026-11-24.
+REQUIRED_WITHDRAWN = {
+    "REQ-TA-FR-002": "GUI out of scope",
+    "REQ-TA-NFR-SAFETY-001": "Research-only scope: no position sizing is validated",
+    "REQ-TA-NFR-SAFETY-002": "Replaced by REQ-TA-FR-007 part 3",
+}
 
 
-def main() -> int:
-    # An explicit path lets docs/req/negative-fixtures.md run a single mutation
-    # against a temporary copy without touching the real registry.
-    yaml_path = sys.argv[1] if len(sys.argv) > 1 else YAML_PATH
-    with open(yaml_path, encoding="utf-8") as handle:
-        doc = yaml.safe_load(handle)
-    with open(SCHEMA_PATH, encoding="utf-8") as handle:
+class UniqueKeyLoader(yaml.SafeLoader):
+    """SafeLoader that rejects duplicate mapping keys.
+
+    `yaml.safe_load` silently keeps the last of two identical top-level keys, so
+    a registry could carry a stale `schema_version: 0.0.0` line above the real
+    one and validate cleanly. Found by an independent review on 2026-11-24.
+    """
+
+
+def _no_duplicate_keys(loader, node, deep=False):
+    mapping = {}
+    for key_node, value_node in node.value:
+        key = loader.construct_object(key_node, deep=deep)
+        if key in mapping:
+            raise yaml.constructor.ConstructorError(
+                "while constructing a mapping", node.start_mark,
+                f"found duplicate key {key!r}", key_node.start_mark)
+        mapping[key] = loader.construct_object(value_node, deep=deep)
+    return mapping
+
+
+UniqueKeyLoader.add_constructor(
+    yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG, _no_duplicate_keys)
+
+
+def main(argv=None) -> int:
+    parser = argparse.ArgumentParser(
+        description="Validate the requirements registry against its schema and cross-record rules.")
+    parser.add_argument("registry", nargs="?", default=None,
+                        help=f"registry file (default: {YAML_PATH})")
+    parser.add_argument("--registry", dest="registry_opt", default=None,
+                        help="registry file; accepted because the negative-fixture "
+                             "document uses this flag form")
+    parser.add_argument("--schema", dest="schema", default=None,
+                        help=f"schema file (default: {SCHEMA_PATH})")
+    args = parser.parse_args(argv)
+
+    yaml_path = Path(args.registry_opt or args.registry or YAML_PATH)
+    schema_path = Path(args.schema) if args.schema else SCHEMA_PATH
+
+    if not yaml_path.is_file():
+        print(f"ERROR registry file not found: {yaml_path}")
+        return 1
+    if not schema_path.is_file():
+        print(f"ERROR schema file not found: {schema_path}")
+        return 1
+
+    try:
+        with open(yaml_path, encoding="utf-8") as handle:
+            doc = yaml.load(handle, Loader=UniqueKeyLoader)
+    except yaml.YAMLError as exc:
+        print(f"ERROR registry does not parse as YAML: {exc}")
+        return 1
+    except OSError as exc:
+        print(f"ERROR registry unreadable: {exc}")
+        return 1
+
+    with open(schema_path, encoding="utf-8") as handle:
         schema = json.load(handle)
     Draft202012Validator.check_schema(schema)
     problems = []
@@ -51,11 +117,19 @@ def main() -> int:
     for ident in withdrawn & seen:
         problems.append(f"withdrawn id reused in requirements: {ident}")
 
-    # 4. Every dependency resolves
+    # 4. Every dependency and inviting cross-reference resolves
     for r in reqs:
         for dep in r["dependencies"]:
             if dep not in seen:
                 problems.append(f"{r['id']}: dangling dependency {dep}")
+        enforced = r.get("enforced_by")
+        if enforced and enforced not in seen:
+            problems.append(f"{r['id']}: enforced_by names unknown requirement {enforced}")
+        for other in r.get("amended_by") or []:
+            # `amended_by` may name a requirement OR a recorded decision (D-1…D-5).
+            if other in seen or re.fullmatch(r"D-\d+", str(other)):
+                continue
+            problems.append(f"{r['id']}: amended_by names unknown requirement or decision {other}")
 
     # 5. A Must must not depend on a Could (Must -> Should is allowed but reported)
     pri = {r["id"]: r["priority"] for r in reqs}
@@ -69,11 +143,59 @@ def main() -> int:
                     problems.append(
                         f"warning: {r['id']} (Must) depends on {dep} (Should)")
 
-    # 6. Every parameter referenced in used_by exists
+    # 6. Parameters and their users resolve in both directions.
+    #    The old rule only checked that a named parameter's `used_by` targets exist.
+    #    It did not check that a parameter the registry *relies on* is declared, so
+    #    deleting CALL_CAP from the appendix exited 0. Found by an independent
+    #    review on 2026-11-24.
+    declared_params = set()
     for p in doc.get("parameter_appendix", []):
+        if p["name"] in declared_params:
+            problems.append(f"parameter declared twice: {p['name']}")
+        declared_params.add(p["name"])
         for used in p["used_by"]:
             if used not in seen:
                 problems.append(f"parameter {p['name']}: used_by unknown requirement {used}")
+
+    # Every UPPER_CASE token the requirement text leans on as a parameter must be
+    # declared, unless it is a recorded environment/technical constant below.
+    # Controlled vocabularies and configuration keys are not tuning parameters.
+    # They are enumerated here BY NAME so that a new one cannot slip in unnoticed:
+    # adding either a vocabulary value or a tuning parameter requires editing this
+    # list, which is the point.
+    VOCABULARY = {
+        # RUN-001 stop reasons
+        "MODEL_FAILURE", "DATA_FAILURE", "INTERNAL_ERROR", "PERSISTENCE_ERROR",
+        "INTERRUPTED", "BUDGET",
+        # output-check outcomes and statuses
+        "NEEDS_REVIEW", "NOT_RUN", "CHECK_ERROR", "NO_DATA", "NOT_REQUESTED",
+        # checkpoint states
+        "CONFIG_CHANGED", "RESUMABLE",
+        # configuration / mapping keys, not tunables
+        "DEFAULT_CONFIG",
+    }
+    PARAM_EXEMPT = {
+        "REQ", "TA", "FR", "NFR", "INV", "SEC", "ARCH", "GOV", "PERF", "COST",
+        "EVAL", "REPRO", "OBS", "RUN", "GUI", "JSON", "YAML", "PRD", "D1", "D2",
+        "D3", "D4", "D5", "CI", "CLI", "API", "SECONDS", "TOKENS", "CALLS",
+    } | VOCABULARY
+    # Tuning parameters are the names that appear in `parameter_appendix`; a
+    # reference is only suspicious if it is UPPER_CASE, underscored, and not a
+    # declared parameter, an exempt token, or an identifier from another namespace.
+    param_re = re.compile(
+        r"\b([A-Z][A-Z0-9]*(?:_[A-Z0-9]+)*_CAP"
+        r"|[A-Z][A-Z0-9]*_(?:BUDGET|DAYS|LIMIT|ALLOWANCE|THRESHOLD|SIZE|RATE|COUNT|ROUNDS|TIMEOUT))\b")
+    for r in reqs:
+        blob_r = json.dumps({k: r.get(k) for k in ("statement", "fit_criterion", "threshold")},
+                            ensure_ascii=False)
+        for token in set(param_re.findall(blob_r)):
+            if token in PARAM_EXEMPT or token in declared_params:
+                continue
+            if token.startswith(("REQ_", "NFR_", "INV_", "SEL_")):
+                continue
+            problems.append(
+                f"{r['id']}: references parameter {token} "
+                "that is not declared in parameter_appendix")
 
     # 7. No placeholder text left behind
     blob = json.dumps(doc, ensure_ascii=False)
@@ -111,8 +233,11 @@ def main() -> int:
                 problems.append(f"{r['id']}: invariant is not marked zero_tolerance")
             if not r.get("enforced_by"):
                 problems.append(f"{r['id']}: invariant does not name enforced_by")
-            if "zero-tolerance" not in json.dumps(r).lower() and "blocking" not in json.dumps(r).lower():
-                problems.append(f"{r['id']}: invariant fit criterion does not state a zero-tolerance outcome")
+            blob = json.dumps(r).lower()
+            if "zero-tolerance" not in blob and "blocking" not in blob:
+                problems.append(
+                    f"{r['id']}: invariant fit criterion "
+                    "does not state a zero-tolerance outcome")
 
     # 12. Required prose is non-empty (the failure mode of a bad bulk rewrite)
     for r in reqs:
@@ -120,9 +245,16 @@ def main() -> int:
             if not r.get(f, "").strip():
                 problems.append(f"{r['id']}: {f} is empty")
 
-    # 13. Withdrawn IDs are exactly the recorded set and appear nowhere as active
-    if len(withdrawn) < 3:
-        problems.append(f"scope.withdrawn_ids holds {len(withdrawn)} entries; 3 are recorded (FR-002, SAFETY-001, SAFETY-002)")
+    # 13. Withdrawn IDs are exactly the recorded set and appear nowhere as active.
+    #     Counting alone was not enough: swapping FR-002 for a made-up ID kept the
+    #     count at 3 and passed. Found by an independent review on 2026-11-24.
+    missing_w = sorted(set(REQUIRED_WITHDRAWN) - withdrawn)
+    extra_w = sorted(withdrawn - set(REQUIRED_WITHDRAWN))
+    if missing_w:
+        problems.append(
+            f"scope.withdrawn_ids lost recorded withdrawn ID(s): {', '.join(missing_w)}")
+    if extra_w:
+        problems.append(f"scope.withdrawn_ids holds unrecorded ID(s): {', '.join(extra_w)}")
 
     # 14. The eight invariants are present
     for n in range(1, 9):
@@ -151,7 +283,9 @@ def main() -> int:
     if unknown:
         problems.append(f"fixture profile names an unknown requirement: {', '.join(unknown[:5])}")
     if "A-C" not in fp.get("offline_variants", {}):
-        problems.append("profile A-C (portfolio with an unrelated holding) is missing; the holdings clause cannot be exercised")
+        problems.append(
+            "profile A-C (portfolio with an unrelated holding) is missing; "
+            "the holdings clause cannot be exercised")
 
     # 15. Every fit criterion is a complete Given/when/then
     for r in reqs:
