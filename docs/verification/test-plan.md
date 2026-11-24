@@ -1,3 +1,125 @@
+# Test plan — registry alignment
+
+Updated 2026-11-25. Scope: all 36 active entries in [requirements.yaml](../req/requirements.yaml), schema 1.2.0, proposed for adoption. Use the baseline, four coverage states and per-requirement evidence/gaps in [requirement-test-mapping.md](requirement-test-mapping.md). No tests or implementation changed, no approval invented, and no live run performed.
+
+Latest execution: [missing-test follow-up](registry-test-update-2026-11-25.md#missing-test-follow-up). New deterministic tests exercise frozen input through publication, conditional result fields, invalid REVIEW/PASSED, corrected findings and twenty disclaimer-placement renders. See the mapping's separate implementation and live-acceptance backlogs. Earlier statements that no tests were run describe the initial documentation pass only.
+
+## Execution and acceptance plan
+
+Use synthetic data, blocked network and scripted models through `run_analysis_api`; raw graph tests are supporting evidence only. Apply registry profiles A-A (no snapshot), A-B (confirmed snapshot without target), A-C (target plus unrelated holding); INV-014 needs all three, credential tests span all inputs. Explicit-empty and absent remain distinct. Reset cache/checkpoint state except checkpoint-specific cases.
+
+For every mapping row, retain existing assertions and add the stated missing fit-criterion cases before upgrading coverage. Prioritize RUN-001/budget outcomes, confirmed input mutation, evidence/coverage contracts, then R1-R8 integration. Preserve Q2 provenance independently. A owns channel enumeration, thresholds and requirement ambiguities; B/D own design/implementation; C owns test oracles and independent acceptance; E owns enforcement. Pending cases are planned work, not passing tests.
+
+Acceptance requires the full row's fit criterion, negative controls and applicable fixture profiles, plus actual recorded command, revision/dirty state, counts, failures, skips and exclusions. Do not use historical test counts as current minimums or silently waive environmental failures. Do not infer semantic quality from Q1-Q4, scorer self-tests or token savings. Live evaluation requires a fixed profile/threshold, durable all-start accounting, portable artifacts and genuine human scores; current independent acceptance is PENDING.
+
+Test-plan pre-approval remains paused as a required merge check; GOV-002 is a clarification item, not permission to reactivate it. Normal CI still applies. Documentation-only validation here checks IDs, paths and whitespace; behavioral tests and live CI are not claimed run. The available Python lacks PyYAML, so registry parsing/schema execution was not performed in this review.
+
+For a subsequent test run use an isolated environment with `python -m pip install -e ".[dev]"`, then `python -m pytest -q`; default integration exclusions and optional skips must be recorded. Required CI also runs Ruff, mypy, requirement schema, workflow permissions/security, dependency and AI-log checks as configured in `.github/workflows/ci.yml`.
+
+## Semantic migration of historical references
+
+Relationships below are partial unless the meanings fully coincide; numeric suffixes never establish equivalence. No active ID owns discovery or the full confirmation flow. Test filenames and TC IDs stay unchanged to preserve evidence links.
+
+| Historical requirement | Current meaning-based allocation |
+|---|---|
+| SEL-TA-FR-001 | Unmapped discovery/selection obligation (A clarification) |
+| SEL-TA-FR-002 | Unmapped confirmation flow (A open item 16); REQ-TA-INV-014 only for frozen authorization |
+| SEL-TA-FR-003 | REQ-TA-INV-014 (freeze); validation remainder unmapped |
+| SEL-TA-FR-004 | REQ-TA-FR-007 / REQ-TA-INV-003 (partial ownership semantics) |
+| SEL-TA-FR-005 | REQ-TA-FR-007 / REQ-TA-INV-001 |
+| SEL-TA-FR-006 | REQ-TA-INV-014 / REQ-TA-NFR-REPRO-001 |
+| SEL-TA-FR-007 | REQ-TA-ARCH-002 / REQ-TA-INV-001 / REQ-TA-INV-008 (Q rules only) |
+| SEL-TA-NFR-001 | REQ-TA-NFR-001 / REQ-TA-RUN-001 |
+| SEL-TA-NFR-002 | REQ-TA-NFR-OBS-001 |
+| SEL-TA-NFR-003 | REQ-TA-SEC-002 (credentials; extra holdings protection retained) |
+| SEL-TA-NFR-004 | REQ-TA-NFR-REPRO-001 / REQ-TA-RUN-001 |
+| SEL-TA-NFR-005 | REQ-TA-ARCH-001 (partial; CLI separation is additional scope) |
+| SEL-TA-NFR-006 | REQ-TA-NFR-EVAL-001 |
+| SEL-TA-GOV-001 | REQ-TA-GOV-002 (paused required gate) |
+| SEL-TA-GOV-002 | REQ-TA-GOV-004 (schema) |
+| SEL-TA-GOV-003 | Unmapped regression governance; retained CI duty |
+| SEL-TA-GOV-004 | REQ-TA-GOV-001 (semantic evaluation) |
+| SEL-TA-GOV-005 | REQ-TA-GOV-003 (AI log) |
+| SEL-TA-GOV-006 | Unmapped role-permission enforcement; E decision |
+
+## Existing case inventory with current allocations
+ (IDs → requirement → expected)
+
+| Test ID | Requirement | Scenario | Expected result |
+|---|---|---|---|
+| TC-FR001-a | Unmapped discovery/selection obligation (A clarification) | a/b + nested + symlink + .txt present | only `a.json,b.json`, sorted |
+| TC-FR001-b | Unmapped discovery/selection obligation (A clarification) | missing dir | empty list, not error |
+| TC-FR001-c | Unmapped discovery/selection obligation (A clarification) | empty dir | empty list |
+| TC-FR001-d | Unmapped discovery/selection obligation (A clarification) | directory read error | `DirectoryReadError` (not "empty") |
+| TC-FR001-e | Unmapped discovery/selection obligation (A clarification) | select b | only b validated; basename `b.json` |
+| TC-FR002-a | Unmapped confirmation flow (A open item 16); REQ-TA-INV-014 only for frozen authorization | FROZEN context to entry | `ValueError` (consent required) |
+| TC-FR002-b | Unmapped confirmation flow (A open item 16); REQ-TA-INV-014 only for frozen authorization | CONFIRMED context | runs once, COMPLETED |
+| TC-FR002-c | Unmapped confirmation flow (A open item 16); REQ-TA-INV-014 only for frozen authorization | both flags / no as-of | `FLAG_CONFLICT` / `AS_OF_MISMATCH` |
+| TC-FR002-d | Unmapped confirmation flow (A open item 16); REQ-TA-INV-014 only for frozen authorization | `--without-portfolio` | one run with `portfolio is None` |
+| TC-FR003-a | REQ-TA-INV-014 (freeze); validation remainder unmapped | valid populated | loads; provenance fields set |
+| TC-FR003-b | REQ-TA-INV-014 (freeze); validation remainder unmapped | explicit empty `positions` | valid flat snapshot |
+| TC-FR003-c | REQ-TA-INV-014 (freeze); validation remainder unmapped | `cash:null` | cash preserved as `None` |
+| TC-FR003-d | REQ-TA-INV-014 (freeze); validation remainder unmapped | 5 invalid classes (param) | typed `InputError` w/ kind+field |
+| TC-FR003-e | REQ-TA-INV-014 (freeze); validation remainder unmapped | unreadable path | `UNREADABLE_PATH` |
+| TC-FR003-f | REQ-TA-INV-014 (freeze); validation remainder unmapped | as-of != analysis date | `AS_OF_MISMATCH` |
+| TC-FR003-g | REQ-TA-INV-014 (freeze); validation remainder unmapped | edit file after freeze | frozen rows/digest unchanged |
+| TC-FR004-a | REQ-TA-FR-007 / REQ-TA-INV-003 (partial ownership semantics) | no portfolio | frozen notice, no "current position" |
+| TC-FR004-b | REQ-TA-FR-007 / REQ-TA-INV-003 (partial ownership semantics) | explicit flat | "No current position in AAPL" |
+| TC-FR004-c | REQ-TA-FR-007 / REQ-TA-INV-003 (partial ownership semantics) | held + missing cash | holding shown; no invented cash |
+| TC-FR004-d | REQ-TA-FR-007 / REQ-TA-INV-003 (partial ownership semantics) | broker alias | alias matched to instrument |
+| TC-FR004-e | REQ-TA-FR-007 / REQ-TA-INV-003 (partial ownership semantics) | two selections | no cross-selection holding leak |
+| TC-FR005-a | REQ-TA-FR-007 / REQ-TA-INV-001 | 5 ratings + REVIEW (param) | each parsed as itself |
+| TC-FR005-b | REQ-TA-FR-007 / REQ-TA-INV-001 | unreadable text | `REVIEW`, never Hold |
+| TC-FR005-c | REQ-TA-FR-007 / REQ-TA-INV-001 | completed RunResult | one rating enforced |
+| TC-FR005-d | REQ-TA-FR-007 / REQ-TA-INV-001 | report w/ differing RM/Trader/PM judgments | 3 labelled stages; exactly one PM-sourced final rating |
+| TC-FR006-a | REQ-TA-INV-014 / REQ-TA-NFR-REPRO-001 | documented Reason-E book | fingerprint = `45f07d9e…cef72`, 64 hex |
+| TC-FR006-b | REQ-TA-INV-014 / REQ-TA-NFR-REPRO-001 | reorder / 1 vs 1.0 / null price | equal digests |
+| TC-FR006-c | REQ-TA-INV-014 / REQ-TA-NFR-REPRO-001 | none vs explicit empty | distinct mode/fingerprint |
+| TC-FR006-d | REQ-TA-INV-014 / REQ-TA-NFR-REPRO-001 | select b | b fingerprint, != a |
+| TC-FR006-e | REQ-TA-INV-014 / REQ-TA-NFR-REPRO-001 | 2 runs, same contents/date, fresh IDs, different text | both texts published; provenance identical (minus run ID/ts) |
+| TC-FR007-a | REQ-TA-ARCH-002 / REQ-TA-INV-001 / REQ-TA-INV-008 (Q rules only) | all rules hold | PASSED, no findings |
+| TC-FR007-b | REQ-TA-ARCH-002 / REQ-TA-INV-001 / REQ-TA-INV-008 (Q rules only) | each Q1/Q2/Q3/Q4 break | matching finding, NEEDS_REVIEW |
+| TC-FR007-c | REQ-TA-ARCH-002 / REQ-TA-INV-001 / REQ-TA-INV-008 (Q rules only) | body claims "OUTPUT CHECK: PASSED" | ignored; NEEDS_REVIEW |
+| TC-FR007-d | REQ-TA-ARCH-002 / REQ-TA-INV-001 / REQ-TA-INV-008 (Q rules only) | `evaluate` raises inside `run_analysis_api` | called; COMPLETED + NEEDS_REVIEW + one CHECK_ERROR |
+| TC-FR007-e | REQ-TA-ARCH-002 / REQ-TA-INV-001 / REQ-TA-INV-008 (Q rules only) | check under blocked sockets | PASSED (no provider) |
+| TC-NFR001-a | REQ-TA-NFR-001 / REQ-TA-RUN-001 | unreadable final text | COMPLETED + REVIEW + NEEDS_REVIEW |
+| TC-NFR001-b | REQ-TA-NFR-001 / REQ-TA-RUN-001 | internal exception | INCOMPLETE / INTERNAL_ERROR |
+| TC-NFR001-c | REQ-TA-NFR-001 / REQ-TA-RUN-001 | vendor exception | DATA_FAILURE |
+| TC-NFR001-d | REQ-TA-NFR-001 / REQ-TA-RUN-001 | provider lib / timeout | MODEL_FAILURE |
+| TC-NFR001-d2 | REQ-TA-NFR-001 / REQ-TA-RUN-001 | bare ConnectionError | INTERNAL_ERROR (guard) |
+| TC-NFR001-e | REQ-TA-NFR-001 / REQ-TA-RUN-001 | raised engine error | no exception escapes |
+| TC-NFR002-a | REQ-TA-NFR-OBS-001 | completed run events | all parse, fields non-null, elapsed≥0, 1 terminal |
+| TC-NFR002-b | REQ-TA-NFR-OBS-001 | second terminal | rejected |
+| TC-NFR002-c | REQ-TA-NFR-OBS-001 | secret in event | redacted |
+| TC-NFR003-a | REQ-TA-SEC-002 (credentials; extra holdings protection retained) | 4 secret types (param) | each scrubbed |
+| TC-NFR003-b | REQ-TA-SEC-002 (credentials; extra holdings protection retained) | secret-keyed mapping | values redacted |
+| TC-NFR003-c | REQ-TA-SEC-002 (credentials; extra holdings protection retained) | diagnostic w/ secret | type kept, secret hidden |
+| TC-NFR003-d | REQ-TA-SEC-002 (credentials; extra holdings protection retained) | model error + synthetic portfolio via API | no secret/unrelated-holding leak in result/report/manifest/events; source unchanged |
+| TC-NFR003-e | REQ-TA-SEC-002 (credentials; extra holdings protection retained) | CLI pre-run portfolio input error | no secret/unrelated-holding in CLI output; source unchanged |
+| TC-NFR003-f | REQ-TA-SEC-002 (credentials; extra holdings protection retained) | mid-run vendor exception via API | INCOMPLETE/DATA_FAILURE/NOT_RUN; no secret/unrelated-holding in result/report(.md/.html)/manifest/events; vendor stub reached; source unchanged |
+| TC-NFR003-g | REQ-TA-SEC-002 (credentials; extra holdings protection retained) | completed narrative with planted credential (md+html) | COMPLETED; benign sentence retained; credential omitted in both reports; [REDACTED] present |
+| TC-NFR004-a | REQ-TA-NFR-REPRO-001 / REQ-TA-RUN-001 | two same-ticker/date runs | isolated dirs; first bytes unchanged |
+| TC-NFR004-b | REQ-TA-NFR-REPRO-001 / REQ-TA-RUN-001 | portfolio provided | manifest omits payload/cash |
+| TC-NFR004-c | REQ-TA-NFR-REPRO-001 / REQ-TA-RUN-001 | completed manifest | conditional fields correct (rating present, stop_reason null) |
+| TC-NFR004-d | REQ-TA-NFR-REPRO-001 / REQ-TA-RUN-001 | one config value changed | only that key differs in `effective_config`; run IDs differ |
+| TC-NFR004-e | REQ-TA-NFR-REPRO-001 / REQ-TA-RUN-001 | prompt-template file edited (simulated) | `prompt_hash` changes; `effective_config` unchanged |
+| TC-NFR004-f | REQ-TA-NFR-REPRO-001 / REQ-TA-RUN-001 | engine error → published INCOMPLETE | manifest has `final_rating=null`, `output_check=NOT_RUN`, a `stop_reason` |
+| TC-NFR004-g | REQ-TA-NFR-REPRO-001 / REQ-TA-RUN-001 | R13a commit failure (rename fails) | INCOMPLETE/PERSISTENCE_ERROR/NOT_RUN; no rating; nothing published; no `_staging` left |
+| TC-NFR004-h | REQ-TA-NFR-REPRO-001 / REQ-TA-RUN-001 | R13b best-effort state.json write fails | COMPLETED outcome preserved; `BEST_EFFORT_FAILED:state.json` in events |
+| TC-NFR004-i | REQ-TA-NFR-REPRO-001 / REQ-TA-RUN-001 | R14 terminal-event append fails | COMPLETED preserved; manifest `terminal_event.durable=false` |
+| TC-NFR005-a | REQ-TA-ARCH-001 (partial; CLI separation is additional scope) | scan runapi/agents/graph | no terminal-prompt imports |
+| TC-NFR005-b | REQ-TA-ARCH-001 (partial; CLI separation is additional scope) | scan runapi imports | no `cli` import |
+| TC-NFR006-a | REQ-TA-NFR-EVAL-001 | 6 complete/4 incomplete/2 cancel | 6/10, review 2, cancel 2 |
+| TC-NFR006-b | REQ-TA-NFR-EVAL-001 | zero completed | INSUFFICIENT_EVIDENCE |
+
+Parametrised cases expand to 80 collected test items.
+
+
+
+## Historical plan (preserved, superseded)
+
+Original approval references, results and change history below describe the earlier selection only. They are not new approval, current acceptance, or the current registry scope. Current coverage and gaps are in the linked mapping; historical semantic claims are subject to its dated correction.
+
 # Test Plan (Member C)
 
 > Remediation update 2026-11-21: current developer regression results and remaining F8/F9 acceptance limitations are recorded in `docs/reviews/remediation-2026-11-21.md`. Historical counts and claims below must not be treated as acceptance of the modified revision without independent review.

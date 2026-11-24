@@ -53,3 +53,17 @@ def test_tc_nfr002_c_secret_redacted(tmp_path):
     text = (tmp_path / "events.jsonl").read_text()
     assert "sk-abcdefghijklmnop1234" not in text
     assert "[REDACTED]" in text
+
+
+@pytest.mark.parametrize("reason", ["MODEL_FAILURE", "DATA_FAILURE", "BUDGET", "INTERNAL_ERROR", "PERSISTENCE_ERROR", "INTERRUPTED"])
+def test_failure_logging_redacts_credentials(tmp_path, reason):
+    """Sink coverage only; BUDGET engine support is checked separately."""
+    sink = EventSink("failed", "AAPL", Redactor())
+    sink.emit("output", "run.terminal", f"INCOMPLETE:{reason} auth=Bearer sk-abcdefghijklmnop1234")
+    assert sink.write_to(tmp_path / "events.jsonl")
+    raw = (tmp_path / "events.jsonl").read_text()
+    rows = [json.loads(line) for line in raw.splitlines()]
+    assert len(rows) == 1
+    assert rows[0].keys() >= REQUIRED
+    assert reason in rows[0]["event_outcome"]
+    assert "sk-abcdefghijklmnop1234" not in raw

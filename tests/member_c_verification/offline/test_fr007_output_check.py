@@ -107,3 +107,16 @@ def test_tc_fr007_e_check_calls_no_provider(monkeypatch):
     monkeypatch.setattr(socket, "create_connection", refuse)
     result = _eval()
     assert result.output_check == "PASSED"
+
+
+@pytest.mark.parametrize("severity,verdict", [("CORRECTED", "PASSED"), ("BLOCKING", "NEEDS_REVIEW")])
+def test_registry_finding_severity(severity, verdict):
+    from tradingagents.runapi.result import CheckResult, Finding
+    result = CheckResult(verdict, (Finding("R5" if severity == "CORRECTED" else "R3", status=severity),))
+    assert result.as_dict()["findings"][0]["status"] == severity
+
+
+def test_mixed_findings_are_retained_for_review():
+    from tradingagents.runapi.result import CheckResult, Finding
+    result = CheckResult("NEEDS_REVIEW", (Finding("R5", status="CORRECTED"), Finding("R8")))
+    assert [f["status"] for f in result.as_dict()["findings"]] == ["CORRECTED", "BLOCKING"]
