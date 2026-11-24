@@ -9,7 +9,7 @@
 
 ## Context
 
-The 24 November requirements snapshot (`requirements.yaml`, `status: proposed_for_adoption`) proposes obligations beyond the implemented `SEL-TA-*` baseline: an R1–R8 deterministic output check with a **corrected** finding class, an evidence-ID registry and per-run coverage record, a run-wide single-use request-budget controller and a `BUDGET` stop reason. The as-built system implements only Q1–Q4, five stop reasons, and input provenance (see interface-contracts §12). This ADR records the **bounded design decisions** needed to make those obligations implementable and testable, without claiming they are adopted or built.
+The 24 November requirements snapshot (`docs/req/requirements.yaml`, `status: proposed_for_adoption`) proposes obligations beyond the implemented `SEL-TA-*` baseline: an R1–R8 deterministic output check with a **corrected** finding class, an evidence-ID registry and per-run coverage record, a run-wide single-use request-budget controller and a `BUDGET` stop reason. The as-built system implements only Q1–Q4, five stop reasons, and input provenance (see interface-contracts §12). This ADR records the **bounded design decisions** needed to make those obligations implementable and testable, without claiming they are adopted or built.
 
 ## Decisions (bounded alternatives)
 

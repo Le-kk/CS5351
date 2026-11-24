@@ -54,3 +54,11 @@ These are **catalog triggers** (the `R*` prefix here is the catalog namespace, *
 | R21 | Output check blocking rule fails (R1–R4,R6–R8) or checker raises | `runapi/checks.py` | Do not pass; retain findings | `COMPLETED` + `NEEDS_REVIEW` | Blocking finding / `CHECK_ERROR` |
 
 **Precedence:** if a budget stop (R17) and a critical persistence failure co-occur, `PERSISTENCE_ERROR` is primary and the budget cause is secondary (R13a unchanged). Reaching `CALL_CAP` after the last needed request does not itself trigger R17.
+
+## Concise intermediate context — feature branch `9102759` (implemented on feature, not on main)
+
+> **Namespace note.** The `R22` row below is a **catalog trigger row** in this document's namespace — **not** a proposed output-check rule `R1–R8` (`REQ-TA-ARCH-002`), **not** the as-built checker codes `Q1–Q4`, and **not** the proposed run-budget row `R17`. It is **implemented on feature branch `9102759` (PR #18), not integrated on main**, and introduces no aggregate budget or forced truncation.
+
+| # | Trigger | Responsible component | Fallback / action | Output | Diagnostic / monitor |
+|---|---|---|---|---|---|
+| R22 | Concise intermediate context enabled (`concise_intermediate_reports`, default True; feature `9102759`) | `agents/context.py` (`concise_analysis_instruction`, `opponent_argument_or_opening(...,history)`, `bound_debate_prompt`); `agents/analysts/turn.py` (assembled system message); Bull/Bear/risk agents (assembled prompt strings) | Advisory evidence-first brevity; exact Python string-substring opponent reference; restore explicit copies before the existing guard when reconstructed-original length > `min(cap,threshold)*4` (reduces, does not eliminate, dangling-reference risk); legacy path via switch | Normal run; `prompt_hash` reflects the touched sources | `EffectiveConfig.concise_intermediate_reports`; no new forced truncation |

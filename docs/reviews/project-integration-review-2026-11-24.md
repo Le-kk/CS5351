@@ -32,7 +32,7 @@ The temporary validation runs used the existing Ubuntu system Python with PyYAML
 
 **Priority: P1. Suggested coordination: A and E.**
 
-The six uploaded files are at the repository root: `requirements.yaml`, `req-schema.json`, `validate.py`, `requirement-source-notes.md`, `negative-fixtures.md`, and `change-log.md`. The validator hard-codes `docs/req/requirements.yaml` and `docs/req/req-schema.json` at [validate.py](../../validate.py), lines 18–29. The reproduction instructions also invoke `docs/req/validate.py`. Those files are not present at the expected locations.
+The six uploaded files are at the repository root: `requirements.yaml`, `req-schema.json`, `validate.py`, `requirement-source-notes.md`, `negative-fixtures.md`, and `change-log.md`. The validator hard-codes `docs/req/requirements.yaml` and `docs/req/req-schema.json` at [validate.py](https://github.com/Le-kk/CS5351/blob/a62b801a51e6310f3b46860f6d2790583a95e0e0/validate.py), lines 18–29. The reproduction instructions also invoke `docs/req/validate.py`. Those files are not present at the expected locations.
 
 This is a reproducible integration failure, not evidence that the registry cannot satisfy its schema: copying the registry/schema into the intended layout in an isolated temporary directory makes the baseline pass. The project virtual environment additionally lacks `jsonschema`, so E must ensure the validation job has its declared dependencies.
 
@@ -42,7 +42,7 @@ No current workflow invokes this validator. Existing green CI therefore does not
 
 **Priority: P1. Suggested coordination: A, with the team confirming scope.**
 
-The uploaded [requirements.yaml](../../requirements.yaml) contains **34 active entries and 3 withdrawn IDs**, with **24 proposed and 10 partial**. Its document status is `proposed_for_adoption`. It has neither `REQ-TA-INV-014` nor `REQ-TA-GOV-004`, although A's later `reply-to-B-2026-11-23.md` reports those additions and 36 active entries. This establishes a difference between the uploaded snapshot and the later correspondence; it does not establish that A's unpublished working copy is wrong.
+The uploaded [requirements.yaml](https://github.com/Le-kk/CS5351/blob/a62b801a51e6310f3b46860f6d2790583a95e0e0/requirements.yaml) contains **34 active entries and 3 withdrawn IDs**, with **24 proposed and 10 partial**. Its document status is `proposed_for_adoption`. It has neither `REQ-TA-INV-014` nor `REQ-TA-GOV-004`, although A's later `reply-to-B-2026-11-23.md` reports those additions and 36 active entries. This establishes a difference between the uploaded snapshot and the later correspondence; it does not establish that A's unpublished working copy is wrong.
 
 The uploaded scope at lines 24–28 still excludes portfolio files and says every fixture runs without one. Its fixture profiles at lines 1404 onward explicitly contain confirmed portfolio inputs. The source notes acknowledge the optional-input decision remains open. The main statement and profiles therefore do not describe one coherent scope.
 
