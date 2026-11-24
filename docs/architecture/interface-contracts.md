@@ -2,7 +2,7 @@
 
 Status: architecture draft (revised 2026-11-12 per the Stage-3 architecture review; implementation-aligned 2026-11-24). Typed shapes were **proposed design contracts** for C (test seams) and D (implementation). As of `a62b801` they are **implemented** in `tradingagents/runapi/` (verified against source; see §12). Where the implementation is narrower than this spec, §12 records the difference; the contract text below is the design of record. Independent acceptance (C) and enforcement (E) remain their owners'. Synthetic examples are **document examples**, not passing application tests.
 
-This revision designs the required contracts rather than deferring them to D. External-owner items (final D1 approval, the pending `REQ-TA-INV-014`/`REQ-TA-GOV-004` publication, C's tests/rubric, E's enforcement, instructor layout) remain explicitly pending.
+This revision designs the required contracts rather than deferring them to D. External-owner items remain: final D1 **adoption** of the 36-entry registry (which **contains** `REQ-TA-INV-014` and `REQ-TA-GOV-004`, both `status: proposed`) (A); C's tests/rubric and independent semantic acceptance; E's OpenCode permission enforcement and confirmation of the required `requirements schema` check (implemented; activation E-reported); instructor layout. `REQ-TA-GOV-004` (schema validation, `SEL-TA-GOV-002`) now has an implemented CI gate (`requirements schema`); runtime contracts here are unchanged by it.
 
 ---
 
@@ -531,7 +531,7 @@ Aggregation (design):
 - Controlled before/after experiments carry `controlled_change` and are labelled as changed-factor comparisons; repeated fixed-condition benchmarks require matching controls. Exact scoring/threshold is C/A's (pending).
 
 ## 11. Pending (external owners)
-Final D1/schema (A); C's test IDs, rubric/threshold, and independent evidence; E enforcement; instructor layout. A must approve any reliance on the reduced-coverage low-level primitive (§5.3). `REQ-TA-INV-014` (immutable input) and `REQ-TA-GOV-004` (schema validation) are now present in the 36-entry registry (`status: proposed`); their presence does not change this contract — input freezing is covered by INV-04/05/05b and schema validation belongs to the governance/CI boundary.
+Final D1/schema (A); C's test IDs, rubric/threshold, and independent evidence; E enforcement; instructor layout. A must approve any reliance on the reduced-coverage low-level primitive (§5.3). `REQ-TA-INV-014` (immutable input) and `REQ-TA-GOV-004` (schema validation) are now present in the 36-entry registry (`status: proposed`); their presence does not change this contract — input freezing is covered by INV-04/05/05b and schema validation belongs to the governance/CI boundary, where `REQ-TA-GOV-004` now has an implemented `requirements schema` CI gate (E-reported required; not adoption).
 
 ## 12. Implementation status and deviations at `a62b801` (verified 2026-11-24)
 
