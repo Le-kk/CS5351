@@ -1,8 +1,8 @@
 # Permission Model (Member B design)
 
-Status: architecture draft (revised 2026-11-12 per review B3-06). Describes **application roles during a run** and **per-coding-agent-role file rights**, kept separate. E implements enforcement (`.opencode/permissions.jsonc`, `.github`). Governance is **not installed** at drafting (`AGENTS.md`, `.opencode/` absent — see `risk-list.md` R-GOV); no enforcement or denied-write demo is claimed.
+Status: architecture draft (revised 2026-11-12 per review B3-06; implementation-aligned 2026-11-24). Describes **application roles during a run** and **per-coding-agent-role file rights**, kept separate. E implements enforcement. As of `a62b801`, governance **tooling and policy files exist** (`docs/code-governance/`, `scripts/ci/`, `.github/workflows/`), but the OpenCode permission package (`AGENTS.md`, `.opencode/permissions.jsonc`, `.agent/`) is **still absent**, so no OpenCode permission enforcement is installed. **Governance status (corrected 2026-11-24), per the integration review `evidence/integration-review-2026-11-24/github-checks.json`:** the public integration branch **requires** `ai-log updated`, `dependency check`, `required tests`, `ruff (strict, full repo)` — so **AI-use-log updates are a required merge check**. The **test-approval tooling exists and runs**, but **merge enforcement remains incomplete**: `test approval` is **not** in the required-status-check contexts, and PR 16 merged with a failed approval check. This draft claims **no** demonstrated denial and **no** enforced approval gate; schema-validation gating is likewise not wired. See `risk-list.md` R-GOV.
 
-Source: `SEL-TA-GOV-006` (B permission design; E enforcement); team ownership per `docs/project-deliverables-and-ownership.md`.
+Source: `SEL-TA-GOV-006` (B permission design; E enforcement). Ownership follows the team allocation recorded in `docs/architecture/evaluation-logbook.md`; the previously cited `docs/project-deliverables-and-ownership.md` is **not present** in the checkout.
 
 ## 1. Role separation
 
@@ -22,7 +22,8 @@ Deny precedence: **deny wins** over any allow; a more-specific deny overrides a 
 ### 2.1 Common startup READ set (all coding-agent roles) — F5
 Every coding-agent role must read the governance/blueprint startup set; these paths are **readable by all A/B/C/D/E** (still subject to the secret denies above):
 ```
-AGENTS.md, Prompt.md, architecture-blueprint.md, docs/architecture/**, docs/project-deliverables-and-ownership.md
+AGENTS.md, Prompt.md, architecture-blueprint.md, docs/architecture/**,
+docs/project-deliverables-and-ownership.md (if present; currently absent from the checkout)
 ```
 This makes the startup reading order runnable under default-deny without opening secret paths.
 
@@ -50,8 +51,10 @@ This makes the startup reading order runnable under default-deny without opening
 
 ## 4. Enforcement (E) and denied-write behaviour (GOV-006)
 
-- E wires per-role whitelists into `.opencode/permissions.jsonc` and CI. A denied access attempt must be **blocked and logged without changing the file**. B specifies; E implements and demonstrates. This draft does **not** claim a demonstrated denial.
-- Branch protection requires passing checks + human review + ADR for safety changes. B's ADRs are the architecture contribution.
+- **Present at `a62b801`:** `docs/code-governance/{verification-constraints.md,test-approval-policy.yaml,self-review-workflow.md,dependency-*}`; CI helpers in `scripts/ci/` (`check_test_approval.py`, `check_ai_log_updated.py`, `check_required_tests.py`, `check_dependencies.py`, `build_pr_self_review.py`); workflows `.github/workflows/{ci,test-approval,test-approval-complete,pr-self-review,release-assets}.yml`.
+- **Absent / not enforced:** the OpenCode permission package (`AGENTS.md`, `.opencode/permissions.jsonc`, `.opencode/rules.md`, `.agent/rules.md`) is not present, so per-role file rights below are **design intent only**. The public integration branch lists only four required checks; `test approval` exists but is **not required**, and a PR merged with a failed approval check (24 November review, I24 03). Schema-validation gating is likewise not wired.
+- E wires per-role whitelists into `.opencode/permissions.jsonc` and CI. A denied access attempt must be **blocked and logged without changing the file**. This draft does **not** claim a demonstrated denial or an enforced fifth gate.
+- Branch protection is *intended* to require passing checks + human review + ADR for safety changes; the review found full admin-only settings not verifiable and `test approval` not required. B's ADRs remain the architecture contribution.
 
 ## 5. Permitted/denied examples (document examples) — F5
 - **Startup reads:** A/B/C/D/E can all read `AGENTS.md`, `Prompt.md`, `architecture-blueprint.md`, `docs/architecture/**` → permitted.

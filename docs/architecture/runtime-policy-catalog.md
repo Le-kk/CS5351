@@ -1,6 +1,8 @@
 # Runtime Policy Catalog (Member B)
 
-Status: architecture draft. Maps each supported failure/degraded path to trigger, responsible component, fallback/action, output and diagnostic/monitor, consistent with the selected result/check contract (`SEL-TA-FR-007`, `SEL-TA-NFR-001`). Test evidence is C's; enforcement wiring is D/E's. No measured results are claimed.
+Status: architecture draft (implementation-aligned 2026-11-24). Maps each supported failure/degraded path to trigger, responsible component, fallback/action, output and diagnostic/monitor, consistent with the selected result/check contract (`SEL-TA-FR-007`, `SEL-TA-NFR-001`). Components exist in the `a62b801` checkout (verified); test evidence is C's; enforcement wiring is D/E's. No measured results are claimed.
+
+> **Label namespace warning:** the `R1`, `R2`, … in the **first column of the table below are trigger-row identifiers in this catalog only**. They are **not** the output-check rules `R1–R8` of proposed `REQ-TA-ARCH-002`, and **not** the checker codes `Q1–Q4` in `runapi/checks.py`. For example, catalog `R1` here is a recoverable-data sentinel path, whereas `REQ-TA-ARCH-002`'s `R1` is "final rating readable". Do not equate them by number.
 
 ## Result contract reminder
 - `run_outcome = COMPLETED | INCOMPLETE`.
@@ -35,3 +37,20 @@ Status: architecture draft. Maps each supported failure/degraded path to trigger
 - `MODEL_FAILURE` is used **only** for exhausted model/provider output failures; recoverable optional-data sentinels (R1) are never reclassified as fatal.
 - Diagnostics are redacted (NFR-003) before delivery; secrets/holdings never appear.
 - Durability across total disk failure/power loss is **not** promised; PERSISTENCE_ERROR is the cooperative failure contract.
+
+## As-built status at `a62b801` (verified 2026-11-24)
+Rows R3–R5 (`MODEL_FAILURE`/`DATA_FAILURE`/`INTERNAL_ERROR`) and R12 (`INTERRUPTED`) map to `runapi/finalize.py::classify_exception`; R13a/R13c/R14 map to `runapi/persist.py` (single `os.rename`, truthful `terminal_event.durable`) and `runapi/events.py` (stage-private tentative terminal). R9–R11, R15 map to `runapi/checks.py` (`Q1–Q4`, `CHECK_ERROR`). The vocabulary is **five** stop reasons; there is **no `BUDGET` row** implemented. Proposed budget rows (`REQ-TA-NFR-PERF-002`/`COST-001/002` → `BUDGET`) are **not** in this catalog as implemented behaviour; they would require a sixth `stop_reason` and every reader updated.
+
+## Proposed rows for the extended checks (2026-11-24; **PROPOSED, not implemented**)
+
+These are **catalog triggers** (the `R*` prefix here is the catalog namespace, **not** ARCH-002 rules or Q1–Q4). They accompany interface-contracts §13–§15 and ADR 002.
+
+| # | Trigger | Responsible component | Fallback / action | Output | Diagnostic / monitor |
+|---|---|---|---|---|---|
+| R17 | A **required** model request is refused by an adopted run budget (`CALL_CAP`) | `runapi/budget.py` → shared execution boundary → finalizer | Refuse the request; stop new admission; account for in-flight; preserve partial content through normal publication | `INCOMPLETE`, `stop_reason=BUDGET`, `final_rating=null`, `output_check=NOT_RUN` | Budget kind, configured cap, counters, run/attempt id; no prompts/secrets |
+| R18 | **Mandatory core** data channel has code ≠ `OK` — including `NOT_REQUESTED` when the core channel was mandated but never requested (price `UNAVAILABLE`/`NO_DATA`/`STALE`/`NOT_REQUESTED`) | `runapi/coverage.py` + finalizer | Stop as data failure; do not publish a successful analysis. **Strict published rule:** an unrequested mandatory core channel is NOT auto-exempt; excluding it requires an adopted A/team exemption (not applied) | `INCOMPLETE`, `stop_reason=DATA_FAILURE`, `NOT_RUN` | Channel + code; source metadata |
+| R19 | Non-core channel gap / statement `STALE` | `runapi/coverage.py` | Continue; code the channel; show `STALE` with filing date | `COMPLETED` (or normal) | Coverage section reflects code |
+| R20 | Output check produces **corrected only** finding (e.g. R5 confidence) | `runapi/checks.py` | Apply correction; record original+corrected | `COMPLETED` + `PASSED` + CORRECTED finding | `output.check` corrected finding |
+| R21 | Output check blocking rule fails (R1–R4,R6–R8) or checker raises | `runapi/checks.py` | Do not pass; retain findings | `COMPLETED` + `NEEDS_REVIEW` | Blocking finding / `CHECK_ERROR` |
+
+**Precedence:** if a budget stop (R17) and a critical persistence failure co-occur, `PERSISTENCE_ERROR` is primary and the budget cause is secondary (R13a unchanged). Reaching `CALL_CAP` after the last needed request does not itself trigger R17.

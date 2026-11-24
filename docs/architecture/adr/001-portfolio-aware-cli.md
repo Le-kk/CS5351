@@ -1,8 +1,8 @@
 # ADR 001 — Portfolio-aware CLI: input/service boundary and consent
 
-- Status: **Proposed (architecture draft)**. Selection made by Brian (human) 2026-11-12; awaiting team/instructor reconciliation. Not implementation.
+- Status: **Proposed (architecture draft; implementation-aligned 2026-11-24)**. Selection made by Brian (human) 2026-11-12; awaiting team/instructor reconciliation. The C2 boundary is **implemented** at `a62b801` (verified); this ADR records the decision and its as-built status, not an approval.
 - Deciders: Brian (selection), Member B (author), pending A (requirements coherence), E (governance/assembly).
-- Scope: `SEL-TA-FR-001..007`, `SEL-TA-NFR-001..006`, `SEL-TA-GOV-006` (permission design contribution).
+- Scope: `SEL-TA-FR-001..007`, `SEL-TA-NFR-001..006`, `SEL-TA-GOV-006` (permission design contribution). Broader `REQ-TA-*` extensions are recorded as proposed impacts in §"Proposed broader requirements", not adopted here.
 - Supersedes: none. Does not modify v2 requirements or the D1 registry (A owns).
 
 > Estimates in this ADR are labelled **ESTIMATE** and are design judgements. No measurement or verification is claimed.
@@ -68,13 +68,31 @@ Brian selected **C2** because of its **explicit input/snapshot boundary, test se
 
 Positive: single provenance source; deterministic check authority; consent is an explicit transition; shared execution service gives full-coverage API path; preserved engine signature.
 Negative/risks: the raw low-level engine primitive can bypass the boundary and its product use requires A's approval (R-API); full-64 fingerprint canonicalization must be exactly implemented (`interface-contracts.md` §2.2); prompt/context wording changes are required (not optional).
+Scope note: the implemented optional-portfolio flow is retained here. The broader `REQ-TA-*` candidate's scope statement excludes portfolio files while its fixture profiles include them; that replacement-scope disagreement is **unresolved (A/C/team)** and does not change this ADR's decision.
 
 ## Repairs (2026-11-21, R1–R5)
 
 These bounded repairs keep the selected architecture; see [remediation record](../../reviews/remediation-r1-r5-2026-11-21.md).
 
-- **R4:** the Research Manager now receives the same protected `get_portfolio_context_from_state` block as the Trader and Portfolio Manager, so its investment plan cannot assert a nonexistent position or treat unknown input as flat. It adds a stage-appropriate instruction to correct conflicting upstream ownership premises; the five-tier research vocabulary and three-action Trader vocabulary are unchanged and no rating is forced.
+- **R4:** the Research Manager now receives the same protected `get_portfolio_context_from_state` block as the Trader and Portfolio Manager, together with a stage-appropriate instruction to correct conflicting upstream ownership premises. The five-tier research vocabulary and three-action Trader vocabulary are unchanged and no rating is forced. **Scope of the guarantee:** this is *prompt grounding* — the trusted snapshot facts are deterministically delivered to all three decision stages (verified by prompt-capture tests), not a guarantee that the model *cannot* state a nonexistent position. Only a deterministic check could enforce that; the current Q1–Q4 checker does not inspect ownership narrative, so whether a given model response honours the grounding is a **semantic** matter pending C's GOV-004 acceptance. The R4 repair reduces the chance of an unsupported ownership claim; it does not deterministically forbid one.
 - **R5:** publication stages a private tentative terminal on the `EventSink` and only commits the caller-visible terminal after the single directory rename succeeds; a critical publication failure exposes exactly one matching `INCOMPLETE` terminal. Terminal-append failure alone still preserves the logical outcome with `terminal_event.durable=false`; report/manifest remain critical and the single-terminal rule is preserved.
+
+## Implementation status at `a62b801` (verified 2026-11-24)
+
+The C2 boundary is present in the checkout, not merely designed:
+
+- `runapi/input_service.py` (`PortfolioInputService`, `freeze_explicit`, `freeze_no_portfolio`), `runapi/context.py` (`RunContext`, `FrozenSnapshot`, `ConsentState`), `runapi/execution.py` (`run_analysis_api`, rejects non-`CONFIRMED` at `:149`), `runapi/checks.py` (`OutputChecker`, Q1–Q4), `runapi/finalize.py` (`classify_exception`, `OutcomeFinalizer`), `runapi/persist.py` (single `os.rename` publication at `:154`), `runapi/events.py` (stage-private tentative terminal), `runapi/result.py` (`RunResult`/`CheckResult`/`Finding`), `runapi/reporting.py` (`build_envelope`, `verify_envelope_header_matches`), `runapi/redact.py`.
+- R1–R5 repairs are implemented (`agents/structured.py` applies the shared `Redactor` to its fallback warnings). Independent acceptance of these repairs remains **pending (C)**; the implementation's own remediation record is `docs/reviews/remediation-r1-r5-2026-11-21.md`.
+- The C-owned tests under `tests/member_c_verification/offline/` define the seams; passing status is C's to report, not this ADR's.
+
+## Proposed broader requirements — impact, **not** implemented
+
+The uploaded `requirements.yaml` (`status: proposed_for_adoption`) and A's later correspondence would extend the as-built system. If adopted, the following are architecture impacts, documented but **not** designed as accepted decisions here:
+
+- **`BUDGET` stop reason** and a run-wide **single-use call-reservation** controller (`REQ-TA-RUN-001`, `REQ-TA-NFR-COST-002`): would add a sixth serialized `StopReason`, a shared budget component consulted before every model dispatch, and updates to every reader. The current five-value literal (`runapi/result.py:12-14`) has no `BUDGET`.
+- **R1–R8 output check** (`REQ-TA-ARCH-002`) and **corrected-only `PASSED`** (R5): R2 (evidence-ID resolution) and R4–R7 (sentiment/coverage) require new data fields and registry components the checker does not inspect; R5 would change `Finding.status`/`CheckResult` so `PASSED` can carry corrected findings — a coordinated type change across checks/report/scorer if retained.
+- **Evidence and coverage registries** (`REQ-TA-FR-001`, `REQ-TA-FR-005`, `REQ-TA-INV-002/007`), **aggregate budgets/resume** (`REQ-TA-NFR-PERF-002`, `COST-001/002`, D-5): new components and a resume contract that currently conflicts with `INV-11`/`INV-12`.
+- **`REQ-TA-INV-014` / `REQ-TA-GOV-004`** are pending publication; the existing design already covers input freezing (`INV-04/05/05b`) and treats schema validation as a governance/CI boundary, so their absence does not change C2's data flow.
 
 ## Reopening conditions
 

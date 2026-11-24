@@ -1,13 +1,13 @@
 # Architecture Blueprint — Portfolio-Aware CLI and Auditable Reporting
 
-Status: **architecture draft (Stage 3)** for Member B's session. Not implementation, not verification, not an approved course deliverable until E/team assembly and instructor reconciliation. Complements the D2 artifacts under `docs/architecture/`.
+Status: **architecture draft, implementation-aligned (revised 2026-11-24)** for Member B's session. It describes the C2 design and now also states, separately, what the `main` checkout implements at `a62b801a51e6310f3b46860f6d2790583a95e0e0` versus what remains proposed. Not implementation approval, not verification, not an approved course deliverable until E/team assembly and instructor reconciliation. Complements the D2 artifacts under `docs/architecture/`.
 
-- Selection: **C2 — input-service + immutable `RunContext` boundary with a small lifecycle coordinator**, chosen by Brian (human) on 2026-11-12 based on **estimated** tradeoffs, not verified superiority.
+- Selection: **C2 — input-service + immutable `RunContext` boundary with a small lifecycle coordinator**, chosen by Brian (human) on 2026-11-12 based on **estimated** tradeoffs, not verified superiority. Preserved unchanged; no new candidate generation.
 - Target baseline: TradingAgents **v0.7.1** (`tradingagents/__init__.py:3`, `pyproject.toml`).
-- Working scope: `docs/req/selected-requirements.md` (`SEL-TA-FR-001..007`, `SEL-TA-NFR-001..006`, `SEL-TA-GOV-001..006`). This is a working selection, **not** an approved D1 registry.
-- Location convention (interim, pending course clarification): this root file is canonical; `docs/architecture/architecture-blueprint.md` is a pointer only.
+- Working scope: `docs/req/selected-requirements.md` (`SEL-TA-FR-001..007`, `SEL-TA-NFR-001..006`, `SEL-TA-GOV-001..006`). This is a **working/historical selection**, **not** the complete adopted D1 registry. The broader uploaded candidate (`requirements.yaml`, `status: proposed_for_adoption`, 34 active entries at session start) and A's later 36-entry revision are treated as a separate, pending publication; see §1.4 and `docs/architecture/traceability-inputs-member-b.md`.
+- Location convention (interim, pending course/instructor decision): this root file is canonical; `docs/architecture/architecture-blueprint.md` is a pointer only. One canonical blueprint is maintained here.
 
-> Honesty statement: This document specifies architecture and testability. It does **not** claim C's tests exist/pass, E's gates are enforced, or any approval has been obtained. Unknown test IDs and implementation links remain **pending**. Estimates are labelled **ESTIMATE**.
+> Honesty statement: This document specifies architecture and testability, and records which parts the current checkout implements. Implementation links point at real source paths; independent acceptance (C) and enforcement (E) remain their owners'. Proposed obligations (broader `REQ-TA-*` extensions) are labelled **PROPOSED / NOT IMPLEMENTED** and are not claimed satisfied. Estimates are labelled **ESTIMATE**. Retained evidence is cited by path but not re-run here.
 
 ---
 
@@ -38,8 +38,30 @@ Both modes yield an auditable result with deterministic input provenance and a d
 Web GUI; broker connection/order execution; exposure certification; automatic broker discovery; full twelve-channel evidence registry; new historical filtering/freshness rules; global source-confidence grades; R4–R6 sentiment correction; resume/checkpoint redesign; aggregate time/token/call budgets; debate convergence; analyst plugin redesign. (selected-requirements §5.)
 
 ### 1.4 Authority of current selection vs open decisions
-- **Approved working input (use directly):** CLI-only UI; `PORTFOLIO_DIR=<project-root>/portfolios`; `--without-portfolio`; `--portfolio-as-of`; consent behaviour; full normalized-content SHA-256 (64-char) fingerprint.
-- **Open (not B's to close; do not invent):** final D1 YAML/schema approval (A); semantic rubric/threshold (`GOV-004`, C/A); instructor-accepted source/test layout and transcript wording; governance install (E); blueprint location final convention (E).
+
+Three requirement states are kept distinct and are **never** merged by numeric suffix:
+
+1. **Working/historical baseline — `SEL-TA-*`** (`docs/req/selected-requirements.md`, 19 IDs). It authorized this architecture exploration and underlies C's existing tests. It is **not** the complete adopted D1 registry; it does **not** by itself cover the course-required performance/cost/governance/security types.
+2. **Uploaded broader candidate — `REQ-TA-*`** (root `requirements.yaml`, `status: proposed_for_adoption`; 34 active, 3 withdrawn, 24 proposed, 10 partial at session start). Inspection confirms it does **not** contain `REQ-TA-INV-014` (immutable input) or `REQ-TA-GOV-004` (schema validation) that A's later correspondence reports adding to reach 36. No supplied withdrawal establishes intentional removal. Treat both IDs as **pending publication**, not already-resolving references. The provisional meaning crosswalk is in `docs/architecture/traceability-inputs-member-b.md`.
+3. **As-built** — what `a62b801` implements. Verified against source in this revision; links below.
+
+- **Approved working input (implemented, use directly):** CLI-only UI; `PORTFOLIO_DIR=<project-root>/portfolios`; `--without-portfolio`; `--portfolio-as-of`; consent behaviour; full normalized-content SHA-256 (64-char) fingerprint.
+- **Implemented optional portfolio (keep):** the system supports `NO_PORTFOLIO` and an explicitly confirmed `PORTFOLIO_PROVIDED` snapshot, including an explicitly empty (flat) book. **Unresolved, A/C/team:** the uploaded candidate's scope statement excludes portfolio files while its fixture profiles include them. This document keeps the implemented optional-input flow and records the disagreement; it does not adopt either wording. Missing data is not an empty account; explicit empty input is valid and need not force Hold; user holdings are unverified context, not a broker account or executable instruction.
+- **Open (not B's to close; do not invent):** final D1 YAML/schema approval and the reconciled 36-entry snapshot (A); the two pending IDs (`REQ-TA-INV-014`, `REQ-TA-GOV-004`); semantic rubric/threshold (`SEL-TA-GOV-004`, C/A/D/E); instructor-accepted source/test layout and transcript wording (E); governance install and required-check wiring (E); blueprint location final convention (E).
+
+### 1.5 Implemented now versus proposed (broader `REQ-TA-*`)
+
+The broader uploaded promotion proposes obligations the current checkout does **not** implement. They are documented here as **PROPOSED / NOT IMPLEMENTED** so planned impact is visible without overclaiming. Authoritative as-built detail is `docs/architecture/interface-contracts.md` §12 and `docs/architecture/runtime-policy-catalog.md`.
+
+| Subject | As-built at `a62b801` (verified) | Proposed (`REQ-TA-*`) — **not implemented** |
+|---|---|---|
+| Output check rules | **Q1–Q4** only (`runapi/checks.py`): Q1 rating readable, Q2 provenance matches trusted metadata, Q3 disclaimer present, Q4 no prohibited guarantee phrase. Findings are **`BLOCKING` only**; `PASSED` requires **empty** findings (`result.py`). | **R1–R8** (`REQ-TA-ARCH-002`): adds evidence-ID resolution (R2), ownership-phrase block (R3), sentiment band/confidence/coverage (R4–R6), coverage-section equality (R7). R1≈Q1, R8≈Q3/Q4; R2 has no enforcing component; R4–R7 inspect fields the checker ignores. |
+| Stop-reason vocabulary | Five: `MODEL_FAILURE`, `DATA_FAILURE`, `INTERNAL_ERROR`, `PERSISTENCE_ERROR`, `INTERRUPTED` (`runapi/result.py:12-14`). | **Adds `BUDGET`** (six) plus a run-wide single-use call-reservation controller (`REQ-TA-RUN-001`, `REQ-TA-NFR-COST-002`). Adding an enum value breaks every existing reader unless updated. |
+| Corrected findings | `Finding.status` is only `BLOCKING`; `CheckResult(PASSED)` rejects findings. | **R5** would permit **corrected-only** findings with `PASSED` — a coordinated result-contract extension (`Finding`/`CheckResult`/report/scorer) if retained. |
+| Evidence/coverage registries | Input provenance only (`INV-04/05/05b`); no per-citation evidence registry, no per-run `data_coverage` record. | `REQ-TA-FR-001` evidence IDs; `REQ-TA-FR-005` twelve-channel coverage + `NOT_REQUESTED`; `REQ-TA-INV-002/007`. |
+| Aggregate budgets, resume identity | Per-call `max_tokens`; each fresh invocation gets a fresh `run_id` (`INV-12`); no resume. | `REQ-TA-NFR-PERF-002`/`COST-001`/`COST-002` budgets; D-5 resume keeps `run_id` and appends attempts — **conflicts** with `INV-11/INV-12` and is an open contract change (OQ-8). |
+
+Implementing any row above is a design + D implementation change requiring C's approved tests and E's gates; it is **not** satisfied by the working `SEL-TA-*` tests or this documentation revision.
 
 ---
 
@@ -81,23 +103,23 @@ Artifact boundary (redaction + run-ID isolation)  →  report(MD/HTML), manifest
 
 ## 3. Components
 
-Concrete planned module paths are in `docs/architecture/interface-contracts.md` §1 (B3-10). Reusable noninteractive services live under `tradingagents/runapi/` and must not import `cli`.
+Concrete module paths are in `docs/architecture/interface-contracts.md` §1 (B3-10). The `tradingagents/runapi/` modules and `cli/input_ui.py` **exist in the current checkout** (verified); the "Status" column records that. Reusable noninteractive services live under `tradingagents/runapi/` and must not import `cli`.
 
-| Component | Responsibility | Where (planned) | Needs baseline change? |
+| Component | Responsibility | Where (verified path) | Status vs baseline |
 |---|---|---|---|
-| **Shared execution service** | **Common application entry** `run_analysis_api(RunContext, …)`: consent check → run → render → check → finalize → stage/publish → terminal event. Prompt-free; used by CLI and supported API. | `tradingagents/runapi/execution.py` | additive |
-| `PortfolioInputService` | Noninteractive discovery/precheck/freeze; **sole** discoverer/validator; prompt-free. | `tradingagents/runapi/input_service.py` | additive |
-| `RunContext` / `FrozenSnapshot` (deeply immutable) | Frozen value tuples + mode + full-64 fingerprint + as-of/basis + consent_state; read-only provenance source. | `tradingagents/runapi/context.py` | additive |
-| `OutputChecker` | Deterministic Q1–Q4 on the checked **body**; assigns `output_check` + findings. Authoritative, non-LLM. | `tradingagents/runapi/checks.py` | additive |
-| `OutcomeFinalizer` | Maps graph return/exceptions/attempted critical-persistence failure to `run_outcome` + `stop_reason`. | `tradingagents/runapi/finalize.py` | additive |
-| `Redactor` | Central masking (keys/tokens/bearer, unsafe diagnostics) at every sink. | `tradingagents/runapi/redact.py` | additive |
-| `EventSink` (JSONL) | Fixed-field structured events. | `tradingagents/runapi/events.py` | additive |
-| Persistence/Manifest | Staging (report+manifest **critical**; terminal event **best-effort**) → single atomic directory commit; manifest via `SafeRunMetadata`; `terminal_event.durable` decided pre-commit without blocking publication. | `tradingagents/runapi/persist.py` | additive |
-| Result schemas | `RunResult`, `CheckResult`, `Finding`, `InputError`, `SafeInputMetadata`, `SafeRunMetadata`, `EffectiveConfig`. | `tradingagents/runapi/result.py` | additive |
-| CLI input UI | Interactive discovery/consent **only** here. | `cli/input_ui.py` | additive |
+| **Shared execution service** | **Common application entry** `run_analysis_api(RunContext, …)`: consent check → run → render → check → finalize → stage/publish → terminal event. Prompt-free; used by CLI and supported API. | `tradingagents/runapi/execution.py` | present (additive) |
+| `PortfolioInputService` | Noninteractive discovery/precheck/freeze; **sole** discoverer/validator; prompt-free. | `tradingagents/runapi/input_service.py` | present (additive) |
+| `RunContext` / `FrozenSnapshot` (deeply immutable) | Frozen value tuples + mode + full-64 fingerprint + as-of/basis + consent_state; read-only provenance source. | `tradingagents/runapi/context.py` | present (additive) |
+| `OutputChecker` | Deterministic **Q1–Q4** on the checked **body**; assigns `output_check` + findings. Authoritative, non-LLM. | `tradingagents/runapi/checks.py` | present (additive) |
+| `OutcomeFinalizer` | Maps graph return/exceptions/attempted critical-persistence failure to `run_outcome` + `stop_reason`. | `tradingagents/runapi/finalize.py` | present (additive) |
+| `Redactor` | Central masking (keys/tokens/bearer, unsafe diagnostics) at every sink, including `agents/structured.py` warnings (R1 repair). | `tradingagents/runapi/redact.py` | present (additive) |
+| `EventSink` (JSONL) | Fixed-field structured events; stage-private tentative terminal. | `tradingagents/runapi/events.py` | present (additive) |
+| Persistence/Manifest | Staging (report+manifest **critical**; terminal event **best-effort**) → single atomic directory commit; manifest via `SafeRunMetadata`; `terminal_event.durable` decided pre-commit without blocking publication. | `tradingagents/runapi/persist.py` | present (additive) |
+| Result schemas | `RunResult`, `CheckResult`, `Finding`, `InputError`, `RunRecord`, `summarize_records`. | `tradingagents/runapi/result.py` | present (additive) |
+| CLI input UI | Interactive discovery/consent **only** here. | `cli/input_ui.py` | present (additive) |
 | CLI adapter | Thin wiring; adds `--without-portfolio`, `--portfolio-as-of`; suppresses prompts under flags. | `cli/main.py` | adapted |
 | Prompt/context semantics | Mode-aware rating-scale legend; no-portfolio Hold meaning; user-supplied/unverified wording. | `tradingagents/agents/context.py`, manager/trader prompts | adapted |
-| Reporting boundary | Renders checked **body** + trusted **envelope header** from `SafeRunMetadata`; stage labels. | `tradingagents/reporting.py`, `tradingagents/report_html.py` | adapted |
+| Reporting boundary | Renders checked **body** + trusted **envelope header** from `SafeRunMetadata`; stage labels `build_envelope`/`verify_envelope_header_matches`. | `tradingagents/runapi/reporting.py`, `tradingagents/reporting.py`, `tradingagents/report_html.py` | adapted |
 | Existing loader/model | `PortfolioContext`/`Position` validation and rendering; alias matching. | `tradingagents/portfolio.py` (preserved) | unchanged semantics |
 | Raw engine primitive | `TradingAgentsGraph.propagate/stream_run/create_run_state` signature preserved; **does not** traverse the boundary (reduced scope, A approval for product use). | `tradingagents/graph/trading_graph.py` | signature preserved |
 
@@ -154,11 +176,86 @@ Detailed state machine, schemas, canonicalization, ordering and failure simulati
 
 ---
 
-## 8. Verification strategy (design-level only)
+## 8. Verification strategy and current evidence (design-level only)
 
 - **Testability seams** (for C): `PortfolioInputService` (discover/validate/freeze), `RunContext` identity, `OutputChecker` (Q1–Q4 with injected model claims), `OutcomeFinalizer` (typed exceptions), redaction at each sink, manifest atomicity, same-date isolation.
-- **Observable positive/negative seams** are listed per requirement in `docs/architecture/traceability-inputs-member-b.md` for C. B does not write test code or claim results.
-- **Document consistency checks** (this session) are **not** application verification.
+- **Real test definitions now exist** under `tests/member_c_verification/offline/` (C-owned), mapping to the working selection: `test_fr001_discovery.py`, `test_fr002_consent.py`, `test_fr003_validation_freeze.py`, `test_fr004_propagation.py`, `test_fr005_ratings.py`, `test_fr006_provenance.py`, `test_fr007_output_check.py`, `test_nfr001_failures.py`, `test_nfr002_events.py`, `test_nfr003_privacy.py`, `test_nfr004_persistence.py`, `test_nfr005_layering.py`, `test_nfr006_population.py`. B **links** these; B does not own, run or certify them.
+- **Developer/remediation tests** under `tests/member_b_remediation/` (R1–R5 probes) and `tests/member_d_verification/` are diagnostic regression material; they are not independent acceptance.
+- **Retained evidence** is cited by path and **not re-run here** (see `docs/architecture/traceability-inputs-member-b.md`): `docs/reviews/evidence/live-verification-2026-11-21/` (fresh five-case/two-trial live cohort; all 15 deduplicated attempts `COMPLETED`), `docs/reviews/evidence/live-diagnostic-2026-11-18.json`, and the 24 November integration review. Historical formal **PASS remains unverified**; independent current semantic acceptance remains **pending (C)**.
+- **Distinction preserved:** a test *definition* existing ≠ passing; a developer diagnostic ≠ acceptance; a fresh live run ≠ formal acceptance under open `N_EVAL`/threshold parameters.
+- **Document consistency checks** (this revision) are **not** application verification.
+
+Verification links per requirement are in `docs/architecture/traceability-inputs-member-b.md`; C owns the verdict.
+
+---
+
+## 8A. Engineering contributions (project-specific design)
+
+This section states the team's concrete engineering contributions honestly. The individual mechanisms are **standard software-engineering techniques** (immutability, content hashing, atomic directory replacement, append-before-dispatch ledgers, fail-closed checks). We do **not** claim to have invented them, and a standard technique's use does not by itself establish originality. The contribution is the **problem-specific design, its adaptation across the existing TradingAgents pipeline, and the demonstrated effect** in this application; the professor assesses originality. Each item separates what is **deterministically enforced** from what depends on **model compliance** (pending semantic acceptance).
+
+### 8A.1 Protected portfolio facts across Research Manager, Trader and Portfolio Manager
+
+- **Concrete problem.** In the baseline the portfolio block reached some decision stages unevenly. A real observed failure (2026-11-18, F9) showed an explicit-empty `PortfolioContext(positions=[])` run completing with deterministic check `PASSED` while the Trader/Portfolio-Manager narrative still spoke of "reducing/retaining existing exposure" — an unsupported account claim. Downstream stages could also inherit an ownership premise asserted upstream (the Research Manager's investment plan) without access to the same supplied facts.
+- **Design decision.** Route the same protected portfolio block through a single helper, `get_portfolio_context_from_state` (`tradingagents/agents/context.py:214`), into **all three** decision stages — Research Manager, Trader, Portfolio Manager — and wrap it in `<protected_context>…</protected_context>` (`protect_context`, `context.py:271`) so context compaction cannot drop it. Absent input yields an explicit "no account ownership is assumed / unknown, not flat" notice; explicit-empty carries a no-nonzero-target instruction; a held book carries the supplied quantity. The stage instruction tells the model to correct conflicting upstream ownership premises (R4). The five research ratings and three Trader actions are unchanged; no rating is forced.
+- **Baseline/team change.** Bounded R4 repair (2026-11-21): equalized the block across all three stages and added the corrective instruction. It is a prompt-grounding change, **not** a new authoritative check.
+- **Tradeoff.** Prompt text grows slightly and each stage must be kept consistent; grounding reduces but cannot eliminate unsupported narrative. A deterministic ownership check would be a larger change the current Q1–Q4 checker deliberately does not make.
+- **Implementation status.** **Implemented** (R4). **Deterministically enforced:** the trusted facts are delivered to all three stages and survive compaction (prompt-capture tests). **Not enforced deterministically:** that the model's prose never asserts an unsupported position — that is assessed semantically (pending C, GOV-004).
+- **Links.** Tests: `tests/member_b_remediation/test_r4_research_manager_context.py` (RM/Trader/PM prompt distinction, shared facts, user-supplied/unverified label surviving compaction, absent≠flat); C seams `tests/member_c_verification/offline/test_fr004_propagation.py`, `test_fr005_ratings.py`. Source: `tradingagents/agents/managers/research_manager.py:27-52`, `portfolio_manager.py:30-51`, `trader/trader.py:34,82-93`, `context.py:214-273`. Evidence: `docs/reviews/evidence/live-diagnostic-2026-11-18.json`; `docs/reviews/remediation-r1-r5-2026-11-21.md`.
+- **Residual limitation.** Prompts cannot guarantee every future narrative; Q1–Q4 does not inspect ownership wording. The concrete demonstration is the **explicit-empty → upstream RM trim error the downstream stages corrected → protected-context repair → fresh RM/Trader/PM prompt evidence** thread recorded in the remediation review (retained diagnostics, not a new experiment run here).
+
+### 8A.2 Separation of model advice from authoritative provenance/check results (truthful publication and failure handling)
+
+- **Concrete problem.** Model narrative, ratings text and any self-claimed "OUTPUT CHECK: PASSED" are advisory but can be mistaken for authoritative state; and a run can claim success while its artifacts failed to publish, or leave a caller-visible COMPLETED terminal for an unpublished run.
+- **Design decision.** Advisory model output is separated from authoritative, deterministic state:
+  - **Provenance** is built only from the frozen `RunContext` and a full 64-char SHA-256 over canonical JSON bytes (`runapi/context.py`), never re-read from the file or `final_state`.
+  - **Check authority** lives in one non-LLM `OutputChecker` (Q1–Q4); model text cannot set or override `output_check` (`runapi/checks.py`, `test_fr007_output_check.py::test_tc_fr007_c_model_claim_cannot_override`).
+  - **Outcome** is decided by `OutcomeFinalizer` from typed exceptions (`runapi/finalize.py`).
+  - **Truthful publication:** report+manifest are **critical** and published by a **single atomic directory rename**; the JSONL terminal event is **best-effort** and its real durability is recorded as `terminal_event.durable` before the immutable manifest is staged (`runapi/persist.py:130-157`). A critical staging/commit failure returns `INCOMPLETE/PERSISTENCE_ERROR` with no artifact promise. A tentative terminal is staged privately and revealed only after the commit; a post-commit callback failure cannot revise a published COMPLETED result (R5).
+- **Baseline/team change.** Bounded R5 repair plus the C2 boundary (`runapi/` modules). These separate advisory from authoritative status and make publication truthfully conditional.
+- **Tradeoff.** More modules and a staging directory; best-effort events mean a run can publish with `durable=false` (stated, not hidden). Not a power-loss durability guarantee.
+- **Implementation status.** **Implemented** (Q1–Q4 + R5). **Deterministically enforced:** check authority, provenance identity, conditional result fields, single-commit publication, truthful `durable`. **Residual:** the checker only covers Q1–Q4, not factual accuracy; terminal append remains best-effort.
+- **Links.** Tests: `tests/member_b_remediation/test_r5_terminal_visibility.py` (rename-failure exposes INCOMPLETE only, manifest-write consistency, terminal-append keeps logical outcome, tentative not exposed pre-commit, single terminal); C seams `tests/member_c_verification/offline/test_fr006_provenance.py`, `test_fr007_output_check.py`, `test_nfr004_persistence.py`, `test_nfr002_events.py`. Source: `runapi/checks.py`, `runapi/finalize.py`, `runapi/persist.py`, `runapi/events.py`, `runapi/reporting.py`. Evidence: `docs/reviews/remediation-r1-r5-2026-11-21.md`.
+- **Residual limitation.** Q1–Q4 certifies only its named rules, not truth or account suitability; publication durability is cooperative, not power-loss-proof. Demonstration: the **publication-failure / counterfeit-terminal negatives** in `test_r5_terminal_visibility.py` (offline regression material, not a new live run).
+
+### 8A.3 Evaluation-evidence integrity (case/config/artifact correspondence, counterfeit rejection, unsuccessful-attempt accounting)
+
+- **Concrete problem.** A semantic score is only meaningful if each result is bound to the case, configuration and artifact it claims to have come from; a forged or mismatched artifact could otherwise pass, and silently dropping failed or incomplete attempts could inflate completion/quality.
+- **Design decision.** The live scorer/harness (`tests/member_c_verification/live/`) enforces the points below. **Provenance, by verified commit (roles only):** the evaluator originated as Member C's supplied tooling (`f66fc14`, `57b164c`, `b8c4a25`); it was subsequently hardened (`bb777d5`); the R2/R3 correspondence/counterfeit-replay repairs and the `tests/member_b_remediation/` regression tests were made in the supervised OpenCode repair session under a Brian-approved plan (`56bbe29`). `replay_store.py` was introduced in `56bbe29`, **not** with the original evaluator. A commit records submitted changes; it does **not** by itself prove who manually authored the code. C's **independent acceptance remains pending**. The points it enforces:
+  - **Correspondence:** per case, the trusted `(input_mode, basename, fingerprint, as-of, kind)` is derived from the authoritative case definitions (`score_gov004.py::expected_case_identity`) and compared to the manifest; tier-provider settings must match the fixed configuration (`_tier_providers_match_fixed`); case/config/provenance/result and hash checks bind each report to its record.
+  - **Counterfeit rejection:** conflicting mirror copies and bare authoritative metadata lines outside the header block are rejected (`_reject_counterfeit_metadata_outside_header`; canonical-record equality for durability mirrors).
+  - **Unsuccessful-attempt accounting:** `replay_store.claim_start` records an exclusive, durable STARTED before dispatch under a cross-process lock; an unresolved start stays a non-completed denominator entry and blocks ID reuse; the scorer reports all started/completed attempts and separates retries.
+- **Baseline/team change.** Verification-tooling changes (R2/R3) in the supervised OpenCode repair session on C's evaluator (origin/hardening/repair by commit per above). The application product code is not the evaluator; the ledger and scorer are verification governance.
+- **Tradeoff.** Binding and duplicate-detection add complexity and refuse convenience shortcuts (e.g., reusing a run ID, or substituting a held-target artifact for an empty case); a stricter scorer can fail an otherwise "good-looking" package.
+- **Implementation status.** **Implemented** as verification tooling: original evaluator (C), hardening (`bb777d5`), R2/R3 repairs/regressions (`56bbe29`). **Deterministically enforced:** case/config/artifact binding, counterfeit rejection, exclusive durable starts, all-start accounting. **Residual:** the scorer cannot authenticate a human reviewer or decide general financial truth; the human score sheet is intentionally unfilled and **C's independent acceptance is pending**.
+- **Links.** Tests: `tests/member_b_remediation/test_r2_scorer_correspondence.py`, `test_r2_r3_differential_pins.py`, `test_r3_replay_durability.py` (durable-before-dispatch, later-failure retention, unresolved start stays non-completed, exclusive same-ID claim); C harness `tests/member_c_verification/live/test_score_gov004_exitcodes.py` (PASS/FAIL/PENDING exit codes), `test_harness_selfcheck.py`. Source: `tests/member_c_verification/live/score_gov004.py`, `replay_store.py`. Evidence: `docs/reviews/evidence/live-verification-2026-11-21/` (`gov004_starts.json`, `cohort.json`, `ai-review-proposed-scores.json`, `rescore-results.json`, `integrity.json`).
+- **Residual limitation.** The retained cohort used a narrow rubric that does **not** test general financial arithmetic; the AI-proposed 28/28 is a proposal, not C acceptance. Demonstration: the **retained live package** is re-scored from the repository; the scorer reports `PENDING` until a real reviewer supplies the score sheet, while a counterfeit/substituted artifact fails (`test_r2_02_held_target_substituted_for_empty_case_fails`, `test_r2_03_*`, `test_r3_04_unresolved_start_stays_noncompleted_and_blocks_reuse`).
+
+### 8A.4 Demonstration types and originality claim
+
+Three distinct deliverables use this material; they are not interchangeable:
+
+- **Video — product demonstration.** Shows before/after behaviour (e.g., optional/empty portfolio, protected facts across stages, advisory-vs-authoritative status, a publication-failure or counterfeit negative) using recorded live **or clearly labelled scripted offline** material. It illustrates the mechanism; it does not itself prove originality or acceptance.
+- **Original-SE explanation.** Explains the project-specific design decisions above: why these facts must be protected across stages, why advisory text is separated from deterministic authority, and why evaluation evidence must bind case/config/artifact. The novelty claim rests on this adaptation and demonstrated effect, **not** on the use of standard techniques.
+- **Traceability/governance evidence.** The retained tests, evidence packages, and (when assembled by E) `docs/architecture/trace-matrix.md` link requirement → component → test/evidence → monitor. Presence of files or green CI does not by itself prove a gate is enforced or a rubric passed.
+
+**Honesty boundary.** Standard techniques (immutability, hashing, atomic publication, ledgers, fail-closed checks) and compliance with course instructions alone do **not** establish originality. No experiment, approval, or ADD cycle is invented here; the demonstration thread reuses existing tests and retained artifacts. The honest limits (prompt grounding ≠ deterministic ownership enforcement; Q1–Q4 ≠ truth; scorer ≠ human acceptance) are stated above and must stay visible.
+
+---
+
+## 8B. Implementation-ready design for the extended requirements (PROPOSED)
+
+The broader proposed `REQ-TA-*` obligations are not a wish-list: implementation-ready (proposed) contracts, sequences, failure/concurrency policies and proposed test scenarios are in [interface-contracts.md](docs/architecture/interface-contracts.md) §13–§16 and the new design decisions in [ADR 002](docs/architecture/adr/002-extended-result-evidence-budget.md). Summary map:
+
+| Area | Requirements | Design location | Component (proposed) |
+|---|---|---|---|
+| Evidence & coverage | `REQ-TA-FR-001/004/005/006` | interface-contracts §13 | `runapi/evidence.py`, `runapi/coverage.py` |
+| Output-check v2 | `REQ-TA-ARCH-002`, `FR-007/008`, `SEC-003`, `INV-001..008` | interface-contracts §14; ADR-002 D1/D2 | `runapi/checks.py` (R1–R8, corrected findings) |
+| Run budget | `REQ-TA-NFR-COST-002`, RUN-001 `BUDGET` | interface-contracts §15; ADR-002 D3 | `runapi/budget.py` |
+| Integration/handoff | all above | interface-contracts §16 | module boundaries, order, feasibility |
+
+**Approved design targets (this pass):** corrected findings may coexist with `PASSED` while blocking findings produce `NEEDS_REVIEW` (R5, §14.2); the R3 ownership check is a **deterministic blocking phrase check** with contextual handling recorded only as an A/C/team alternative (§14.4); the Q2 trusted-provenance guard is **preserved separately** from evidence-ID R2 (§14.1); evidence/coverage data contracts are agreed **before** R2/R7 integration (§13, §16.1).
+
+**This is a genuine new design cycle for the new requirements** (ADR 002), separate from and not altering the preserved C2 selection/evaluation (C1/C2/C3). Nothing here is implemented; D implementation and C acceptance remain pending; final requirements adoption is not implied. Feasibility and open adoption/config decisions are labelled in §16.4–§16.5.
 
 ---
 
@@ -188,3 +285,4 @@ Full per-ID allocation (enforced-by component, fallback, other-owner/deferred) i
 - Alternatives and the human selection rationale: `docs/architecture/adr/001-portfolio-aware-cli.md`; scores and weights in `docs/architecture/evaluation-table.md`; process evidence in `docs/architecture/evaluation-logbook.md`.
 - Unresolved decisions and pending evidence are recorded in `docs/architecture/risk-list.md` and the traceability handoff. No approvals, measurements or transcripts are invented here.
 - This file is one of the approved B write set; `docs/architecture/architecture-blueprint.md` is a pointer to it.
+- **2026-11-24 revision:** aligned component names/paths, result/check/publication contracts, stop-reason vocabulary, optional-portfolio scope disagreement, requirements ID namespaces and verification/evidence links with the `a62b801` checkout and the 24 November integration review. Broader `REQ-TA-*` extensions are documented as **PROPOSED / NOT IMPLEMENTED** (§1.5). C2 selection, C1/C3 alternatives and Brian's estimated rationale are preserved unchanged.

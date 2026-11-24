@@ -1,6 +1,8 @@
 # Invariant Register (Member B)
 
-Status: architecture draft (revised 2026-11-12 per `docs/reviews/member-b-stage3-review-2026-11-12.md`). Source requirement, enforcing component, verification method (testability only — C owns tests), runtime monitor and concrete fallback. No measured verification is claimed. Module paths per `interface-contracts.md` §1.
+Status: architecture draft (revised 2026-11-12 per the Stage-3 architecture review; implementation-aligned 2026-11-24). Source requirement, enforcing component, verification method (testability only — C owns tests), runtime monitor and concrete fallback. Enforcing components below are **present in the `a62b801` checkout** (verified). Passing status is C's; no measured verification is claimed here. Module paths per `interface-contracts.md` §1; as-built differences per `interface-contracts.md` §12.
+
+> **Namespace:** B's register uses `INV-01..INV-14` (plus `INV-05b`). This is a **different namespace** from the candidate `REQ-TA-INV-001..008` (requirements invariants) and from the pending `REQ-TA-INV-014` (immutable input). Do **not** equate `INV-14` with `REQ-TA-INV-014`; they are unrelated IDs. The semantic crosswalk is in `docs/architecture/traceability-inputs-member-b.md`.
 
 | ID | Source | Statement | Enforcing component | Verification method (testability) | Runtime monitor | Concrete fallback |
 |---|---|---|---|---|---|---|
@@ -26,3 +28,43 @@ Status: architecture draft (revised 2026-11-12 per `docs/reviews/member-b-stage3
 - **INV-10 (B3-01):** the shared execution service is the sanctioned common entry; the raw `TradingAgentsGraph` primitive is a declared reduced-coverage compatibility path (risk R-API; product reliance requires A's approval).
 - No account/exposure validation; deferred (selected-requirements §5).
 - Upstream 12-char checkpoint fingerprint (`portfolio.py:70-72`, `trading_graph.py:158`) preserved unchanged; unrelated to INV-05.
+
+## As-built status at `a62b801` (verified 2026-11-24)
+The enforcing components named above exist in the current checkout; each invariant below is a **design obligation** whose runtime enforcement is present and whose independent verification (C) remains pending. The existing code does **not** carry the proposed broader checks, so the following are **not** enforced beyond their stated scope:
+- **INV-03 / Q1–Q4 only** — the checker enforces Q1–Q4; proposed `R2` (evidence-ID resolution), `R4–R7` (sentiment/coverage) and corrected-only `PASSED` (`R5`) are **not** implemented.
+- The candidate's coverage/evidence invariants (`REQ-TA-INV-002/007`) have no counterpart in this register (see crosswalk below).
+
+## Provisional crosswalk to candidate `REQ-TA-INV-*` (meaning-based, not suffix)
+The candidate's `REQ-TA-INV-001..008` are **its** requirement-invariant entries; several are partial/qualified matches, not identities. This is a B-side reading of A's own crosswalk notes; **A owns the candidate meaning**, and a partial match here does **not** prove the candidate rule is enforced.
+
+| Candidate | B register (meaning) | Relationship | Note |
+|---|---|---|---|
+| `REQ-TA-INV-001` unreadable rating never passes | INV-08 (conditional outcome), INV-03 (authority); checker rule Q1 | partial | Q1 maps to candidate R1; B's mechanism differs from a zero-tolerance requirement entry |
+| `REQ-TA-INV-002` every cited evidence ID resolves | — (none) | none | no cited-evidence registry exists; INV-04 binds input provenance only |
+| `REQ-TA-INV-003` no banned ownership phrase | INV-02, INV-13 | partial | no universal ownership classifier; narrative wording is C's semantic evaluation, not Q1–Q4 |
+| `REQ-TA-INV-004` sentiment score matches band | — (none) | none | no sentiment band rule in the checker |
+| `REQ-TA-INV-005` sentiment confidence cap | — (none) | none | no coverage-cap rule in the checker |
+| `REQ-TA-INV-006` no sentiment direction without data | — (none) | none | sentiment-band scope only; does not force final Hold |
+| `REQ-TA-INV-007` coverage section equals record | — (none) | none | no per-run coverage record |
+| `REQ-TA-INV-008` disclaimer + no guarantee phrase | INV-03; checker rules Q3, Q4 | partial | Q3/Q4 enforce disclaimer/prohibited phrases |
+| `REQ-TA-INV-014` immutable input (**pending publication**, absent from uploaded YAML) | INV-04, INV-05, INV-05b | partial+pending | input freezing is covered; the ID is not resolvable in the uploaded registry |
+
+**Not equal to `INV-14`:** candidate `REQ-TA-INV-014` is input immutability; B's `INV-14` is the persistence/publication non-contradiction invariant. The numeric suffix does not map.
+
+**INV-06 privacy has no full candidate counterpart.** INV-06 covers **credentials *and* holdings minimisation** (no raw portfolio bytes / other-position dump; source read-only; unrelated-holding marker absent). Uploaded `REQ-TA-SEC-002` covers **credentials only**; the holdings half maps to **no registered `REQ-TA-*` entry** — only candidate-only `INV-010` clause 2 (not in the registry). Do not read INV-06 as fully satisfied by any `REQ-TA-SEC-*` clause. See `traceability-inputs-member-b.md` §2 note and `risk-list.md` R-PRIV; the open scope/profile contradiction is OQ-13.
+
+## Proposed design invariants for the extended checks (2026-11-24; **PROPOSED, not implemented**)
+
+These are **new design obligations** matching interface-contracts §13–§15 and ADR 002; they are not satisfied by the current Q1–Q4 register. Enforcer paths are proposed. Verification is C's; no results claimed.
+
+| ID (proposed) | Source | Statement | Enforcing component (proposed) | Fallback |
+|---|---|---|---|---|
+| INV-15 | `REQ-TA-INV-002` (evidence IDs) / FR-001 | Every evidence ID cited in a report resolves to exactly one retained `EvidenceRecord`; no dangling citation passes | `runapi/evidence.py` + checker R2 | Blocking (R2); `NEEDS_REVIEW` |
+| INV-16 | `REQ-TA-INV-007` (coverage equality) / FR-005 | The rendered "Data coverage" section equals the `CoverageSet` record, including `NOT_REQUESTED` | `runapi/coverage.py` + checker R7 | Blocking (R7); `NEEDS_REVIEW` |
+| INV-17 | `REQ-TA-INV-004/005/006` (sentiment) / FR-008 | R4 band-range is blocking; R5 confidence downgrade is **corrected** (safe projection `SafeCorrectionFields.sentiment_confidence` = `"low"`; finding records enum original+corrected) and may pass; R6 no-direction-without-data is blocking | checker R4/R5/R6 | R4/R6 blocking; R5 corrected |
+| INV-18 | `REQ-TA-NFR-COST-002` / RUN-001 `BUDGET` | `dispatch_attempts <= granted <= CALL_CAP` with **monotonic `granted`** (invalidation never refunds capacity); plain/tool-bound/structured dispatch each consume exactly one reservation; a required refused attempt ⇒ `INCOMPLETE/BUDGET`; never relabelled `INTERNAL_ERROR`; persistence failure primary | `runapi/budget.py` + finalizer | Stop admission; account in-flight; `BUDGET` |
+| INV-19 | `REQ-TA-ARCH-002` (R5) | For a **completed, evaluated** run, one final verdict covers the exact delivered (re-rendered, redacted) body: `PASSED` ⇔ no BLOCKING (CORRECTED-only allowed); any BLOCKING ⇒ `NEEDS_REVIEW`; **`INCOMPLETE ⇒ NOT_RUN` regardless of empty findings** | checker single-verdict pipeline | Version-gated manifest (separate `schema_version`/`check_rules_version`); readers fail closed on unknown status |
+
+**Namespace caution:** proposed `INV-15..19` are B architecture IDs local to this register; they are **not** `REQ-TA-INV-*` entries. `REQ-TA-INV-002` (evidence IDs) maps to **INV-15** by meaning, not by number. The Q2 trusted-provenance guard remains a separate check (not INV-15/16).
+
+**R3 (ownership phrase) is a blocking deterministic phrase check** (target; §14.4). Contextual handling is an A/C/team alternative, not an advisory replacement; it is not represented as an INV here.

@@ -1,0 +1,75 @@
+{
+  "repository": "kelepawuqiusi/CS5351",
+  "pull_request": {
+    "number": 16,
+    "url": "https://github.com/kelepawuqiusi/CS5351/pull/16",
+    "head_sha": "170b4075cbd6f5c74aa8c9ce726dfbb868c624f4",
+    "merge_sha": "a62b801a51e6310f3b46860f6d2790583a95e0e0",
+    "merged_at": "2026-11-23T14:24:22Z"
+  },
+  "approval_checks": [
+    {
+      "name": "test approval",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/kelepawuqiusi/CS5351/runs/137728306251",
+      "head_sha": "170b4075cbd6f5c74aa8c9ce726dfbb868c624f4",
+      "started_at": "2026-11-23T13:33:06Z",
+      "completed_at": "2026-11-23T13:33:09Z",
+      "output": {
+        "title": "failed",
+        "summary": "test approval: failed for 170b4075cbd6f5c74aa8c9ce726dfbb868c624f4\nthe test-approval workflow did not finish successfully",
+        "text": null,
+        "annotations_count": 0,
+        "annotations_url": "https://api.github.com/repos/kelepawuqiusi/CS5351/check-runs/137728306251/annotations"
+      }
+    },
+    {
+      "name": "test-approval",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/kelepawuqiusi/CS5351/actions/runs/45185014769/job/137728249316",
+      "head_sha": "170b4075cbd6f5c74aa8c9ce726dfbb868c624f4",
+      "started_at": "2026-11-23T13:33:02Z",
+      "completed_at": "2026-11-23T13:33:13Z",
+      "output": {
+        "title": null,
+        "summary": null,
+        "text": null,
+        "annotations_count": 2,
+        "annotations_url": "https://api.github.com/repos/kelepawuqiusi/CS5351/check-runs/137728249316/annotations"
+      }
+    }
+  ],
+  "branch_protection_summary": {
+    "enabled": true,
+    "required_status_checks": {
+      "enforcement_level": "non_admins",
+      "contexts": [
+        "ai-log updated",
+        "dependency check",
+        "required tests",
+        "ruff (strict, full repo)"
+      ],
+      "checks": [
+        {
+          "context": "ai-log updated",
+          "app_id": 15368
+        },
+        {
+          "context": "dependency check",
+          "app_id": 15368
+        },
+        {
+          "context": "required tests",
+          "app_id": 15368
+        },
+        {
+          "context": "ruff (strict, full repo)",
+          "app_id": 15368
+        }
+      ]
+    }
+  },
+  "head": "a62b801a51e6310f3b46860f6d2790583a95e0e0"
+}

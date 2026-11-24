@@ -1,6 +1,6 @@
 # Memory and State Design (Member B)
 
-Status: architecture draft. Distinguishes pre-run cancellation, fresh started runs, transient state, immutable final artifacts, user-supplied portfolio data, provider transmission and retention/privacy. Resume changes are deferred (selected-requirements §5) and are **not** designed here.
+Status: architecture draft (implementation-aligned 2026-11-24). Distinguishes pre-run cancellation, fresh started runs, transient state, immutable final artifacts, user-supplied portfolio data, provider transmission and retention/privacy. Named components exist in the `a62b801` checkout (verified); independent verification is C's. Resume changes are **deferred** in this selection and are **not** designed here (see §6 for the proposed D-5 conflict).
 
 ## 1. Lifecycle states
 
@@ -54,3 +54,18 @@ Each sink: decision (retain/adapt/disable/replace), output location, run-ID isol
 
 ## 6. Non-goals
 No resume/checkpoint redesign, no cross-run catalogue, no aggregate budget persistence. Upstream checkpoint fingerprint (12-char) remains a checkpoint concern, preserved unchanged.
+
+## 7. Proposed broader changes — impact, not implemented (2026-11-24)
+
+- **Aggregate budgets (`REQ-TA-NFR-PERF-002`, `COST-001/002`, `BUDGET`):** if adopted, a run-scoped budget controller and a sixth `stop_reason` would be added; neither exists in `runapi/result.py` today. This section does **not** design or adopt it.
+- **Resume identity (D-5 proposal):** the candidate suggests a resumed run keeps its `run_id` and appends an attempt, whereas this design gives **every fresh invocation a fresh `run_id`** and treats final records as immutable (INV-11/INV-12). These **conflict**; adoption would be a separate contract change (OQ-8), not implied by the current selection. Not implemented.
+- **Per-run coverage/evidence records (`REQ-TA-FR-001/005`):** would add durable per-run coverage and evidence registries. The as-built sinks (§5) do not persist these; only input provenance is durable.
+
+## 8. Run-budget controller state (proposed; not implemented)
+
+The `RunBudgetController` (interface-contracts §15) holds **mutable per-run budget state** (reservation/counter state per slot). This state:
+- is **separate from the frozen input snapshot** (`RunContext` is immutable and not touched by the budget);
+- is **one per run** and never a global counter shared across unrelated runs;
+- is not persisted as part of the immutable manifest beyond safe audit counts (cap, attempts, reservations, denials); no prompts/secrets are retained.
+
+**Resume identity remains a separate, undecided contract** (ADR 002 D5): this selection uses a fresh `run_id` per invocation (INV-12) and immutable artifacts; a logical-run + attempt model is **not** adopted here and does not conflict-resolve automatically. Interruption (`INTERRUPTED`) semantics are unchanged and do not themselves settle resume.
