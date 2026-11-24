@@ -1,12 +1,12 @@
 # Traceability Inputs — Member B (for E)
 
-Status: **revised 2026-11-24** (implementation-aligned). This is B's contribution of component/invariant/runtime-monitor rows for E's shared `trace-matrix.md`. B does **not** publish a competing final matrix (E owns assembly). Implementation links now point at **real `a62b801` paths** (verified); test links point at **real C-owned test files** that C owns and whose passing status C reports. B does not certify results. E still assembles the final `docs/architecture/trace-matrix.md` (E-owned; not yet present).
+Status: **revised 2026-11-24** (implementation-aligned). This is B's contribution of component/invariant/runtime-monitor rows for E's shared `trace-matrix.md`. B does **not** publish a competing final matrix (E owns assembly). Implementation links now point at **real source/CI paths** (verified); test links point at real owning test files — FR/NFR rows cite **C-owned** independent-verification tests (C reports their status), and the GOV-002 row cites a **CI gate probe** (E/D-owned) that is **not** C's independent acceptance. B does not certify results. E still assembles the final `docs/architecture/trace-matrix.md` (E-owned; not yet present).
 
-Legend: **Enforced-by** = design component present in the checkout; **Fallback** = concrete behaviour; **Monitor** = runtime observation; **Test** = C-owned test file (existence only; not a pass claim); **Impl** = source path (verified).
+Legend: **Enforced-by** = design component present in the checkout; **Fallback** = concrete behaviour; **Monitor** = runtime observation; **Test** = owning test file (existence only; not a pass claim) — the FR/NFR rows cite **C-owned** independent-verification tests, while the GOV-002 row cites a **CI gate probe** (`test_requirement_schema_gate.py`, E/D-owned) that is **not** C's independent acceptance; **Impl** = source/CI path (verified).
 
 ## 1. Working selection `SEL-TA-*` (implemented baseline)
 
-| Req ID | Enforced-by (present) | Distilled invariant | Runtime monitor / event | Fallback | Test (C-owned, exists) | Impl (verified) |
+| Req ID | Enforced-by (present) | Distilled invariant | Runtime monitor / event | Fallback | Test (owned; existence only) | Impl (verified) |
 |---|---|---|---|---|---|---|
 | SEL-TA-FR-001 | `PortfolioInputService.discover` | INV-01 | `input.selection` | reselect/cancel; zero LLM | `tests/member_c_verification/offline/test_fr001_discovery.py` | `tradingagents/runapi/input_service.py` |
 | SEL-TA-FR-002 | Coordinator consent | INV-09 | `input.consent` | decline → no run | `tests/member_c_verification/offline/test_fr002_consent.py` | `tradingagents/runapi/execution.py` |
@@ -22,7 +22,7 @@ Legend: **Enforced-by** = design component present in the checkout; **Fallback**
 | SEL-TA-NFR-005 | `runapi/execution.py` shared service + `cli/input_ui.py` | INV-10/INV-09 | `api.entry` | supported API traverses boundary; raw primitive reduced-coverage (A approval) | `tests/member_c_verification/offline/test_nfr005_layering.py` | `tradingagents/runapi/execution.py`, `cli/input_ui.py` |
 | SEL-TA-NFR-006 | `RunRecord` aggregation (`runapi/result.py`; interface-contracts §10) | (risk R-LABEL) | `run.started`/`run.terminal` | zero-completed ⇒ insufficient evidence | `tests/member_c_verification/offline/test_nfr006_population.py` | `tradingagents/runapi/result.py` |
 | SEL-TA-GOV-001 | C/E/human (test-plan approval) | — | — | — | owned C/E | n/a |
-| SEL-TA-GOV-002 | A/E (registry schema) | — | — | — | owned A/E | n/a |
+| SEL-TA-GOV-002 | A (`docs/req/validate.py` cross-record) → E (`requirements schema` job) | `REQ-TA-GOV-004` schema validation | `requirements schema` CI job | gate non-zero on invalid; E-reported required | `tests/member_d_verification/test_requirement_schema_gate.py` (CI probe; **not** C independent acceptance) | `scripts/ci/check_requirement_schema.py`, `docs/req/validate.py`, `.github/workflows/ci.yml` |
 | SEL-TA-GOV-003 | C/E (CI gates) | — | — | — | owned C/E | n/a |
 | SEL-TA-GOV-004 | C/D/E (semantic threshold) | — | — | — | owned C/D/E | n/a |
 | SEL-TA-GOV-005 | E/all (AI-use log) | — | — | — | owned E | n/a |
@@ -50,7 +50,7 @@ The uploaded `REQ-TA-*` candidate uses different meanings for shared numeric suf
 | NFR-005 cohesive integration | shared boundary, no prompts in agents | `REQ-TA-ARCH-001` (vendors behind router) | partial | partial |
 | NFR-006 evaluation population | started-run accounting | `REQ-TA-NFR-EVAL-001` | same | proposed |
 | GOV-001 test-plan approval | prior approval gate | `REQ-TA-GOV-002` | same | proposed |
-| GOV-002 registry schema | schema validation | `REQ-TA-GOV-004` (present, `status: proposed`) | same | proposed (in registry; gate not enforced) |
+| GOV-002 registry schema | schema validation: A's validator + `scripts/ci/check_requirement_schema.py` + `requirements schema` CI job + `test_requirement_schema_gate.py` | `REQ-TA-GOV-004` (present, `status: proposed`; gate **implemented+verified**) | same | proposed (registry not adopted; gate implemented) |
 | GOV-003 CI gates | lint/tests/deps + safety paths | `REQ-TA-GOV-003` = *AI-log gate* (misfiled) | partial | proposed |
 | GOV-004 semantic threshold | semantic eval gate | `REQ-TA-GOV-001` semantic suite | same | proposed |
 | GOV-005 AI-use log | AI-log-gated merge | `REQ-TA-GOV-003` | same | proposed |
@@ -62,7 +62,7 @@ The uploaded `REQ-TA-*` candidate uses different meanings for shared numeric suf
 
 ## 3. Pending items (explicitly not invented)
 - **`REQ-TA-INV-014` (immutable input) — present in the 36-entry registry** (`status: proposed`). Input freezing is covered by INV-04/05/05b; the ID is resolvable; adoption is still open.
-- **`REQ-TA-GOV-004` (schema validation) — present in the registry** (`status: proposed`). Schema validation belongs to the governance/CI boundary (permission-model §4); no registered schema gate is enforced yet.
+- **`REQ-TA-GOV-004` (schema validation) — present in the registry** (`status: proposed`). **Implemented and locally/hosted verified** at baseline `2efbf0f` (PR #26): `.github/workflows/ci.yml` `requirements schema` runs `scripts/ci/check_requirement_schema.py` (wrapping A's `docs/req/validate.py`) and `tests/member_d_verification/test_requirement_schema_gate.py`; observed 36 requirements / 3 withdrawn / 0 errors / 0 warnings, 16 targeted probes passing, main schema job success, and a negative probe (PR #27) failing the schema job (closed unmerged). **E reports** the check is required on main with strict protection; the administrative endpoint could not be independently read (HTTP 401), so that setting is **E-reported**, not inspected here. This is `SEL-TA-GOV-002` → `REQ-TA-GOV-004`; **`SEL-TA-GOV-004` is semantic evaluation (`REQ-TA-GOV-001`), a different gate.** See `docs/reviews/requirements-schema-gate-review-2026-11-24.md`.
 - **Optional-portfolio scope** — implemented here, and the current registry's scope statement **includes** optional portfolio input (profiles A-A/A-B/A-C); adoption is still open and confirmation-flow ownership is OQ-16.
 - `docs/architecture/trace-matrix.md` (E-owned) is **not yet present**; these rows are B's input to it.
 
@@ -101,7 +101,7 @@ Requirement → proposed component/interface → proposed C scenario → impleme
 | `REQ-TA-FR-007` ownership (R3) | checker + prompts | ic §14.4; ADR-002 D2 | K2, K9 | 3 |
 | `REQ-TA-FR-008` sentiment (R4–R6) | checker + schema | ic §14.1, §14.3; ADR-002 D1 | K11–K15 | 3 |
 | `REQ-TA-NFR-REPRO-001` widen | `runapi/execution.py` | ic §16.1 step 4; §16.7 versions | config-diff/immutability; budget-only vs full-v2 examples | 4 |
-| `REQ-TA-INV-014` / `REQ-TA-GOV-004` (present, `proposed`) | — (map to INV-04/05/05b; governance) | ic §11; oq8 reply | reuse FR-003/FR-006 | proposed |
+| `REQ-TA-INV-014` / `REQ-TA-GOV-004` (present, `proposed`) | INV-014 → INV-04/05/05b; GOV-004 → `requirements schema` gate (implemented) | ic §11; oq8 reply; schema-gate review | reuse FR-003/FR-006; schema gate probes | proposed |
 | `REQ-TA-FR-003` resume | CLI + checkpointer | ADR-002 D5 (separate) | — | optional/separate |
 | `REQ-TA-NFR-COST-003` convergence | graph | — | — | optional/separate |
 

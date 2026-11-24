@@ -28,6 +28,22 @@ It exits non-zero on a missing file, YAML/schema parse failure, or cross-record 
 
 ## Remaining limitations
 
-Moving the files resolves the original layout/command failure in I24 01, and the current validator accepts both a positional path and `--registry`/`--schema` (the earlier '`--registry` unsupported' note is superseded by the current interface). It does not resolve adoption verification, semantic adoption of the registry, remaining validator-rule hardening, or schema-gate installation. These remain the separately recorded A/C/E follow-ups in the [integration review](../reviews/project-integration-review-2026-11-24.md). The original six files, including their historical examples and claims, were deliberately preserved unchanged.
+Moving the files resolves the original layout/command failure in I24 01, and the current validator accepts both a positional path and `--registry`/`--schema` (the earlier '`--registry` unsupported' note is superseded by the current interface). It does not resolve adoption verification, semantic adoption of the registry, remaining validator-rule hardening, or OpenCode/approval governance. These remain the separately recorded A/C/E follow-ups in the [integration review](../reviews/project-integration-review-2026-11-24.md). The original six files, including their historical examples and claims, were deliberately preserved unchanged.
+
+> **Historical note (superseded):** the earlier statement that no CI job installs or runs the validator is now out of date. A `requirements schema` CI gate exists (see below); it is **structural only** and does not adopt the registry.
+
+## Requirements schema gate (implemented)
+
+`REQ-TA-GOV-004` (crosswalk `SEL-TA-GOV-002`) is enforced by the `requirements schema` job in [`.github/workflows/ci.yml`](../../.github/workflows/ci.yml), which runs [`scripts/ci/check_requirement_schema.py`](../../scripts/ci/check_requirement_schema.py) (wrapping this directory's `validate.py`) and the probes in [`tests/member_d_verification/test_requirement_schema_gate.py`](../../tests/member_d_verification/test_requirement_schema_gate.py). Instructions: [`requirements-schema-gate.md`](../code-governance/requirements-schema-gate.md). It verifies structural/schema/cross-record validity only — not semantic adequacy, implementation, or human adoption.
+
+Safe local reproduction (no model/API calls):
+
+```sh
+pip install -e ".[dev]"
+python scripts/ci/check_requirement_schema.py
+python -m pytest -q tests/member_d_verification/test_requirement_schema_gate.py
+```
+
+Merge-protection activation (required check on `main`) is **E-reported** with a direct-read limitation (administrative endpoint HTTP 401 in the reviewing session); see [the schema-gate review](../reviews/requirements-schema-gate-review-2026-11-24.md). The registry remains `proposed_for_adoption`; the gate is not A's adoption decision.
 
 Current architecture reading paths point here. The historical integration review retains its original findings and now links to the exact reviewed root-layout revision. Authentic AI transcripts and retained measurement evidence are not rewritten by this relocation.
