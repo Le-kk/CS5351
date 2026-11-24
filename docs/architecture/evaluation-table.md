@@ -1,6 +1,6 @@
 # Evaluation Table (Member B)
 
-Status: architecture draft. Candidate comparison and the human selection. All scores are **design estimates** (authoring-time judgements), **not** measured verification. Weights are the approved set. The selection is a human choice based on estimated tradeoffs, not a claim of verified superiority.
+Status: architecture draft (implementation-aligned 2026-11-24). Candidate comparison and the human selection. All scores are **design estimates** (authoring-time judgements), **not** measured verification. Weights are the approved set. The selection is a human choice based on estimated tradeoffs, not a claim of verified superiority. **This table compares candidate architectures C1/C2/C3 and is unchanged by the 2026-11-24 revision;** it does not evaluate the broader `REQ-TA-*` requirements, which are a separate adoption decision (see §8).
 
 ## 1. Candidates (neutral)
 
@@ -70,3 +70,6 @@ Ranking across baseline and both normalized scenarios: **C2 > C3 > C1**. This co
 
 ## 7. Selection
 **C2 selected by Brian (human)**, rationale: explicit input/snapshot boundary, test seams and shared provenance without C3's broader orchestration change. Recorded in `adr/001-portfolio-aware-cli.md`; process in `evaluation-logbook.md`.
+
+## 8. Candidate comparison versus broader-requirements acceptance (kept distinct)
+This table is a **candidate architecture** evaluation. It is **not** an acceptance evaluation of the proposed `REQ-TA-*` obligations (evidence registry, R1–R8, sentiment/coverage, aggregate budgets, resume). Those broader obligations require their own implementation + independent verification, and the current checkout implements only the `SEL-TA-*` baseline. Do not read a high C2 score here as evidence that the broader requirements are satisfied.

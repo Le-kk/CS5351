@@ -1,6 +1,6 @@
 # Option Ledger (Member B)
 
-Status: architecture draft. Rejected/deferred options and their reconsideration conditions. This preserves actual alternatives; it does not claim an earlier decision history.
+Status: architecture draft (implementation-aligned 2026-11-24). Rejected/deferred options and their reconsideration conditions. This preserves actual alternatives; it does not claim an earlier decision history. The 2026-11-24 revision adds as-built status; the historical rejection/deferral decisions are unchanged.
 
 | Option | Status | Why rejected/deferred | Reconsideration condition |
 |---|---|---|---|
@@ -21,3 +21,6 @@ Status: architecture draft. Rejected/deferred options and their reconsideration 
 
 ## Selection recorded
 C2 selected by Brian (human) 2026-11-12 on estimated tradeoffs (see `adr/001-portfolio-aware-cli.md`, `evaluation-table.md`, `evaluation-logbook.md`).
+
+## As-built status (2026-11-24)
+The rows "Route API through common execution service" (accepted/designed) and the C2 boundary are **now implemented** (`tradingagents/runapi/`, verified). The rows "Resume/checkpoint redesign", "Aggregate run-token/time/call budgets" and "12-channel grading / sentiment correction" remain **deferred**, consistent with the proposed-only status of the corresponding `REQ-TA-*` items. The broader candidate's `BUDGET` stop reason, evidence registry, R1–R8 and resume (D-5) extensions are **not implemented**; they are proposed adoption decisions, not accepted options in this ledger. Deferral is not satisfaction.

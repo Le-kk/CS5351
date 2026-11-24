@@ -1,14 +1,14 @@
 # Interface Contracts (Member B)
 
-Status: architecture draft (revised 2026-11-12 per review `docs/reviews/member-b-stage3-review-2026-11-12.md`). Typed shapes are **proposed design contracts** for C (test seams) and D (implementation); they are not implemented code. Unknown test IDs / implementation links remain **pending**. No compliance is claimed for anything not built or tested. Synthetic examples are **document examples**, not passing application tests.
+Status: architecture draft (revised 2026-11-12 per the Stage-3 architecture review; implementation-aligned 2026-11-24). Typed shapes were **proposed design contracts** for C (test seams) and D (implementation). As of `a62b801` they are **implemented** in `tradingagents/runapi/` (verified against source; see §12). Where the implementation is narrower than this spec, §12 records the difference; the contract text below is the design of record. Independent acceptance (C) and enforcement (E) remain their owners'. Synthetic examples are **document examples**, not passing application tests.
 
-This revision designs the required contracts rather than deferring them to D. External-owner items (final D1 approval, C's tests/rubric, E's enforcement, instructor layout) remain explicitly pending.
+This revision designs the required contracts rather than deferring them to D. External-owner items (final D1 approval, the pending `REQ-TA-INV-014`/`REQ-TA-GOV-004` publication, C's tests/rubric, E's enforcement, instructor layout) remain explicitly pending.
 
 ---
 
 ## 1. Module map and ownership (addresses B3-10)
 
-Concrete planned paths so D does not invent architecture. Names are **proposed**; ownership is by team role.
+Paths below **exist in the `a62b801` checkout** (verified 2026-11-24) except where marked *(existing)*. Ownership is by team role.
 
 | Planned path (new unless marked) | Responsibility | Owner (design / implement / test / enforce) |
 |---|---|---|
@@ -505,4 +505,499 @@ Aggregation (design):
 - Controlled before/after experiments carry `controlled_change` and are labelled as changed-factor comparisons; repeated fixed-condition benchmarks require matching controls. Exact scoring/threshold is C/A's (pending).
 
 ## 11. Pending (external owners)
-Final D1/schema (A); C's test IDs, rubric/threshold, and independent evidence; E enforcement; instructor layout. A must approve any reliance on the reduced-coverage low-level primitive (§5.3).
+Final D1/schema (A); C's test IDs, rubric/threshold, and independent evidence; E enforcement; instructor layout. A must approve any reliance on the reduced-coverage low-level primitive (§5.3). Pending publication of `REQ-TA-INV-014` (immutable input) and `REQ-TA-GOV-004` (schema validation) does not change this contract; input freezing is covered by INV-04/05/05b and schema validation belongs to the governance/CI boundary.
+
+## 12. Implementation status and deviations at `a62b801` (verified 2026-11-24)
+
+This section records what the checkout **actually implements** relative to the design above. Where the design is broader, the deviation is stated; none of these is a claim that a proposed `REQ-TA-*` obligation is met.
+
+### 12.1 Implemented as designed
+- **Consent gate (§4.1, §5):** `run_analysis_api` rejects any `RunContext` whose `consent_state != CONFIRMED` (`runapi/execution.py:149`); `freeze_explicit`/`freeze_no_portfolio` return `FROZEN` (`runapi/input_service.py`).
+- **Canonical fingerprint (§2.2):** implemented in `runapi/context.py`; `FrozenSnapshot` carries the full-64 digest and `as_of_basis="USER_CONFIRMED"`.
+- **Checker authority & Q1–Q4 (§3.3, §6):** `runapi/checks.py` `OutputChecker.evaluate(trusted, provenance_fragment, final_rating, rendered_body)`; checker exception → `CHECK_ERROR` via `error_result`.
+- **Conditional result fields (§3.4):** enforced by `RunResult.__post_init__` (`runapi/result.py:78-90`): `COMPLETED` requires a rating and no stop reason; `INCOMPLETE` requires no rating, a stop reason, `NOT_RUN` and no findings.
+- **Single publication commit + truthful terminal durability (§7):** `runapi/persist.py` writes report+manifest into `_staging`, appends the terminal event, and publishes with one `os.rename` (`:154`); a terminal-append failure yields `terminal_event.durable=false` without flipping the outcome. Stage-private tentative terminal is in `runapi/events.py` (`stage_tentative_terminal`/`commit_terminal`/`discard_tentative_terminal`).
+- **Envelope + header guard (§6.4):** `runapi/reporting.py` `build_envelope` and `verify_envelope_header_matches`.
+- **Evaluation population interface (§10):** `RunRecord` and `summarize_records` exist in `runapi/result.py` (`INSUFFICIENT_EVIDENCE` when no completed run).
+
+### 12.2 As-built vocabulary (narrower than `REQ-TA-*`)
+- **`StopReason`:** five values — `MODEL_FAILURE`, `DATA_FAILURE`, `INTERNAL_ERROR`, `PERSISTENCE_ERROR`, `INTERRUPTED` (`runapi/result.py:12-14`). **No `BUDGET`.** `classify_exception` maps auth/provider/langchain exceptions to `MODEL_FAILURE`, vendor/data to `DATA_FAILURE`, else `INTERNAL_ERROR`; `KeyboardInterrupt`/`InterruptedError` → `INTERRUPTED`.
+- **`Finding.status`:** only `BLOCKING` (`result.py:39`). **`CheckResult`:** `PASSED` with any findings raises; `NEEDS_REVIEW` requires ≥1 finding; `NOT_RUN` forbids findings (`result.py:51-57`). There is **no corrected-finding state**, so proposed R5 (`PASSED` with corrected-only findings) is **not** supported by the current types.
+- **Checker rules:** Q1–Q4 only; no evidence-ID, sentiment or coverage rules. Proposed `R1–R8` (`REQ-TA-ARCH-002`) are **not** implemented; R1≈Q1, R8≈Q3/Q4, R2/R4–R7 have no enforcing code.
+
+### 12.3 Conditional-semantics corrections (aligned with the 24 November review)
+- **Outcome-dependent fields, not blanket non-null:** `stop_reason` is present **only** for `INCOMPLETE`; `final_rating` is present **only** for `COMPLETED` (§3.4). Any proposed requirement wording that requires both fields non-null in every record is **inconsistent** with this contract and with `REQ-TA-RUN-001`'s own validity table; the correct check validates field presence/nullability per the validity table, not a blanket non-null assertion. (This is the `REQ-TA-NFR-REPRO-001` fit-(b) vs `REQ-TA-RUN-001` tension identified in the review; it is a requirements-wording item, not an architecture change.)
+- **Critical publication failure cannot promise an artifact:** a critical report/manifest failure returns `INCOMPLETE/PERSISTENCE_ERROR` with `report_path=null`, `manifest_path=null` (§7.3). The contract does **not** promise an on-disk report/manifest on that path; a reproduction requirement should preserve the returned-logical-result vs artifact-publication distinction.
+- **Fixture shorthand:** `INCOMPLETE(MODEL)` / `INCOMPLETE(DATA)` in fixture prose are human shorthand; serialized values remain `MODEL_FAILURE` / `DATA_FAILURE` (RUN-001 spelling rule).
+
+### 12.4 Optional-portfolio scope (implemented; replacement registry unresolved)
+- The implemented contract supports `NO_PORTFOLIO` and an explicitly confirmed `PORTFOLIO_PROVIDED` snapshot, including an explicitly empty (flat) book and a supplied book that lacks the analyzed instrument (`§1`, `§2.1`). This is retained as implemented.
+- The uploaded `REQ-TA-*` candidate's scope statement excludes portfolio files while its fixture profiles include them. That replacement-scope disagreement is **unresolved (A/C/team)**; this document does not adopt either wording.
+
+### 12.5 Proposed extensions (documented impact, **not** implemented)
+Recorded here so adoption cost is visible; each is a design+D+C+E change, not implied by this contract:
+- `BUDGET` enum value + run-wide single-use call-reservation controller (`REQ-TA-NFR-COST-002`), including updating every reader that enumerates `StopReason`.
+- `R1–R8` checker with evidence-ID registry and per-run `data_coverage` record (`REQ-TA-FR-001/005`, `INV-002/007`).
+- Corrected-only `PASSED`: requires adding a non-blocking `Finding` status and relaxing `CheckResult(PASSED)` (`result.py:51-57`) together across checks/report/scorer and their tests.
+- Aggregate time/token budgets and resume identity (D-5), which conflicts with the fresh-run-ID/immutability invariants (INV-11/INV-12).
+
+---
+
+## 13. Evidence and coverage model — `REQ-TA-FR-001/004/005/006` (PROPOSED, not implemented)
+
+Status: **proposed implementation-ready design** for D to build and C to test. Nothing here is implemented at `a62b801`; the existing run has **input provenance only** (`INV-04/05/05b`) and no per-run evidence or coverage record. This section is the **data contract** that the R2 (evidence-ID) and R7 (coverage-equality) check rules in §14 depend on; per the approved plan, this contract must be agreed **before** those checker integrations. Feasibility of implementing it before 25 Nov is **not promised** (see §16).
+
+### 13.1 Proposed components and module boundaries
+| Component | Responsibility | Proposed path (new) | Owner(design/impl/test/enforce) |
+|---|---|---|---|
+| `EvidenceRegistry` | Assign stable evidence IDs; retain per-item records; expose lookup for citation resolution | `tradingagents/runapi/evidence.py` | B / D / C / E |
+| `CoverageTracker` | Accumulate one code per channel; classify core/non-core; compute `NOT_REQUESTED`; render deterministic section | `tradingagents/runapi/coverage.py` | B / D / C / E |
+| Router/bypass seams | Emit a record/code for every channel, including the 2 router-bypass channels (3 and 11) | `tradingagents/dataflows/router.py` (+ bypass call sites) | B / D / C / E |
+
+Dependency rule preserved: `runapi/*` must not import `cli`.
+
+### 13.2 Field-level data contracts (authority noted per field)
+
+```
+EvidenceRecord {
+  evidence_id: str            # stable within a run; assigned by EvidenceRegistry (AUTHORITATIVE, deterministic)
+  channel: ChannelCode        # see §13.3 (deterministic)
+  source: str                 # vendor/source label as supplied (SOURCE-PROVIDED metadata; not model text)
+  ticker: str                 # instrument the item concerns (SOURCE-PROVIDED)
+  observed_at: str | null     # ISO-8601 when observed, else null (SOURCE-PROVIDED)
+  published_at: str | null    # ISO-8601 publication/filing date, else null (SOURCE-PROVIDED)
+  as_of_window: str           # the FR-004 window this item was admitted under (deterministic)
+  value_ref: str | null       # opaque pointer to the retained payload; NOT the payload text (deterministic)
+}
+```
+
+- **Invariant:** at least one of `observed_at` / `published_at` is non-null for every admitted item (R2 resolution depends on it). Enforced by `EvidenceRegistry` on admission.
+- **IDs are run-scoped** and never derived from model output. A citation in the rendered report references `evidence_id`; R2 (§14) resolves it against the registry.
+- **Retention vs outage:** records are written to the run's own artifact area. "Retain evidence after an ordinary engine failure" is **not** a promise that storage succeeds during a critical persistence outage; on critical report/manifest failure the run is `INCOMPLETE/PERSISTENCE_ERROR` and no published paths are promised (§7.3). Evidence retention is best-effort relative to that critical boundary.
+
+**Public operations (proposed) and behaviour:**
+```
+class EvidenceRegistry:
+    def register(self, item: AdmittedItem) -> str        # returns stable evidence_id
+    def resolve(self, evidence_id: str) -> EvidenceRecord   # raises EvidenceResolutionError if unknown
+    def export_index(self) -> list[EvidenceRecord]       # safe fields only (no payload)
+```
+- **Stable ID / dedup:** assign `evidence_id` deterministically per run; dedup key = `(channel, source, ticker, observed_at, published_at, value_hash)`. A duplicate admission returns the existing ID (no second record, no second coverage bump).
+- **Timestamp admission:** the registry records the caller-supplied `observed_at`/`published_at`; it never infers time from file mtime. An item lacking both timestamps is **rejected** (not admitted) and the channel is coded accordingly.
+- **Lookup/error:** `resolve()` of an unknown ID raises `EvidenceResolutionError`; R2 turns that into a blocking finding.
+- **Concurrency:** all mutations (`register`) and reads (`resolve`/`export_index`) are guarded by **one lock per registry**; IDs are unique under concurrent analyst fan-out.
+- **Attachment before agents see text:** IDs and source dates are attached at the **data boundary** (router / bypass call site) **before** the analyst prompt is assembled, so the model can cite `[ev:ID]` and the renderer can show `source` + `DATE` beside it.
+- **Citation syntax & visible source/date (satisfies FR-001, not just resolution):** citations use `[ev:<evidence_id>]`; the renderer resolves each to `source` + `published_at|observed_at` (`YYYY-MM-DD`) and **renders them beside the citation**. Resolving an ID alone does not satisfy the visible source/date criterion; the rendered text must show both.
+- **Payload ownership / `value_ref`:** `value_ref` is an opaque key into a **run-owned** retained-payload store under the run's artifact directory (proposed `.../<run_id>/evidence/payloads/<hash>`). Evidence fields never depend on an unspecified store; if the payload is unavailable, the record still carries source/timestamps and `value_ref=null`. The store path is safe (no secrets); contents are redacted before persistence.
+
+```
+CoverageRecord {
+  channel: ChannelCode        # one reportable unit from §13.3's proposed catalog (not a vendor call)
+  code: "OK" | "UNAVAILABLE" | "NO_DATA" | "STALE" | "WITHHELD" | "NOT_REQUESTED"   # (deterministic)
+  detail: str | null          # redacted, source-metadata-derived; never model prose
+}
+CoverageSet {
+  entries: CoverageRecord[]           # one row per proposed channel unit (see §13.3)
+  core_channels: ChannelCode[]        # mandatory core set per the requirement; NOT silently reduced
+  run_core_ok: bool                   # every MANDATORY core channel == OK (strict; see below)
+}
+```
+
+- **Coverage is built from tool results, never written by the model.** The rendered "Data coverage" section is produced deterministically from `CoverageSet`; R7 (§14) asserts the rendered section equals the record.
+- `NOT_REQUESTED` = no selected analyst required any vendor call for this unit; valid for both COMPLETED and INCOMPLETE.
+- **Core rule (published requirement — STRICT, preserved):** if **any mandatory core channel** has a code other than `OK` — including `NOT_REQUESTED` — the run ends `INCOMPLETE/DATA_FAILURE`. Non-core gaps do not stop the run. **Unrequested mandatory core data is NOT treated as “not applicable” or automatically exempt.** Excluding an unrequested mandatory core channel from finalization is permitted **only** if A/team explicitly adopt that exemption; until then this design applies the strict rule. (Surfaced, not adopted — §13.3; requirements decision for A/team.)
+
+### 13.3 Channel units vs vendor calls, proposed catalog and core policy
+
+> **Channels are not vendor calls.** A **coverage channel/unit** is a reportable availability unit; a **vendor call** is one router-method or direct-source invocation that feeds a unit. One unit may require several calls (e.g. fundamentals = balance sheet + cashflow + income statement); a unit is `OK` only if **all required calls** for it succeeded.
+
+**Proposed catalog — REQUIRES A/C AGREEMENT (not adopted).** This is a **proposal**, visibly awaiting A's authoritative channel table and C's test review; it is **not** an adopted enumeration and must not be implemented as-if-approved. Derived from real code; the requirement's "12 channels / channels 3 and 11 bypass" **cannot be reconciled to code without A's table** (`requirements-draft-v4.md`, not in checkout). Verified reality: **11 router methods** (`VENDOR_METHODS`, `tradingagents/dataflows/router.py:97-150`) **plus direct sources** that bypass the router (`fetch_stocktwits_messages`, `fetch_reddit_posts` in `agents/analysts/sentiment_analyst.py`; `get_company_profile` in `agents/context.py`; `build_verified_market_snapshot` in `agents/tools.py`). So "two bypass channels" undercounts non-router sources.
+
+| # (proposed) | Unit / channel | Source tool(s)/method(s) | Caller | Seam | Analyst / request relationship | Core? |
+|---|---|---|---|---|---|---|
+| 1 | price history (OHLCV) | `get_stock_data` | market analyst | router | market | **core** |
+| 2 | technical indicators | `get_indicators` | market analyst | router | market | non-core (follows price) |
+| 3 | fundamentals/statements | `get_fundamentals`, `get_balance_sheet`, `get_cashflow`, `get_income_statement` | fundamentals analyst | router | fundamentals | non-core |
+| 4 | ticker news | `get_news` | news analyst | router | news | non-core |
+| 5 | global news | `get_global_news` | news analyst | router | news | non-core |
+| 6 | insider transactions | `get_insider_transactions` | news analyst | router | news | non-core |
+| 7 | macro indicators | `get_macro_indicators` | (macro if selected) | router (optional category) | optional | non-core |
+| 8 | prediction markets | `get_prediction_markets` | (if selected) | router (optional; live-only) | optional | non-core |
+| 9 | social: StockTwits | `fetch_stocktwits_messages` | sentiment analyst | **direct/bypass** | sentiment | non-core |
+| 10 | social: Reddit | `fetch_reddit_posts` | sentiment analyst | **direct/bypass** | sentiment | non-core |
+| 11 | company profile | `get_company_profile` | `agents/context.py` | **direct/bypass** | identity/context | non-core |
+| 12 | verified market snapshot | `build_verified_market_snapshot` | `agents/tools.py` | **direct/bypass** | market | non-core |
+
+- Indices above are **proposed labels only**; they are **not** A's numeric channel IDs and must not be treated as the requirement's "channels 3 and 11". The discrepancy (11 router methods + 4 direct sources vs the requirement's 12-with-2-bypass) is surfaced for **A/C** to reconcile; this table is a starting proposal, not an adopted enumeration. **A/C agreement is required before D implements it and before any market-only coverage count is treated as authoritative.**
+- **Core set default (proposed, requires A/C agreement):** price history only (per the requirement's price-core rule); technical indicators follow price. The core membership itself is part of the catalog A/C must confirm.
+- **Behavior when a mandatory core channel was never requested (e.g. market analyst not selected):** under the **strict published rule** (§13.2), an unrequested mandatory core channel is `NOT_REQUESTED` ≠ `OK`, so the run **ends `INCOMPLETE/DATA_FAILURE`** — the run may not silently finish as if it had usable core evidence. **Excluding unrequested mandatory core channels from finalization is a proposed exemption that requires A/team adoption**; it is recorded here as **open, not applied**. If A/team adopts it, both §13.2 and the runtime policy R18 update together; until then D implements the strict branch.
+
+### 13.4 Freshness (§`REQ-TA-FR-006`) — proposed parameters
+- Price freshness: latest bar ≤ `STALE_PRICE_DAYS` (10, fixed) before *D*; exceeded ⇒ core gap ⇒ `INCOMPLETE/DATA_FAILURE`.
+- Statement freshness: filed ≤ `STALE_STATEMENT_DAYS` (provisional, **open**) before *D*; exceeded ⇒ coded `STALE`, shown with filing date, run continues.
+- News/social: item inside the *D*-clamped window; excluded items are `NO_DATA`/`UNAVAILABLE`, not `STALE`.
+- `STALE_STATEMENT_DAYS` is a **configuration decision, not a measured value** (open; A owns).
+
+### 13.5 Normal sequence
+`admit(item) → assign evidence_id + record in EvidenceRegistry → set/refine CoverageRecord[channel]` for each retrieved item; at finalize, `coverage = CoverageSet.compute()` and `coverage.render()` produces the report section. Sequence integrates at the data boundary (`router`/bypass), before the checker runs.
+
+### 13.6 Failure / concurrency / privacy / persistence policy
+- **Availability after fallback (per call → per unit):** each vendor call resolves to one of `OK`, `UNAVAILABLE` (all vendors in the chain failed/absent), `NO_DATA` (call succeeded but returned a genuinely empty result), `STALE`, `WITHHELD` (live-only data on a historical run). A unit's code is the **worst** outcome across its required calls (`OK` only if all `OK`; else the highest-severity non-OK: `UNAVAILABLE` > `STALE` > `NO_DATA`/`WITHHELD`; `NO_DATA` on a non-core unit does not stop the run).
+- **Unfinished/unavailable requests ≠ genuine empty results:** a request that was started but did not complete (exception, timeout, fallback exhausted) ⇒ `UNAVAILABLE`; a call that completed and returned zero items ⇒ `NO_DATA`; a call never made (analyst not selected) ⇒ `NOT_REQUESTED`. These three must not be conflated: `NO_DATA` means “asked and got nothing”, `UNAVAILABLE` means “asked but could not obtain”, `NOT_REQUESTED` means “never asked”.
+- **Failure:** a malformed item that cannot be admitted is coded for its unit, not a crash; a **mandatory core unit** ≠ `OK` ⇒ `DATA_FAILURE` (strict rule; any exemption requires A/team adoption, §13.2/§13.3).
+- **Concurrency:** analysts fan out; `EvidenceRegistry` and `CoverageTracker` mutations must be thread-safe (single lock per registry/tracker, or per-thread accumulation merged at join). IDs must remain unique under concurrency; per-unit code merge is worst-wins and commutative.
+- **Privacy:** records carry source metadata and an opaque `value_ref`, not raw payloads; redaction applies at any sink that emits records; holdings/other-position content never enters an evidence record.
+- **Persistence:** evidence/coverage are written into the run's artifact area; a critical publication failure does not promise their durability beyond §7.3; on ordinary engine failure, retained records stay available if storage worked.
+
+### 13.7 Compatibility/migration
+Additive fields only. Existing manifests gain `coverage` and (optionally) an evidence-index reference; the **manifest/result `schema_version`** bumps independently of the **`check_rules_version`** (§16.7). Old readers must tolerate the new fields or use the explicit version gate. No rename of existing `SafeRunMetadata` fields.
+
+### 13.8 Proposed verification scenarios (C inputs; not accepted)
+| # | Input | Expected | Violating negative |
+|---|---|---|---|
+| E1 | offline run, all 4 analysts | each requested unit `OK`; every citation resolves **and shows source+date** | dangling cited ID ⇒ R2 blocking; citation without visible source/date fails |
+| E2 | market-only run (others not selected) | **proposed count (requires A/C agreement)**: market units `OK`, all unrequested units `NOT_REQUESTED`; **strict rule:** if price (mandatory core) is `OK` the run may complete; any mandatory-core unit left `NOT_REQUESTED` ⇒ `INCOMPLETE/DATA_FAILURE` | relying on an unadopted exemption/finishing with a mandatory core channel `NOT_REQUESTED` fails |
+| E3 | mandatory price core `UNAVAILABLE` (requested) | `INCOMPLETE/DATA_FAILURE` | completed run with mandatory-core gap fails |
+| E4 | all non-core units gapped | `COMPLETED`, units coded | incomplete on non-core gap fails |
+| E5 | statement at `STALE_STATEMENT_DAYS`+1 | `STALE`, shown, run continues | run stops or hides fails |
+| E6 | prose replaced, structure same | coverage section byte-identical | model-authored section differs fails |
+| E7 | mandatory price at `STALE_PRICE_DAYS`+1 | `INCOMPLETE/DATA_FAILURE` | — |
+| E8 | incomplete after price retrieved | evidence retained unchanged | erased evidence fails |
+| E9 | vendor chain: primary fails, fallback succeeds | unit `OK` | coding `UNAVAILABLE` when fallback succeeded fails |
+| E10 | all vendors fail (mandatory core) | unit `UNAVAILABLE`; core ⇒ `DATA_FAILURE`; non-core ⇒ coded | `NO_DATA` used for a failure fails |
+| E11 | call succeeds, zero items | unit `NO_DATA` (non-core ⇒ run continues) | `UNAVAILABLE` used for an empty result fails |
+| E12 | unit never requested | `NOT_REQUESTED`, never `UNAVAILABLE`/`NO_DATA` | conflating not-requested with gap fails |
+| E13 | **mandatory core channel `NOT_REQUESTED`** (e.g. market analyst not selected) | **strict rule: `INCOMPLETE/DATA_FAILURE`** unless A/team adopt the exemption | completing as if core were usable without an adopted exemption fails |
+
+---
+
+## 14. Output-check v2 and result contract — `REQ-TA-ARCH-002`, `FR-007/008`, `SEC-003`, `INV-001..008` (PROPOSED target, not implemented)
+
+Status: **proposed published target** for D/C. The as-built checker is Q1–Q4 with blocking-only findings (§12.2). This section defines the proposed target: **R1–R8** with a **corrected** finding class such that **corrected-only findings may coexist with `PASSED`** and **blocking findings produce `NEEDS_REVIEW`**. It **preserves the existing Q2 trusted-provenance guard unchanged**; A's evidence-ID **R2 is a separate rule** that depends on §13. Implementation order: §13 data contracts first, then R2/R7 integration (§16).
+
+> **Namespace discipline.** `R1–R8` here = output-check rules (`REQ-TA-ARCH-002`). Distinct from: catalog runtime triggers `R1..R17` (`runtime-policy-catalog.md`), checker codes `Q1–Q4` (as-built), and the semantic rubric `R1–R7` (C). Do not equate by number.
+
+### 14.1 Rule set (target)
+| Rule | Check | Owner req | Kind | Depends |
+|---|---|---|---|---|
+| R1 | Final rating readable (not REVIEW) | RUN-001 | Blocking | — |
+| R2 | Every cited evidence ID resolves to exactly one record | FR-001 | Blocking | **§13 EvidenceRegistry** |
+| R3 | No banned ownership phrase (ownership-assertion check) | FR-007 | Blocking | — |
+| R4 | Sentiment score lies in its band's range (only when sentiment selected & report present) | FR-008 | Blocking | — (applicability: §14.3) |
+| R5 | Sentiment confidence within coverage cap (downgrade to `low`, record safely) | FR-008 | **Corrected** | §13 coverage (source availability) |
+| R6 | No sentiment direction (non-Neutral band) when no source `OK` (only when sentiment selected & report present) | FR-008 | Blocking | §13 coverage |
+| R7 | "Data coverage" section equals the CoverageRecord (incl. `NOT_REQUESTED`) | FR-005 | Blocking | **§13 CoverageSet** |
+| R8 | Disclaimer present; no prohibited guarantee phrase | SEC-003 | Blocking | — |
+
+- **Q2 is preserved separately.** The existing **Q2 trusted-provenance guard** (envelope provenance fragment equals explicit trusted `SafeInputMetadata`, §6.4) remains an independent, always-on check on the frozen input identity. It is **not** replaced or absorbed by R2. R2 concerns **cited evidence IDs**, a different subject (report citations vs input provenance). Both can co-exist; a run can fail Q2 (provenance mismatch) while passing R2, or vice-versa.
+
+### 14.2 Finding and result types, and the single-verdict pipeline (target)
+```
+Finding {
+  rule: "Q2" | "R1".."R8" | "CHECK_ERROR"   # Q2 retained; R* per table
+  status: "BLOCKING" | "CORRECTED"           # NEW: corrected class added
+  detail: str                                # redacted
+  original: str | null                       # for CORRECTED: pre-correction value (safe field)
+  corrected: str | null                      # for CORRECTED: post-correction value (safe field)
+}
+CheckResult {
+  output_check: "PASSED" | "NEEDS_REVIEW" | "NOT_RUN"
+  findings: Finding[]
+  corrected_fields: SafeCorrectionFields | null  # ONLY explicitly-safe fields (e.g. sentiment confidence enum), never body text
+}
+```
+
+**Single final verdict over the exact delivered body (no freeze-before-recheck).** The verdict must describe precisely what is delivered, so evaluation happens **once, on the final body**:
+
+1. Render the body once from `final_state` + `RunContext` (§6.1), producing `body_fields`.
+2. **Normalize first:** apply authorized corrections to `body_fields` (e.g. R5 confidence) → corrected `body_fields`.
+3. **Re-render** the delivered body deterministically from the corrected `body_fields`.
+4. **Redact the final re-rendered body** (`redactor.scrub`) — redaction happens **before** evaluation and before delivery, so the checked bytes equal the delivered bytes.
+5. **Evaluate once** on that final redacted body: `Checker.evaluate(CheckInput{trusted, provenance, redacted_body, body_fields, evidence, coverage}) → CheckVerdict`. The single `CheckVerdict` (`output_check`, `findings`, `corrected_fields`) is the authoritative verdict for the delivered document. No second, competing verdict is produced.
+6. Persist only the **safe** correction fields (`corrected_fields` restricted to enumerations/flags such as sentiment confidence/band/score — never narrative or free text), plus findings.
+
+**Result mapping (target), scoped to a completed, evaluated run:**
+- Any **BLOCKING** finding ⇒ `NEEDS_REVIEW`.
+- **Only CORRECTED** findings (no blocking) ⇒ `PASSED` (corrections already reflected in the re-rendered delivered body). *(Approved R5 target; see §16.)*
+- No findings ⇒ `PASSED`.
+- Checker exception ⇒ `NEEDS_REVIEW` with single `CHECK_ERROR`.
+- `INCOMPLETE` ⇒ `NOT_RUN`, findings `[]` (checker **not invoked**).
+
+**Cross-field invariants (target), completed-and-evaluated only:**
+- For a completed run whose checker was evaluated: `PASSED ⇔ findings contain no BLOCKING (CORRECTED allowed)`; `NEEDS_REVIEW ⇒ ≥1 BLOCKING` (CHECK_ERROR counts as blocking).
+- **`INCOMPLETE ⇒ NOT_RUN` with findings `[]`.** Explicit negative: **incomplete + empty findings must remain `NOT_RUN`, never `PASSED`.** The `PASSED ⇔ no BLOCKING` equivalence therefore **does not** apply to incomplete runs.
+
+### 14.2a Typed v2 checker/evidence contracts (target)
+
+These are the exact types the pipeline (§14.2) and rules (§14.1) consume/produce. All are proposed; D implements, C tests.
+
+```
+BodyFields {                       # the structured fields the body was rendered from (trusted inputs to render)
+  final_rating: "Buy"|"Overweight"|"Hold"|"Underweight"|"Sell"|"REVIEW"|null
+  sentiment: SentimentFields | null        # null iff sentiment analyst not selected OR no report
+}
+SentimentFields {                  # present only when sentiment selected AND a SentimentReport exists
+  overall_band: "Bullish"|"Mildly Bullish"|"Neutral"|"Mixed"|"Mildly Bearish"|"Bearish"
+  overall_score: float             # 0.0–10.0 (schema-bounded)
+  confidence: "low"|"medium"|"high"
+}
+
+EvidenceView {                     # read-only projection of the §13 EvidenceRegistry for R2
+  resolve(evidence_id) -> EvidenceRecord | None    # None ⇒ dangling
+  ids: set[str]                                     # admitted IDs for this run
+}
+CoverageView {                     # read-only projection of §13 CoverageSet for R6/R7
+  channel_code(channel) -> "OK"|"UNAVAILABLE"|"NO_DATA"|"STALE"|"WITHHELD"|"NOT_REQUESTED"
+  sentiment_source_status() -> {"stocktwits":"OK"|...,"reddit":...}   # per-source availability for R5/R6
+  rendered_section() -> str        # deterministic coverage section for R7 equality
+  mandatory_core_ok() -> bool      # strict: every mandatory core channel == OK (any NOT_REQUESTED ⇒ False)
+}
+
+CheckInput {
+  trusted: SafeInputMetadata                 # Q2 authoritative expected values (unchanged)
+  provenance_fragment: str                   # Q2 subject (independently rendered trusted text)
+  redacted_body: str                         # final re-rendered + redacted body (checked == delivered)
+  body_fields: BodyFields                    # post-normalization fields the body was rendered from
+  evidence: EvidenceView                     # R2
+  coverage: CoverageView | null              # R5/R6/R7; null only when coverage not available (then R7 blocks)
+  check_rules_version: 2
+}
+
+CheckVerdict {                     # the single authoritative verdict for the delivered document
+  output_check: "PASSED"|"NEEDS_REVIEW"|"NOT_RUN"
+  findings: Finding[]                        # per §14.2
+  corrected_fields: SafeCorrectionFields | null
+}
+```
+
+**`SafeCorrectionFields` — exact safe R5 projection (only these keys are ever persisted/emitted):**
+```
+SafeCorrectionFields {
+  sentiment_confidence: "low" | "medium" | "high" | null   # R5 correction target; the ONLY corrected value in v2
+}
+```
+- **R5 correction is exactly:** `corrected_fields.sentiment_confidence = "low"` when coverage shows a sentiment source not `OK` and the model chose `"medium"|"high"`. Nothing else is corrected in v2; **no narrative text, no scores, no free text, no holdings** enter `SafeCorrectionFields`.
+- `Finding{R5, CORRECTED}` carries `original`/`corrected` as **enum strings** (`"high"→"low"`), which are safe; the `detail` is redacted. The `Finding` fields never carry narrative.
+- If a future correction to `overall_score`/`overall_band` is proposed, it must be added to `SafeCorrectionFields` only after A/C agreement that the value is safe to persist; the current target corrects **confidence only**.
+
+**Evidence/check type rules:** `EvidenceView`/`CoverageView` are **read-only projections** (the checker never mutates the registries); `CheckInput.check_rules_version` is fixed to `2` for this target (§16.7); a checker that cannot build `CoverageView` emits a **blocking R7** (coverage section unavailable) rather than `PASSED`.
+- `RunResult`/manifest authority unchanged: `PASSED` still certifies only R1–R8, not truth or suitability.
+
+### 14.3 Corrected-finding handling (R5) and sentiment-output cases — concrete
+
+**R5 correction (when sentiment is selected and a `SentimentReport` exists).** When coverage shows a sentiment source not `OK` and confidence `> low`: set `corrected_fields.sentiment_confidence="low"` and `Finding{R5, CORRECTED, original=<high>, corrected="low"}`. The re-render (§14.2 step 3) writes `low` into the delivered header; the single verdict is `PASSED` unless another rule blocks. Corrections and blocking findings may coexist; blocking dominates the verdict while the correction is still applied and recorded.
+
+**Sentiment-output cases (explicit, distinct):**
+- **Sentiment Analyst not selected** → R4–R6 **not applicable**; no finding. (Market-only fixture must not fail for an absent `SentimentReport`.)
+- **Both generation paths fail** (structured call and free-text fallback both yield nothing usable) → the run is **`INCOMPLETE` / `stop_reason=MODEL_FAILURE` / `output_check=NOT_RUN`, no final rating, no findings** (classified by the finalizer as a model failure; the checker is not invoked). This matches `REQ-TA-NFR-001`.
+- **Usable free text without structured fields** (the analyst produced usable narrative but no `SentimentReport`) → this is a **separate case**; it is **not** assigned a new adopted finding rule here. It is surfaced as an **open policy question for A/C** (whether to treat as `REVIEW`/`NEEDS_REVIEW` or to attempt extraction). The design records the case explicitly rather than inventing a rule.
+- **All three sources unavailable** (selected, report present) → R6 requires `Neutral` band (blocking if not); R5 caps confidence at `low` (corrected). Availability comes from the **coverage record** (`SentimentReport` has no source-status field).
+
+This is a **contract extension** shipped together: `Finding.status` gains `CORRECTED`, `CheckResult` gains `corrected_fields` (safe only), `CheckResult(PASSED)` no longer requires empty findings, and report/scorer render/interpret the new fields under the `check_rules_version` gate (§14.5, §16.7).
+
+### 14.4 R3 ownership phrase check — target is a **blocking phrase check**
+R3 is retained as a **deterministic blocking phrase/pattern check** over the delivered body for the banned-ownership list (`your position`, `current position`, `maintain the position`, `add to your position`, `exit your position`, `your holdings`, `you own`; list owned by A). A match ⇒ BLOCKING finding. This is the **published target**.
+- **Alternative (requires A/C/team agreement, NOT the target):** contextual handling — assess ownership assertions only when not grounded in supplied facts and permit quoted/conditional uses. This cannot be implemented reliably as a deterministic classifier; it would become a semantic-rubric matter. It is recorded as an **alternative requiring agreement**, **not** an advisory replacement for R3.
+- Interaction with R5-style correction: R3 corrections are **not** auto-applied; ownership wording is a content change the model must make, so R3 is blocking-only.
+
+### 14.5 Report / manifest / scorer compatibility
+- **Report:** envelope gains nothing secret; the re-rendered body shows corrected values; the findings list distinguishes blocking vs corrected with `original`/`corrected` where applicable.
+- **Manifest:** add `check_rules_version` **separately from** the manifest/result `schema_version` (§16.7). Keep `findings` shape additive.
+- **Scorer readers:** must accept `CORRECTED` and `corrected_fields`; a reader that only knows `BLOCKING` **fails closed** on an unknown `status`/version (never silently treats `CORRECTED` as non-blocking).
+- **Schema/version policy:** see §16.7 (separate manifest/result schema version and check-rule version; explicit legacy path for schema-1 artifacts lacking `check_rules_version`; reject unknown/invalid new-format combinations).
+- **Safe-only persistence:** manifest/report carry only `corrected_fields` (enumerations/flags), never narrative/free text; redaction precedes evaluation and delivery.
+
+### 14.6 Incomplete / raise / block / correct decision table (target)
+| Situation | run_outcome | output_check | findings |
+|---|---|---|---|
+| All rules pass | COMPLETED | PASSED | [] |
+| Only R5 corrected | COMPLETED | PASSED | [R5 CORRECTED] |
+| Any blocking rule fails | COMPLETED | NEEDS_REVIEW | ≥1 BLOCKING |
+| Checker raises | COMPLETED | NEEDS_REVIEW | [CHECK_ERROR] |
+| **Both sentiment paths fail** | **INCOMPLETE (`MODEL_FAILURE`)** | **NOT_RUN** | **[]** (no rating) |
+| Engine incomplete (other) | INCOMPLETE | NOT_RUN | [] |
+
+### 14.7 Proposed verification scenarios (C inputs; not accepted)
+| # | Input | Expected | Violating negative |
+|---|---|---|---|
+| K1 | clean completed report | PASSED, [] | — |
+| K2 | one blocking rule each (R1,R2,R3,R4,R6,R7,R8) | NEEDS_REVIEW + matching finding | wrong rule id fails |
+| K3 | R5 corrected only | **PASSED** + R5 CORRECTED(original,corrected); delivered header shows `low`; `corrected_fields.sentiment_confidence=="low"` | treating corrected as blocking fails; losing original/corrected fails; delivered body not matching re-render fails |
+| K4 | model text says "OUTPUT CHECK: PASSED" while R3 fails | NEEDS_REVIEW (model claim ignored) | PASSED fails |
+| K5 | checker raises | NEEDS_REVIEW + CHECK_ERROR | PASSED fails |
+| K6 | incomplete run | NOT_RUN, [] | checker invoked fails |
+| K7 | Q2 provenance mismatch but R2 ids resolve | NEEDS_REVIEW via Q2 (R2 independent) | conflating Q2/R2 fails |
+| K8 | dangling cited ID, provenance correct | NEEDS_REVIEW via R2 | PASSED fails |
+| K9 | R3 banned phrase present | BLOCKING (target phrase check) | downgrading to corrected fails |
+| K10 | incomplete + empty findings | **NOT_RUN** (never PASSED) | PASSED fails |
+| K11 | market-only run (sentiment not selected) | PASSED; **no** R4–R6 finding | failing for absent SentimentReport fails |
+| K12 | all 3 sentiment sources unavailable, band Bullish, confidence high | R6 BLOCKING + R5 CORRECTED (confidence→low) | passing without R6 fails; missing correction fails |
+| K13 | blocking R3 + R5 corrected | NEEDS_REVIEW; correction still applied + recorded | dropping the correction fails |
+| K14 | **both sentiment paths fail** | **INCOMPLETE/MODEL_FAILURE/NOT_RUN, no rating** | COMPLETED or a rating fails |
+| K15 | usable free text, no structured fields | recorded as an **open policy case** (no invented finding rule); not silently PASSED or silently INCOMPLETE without a decision | inventing an adopted rule fails |
+| K16 | redaction-sensitive text in corrected body | delivered body redacted **before** evaluation; checked bytes == delivered bytes | unredacted delivery or check-before-redact fails |
+
+---
+
+## 15. Run-wide request-budget boundary — `REQ-TA-NFR-COST-002` + `BUDGET` (PROPOSED; prioritized first handoff)
+
+Status: **proposed implementation-ready design**, consolidating `docs/architecture/proposals/reply-to-A-cost002-2026-11-22.md` and the stop-reason reply. **Not implemented.** This is the **first recommended implementation handoff** (§16): most isolated, offline-testable, unblocks a Must (`COST-002`) plus RUN-001's `BUDGET`.
+
+### 15.1 Component and boundary
+| Component | Responsibility | Proposed path (new) | Owner |
+|---|---|---|---|
+| `RunBudgetController` | One per run; issues single-use reservations; enforces `dispatch_attempts <= successful_reservations <= CALL_CAP`; exposes exhausted state | `tradingagents/runapi/budget.py` | B / D / C / E |
+
+- The controller lives at the **controlled application client boundary** (where the app issues model-request attempts), shared across quick/deep tiers, structured/plain paths, retries and in-run memory/reflection. It must **not** be a global counter across runs; it must be **separate from the frozen input snapshot** (`RunContext`).
+- `CALL_CAP` is a **configuration value** (test value 8; production default open, **not a measured value**).
+
+### 15.2 Interface (proposed signatures)
+```
+class RunBudgetExhausted(Exception): ...       # distinguishable; must survive broad handlers
+class BudgetProtocolError(Exception): ...      # reuse / wrong-run / invalid transition
+
+Reservation {                                   # single-use; owned by one run/controller
+  id: str
+  controller_run_id: str
+  state: "GRANTED" | "CONSUMED" | "INVALIDATED"
+}
+BudgetAudit {
+  call_cap: int
+  granted: int          # cumulative successful admissions (MONOTONIC; never refunded)
+  dispatched: int       # CONSUMED count (attempts actually issued)
+  invalidated: int      # granted-but-unused; capacity NOT refunded
+  denied: int
+}
+
+class RunBudgetController:
+    def __init__(self, call_cap: int, run_id: str): ...
+    def reserve(self) -> Reservation:      # atomic; increments granted; raises RunBudgetExhausted if granted >= call_cap
+    def dispatch(self, res: Reservation):  # GRANTED -> CONSUMED; must be called BEFORE the request issue
+    def invalidate(self, res: Reservation):# GRANTED -> INVALIDATED; keeps cumulative count; NEVER frees capacity
+    def audit(self) -> BudgetAudit: ...    # safe counts for manifest/event metadata
+```
+`Reservation` authorizes **exactly one** dispatch attempt and cannot be reused. A denied `reserve()` dispatches nothing. `dispatch()`/`invalidate()` raise `BudgetProtocolError` if `res.state != "GRANTED"` (reuse) or `res.controller_run_id != run_id` (wrong run / cross-run reuse). Between grant and request issue: if the dispatch never issues (exception before send), `invalidate()` is called and audited; `granted` stays consumed.
+
+### 15.3 State machine and cumulative bound
+- States per reservation: `GRANTED → CONSUMED` (dispatched) or `GRANTED → INVALIDATED` (granted but unused). **There is no return to available capacity.** The `granted` counter is **monotonic**, so `dispatched <= granted <= CALL_CAP` holds even if an unused grant is invalidated: invalidating never lets a second grant happen at a cap of 1.
+- **Alternative (NOT the target):** a recycling policy that returns an unused slot to capacity would require a **different counting contract** and is an **explicit requirements decision**; it is recorded as an unapproved alternative (ADR 002 D3), not implemented.
+- **Concurrency:** `reserve()` is atomic under a single lock/condition per controller; with 1 slot remaining and N concurrent callers, exactly 1 grants and N-1 raise. No branch overshoot allowance is needed (each concurrent branch holds its own reservation). Default START branches = 4 analysts + Memory Log (derived from constructed plan, not a hard-coded constant; branch count irrelevant to the strict bound).
+- **SDK retries:** `max_retries=0` for the guaranteed-budget mode; every application retry takes a **fresh** reservation. If a client cannot disable hidden retries, that client is **rejected** in guaranteed-budget mode (not silently uncovered). Gateway-internal retries are outside the client-side guarantee (stated, not hidden).
+
+### 15.4a Metering exactly once across plain / tool-bound / structured dispatch
+The controller is attached to the run's **tier chat-model objects** created at `trading_graph.py:79-80` (`create_tier_client(config,"deep"|"quick").get_llm()`), so every dispatch through them is metered:
+- **Plain:** `llm.invoke(...)` → one `reserve()+dispatch()`.
+- **Tool-bound:** `llm.bind_tools(tools).invoke(...)` — the bound runnable delegates to the same underlying metered `invoke`; the controller is on the model object, **not** re-wrapped per call site, so exactly one reservation is consumed (no missed, no double charge).
+- **Structured:** `llm.with_structured_output(schema).invoke(...)` — likewise routes through the same metered `invoke`.
+- **Memory/reflection:** `Reflector` uses the same `quick_thinking_llm`; settlement and the graph `_memory_step` calls inherit the metered object.
+- **No double charge:** because metering lives on the shared model object, wrapping it once covers all bound/proxied runnables; a probe asserts a bound/structured call does not create a second reservation.
+- **Proposed probes (C inputs; not yet run):** P1 plain=1 reservation; P2 tool-bound=1; P3 structured=1; P4 no double-wrap ⇒ not 2 per call; P5 each reservation pairs with ≤1 dispatched attempt; P6 wrong-run/reuse rejected. **Do not claim the runtime guarantee until these pass.**
+
+
+### 15.4 Exhaustion propagation (must survive broad handlers)
+- `RunBudgetExhausted` must **not** be swallowed by `agents/structured.py` free-text fallback, `memory/settlement.py` (`except Exception`), or the graph memory step. D must either re-raise it or consult an authoritative exhausted-state check, so a refused **required** attempt reaches finalization as `BUDGET`.
+- **Trigger:** exhaustion stops a run only when a **required further** attempt is refused. Reaching the cap after the last needed request does **not** force failure; a workflow within cap completes normally.
+- **In-flight:** already-issued requests are accounted for (consumed); their termination is awaited before publishing immutable final counts. No new wall-clock termination guarantee is introduced by COST-002.
+
+### 15.5 Result / config / report / manifest / scorer compatibility (needed with BUDGET)
+- **`StopReason`:** add `"BUDGET"` ⇒ six values. Every reader that enumerates `StopReason` (`result.py`, classifiers, report/manifest validators, scorer) must be updated together; an old reader must **fail closed** on the new value, not silently coerce.
+- **Classifier precedence:** budget refusal is recognized **before** generic `INTERNAL_ERROR`/model classification. **Persistence failure stays primary** if critical report/manifest publication also fails; the budget cause is a secondary recorded diagnostic.
+- **Result fields:** on `INCOMPLETE/BUDGET`: `final_rating=null`, `output_check=NOT_RUN`, `findings=[]`; safe audit names configured cap and counts.
+- **Config:** `CALL_CAP` recorded in `EffectiveConfig` (safe) and manifest; open default is a configuration decision, not a measured number.
+- **Report/manifest:** add `run_budget` summary (cap, granted, dispatched, invalidated, denied) — no prompts/secrets. **`schema_version` and `check_rules_version` are separate axes** (§16.7); budget-only ships as `schema_version=2, check_rules_version=1` (legacy Q1–Q4 preserved), not a vague "v2".
+- **Observability (NFR-OBS-001 dependency):** the BUDGET run's log names the **limit hit** (calls here; tokens/time if separately adopted).
+
+### 15.6 Runtime policy row
+Adds catalog **R17** (see `runtime-policy-catalog.md`): trigger = required request refused by adopted budget → `INCOMPLETE/BUDGET`, partial content preserved through normal publication, no final rating, `NOT_RUN`; safe diagnostic (budget kind, limit, counters, run/attempt id).
+
+### 15.7 Proposed verification scenarios (C inputs; not accepted)
+| # | Input | Expected | Violating negative |
+|---|---|---|---|
+| B1 | within-cap workflow | COMPLETED, normal | INCOMPLETE fails |
+| B2 | CALL_CAP=8, 7 granted, 4 workers (injected barrier) | exactly 1 grant, 3 denials | 2 grants fails |
+| B3 | required attempt after cap exhausted | INCOMPLETE/BUDGET, NOT_RUN, rating null | INTERNAL_ERROR or COMPLETED fails |
+| B4 | exhaustion inside structured fallback/memory | BUDGET not swallowed | fallback hides it fails |
+| B5 | concurrent runs | isolated budgets per run | shared counter leaks fails |
+| B6 | budget stop + critical persistence failure | PERSISTENCE_ERROR primary, budget secondary | two/zero reasons fails |
+| B7 | any controlled attempt without reservation | none possible (audit pairs 1:1) | unpaired attempt fails |
+| B8 | CAP=1: grant A, invalidate A, reserve B | B **denied** (granted already 1; no refund) | recycling that grants B fails (`granted=2 > cap=1`) |
+| B9 | dispatch a reservation twice | second raises `BudgetProtocolError` | 2 consumptions from 1 reservation fails |
+| B10 | pass run-1 reservation to run-2 controller | `BudgetProtocolError` | cross-run reuse accepted fails |
+| B11 | grant then exception before dispatch → invalidate | `granted` unchanged; later reserve at cap denied | capacity freed fails |
+| P1 | plain `llm.invoke` | exactly 1 reservation consumed | 0 or 2 fails |
+| P2 | `llm.bind_tools(...).invoke` | exactly 1 reservation consumed | 0 (missed) or 2 (double) fails |
+| P3 | `llm.with_structured_output(...).invoke` | exactly 1 reservation consumed | 0 or 2 fails |
+| P4 | bound/structured path re-wrap check | not 2 reservations per call | double-wrap/double-charge fails |
+
+---
+
+## 16. Integration, implementation order and handoff — proposed
+
+### 16.1 Dependency-aware implementation order
+1. **§15 budget controller + `BUDGET`** (first handoff) — **READY FOR EXECUTION/TEST PLANNING** (see §16.6). Isolated, offline-testable; unblocks COST-002 (Must) + RUN-001 `BUDGET`. It does **not** depend on any unresolved Slice A/B policy decision. Remaining pre-build items are the standard gates (approved test plan + `/approve-tests` receipt) and config choices, not architecture blocks.
+2. **§13 evidence/coverage data contracts** (data model): required **before** R2/R7 checker integration. **Blocked on A/C agreement** for the proposed channel catalog and any unrequested-core exemption; see §16.5.
+3. **§14 checker v2 (R1–R8, R5 corrected+PASSED, R3 blocking)**: integrates R2/R7 after §13; Q2 preserved separately. Depends on §13 and on the A/C applicability decisions.
+4. **Widen `NFR-REPRO-001`** record: fix `_prompt_hash` unreadable-file skip and `_effective_config` narrowing; **correct the blanket non-null fit** vs RUN-001 conditional fields.
+5. **Optional / separate:** resume identity (FR-003), convergence (COST-003), PERF/COST-001 params — designed only if adopted; do not promise.
+
+### 16.2 Slice A/B/C handoff boundaries
+| Slice | Files (proposed) | D may touch | B supplies | C inputs |
+|---|---|---|---|---|
+| C (budget) | `runapi/budget.py` (new), `result.py`, `finalize.py`, `execution.py`, validators, OBS fields | code+tests (after approval) | §15 interfaces/invariants | B1–B7 scenarios |
+| A (evidence) | `runapi/evidence.py`, `runapi/coverage.py` (new), `dataflows/router.py`, bypass sites | code+tests | §13 contracts | E1–E8 scenarios |
+| B (checker) | `runapi/checks.py`, `result.py`, report/scorer readers | code+tests | §14 rule/finding/result contract | K1–K9 scenarios |
+
+B does not edit D's application modules, C's tests, A's registry, or E's CI; B supplies interfaces and proposed scenarios only.
+
+### 16.3 Genuine new design decisions (recorded in ADR 002)
+These are a **genuine new design cycle** for the new requirements, **separate** from the preserved C2 evaluation (C1/C2/C3). ADR 002 records bounded alternatives for: (i) corrected-finding result contract; (ii) R3 phrase-check vs contextual; (iii) budget-controller reservation model; (iv) evidence/coverage component split. No historical alternatives, choices, experiments or ADD cycles are fabricated.
+
+### 16.4 Feasibility (labelled ESTIMATE)
+- **Design** of all slices by 25 Nov: feasible.
+- **Slice C (budget + `BUDGET`)** is **ready for execution/test planning now** (§16.6); its design is complete and only standard gates remain.
+- **Slice A (evidence/coverage) and Slice B (checker v2)** remain **blocked on A/C policy decisions** (§16.5) before they are execution-ready.
+- **Implementation** of every new Must (FR-001 registry, FR-005 coverage, COST-002 controller, ARCH-002 R1–R8, BUDGET) **plus** C acceptance by 25 Nov: **unlikely / not promised** (ESTIMATE). Budget + BUDGET is the most feasible offline slice; the evidence registry is the largest risk.
+
+### 16.5 Unresolved adoption / scope decisions (explicit)
+- **Slice C (does NOT block budget planning):** `BUDGET` retained (assume yes; pending A/team) and `CALL_CAP` is a configuration value — both are confirmations, not architecture blockers; budget planning may proceed.
+- **Slice A/B (block their own execution):**
+  - **Channel catalog** (12-row proposal, bypass mapping) — **requires A/C agreement**; do not implement as adopted.
+  - **Unrequested-mandatory-core exemption** — **requires A/team adoption**; strict rule applies until then.
+  - R5 corrected+PASSED (approved as **published target**); R3 blocking phrase-check (target) with contextual handling an A/C/team alternative.
+  - Sentiment **usable-free-text-without-structured** policy — open for A/C.
+- `STALE_STATEMENT_DAYS`, `TOKEN_BUDGET`, `RUN_TIME_CAP`, `N_EVAL`, `QUALITY_THRESHOLD` — open configuration values (none blocks Slice C).
+- Resume identity (separate, not implied).
+- Optional-portfolio scope (OQ-13 open; implemented path preserved).
+
+### 16.6 Slice C execution-readiness status (budget + `BUDGET`)
+**Status: READY FOR EXECUTION/TEST PLANNING.** Design complete (§15); no unresolved Slice A/B policy blocks it. Pre-build requirements are standard gates, not architecture:
+- Approved front-matter test plan + `/approve-tests <SHA>` receipt on the open feature PR (prompt pack Templates 1→2→3).
+- Confirm `CALL_CAP` test value (8) and that the production default is a configuration decision (open, not measured).
+- Include the mandatory hook files in the approved `implementation_paths[]` (`trading_graph.py`, `agents/structured.py`, `memory/settlement.py`, `llm_clients/factory.py`) plus `runapi/{budget,result,finalize,execution,reporting,persist,events}.py`.
+- Run probes P1–P4 and B1–B11 as proposed C scenarios; **no runtime metering guarantee is claimed until they pass.**
+- Ships as `schema_version=2, check_rules_version=1` (legacy Q1–Q4 preserved; BUDGET added), independent of the full checker-v2 rollout (§16.7).
+
+### 16.7 Rollout: separate manifest/result version vs check-rule version (target)
+
+Two **independent** version axes; do not conflate them:
+- **`schema_version`** (manifest/result record format) — e.g. `1` (legacy) → `2`.
+- **`check_rules_version`** — separate; `1` = legacy Q1–Q4 (blocking-only), `2` = R1–R8 with `CORRECTED`/`corrected_fields`.
+
+| Rollout stage | `schema_version` | `check_rules_version` | stop reasons | finding kinds | Q2 | Reader behaviour |
+|---|---|---|---|---|---|---|
+| Legacy artifacts (existing) | `1` | **absent** | five | `BLOCKING` only | on | **Explicit legacy path**: a schema-1 record with **no** `check_rules_version` is read under legacy Q1–Q4 semantics (allowed, not an error) |
+| **Budget-only** (Slice C ships first) | `2` (adds `run_budget`) | `1` | six incl. `BUDGET` | `BLOCKING` only | on | readers accept `BUDGET`; checks stay Q1–Q4 |
+| **Full checker v2** (Slice B later) | `2` | `2` | six incl. `BUDGET` | `BLOCKING`+`CORRECTED` | on | readers understand `CORRECTED`/`corrected_fields` |
+
+Rules:
+- **Q2 trusted-provenance guard is preserved in all three modes.**
+- **Unknown/invalid new-format combinations are rejected (fail closed), not coerced**: e.g. `check_rules_version=2` in a record whose reader caps at 1; `schema_version=2` with a required field missing; a `check_rules_version` value other than the supported set; `CORRECTED` finding in a `check_rules_version=1` record (invalid combination). A reader that cannot interpret the declared versions must **reject**, never silently treat `CORRECTED` as non-blocking.
+- **Legacy recognition is explicit and narrow:** only `schema_version=1` **and** `check_rules_version` **absent** takes the legacy path. A schema-1 record that *carries* a `check_rules_version` is **not** silently accepted.
+- **A single vague "v2" label must not imply** that R1–R8 ran after only the budget slice shipped; `check_rules_version` distinguishes them.
+
+**Required examples (to include in C's fixtures):**
+- **Budget-only:** `schema_version=2, check_rules_version=1`, `run_outcome=INCOMPLETE`, `stop_reason=BUDGET`, `output_check=NOT_RUN`, `findings=[]` — accepted; findings are blocking-only.
+- **Full v2 with corrected finding:** `schema_version=2, check_rules_version=2`, `output_check=PASSED`, `findings=[R5 CORRECTED]`, `corrected_fields={sentiment_confidence:"low"}` — accepted.
+- **Rejected unknown-version:** e.g. `check_rules_version=3` (or `2` in a reader that supports only `1`), or a `CORRECTED` finding under `check_rules_version=1` — **rejected (fail closed)** with a typed reader error, not silently downgraded.
+
+> **ADR 002 wording clarification (AR24 06):** “approved published target” in ADR 002 means approval to **draft this architecture target** — it is **not** final team adoption of the requirements and **not** a completed, tested ADD iteration. The new decisions (D1–D5) are genuine new proposals for review; they do not reopen or restate C2.

@@ -1,26 +1,28 @@
 # Risk List (Member B)
 
-Status: architecture draft. Assumptions, risks, owners and review triggers. Ownership follows `docs/project-deliverables-and-ownership.md`. Nothing here is a claimed mitigation already in place unless explicitly marked resolved.
+Status: architecture draft (implementation-aligned 2026-11-24). Assumptions, risks, owners and review triggers. Ownership follows the team allocation recorded in `docs/architecture/evaluation-logbook.md` (the previously cited `docs/project-deliverables-and-ownership.md` is absent from the checkout). Nothing here is a claimed mitigation already in place unless explicitly marked resolved.
 
 | ID | Type | Description | Impact | Owner | Review trigger |
 |---|---|---|---|---|---|
-| R-GOV | Governance gap | `AGENTS.md` and `.opencode/` absent at drafting; no verified OpenCode permission enforcement | Agent edits unguarded | E | Before any implementation |
+| R-GOV | Governance gap | `AGENTS.md`, `.opencode/`, `.agent/` still absent at `a62b801`; governance tooling (`docs/code-governance/`, `scripts/ci/`, workflows) exists. Required checks are `ai-log updated`, `dependency check`, `required tests`, `ruff` (so **AI-log updates are required**), but **`test approval` runs yet is not a required check** (PR 16 merged with a failed approval check); OpenCode per-role permissions and schema-validation gating are not enforced. | Ungated agent edits; approval gate not enforced | E | Before any implementation |
+| R-REQ-SCOPE | Requirements scope | Uploaded `REQ-TA-*` scope statement excludes portfolio files while its fixture profiles include them; implemented optional-portfolio flow conflicts. | Coherent adopted scope undefined | A (resolve) / C / team | Final D1 publication |
+| R-REQ-IDS | Requirements publication | `REQ-TA-INV-014` (immutable input) and `REQ-TA-GOV-004` (schema validation) are reported by A but absent from the uploaded 34-entry YAML; no supplied withdrawal. | Reader may cite unresolvable IDs | A | Reconciled 36-entry snapshot |
 | R-API | Boundary (B3-01) | Raw engine primitive (`TradingAgentsGraph.propagate/stream_run`) bypasses the shared execution service (no `OutputChecker`/redaction/manifest). **Design resolved:** supported project API routes through `runapi/execution.run_analysis_api` (full coverage); primitive is a declared reduced-coverage compatibility path. Residual: product reliance on the primitive requires A approval. | Only if primitive used for product | A (approve scope) / B / D | A approval of reduced-coverage scope |
 | R-C1 | Design (rejected alt) | If C1 were chosen, reporting could re-derive provenance from `final_state`, breaking shared identity | Latent FR-006/007 | B (record) | If reopening C1 |
 | R-DRIFT | Provenance drift | Reporting/result/check reading different provenance sources | Audit inconsistency | B/D | Code review of boundary |
-| R-CANON | Fingerprint (B3-03) | Canonicalization specified (`interface-contracts.md` §2.2): encoding, key order, separators, null==absent, numeric normalization, list sort, symbol spelling, exclusions. Residual: D must implement exactly. | Incorrect identity if misimplemented | B (spec) / D | Implementation review |
+| R-CANON | Fingerprint (B3-03) | Canonicalization specified (`interface-contracts.md` §2.2): encoding, key order, separators, null==absent, numeric normalization, list sort, symbol spelling, exclusions. Implemented in `runapi/context.py`; residual: D correctness and C verification. | Incorrect identity if misimplemented | B (spec) / D | Implementation review |
 | R-OVERWRITE | Data loss | Legacy date-keyed state log overwrites same ticker+date; must be replaced by run-ID keying | Lost prior run | B/D | Implementation |
-| R-PRIV | Privacy | Redactor gaps across new sinks; household secrets in narrative | Secret/holdings leak | B (design) / C (test) | Security test review |
-| R-PROMPT | Semantics | Manager rating-legend "current position" wording (PM `portfolio_manager.py:51-55`, RM `research_manager.py:30-34`) must be mode-conditioned; no-portfolio Hold meaning defined | FR-004/005 violation | B (spec) / D | Prompt change review |
+| R-PRIV | Privacy | Redactor gaps across new sinks; household secrets in narrative. **Also:** the holdings-minimisation half of `SEL-TA-NFR-003` has **no registered `REQ-TA-*` counterpart** (uploaded `REQ-TA-SEC-002` is credentials-only; candidate-only `INV-010` clause 2 is not in the registry) — a coverage gap pending A's disposition and tied to the open OQ-13 scope contradiction. | Secret/holdings leak; unregistered holdings obligation | B (design) / C (test) / A (register) | Security test review; A registry reconciliation |
+| R-PROMPT | Semantics | Manager rating-legend "current position" wording must be mode-conditioned; no-portfolio Hold meaning defined (R4 repair implemented). | FR-004/005 violation | B (spec) / D | Prompt change review |
 | R-LABEL | NFR-006 | Completion accounting must count all started runs and zero-completed → insufficient evidence | Misleading quality | B/D | Evaluation design |
 | R-SEMANTIC | GOV-004 | Semantic rubric/threshold unset; B cannot supply | Gate unimplementable until fixed | C/A | Before semantic approval |
 | R-EST | Estimate | All scores/effort are design estimates, not measurements | False confidence | B | On test evidence |
 | R-LAYOUT | Course ambiguity | Blueprint location / source-test layout / transcript wording pending instructor | Deliverable mismatch | E | Instructor clarification |
-| R-D1 | Requirements | `selected-requirements.md` is working input, not approved D1 | Scope churn | A | Final D1 approval |
+| R-D1 | Requirements | `selected-requirements.md` is working input, not approved D1; broader `REQ-TA-*` candidate proposed, 34 vs reported 36 entries. | Scope churn | A | Final D1 approval |
 
 ## Assumptions
 - CLI-only UI (selected). `PORTFOLIO_DIR=<root>/portfolios`. Full-64 fingerprint for new provenance; upstream 12-char checkpoint fingerprint preserved.
 - Blocking ambiguities already resolved by Brian (Stage 1 §5.3–5.4).
 
 ## Open decisions (not B's)
-Final D1 (A); semantic rubric/threshold (C/A); governance install (E); instructor layout (E); A's approval of any product reliance on the reduced-coverage raw engine primitive (R-API). **API routing is a closed design decision** — the supported project API traverses `runapi/execution.run_analysis_api`; no future ADR is required to *decide* that (implementation is D's).
+Final D1 and the reconciled 36-entry snapshot incl. `REQ-TA-INV-014`/`REQ-TA-GOV-004` (A); optional-portfolio vs portfolio-excluded scope (A/C/team); semantic rubric/threshold (C/A); governance install and `test approval` as a required check (E); instructor layout (E); A's approval of any product reliance on the reduced-coverage raw engine primitive (R-API). **API routing is a closed design decision** — the supported project API traverses `runapi/execution.run_analysis_api`; no future ADR is required to *decide* that (implementation is D's).

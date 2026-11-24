@@ -1,0 +1,212 @@
+{
+  "review_date_hong_kong": "2026-11-24",
+  "captured_at_utc": "2026-11-23T19:02:03.187816+00:00",
+  "head": "a62b801a51e6310f3b46860f6d2790583a95e0e0",
+  "previous_head": "98b82c991fecbd58b25b4617f378fd0930a65df4",
+  "local_modified_untracked_files_preserved_by_sha256_before_after_fast_forward": 8,
+  "application_changes_in_sync": [],
+  "local_checks": [
+    {
+      "command": ".venv/bin/python -m pytest tests/member_d_verification/test_pr_self_review.py tests/member_d_verification/test_test_approval_completion.py -q -p no:cacheprovider",
+      "exit_code": 0,
+      "observed_summary": "50 passed in 4.11s"
+    },
+    {
+      "command": ".venv/bin/python scripts/ci/check_test_approval.py --self-test",
+      "exit_code": 0,
+      "observed_summary": "test-approval self-test passed."
+    },
+    {
+      "command": ".venv/bin/ruff check .",
+      "exit_code": 0,
+      "observed_summary": "All checks passed!"
+    },
+    {
+      "command": "git diff --check",
+      "exit_code": 0
+    }
+  ],
+  "hosted_main_commit_checks": {
+    "Le-kk/CS5351": [
+      {
+        "name": "required tests",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/Le-kk/CS5351/actions/runs/45241695050/job/137928868325",
+        "head_sha": "a62b801a51e6310f3b46860f6d2790583a95e0e0",
+        "started_at": "2026-11-23T18:47:03Z",
+        "completed_at": "2026-11-23T18:47:10Z"
+      },
+      {
+        "name": "tests (py3.11)",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/Le-kk/CS5351/actions/runs/45241695050/job/137927738932",
+        "head_sha": "a62b801a51e6310f3b46860f6d2790583a95e0e0",
+        "started_at": "2026-11-23T18:46:00Z",
+        "completed_at": "2026-11-23T18:47:01Z"
+      },
+      {
+        "name": "clean-install smoke",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/Le-kk/CS5351/actions/runs/45241695050/job/137927738908",
+        "head_sha": "a62b801a51e6310f3b46860f6d2790583a95e0e0",
+        "started_at": "2026-11-23T18:45:21Z",
+        "completed_at": "2026-11-23T18:45:59Z"
+      },
+      {
+        "name": "tests (py3.14)",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/Le-kk/CS5351/actions/runs/45241695050/job/137927738902",
+        "head_sha": "a62b801a51e6310f3b46860f6d2790583a95e0e0",
+        "started_at": "2026-11-23T18:45:22Z",
+        "completed_at": "2026-11-23T18:46:19Z"
+      },
+      {
+        "name": "tests (py3.13)",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/Le-kk/CS5351/actions/runs/45241695050/job/137927738848",
+        "head_sha": "a62b801a51e6310f3b46860f6d2790583a95e0e0",
+        "started_at": "2026-11-23T18:45:13Z",
+        "completed_at": "2026-11-23T18:46:17Z"
+      },
+      {
+        "name": "ai-log updated",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/Le-kk/CS5351/actions/runs/45241695050/job/137927738779",
+        "head_sha": "a62b801a51e6310f3b46860f6d2790583a95e0e0",
+        "started_at": "2026-11-23T18:45:13Z",
+        "completed_at": "2026-11-23T18:45:19Z"
+      },
+      {
+        "name": "tests (py3.12, America/New_York)",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/Le-kk/CS5351/actions/runs/45241695050/job/137927738716",
+        "head_sha": "a62b801a51e6310f3b46860f6d2790583a95e0e0",
+        "started_at": "2026-11-23T18:45:13Z",
+        "completed_at": "2026-11-23T18:46:09Z"
+      },
+      {
+        "name": "ruff (strict, full repo)",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/Le-kk/CS5351/actions/runs/45241695050/job/137927738593",
+        "head_sha": "a62b801a51e6310f3b46860f6d2790583a95e0e0",
+        "started_at": "2026-11-23T18:45:13Z",
+        "completed_at": "2026-11-23T18:45:20Z"
+      },
+      {
+        "name": "dependency check",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/Le-kk/CS5351/actions/runs/45241695050/job/137927738290",
+        "head_sha": "a62b801a51e6310f3b46860f6d2790583a95e0e0",
+        "started_at": "2026-11-23T18:45:13Z",
+        "completed_at": "2026-11-23T18:45:58Z"
+      }
+    ],
+    "kelepawuqiusi/CS5351": [
+      {
+        "name": "required tests",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/kelepawuqiusi/CS5351/actions/runs/45193858100/job/137759740210",
+        "head_sha": "a62b801a51e6310f3b46860f6d2790583a95e0e0",
+        "started_at": "2026-11-23T14:25:42Z",
+        "completed_at": "2026-11-23T14:25:49Z"
+      },
+      {
+        "name": "dependency check",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/kelepawuqiusi/CS5351/actions/runs/45193858100/job/137758966618",
+        "head_sha": "a62b801a51e6310f3b46860f6d2790583a95e0e0",
+        "started_at": "2026-11-23T14:24:29Z",
+        "completed_at": "2026-11-23T14:25:18Z"
+      },
+      {
+        "name": "tests (py3.13)",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/kelepawuqiusi/CS5351/actions/runs/45193858100/job/137758966574",
+        "head_sha": "a62b801a51e6310f3b46860f6d2790583a95e0e0",
+        "started_at": "2026-11-23T14:24:29Z",
+        "completed_at": "2026-11-23T14:25:23Z"
+      },
+      {
+        "name": "tests (py3.12, America/New_York)",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/kelepawuqiusi/CS5351/actions/runs/45193858100/job/137758966550",
+        "head_sha": "a62b801a51e6310f3b46860f6d2790583a95e0e0",
+        "started_at": "2026-11-23T14:24:28Z",
+        "completed_at": "2026-11-23T14:25:16Z"
+      },
+      {
+        "name": "ai-log updated",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/kelepawuqiusi/CS5351/actions/runs/45193858100/job/137758966486",
+        "head_sha": "a62b801a51e6310f3b46860f6d2790583a95e0e0",
+        "started_at": "2026-11-23T14:24:28Z",
+        "completed_at": "2026-11-23T14:24:33Z"
+      },
+      {
+        "name": "tests (py3.14)",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/kelepawuqiusi/CS5351/actions/runs/45193858100/job/137758966466",
+        "head_sha": "a62b801a51e6310f3b46860f6d2790583a95e0e0",
+        "started_at": "2026-11-23T14:24:28Z",
+        "completed_at": "2026-11-23T14:25:40Z"
+      },
+      {
+        "name": "ruff (strict, full repo)",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/kelepawuqiusi/CS5351/actions/runs/45193858100/job/137758966344",
+        "head_sha": "a62b801a51e6310f3b46860f6d2790583a95e0e0",
+        "started_at": "2026-11-23T14:24:28Z",
+        "completed_at": "2026-11-23T14:24:34Z"
+      },
+      {
+        "name": "tests (py3.11)",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/kelepawuqiusi/CS5351/actions/runs/45193858100/job/137758966295",
+        "head_sha": "a62b801a51e6310f3b46860f6d2790583a95e0e0",
+        "started_at": "2026-11-23T14:24:28Z",
+        "completed_at": "2026-11-23T14:25:24Z"
+      },
+      {
+        "name": "clean-install smoke",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/kelepawuqiusi/CS5351/actions/runs/45193858100/job/137758965853",
+        "head_sha": "a62b801a51e6310f3b46860f6d2790583a95e0e0",
+        "started_at": "2026-11-23T14:24:28Z",
+        "completed_at": "2026-11-23T14:25:09Z"
+      }
+    ]
+  },
+  "source_hashes": {
+    "requirements.yaml": "3e145634250c5c01b5b0c3a1cd2b014bf543a8e0548594ac59e189e3fbe3e678",
+    "req-schema.json": "1ba74f70942a00d48e70971704945eace4356a558b05f3126e87cb3111033a1e",
+    "validate.py": "2d0b8f75af99ae2a58f6956715f5b4b0cf49e8eb01df6c1d084435dd28093518",
+    "negative-fixtures.md": "92f63acf3f575f6d26dc65ba9f9587d807cb2d4f7f22043b1264c0360d22266e",
+    "AI-log/Member-D/2026-11-23_15-25-00.md": "8803b4341288f62d9741a7279dd517ecfdc8a1b8abdc8cca44cca132501d31bf",
+    "AI-log/Member-D/2026-11-23_16-15-00.md": "da0b6fe6dca3c3d66e973f15814f0ea5b34867831e721b960dca1c331cc31ae9"
+  },
+  "d_measurement_arithmetic": {
+    "baseline_completed_total_tokens_mean": 138896.5,
+    "after_completed_total_tokens_mean": 148392.0,
+    "percentage_increase": 6.836385366081932
+  },
+  "live_model_calls_performed_for_this_review": 0,
+  "earlier_local_drafts_left_unchanged": true
+}

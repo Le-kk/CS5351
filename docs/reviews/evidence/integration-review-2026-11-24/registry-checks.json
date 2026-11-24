@@ -1,0 +1,97 @@
+{
+  "runtime": {
+    "python": "3.14.4 (main, Aug 20 2026, 10:41:58) [GCC 15.2.0]",
+    "PyYAML": "6.0.3",
+    "jsonschema": "4.19.2"
+  },
+  "documented_command": {
+    "exit_code": 2,
+    "stdout": "",
+    "stderr": "/usr/bin/python3: can't open file '/home/brian/projects/CS5351/docs/req/validate.py': [Errno 2] No such file or directory\n"
+  },
+  "root_command": {
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": "Traceback (most recent call last):\n  File \"/home/brian/projects/CS5351/validate.py\", line 178, in <module>\n    sys.exit(main())\n             ~~~~^^\n  File \"/home/brian/projects/CS5351/validate.py\", line 26, in main\n    with open(yaml_path, encoding=\"utf-8\") as handle:\n         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nFileNotFoundError: [Errno 2] No such file or directory: 'docs/req/requirements.yaml'\n"
+  },
+  "project_venv_command": {
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": "Traceback (most recent call last):\n  File \"/home/brian/projects/CS5351/validate.py\", line 16, in <module>\n    from jsonschema import Draft202012Validator\nModuleNotFoundError: No module named 'jsonschema'\n"
+  },
+  "isolated_correct_layout_baseline": {
+    "exit_code": 0,
+    "stdout": "\n34 requirements; 3 withdrawn; 0 error(s), 0 warning(s)\n",
+    "stderr": ""
+  },
+  "invalid_priority": {
+    "exit_code": 1,
+    "stdout": "ERROR schema: requirements/0/priority: 'Essential' is not one of ['Must', 'Should', 'Could']\n\n34 requirements; 3 withdrawn; 1 error(s), 0 warning(s)\n",
+    "stderr": ""
+  },
+  "missing_CALL_CAP_parameter": {
+    "exit_code": 0,
+    "stdout": "\n34 requirements; 3 withdrawn; 0 error(s), 0 warning(s)\n",
+    "stderr": ""
+  },
+  "wrong_withdrawn_set_same_count": {
+    "exit_code": 0,
+    "stdout": "\n34 requirements; 3 withdrawn; 0 error(s), 0 warning(s)\n",
+    "stderr": ""
+  },
+  "unknown_enforced_by": {
+    "exit_code": 0,
+    "stdout": "\n34 requirements; 3 withdrawn; 0 error(s), 0 warning(s)\n",
+    "stderr": ""
+  },
+  "duplicate_YAML_key": {
+    "exit_code": 0,
+    "stdout": "\n34 requirements; 3 withdrawn; 0 error(s), 0 warning(s)\n",
+    "stderr": ""
+  },
+  "negative_fixture_type_mutation": {
+    "exit_code": 0,
+    "stdout": "\n34 requirements; 3 withdrawn; 0 error(s), 0 warning(s)\n",
+    "stderr": ""
+  },
+  "registry_facts": {
+    "active": 34,
+    "ids": [
+      "REQ-TA-RUN-001",
+      "REQ-TA-FR-001",
+      "REQ-TA-FR-003",
+      "REQ-TA-FR-004",
+      "REQ-TA-FR-005",
+      "REQ-TA-FR-006",
+      "REQ-TA-FR-007",
+      "REQ-TA-FR-008",
+      "REQ-TA-NFR-001",
+      "REQ-TA-NFR-002",
+      "REQ-TA-NFR-OBS-001",
+      "REQ-TA-NFR-REPRO-001",
+      "REQ-TA-NFR-PERF-001",
+      "REQ-TA-NFR-PERF-002",
+      "REQ-TA-NFR-COST-001",
+      "REQ-TA-NFR-COST-002",
+      "REQ-TA-NFR-COST-003",
+      "REQ-TA-NFR-EVAL-001",
+      "REQ-TA-SEC-001",
+      "REQ-TA-SEC-002",
+      "REQ-TA-SEC-003",
+      "REQ-TA-ARCH-001",
+      "REQ-TA-ARCH-002",
+      "REQ-TA-INV-001",
+      "REQ-TA-INV-002",
+      "REQ-TA-INV-003",
+      "REQ-TA-INV-004",
+      "REQ-TA-INV-005",
+      "REQ-TA-INV-006",
+      "REQ-TA-INV-007",
+      "REQ-TA-INV-008",
+      "REQ-TA-GOV-001",
+      "REQ-TA-GOV-002",
+      "REQ-TA-GOV-003"
+    ],
+    "document_status": "proposed_for_adoption"
+  }
+}
