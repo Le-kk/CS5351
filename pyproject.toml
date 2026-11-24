@@ -32,6 +32,8 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
+    "PyYAML>=6.0.2",
+    "jsonschema>=4.23.0",
     "ruff>=0.16",
     "pytest>=8.0",
     "pytest-subtests>=0.13",

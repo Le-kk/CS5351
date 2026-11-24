@@ -1,12 +1,14 @@
 name: CI
 
-# This project sets four categories of merge gates: test and install verification,
-# Lint, dependency check, and AI-log update. Test and install verification is
+# This pipeline defines five categories of merge gates: test and install verification,
+# Lint, dependency check, AI-log update, and requirements schema validation.
+# Test and install verification is
 # performed by the Python test jobs and the clean-install job, then summarized
-# as the fixed check "required tests". The four gate categories are therefore
+# as the fixed check "required tests". The five gate categories are therefore
 # not the same as four workflow jobs. Contract tests remain inside pytest and
 # are not a separate gate. Live model semantic acceptance is not included in
-# these four default gates.
+# these five default gates. Requirements validation includes A's cross-record
+# rules; it does not certify requirement meaning, implementation or adoption.
 #
 # Test approval is a separate check named "test approval". Its workflow is
 # .github/workflows/test-approval.yml, which reads the protected baseline copy
@@ -15,7 +17,8 @@ name: CI
 # approval; it needs /approve-governance from a baseline governance reviewer.
 #
 # After these check names have appeared on a GitHub run, an admin can require
-# exactly: required tests; ruff (strict, full repo); dependency check; ai-log updated.
+# exactly: required tests; ruff (strict, full repo); dependency check; ai-log updated;
+# requirements schema. Test approval remains separately administered.
 # "required tests" passes only when its upstream jobs succeeded. A failed,
 # cancelled, or skipped upstream job makes that check fail.
 
@@ -29,6 +32,25 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  requirements-schema:
+    name: requirements schema
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Install declared validation and test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+      - name: Validate current registry, schema and cross-record rules
+        run: python scripts/ci/check_requirement_schema.py
+      - name: Prove valid, invalid and execution-error outcomes
+        run: python -m pytest -q tests/member_d_verification/test_requirement_schema_gate.py
+
   test:
     name: tests (py${{ matrix.python-version }}${{ matrix.tz && format(', {0}', matrix.tz) || '' }})
     runs-on: ubuntu-latest
