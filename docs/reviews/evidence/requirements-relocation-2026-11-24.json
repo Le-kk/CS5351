@@ -1,0 +1,66 @@
+{
+  "record_type": "Byte-preserving requirements-package relocation, not requirements adoption or validator hardening",
+  "recorded_utc": "2026-11-24T04:45:48.025151+00:00",
+  "authorization": "User selected: Also relocate the requirements package",
+  "prior_main": "8bf739565d42c7d8ea972779ffd754c0d065b830",
+  "architecture_commit": "7bfcf6804df56b36fe511dde351c38586708be5c",
+  "moves": [
+    {
+      "old_path": "requirements.yaml",
+      "new_path": "docs/req/requirements.yaml",
+      "before_sha256": "3e145634250c5c01b5b0c3a1cd2b014bf543a8e0548594ac59e189e3fbe3e678",
+      "after_sha256": "3e145634250c5c01b5b0c3a1cd2b014bf543a8e0548594ac59e189e3fbe3e678",
+      "content_identical": true
+    },
+    {
+      "old_path": "req-schema.json",
+      "new_path": "docs/req/req-schema.json",
+      "before_sha256": "1ba74f70942a00d48e70971704945eace4356a558b05f3126e87cb3111033a1e",
+      "after_sha256": "1ba74f70942a00d48e70971704945eace4356a558b05f3126e87cb3111033a1e",
+      "content_identical": true
+    },
+    {
+      "old_path": "validate.py",
+      "new_path": "docs/req/validate.py",
+      "before_sha256": "2d0b8f75af99ae2a58f6956715f5b4b0cf49e8eb01df6c1d084435dd28093518",
+      "after_sha256": "2d0b8f75af99ae2a58f6956715f5b4b0cf49e8eb01df6c1d084435dd28093518",
+      "content_identical": true
+    },
+    {
+      "old_path": "requirement-source-notes.md",
+      "new_path": "docs/req/requirement-source-notes.md",
+      "before_sha256": "927a061620d1511b37cebcacd287284b166247ac4b18147176878f2a39ed647e",
+      "after_sha256": "927a061620d1511b37cebcacd287284b166247ac4b18147176878f2a39ed647e",
+      "content_identical": true
+    },
+    {
+      "old_path": "negative-fixtures.md",
+      "new_path": "docs/req/negative-fixtures.md",
+      "before_sha256": "92f63acf3f575f6d26dc65ba9f9587d807cb2d4f7f22043b1264c0360d22266e",
+      "after_sha256": "92f63acf3f575f6d26dc65ba9f9587d807cb2d4f7f22043b1264c0360d22266e",
+      "content_identical": true
+    },
+    {
+      "old_path": "change-log.md",
+      "new_path": "docs/req/change-log.md",
+      "before_sha256": "3e91f06f0f48716e73c76ad46dac60db5ceb78283fbc9f13dee3214806352902",
+      "after_sha256": "3e91f06f0f48716e73c76ad46dac60db5ceb78283fbc9f13dee3214806352902",
+      "content_identical": true
+    }
+  ],
+  "validation": {
+    "command_from_repository_root": "python3 docs/req/validate.py",
+    "interpreter": "/usr/bin/python3",
+    "valid_registry_exit_code": 0,
+    "valid_registry_output": "\n34 requirements; 3 withdrawn; 0 error(s), 0 warning(s)\n",
+    "invalid_priority_control_exit_code": 1,
+    "invalid_priority_control_output": "ERROR schema: requirements/0/priority: 'Essential' is not one of ['Must', 'Should', 'Could']\n\n34 requirements; 3 withdrawn; 1 error(s), 0 warning(s)\n",
+    "negative_control": "Temporary copy only; first requirement priority changed to Essential; canonical registry unchanged"
+  },
+  "limitations": [
+    "Requirements remain proposed_for_adoption, with 34 active entries; no requirements statement, ID, status, schema or validator code changed.",
+    "Existing I24 02/04/07 requirements and validator findings are not repaired by this move.",
+    "Verification used the existing Ubuntu system Python and installed PyYAML/jsonschema; no dependency was installed and no CI gate was added.",
+    "Original review source links were pinned to the reviewed root-layout revision; authentic transcripts and retained evidence were not rewritten."
+  ]
+}

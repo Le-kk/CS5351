@@ -9,7 +9,7 @@ Scope of these templates: the prioritised slices in [interface-contracts.md](../
 
 **Model access constraint (access, not a mandate).** As of drafting, DeepSeek V4 Flash is the only model available to Member B's OpenCode work via the school API key. This is an access constraint for this implementation route; it is **not** a course requirement, an evaluated model choice, or a restriction on TradingAgents' inherited provider capabilities. No model comparison or model-saving claim is made. **No credentials belong in any prompt or document**; provide keys only through the environment, never pasted into a prompt.
 
-**Baseline to cite in every prompt (verify before use):** repository `Le-kk/CS5351`; recorded local revision for this planning pack `a62b801a51e6310f3b46860f6d2790583a95e0e0` (or the then-current integration HEAD named by E). Read `requirements.yaml` (`schema_version 1.2.0`, `proposed_for_adoption`), `docs/req/selected-requirements.md`, the named architecture contracts, and `docs/reviews/project-integration-review-2026-11-24.md`.
+**Baseline to cite in every prompt (verify before use):** repository `Le-kk/CS5351`; recorded local revision for this planning pack `a62b801a51e6310f3b46860f6d2790583a95e0e0` (or the then-current integration HEAD named by E). Read `docs/req/requirements.yaml` (`schema_version 1.2.0`, `proposed_for_adoption`), `docs/req/selected-requirements.md`, the named architecture contracts, and `docs/reviews/project-integration-review-2026-11-24.md`.
 
 ---
 
@@ -27,7 +27,7 @@ Slice: <C_budget | A_evidence_coverage | B_checker_v2>
 Baseline revision to inspect: <integration HEAD; planning pack used a62b801...>
 
 Read first:
-- requirements.yaml (schema_version 1.2.0, status proposed_for_adoption) — note
+- docs/req/requirements.yaml (schema_version 1.2.0, status proposed_for_adoption) — note
   <REQ-TA-... IDs for this slice>; treat status/priority as A owns meaning.
 - docs/req/selected-requirements.md (implemented baseline scope).
 - docs/architecture/interface-contracts.md §<13|14|15> and §16.

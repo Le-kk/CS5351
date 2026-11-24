@@ -89,7 +89,7 @@ The C2 boundary is present in the checkout, not merely designed:
 
 ## Proposed broader requirements — impact, **not** implemented
 
-The uploaded `requirements.yaml` (`status: proposed_for_adoption`) and A's later correspondence would extend the as-built system. If adopted, the following are architecture impacts, documented but **not** designed as accepted decisions here:
+The uploaded `docs/req/requirements.yaml` (`status: proposed_for_adoption`) and A's later correspondence would extend the as-built system. If adopted, the following are architecture impacts, documented but **not** designed as accepted decisions here:
 
 - **`BUDGET` stop reason** and a run-wide **single-use call-reservation** controller (`REQ-TA-RUN-001`, `REQ-TA-NFR-COST-002`): would add a sixth serialized `StopReason`, a shared budget component consulted before every model dispatch, and updates to every reader. The current five-value literal (`runapi/result.py:12-14`) has no `BUDGET`.
 - **R1–R8 output check** (`REQ-TA-ARCH-002`) and **corrected-only `PASSED`** (R5): R2 (evidence-ID resolution) and R4–R7 (sentiment/coverage) require new data fields and registry components the checker does not inspect; R5 would change `Finding.status`/`CheckResult` so `PASSED` can carry corrected findings — a coordinated type change across checks/report/scorer if retained.
