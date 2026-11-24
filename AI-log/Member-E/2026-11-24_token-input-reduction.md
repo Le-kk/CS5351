@@ -287,4 +287,3 @@ Source A, line 3370.
 - 本地 **1,797 项测试通过**，Ruff 通过；GitHub CI 正在运行。
 
 由于按要求未包含 AI 日志，`ai-log updated` 门预计会失败并阻止合并，已在 PR 中说明。未执行合并。
-
