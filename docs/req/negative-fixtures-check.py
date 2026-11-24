@@ -127,6 +127,19 @@ def mutate_doc(doc: dict, case: dict) -> None:
             if r["type"] == "cost":
                 r.pop("threshold", None)
                 break
+    elif kind == "prose_dangling_id":
+        # A `REQ-TA-*` ID named only in prose, never in a structured field.
+        # Classic case: REQ-TA-INV-012 was cited four times with no such entry.
+        reqs["REQ-TA-FR-001"]["note"] = (
+            "Non-normative: the persistence rule lives in REQ-TA-INV-012.")
+    elif kind == "drop_freshness_param":
+        doc["parameter_appendix"] = [
+            p for p in doc["parameter_appendix"] if p["name"] != "STALE_PRICE_DAYS"]
+    elif kind == "drop_n_eval":
+        doc["parameter_appendix"] = [
+            p for p in doc["parameter_appendix"] if p["name"] != "N_EVAL"]
+    elif kind == "drop_requirements_key":
+        doc.pop("requirements", None)
     else:
         raise AssertionError(f"unknown mutation {kind}")
 
@@ -156,6 +169,11 @@ CASES = [
     ("18 requirement unassigned", "unassign_one", "no fixture profile assigned"),
     ("19 requirement in two groups", "assign_twice", "assigned to more than one profile group"),
     ("20 A-C profile missing", "drop_ac", "profile A-C"),
+    # Added 2026-11-24 after an external review found all three passed.
+    ("22 prose-cited ID with no entry", "prose_dangling_id", "cites undefined requirement"),
+    ("23 freshness-days parameter deleted", "drop_freshness_param", "references parameter"),
+    ("24 N_EVAL deleted from appendix", "drop_n_eval", "references parameter N_EVAL"),
+    ("25 requirements key removed", "drop_requirements_key", "missing or empty"),
 ]
 
 

@@ -262,6 +262,17 @@ Two measurement series exist for NVDA on 2026-01-09 and **disagree in direction*
 
 **Still open:** the value itself, and which series is reproducible. That is D's measurement and E's control to settle; A will not set `TOKEN_BUDGET` from either figure as they stand.
 
+**2026-11-24 (later) — a candidate figure arrived; the rule it must meet did not change.** E proposed **120,000 total tokens per run** (input plus output) from three measurements, 99,532 / 103,120 / 110,725, and supplied the reference configuration and an explicit "missing usage is not zero" rule. A read E's own AI log before writing anything, and the provenance blocks the number:
+
+- **All three figures are optimised.** The optimisation is the change merged as PR #18 and is already in `main`. The control 160,826 is one unoptimised run from the same session; the first baseline was two runs averaging 138,897.
+- **The reference configuration says the optimisation is on.** Measured that way, the budget caps the optimised build against itself, so a later change could surrender most of the saving and still pass. The comparability clause requires an identical baseline and candidate, and no setting names whether the optimisation is on.
+- **The measurement record is not in the repository.** The AI-log index reached `main`; the measurement record and raw per-run artifacts did not.
+- **The supported harness does not close the gap.** `tests/member_d_verification/token_input_benchmark.py` is a **scripted, unoptimised** measurement over `run_transient` — it stubs the tier client — so it can exercise the budget mechanism offline but cannot supply a live before/after pair.
+
+**A adopted what needed no number and recorded the rest as a proposal:** total-not-per-call accounting, reserve-before-dispatch, the `INCOMPLETE`/`BUDGET` contract, `UNKNOWN` spending budget, and the narrower scope. `TOKEN_BUDGET` stays `open`, with "candidate 120000 … not applied" visible in its value. A provisional 152,000 for the **unoptimised** baseline is in the tradeoff line as A's derivation, not a measurement, and is not applied.
+
+**What would close this:** one before/after pair under the identical named configuration, from the repository rather than a local harness, with the baseline and the allowance both recorded. Then the budget is baseline plus a stated allowance, and a later regression is detectable.
+
 **OQ-14 — Which `GOV-004` is meant? — NAMED AND GUARDED, not closed.**
 
 Two different things now answer to "GOV-004": the team's `SEL-TA-GOV-004` (the semantic-evaluation gate, which is A's `REQ-TA-GOV-001`) and A's new `REQ-TA-GOV-004` (registry schema validation). `docs/architecture/invariants.md` and `docs/architecture/risk-list.md` in the team repository use the first meaning; A's registry now uses the second.
@@ -293,3 +304,11 @@ E's E15: original-language AI-use records already exist under `AI-log/`, but the
 - Did not fill in approvals, signatures, transcripts or results.
 - Did not answer OQ-3 on the course's behalf. OQ-1 was closed by quoting the course PDF, not by guessing what the instructor meant.
 - Did not adopt Member B's `SEL-TA-*` candidate or the different codebase it describes.
+
+**OQ-16 — Who owns the portfolio confirmation flow? — OPEN (found 2026-11-24).**
+
+The scope statement used to say `REQ-TA-FR-002` owned "consent". That ID is the **withdrawn GUI entry**, and the labels beside it were misaligned too (`FR-003` is checkpoint/resume, `FR-004` is point-in-time evidence, `FR-006` is freshness). Correcting the citation exposed a real gap rather than a typo: **no active requirement owns the confirmation gate** — the confirm/decline/EOF prompts, the event they emit (`input.consent` exists in `runapi/events.py`), and the rule that declining aborts the run without reading the file. `REQ-TA-INV-014` says confirmation authorizes the frozen selection; it does not define the gate.
+
+This is recorded as open rather than closed by inventing an owner. Adding the entry would be `REQ-TA-FR-009` (numbering must not skip), and it needs a decision on whether the gate is a requirement or a UX detail of the CLI. Owner: A to propose, B to confirm the event contract.
+
+**OQ-16b — Architecture rules named `INV-11`, `INV-12`, `INV-14`.** Three architecture invariants are cited by the registry but are not `REQ-TA-*` entries. `INV-14` (persistence failure) is referenced from `NFR-REPRO-001` and `INV-014`; `INV-11` (resume) from `INV-014`. Earlier text pointed at `REQ-TA-INV-012` / `REQ-TA-INV-011`, IDs that do not exist, because `INV-009`…`013` were deliberately held back pending D's answer to Q-8d. The citations now name the architecture ID and say it is unregistered. **Whenever Q-8d closes and those entries are added, these citations must be rewritten to the `REQ-TA-*` form.**
