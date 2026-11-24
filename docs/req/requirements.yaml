@@ -678,46 +678,45 @@ requirements:
     \ candidate: the entry point used (`run_analysis_api`, CLI, `run_transient` or `propagate` — these\
     \ are not interchangeable), the analyst set, the debate round counts, the ticker and analysis date,\
     \ the model and provider, and the state of the memory log (a run with past-decision context and a\
-    \ run without it do not measure the same thing). A figure produced under one configuration shall not\
-    \ be compared with a figure produced under a different one, and no budget or saving percentage shall\
-    \ be derived from such a comparison. The record of a measurement shall state each of these six settings\
-    \ so that a later reader can tell whether two figures are comparable.\n\n**Total, not per call.**\
-    \ The budget counts input **and** output tokens cumulatively across every model call in one run: tool-selection\
-    \ calls, analyst calls, both debates, structured-output re-requests, free-text fallback and retries\
-    \ whose usage the provider reports. It is not a per-call ceiling and not an input-only figure; `max_tokens`\
-    \ in `default_config.py` caps a single call and is not this budget.\n\n**Reserve before dispatch.**\
-    \ Before an attempt is dispatched the system shall test the remaining budget against the attempt's\
-    \ input plus its maximum permitted output, and shall not dispatch an attempt that cannot fit. Counting\
-    \ usage only after a call returns does not satisfy this clause, because concurrent branches, retries\
-    \ and output allowance all spend budget between the check and the arrival of the usage report.\n\n\
-    **Usage availability.** Missing usage metadata shall not be read as zero usage. Where a failed or\
-    \ interrupted attempt leaves consumption unknown, the record shall mark that usage `UNKNOWN` and the\
-    \ attempt's reservation shall be retained when deciding whether further attempts are permitted. The\
-    \ existing rule that an `UNKNOWN` run is not stopped is unchanged; what is added is that `UNKNOWN`\
-    \ spends budget rather than being free.\n\n**Scope of the budget.** `TOKEN_BUDGET` binds the reference\
-    \ configuration. Extending it to every ticker, date, analyst set and portfolio mode is a product decision\
-    \ that accepts more runs stopping early, and it requires a correspondingly wider test population;\
-    \ this entry asserts the narrower scope and does not claim the wider one.\n\n**Three purposes, kept\
-    \ apart.** An earlier version of this entry concluded that a budget whose baseline is the optimised\
-    \ build cannot detect a regression. That conclusion was wrong and is withdrawn here: an accepted optimised\
-    \ build can serve as a reference, and whether a cap detects a particular increase depends on its margin,\
-    \ not on which build supplied the figure. A loose cap misses regressions under either baseline. The\
-    \ three purposes are therefore stated separately.\n\n(1) **Optimization evidence** compares a controlled\
-    \ legacy/candidate pair to estimate the effect of the explicit optimisation change. Code, prompts\
-    \ or concise mode are deliberately different across the pair; that is the experimental factor, and\
-    \ it is named and frozen at everything else.\n\n(2) **Runtime budget calibration** chooses a cap and\
-    \ a stated margin for the named supported reference profile, from representative measurements plus\
-    \ quality and completion checks. An optimised reference is not inherently invalid here.\n\n(3) **Regression\
-    \ evaluation** compares subsequent builds with a named accepted reference and a defined tolerance\
-    \ under a defined profile. The reference is named, not assumed identical.\n\n**Comparability.** Two\
-    \ runs are comparable when every setting except the one named experimental factor is identical. Requiring\
-    \ the candidate and baseline to be identical in the very behaviour under evaluation is a defect, not\
-    \ a safeguard: a controlled optimisation intends to change it. The rule that remains is that the factor\
-    \ is named and everything else is frozen. Per-run identity and timing metadata (`run_id`, start and\
-    \ end times, timestamps) are recorded, not treated as settings, and are excluded from any configuration\
-    \ comparison. `TOKEN_BUDGET` shall be set from a named reference configuration and a stated margin,\
-    \ with both numbers recorded; it shall not be derived from figures taken under different, unnamed\
-    \ configurations."
+    \ run without it do not measure the same thing). The one exception is the experimental factor of a\
+    \ controlled comparison, which is named and evaluated below. The record of a measurement shall state\
+    \ each of these six settings so that a later reader can tell whether two figures are comparable.\n\
+    \n**Total, not per call.** The budget counts input **and** output tokens cumulatively across every\
+    \ model call in one run: tool-selection calls, analyst calls, both debates, structured-output re-requests,\
+    \ free-text fallback and retries whose usage the provider reports. It is not a per-call ceiling and\
+    \ not an input-only figure; `max_tokens` in `default_config.py` caps a single call and is not this\
+    \ budget.\n\n**Reserve before dispatch.** Before an attempt is dispatched the system shall test the\
+    \ remaining budget against the attempt's input plus its maximum permitted output, and shall not dispatch\
+    \ an attempt that cannot fit. Counting usage only after a call returns does not satisfy this clause,\
+    \ because concurrent branches, retries and output allowance all spend budget between the check and\
+    \ the arrival of the usage report.\n\n**Usage availability.** Missing usage metadata shall not be\
+    \ read as zero usage. Where a failed or interrupted attempt leaves consumption unknown, the record\
+    \ shall mark that usage `UNKNOWN` and the attempt's reservation shall be retained when deciding whether\
+    \ further attempts are permitted. The existing rule that an `UNKNOWN` run is not stopped is unchanged;\
+    \ what is added is that `UNKNOWN` spends budget rather than being free.\n\n**Scope of the budget.**\
+    \ `TOKEN_BUDGET` binds the reference configuration. Extending it to every ticker, date, analyst set\
+    \ and portfolio mode is a product decision that accepts more runs stopping early, and it requires\
+    \ a correspondingly wider test population; this entry asserts the narrower scope and does not claim\
+    \ the wider one.\n\n**Three purposes, kept apart.** An earlier version of this entry concluded that\
+    \ a budget whose baseline is the optimised build cannot detect a regression. That conclusion was wrong\
+    \ and is withdrawn here: an accepted optimised build can serve as a reference, and whether a cap detects\
+    \ a particular increase depends on its margin, not on which build supplied the figure. A loose cap\
+    \ misses regressions under either baseline. The three purposes are therefore stated separately.\n\n\
+    (1) **Optimization evidence** compares a controlled legacy/candidate pair to estimate the effect of\
+    \ the explicit optimisation change. Code, prompts or concise mode are deliberately different across\
+    \ the pair; that is the experimental factor, and it is named and frozen at everything else.\n\n(2)\
+    \ **Runtime budget calibration** chooses a cap and a stated margin for the named supported reference\
+    \ profile, from representative measurements plus quality and completion checks. An optimised reference\
+    \ is not inherently invalid here.\n\n(3) **Regression evaluation** compares subsequent builds with\
+    \ a named accepted reference and a defined tolerance under a defined profile. The reference is named,\
+    \ not assumed identical.\n\n**Comparability.** Two runs are comparable when every setting except the\
+    \ one named experimental factor is identical. Requiring the candidate and baseline to be identical\
+    \ in the very behaviour under evaluation is a defect, not a safeguard: a controlled optimisation intends\
+    \ to change it. The rule that remains is that the factor is named and everything else is frozen. Per-run\
+    \ identity and timing metadata (`run_id`, start and end times, timestamps) are recorded, not treated\
+    \ as settings, and are excluded from any configuration comparison. `TOKEN_BUDGET` shall be set from\
+    \ a named reference configuration and a stated margin, with both numbers recorded; it shall not be\
+    \ derived from figures taken under different, unnamed configurations."
   fit_criterion: Given the live profile, when 20 runs execute one after another, then 20/20 have known
     usage ≤ `TOKEN_BUDGET`, and the GOV-001 score over these runs is ≥ `QUALITY_THRESHOLD`. A run with
     `UNKNOWN` usage counts as a failure of this criterion, not as zero cost. Given any two measurements
