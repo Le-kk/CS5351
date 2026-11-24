@@ -435,11 +435,20 @@
         },
         "enforced_by": {
           "$ref": "#/$defs/requirementId",
-          "description": "Invariants only: the requirement whose component enforces this rule."
+          "description": "Invariants only: the requirement that owns the meaning of the rule this one enforces. Omit when no requirement owns it. This is a requirement crosswalk, not a claim that a component of that requirement enforces this rule at runtime; use `enforced_components` for that."
         },
         "rule_owner": {
           "$ref": "#/$defs/requirementId",
           "description": "Invariant only: the requirement that owns this rule's meaning. This is provenance, not a dependency, so it does not create a priority ordering constraint."
+        },
+        "enforced_components": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": "Invariants only: the code components that enforce this rule, as repository paths or qualified names. A component is not a requirement: naming one here does not claim any REQ-TA-* entry covers it. Required for every invariant, because an invariant that names neither an owner nor an enforcer cannot be traced."
         }
       },
       "allOf": [
@@ -484,12 +493,12 @@
           "then": {
             "required": [
               "zero_tolerance",
-              "enforced_by"
+              "enforced_components"
             ]
           }
         }
       ]
     }
   },
-  "version": "1.1.0"
+  "version": "1.2.0"
 }

@@ -136,7 +136,30 @@ def main(argv=None) -> int:
         print("\n0 requirements; 0 withdrawn; "
               f"{len(problems)} error(s), 0 warning(s)")
         return 1
+
+    # Every cross-record rule below reads `r["id"]`. An entry that is not a mapping,
+    # or is a mapping without an ID, made that read raise KeyError or TypeError and
+    # the process died with a traceback instead of reporting the rule (F24-05,
+    # 2026-11-24). Such entries are reported here and the dependent checks below run
+    # only over the entries that have an ID, so the remaining findings still appear.
+    well_formed = []
+    for index, entry in enumerate(reqs):
+        if not isinstance(entry, dict):
+            problems.append(
+                f"schema: /requirements/{index}: entry is {type(entry).__name__}, not a mapping; "
+                "cross-record rules skipped for it")
+            continue
+        if not isinstance(entry.get("id"), str) or not entry["id"]:
+            title = entry.get("title")
+            label = f" (title {title!r})" if isinstance(title, str) and title else ""
+            problems.append(
+                f"schema: /requirements/{index}: entry has no 'id' string{label}; "
+                "cross-record rules skipped for it")
+            continue
+        well_formed.append(entry)
+    reqs = well_formed
     ids = [r["id"] for r in reqs]
+
 
     # 2. IDs unique
     seen = set()
@@ -279,13 +302,21 @@ def main(argv=None) -> int:
             problems.append(
                 f"{r['id']}: has a baseline observation but no baseline_observation source link")
 
-    # 11. Invariants are zero-tolerance and name the component that enforces them
+    # 11. Invariants are zero-tolerance and name the component that enforces them.
+    #     `enforced_by` is a requirement crosswalk and is optional: forcing it made
+    #     INV-014 point at itself and then at FR-001, neither of which enforces input
+    #     freezing (review F24-03, 2026-11-24). The enforcer is `enforced_components`.
     for r in reqs:
         if r["type"] == "invariant":
             if r.get("zero_tolerance") is not True:
                 problems.append(f"{r['id']}: invariant is not marked zero_tolerance")
-            if not r.get("enforced_by"):
-                problems.append(f"{r['id']}: invariant does not name enforced_by")
+            comps = r.get("enforced_components")
+            if not isinstance(comps, list) or not comps:
+                problems.append(
+                    f"{r['id']}: invariant does not name enforced_components")
+            elif r.get("enforced_by") == r["id"]:
+                problems.append(
+                    f"{r['id']}: enforced_by names the invariant itself, which is not an enforcer")
             blob = json.dumps(r).lower()
             if "zero-tolerance" not in blob and "blocking" not in blob:
                 problems.append(
@@ -320,9 +351,21 @@ def main(argv=None) -> int:
     #     `amended_by`), so an ID named only in a statement or a note went unchecked.
     #     That is how `REQ-TA-INV-012` was cited four times in this registry while
     #     no such entry existed. Found by an external review on 2026-11-24.
-    id_re = re.compile(r"\bREQ-TA-[A-Z]+-\d{3}\b")
+    #     The pattern is taken from the schema's own `requirementId` pattern rather
+    #     than written again here: the first version accepted only one namespace
+    #     segment, so `REQ-TA-NFR-COST-999` passed unseen (F24-05).
+    id_pattern = schema["$defs"]["requirementId"]["pattern"]
+    # Anchor on the pattern body so it can be used with finditer on free text.
+    # `finditer` is used rather than `findall`: the schema pattern contains a
+    # group, and with a group present `findall` returns only that group's text.
+    if id_pattern.startswith("^") and id_pattern.endswith("$"):
+        id_body = id_pattern[1:-1]
+        id_re = re.compile(rf"(?<![A-Za-z0-9_-]){id_body}(?![A-Za-z0-9_-])")
+    else:
+        id_re = re.compile(id_pattern)
     for where, text in _prose_strings(doc):
-        for cited in id_re.findall(text):
+        for match in id_re.finditer(text):
+            cited = match.group(0)
             if cited not in seen and cited not in withdrawn:
                 problems.append(f"{where}: cites undefined requirement {cited}")
 
@@ -353,7 +396,7 @@ def main(argv=None) -> int:
     for group, ids in fp.get("assignment", {}).items():
         for rid in ids:
             assigned.setdefault(rid, []).append(group)
-    active_ids = [r["id"] for r in doc.get("requirements", []) if r.get("status") != "withdrawn"]
+    active_ids = [r["id"] for r in reqs if r.get("status") != "withdrawn"]
     unassigned = [i for i in active_ids if i not in assigned]
     twice = {i: g for i, g in assigned.items() if len(g) > 1}
     unknown = [i for i in assigned if i not in active_ids]

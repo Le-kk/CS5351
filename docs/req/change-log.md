@@ -383,7 +383,7 @@ Member E proposed **120,000 total tokens per run** from three measurements, 99,5
 - **All three figures are optimised runs.** The optimisation E authored is the change merged as **PR #18**, and it is already in `main`. The second control, 160,826, is one **unoptimised** run from the same session; the first baseline was two runs averaging 138,897.
 - **The proposed reference configuration names the optimisation as on.** A budget measured that way caps the optimised build against itself: a later change could give back much of the saving and still pass. The entry's own comparability clause requires an identical baseline and candidate, and none of the six settings names whether the optimisation is on.
 - **The measurement record is not in the repository.** `AI-log/Member-E/2026-11-24_token-input-reduction.md` reached `main` and is the index A read; the measurement record and the raw per-run artifacts did not, so the per-run settings could not be checked against run artifacts.
-- **The entry point is not pinned by the name.** `run_transient` is the graph-level `persist=False` form of `_run_graph`; whether the optimised runs reached it through the run API is not recorded. The supported harness, `tests/member_d_verification/token_input_benchmark.py`, is **scripted and unoptimised** — it stubs the tier client — so it can prove the mechanism offline but cannot supply the live before/after pair.
+- **The entry point is not pinned by the name.** `run_transient` is the graph-level `persist=False` form of `_run_graph`; whether the optimised runs reached it through the run API is not recorded. **Corrected 2026-11-24:** this bullet originally called `tests/member_d_verification/token_input_benchmark.py` a "scripted and unoptimised" harness that stubs the tier client. That was wrong. The harness is **live-capable and optimized by default** (`--live` mandatory; `concise_intermediate_reports=not args.legacy`; the patched wrapper sets `timeout=60` and calls the real `create_tier_client`), and it was introduced in `aa3b02d`, the same commit as the optimisation. It still cannot certify a budget mechanism, because it implements no token-admission controller — but the reason is missing enforcement evidence, not a scripted model. The missing artifact is the runs' raw output and configuration (F24-01).
 
 **A provisional figure, labelled as A's derivation, not a measurement.** For the **unoptimised** baseline, 152,000 tokens (about 90% of the single unoptimised control 160,826, rounded up so that a good run is not refused). It is recorded in the tradeoff line and **not applied**: one compliant optimised run already measured 110,725, so the value holds only for the configuration it was derived in, and its internal consistency was never verified. **`TOKEN_BUDGET` stays `open`**, with the proposal visible in its `value` text as "candidate 120000 … not applied".
 
@@ -473,3 +473,79 @@ mutation sweep                              all 8 parameter deletions + requirem
 ```
 
 `requirements-draft-v4.md` is untouched (read-only recorded artefact, SHA-256 `542f382c…`). The changes go through dated overrides in `rebuild_registry.py`; `requirements.yaml` was regenerated, never hand-edited.
+
+---
+
+## 2026-11-24 (third) — follow-up review F24-01…F24-05: all five confirmed and fixed
+
+A follow-up review of the merged registry (`ddfcaf3`, i.e. PR #22) reported five further findings. **A checked each one against the code and the files; all five were accurate.** Two of them were defects A introduced while fixing the previous round, which is recorded here rather than glossed over.
+
+### F24-01 — the benchmark was misdescribed in three places
+
+The note, the source notes and this log all called `tests/member_d_verification/token_input_benchmark.py` a **"scripted, unoptimised"** harness that stubs the tier client. **Wrong on every count.** Reading the file:
+
+| Claim | Actually |
+|---|---|
+| scripted | `--live` is **mandatory** (lines 17-24); it makes billable calls |
+| unoptimised | `concise_intermediate_reports=not args.legacy` — optimized is the **default**, `--legacy` is the control (line 39) |
+| stubs the tier client | the `patch`ed wrapper only sets `timeout=60` and calls the **real** `create_tier_client` (lines 82-84) |
+| predates the optimisation | git records it as introduced in `aa3b02d`, **the same commit** as the optimisation |
+
+It also calls `graph.run_transient` directly rather than routing through `run_analysis_api` (lines 107-109). The mocked file is `test_token_input_reduction.py`, a different one.
+
+**Corrected disposition:** the repository contains a **live-capable, mode-switchable benchmark**. What is missing is the three runs' **raw output and configuration**, not a live path. It still cannot certify the budget, because it implements no token-admission controller. All three copies were corrected; the three totals stay **E-reported**.
+
+### F24-02 — calibration, regression detection and comparison policy were conflated
+
+The entry concluded that an optimised baseline "cannot detect a regression", therefore the budget must be unoptimised baseline + allowance. **That does not follow.** An accepted optimised build can be a reference; whether a cap catches an increase depends on its **margin**, and a loose cap misses regressions under either baseline. The conclusion is **withdrawn** and replaced by three separate purposes:
+
+1. **Optimization evidence** — a controlled legacy/candidate pair, factor named and everything else frozen.
+2. **Runtime budget calibration** — a cap and stated margin for the named profile; an optimised reference is not inherently invalid.
+3. **Regression evaluation** — later builds against a named accepted reference and a defined tolerance.
+
+**Arithmetic corrected.** The tradeoff line called 152,000 "about 90%" of 160,826. It is **94.51%**; 90% would be 144,743.4. It also called the figure "baseline plus an allowance" while it is *below* the single control — not a baseline plus anything. Both statements removed; the figure is kept only as A's unverified derivation.
+
+**Comparability contradiction removed.** The statement required an identical baseline and candidate while the fit allowed one named changed factor. A controlled optimisation is *supposed* to change that factor. The rule now: **name the experimental factor and freeze everything else**; per-run identity and timing metadata are excluded from configuration comparison.
+
+### F24-03 — INV-014 named the wrong enforcer, twice
+
+The previous round changed `enforced_by` from INV-014 itself to `REQ-TA-FR-001`. **That was A picking the nearest existing ID to satisfy an identifier check.** FR-001 owns research evidence IDs and records; it does not own portfolio confirmation, canonical normalisation or immutable run contexts, and no evidence-record component exists in `main`.
+
+The real seams are `runapi/input_service.py` (`PortfolioInputService.freeze_loaded` / `freeze_path` / `freeze_explicit`) and `runapi/context.py` (`FrozenSnapshot`, `RunContext` as a frozen dataclass, `snapshot_fingerprint`). **Schema and rules changed so this cannot recur by guesswork:**
+
+- New field `enforced_components` (array of repository paths or qualified names). **Required for every invariant**; `enforced_by` is now an optional *requirement crosswalk*, not a claim that a requirement's component enforces the rule.
+- Validator rule 11 now requires `enforced_components` and rejects `enforced_by == own id`.
+- `INV-014` names the three components and **omits `enforced_by`**, with the statement saying plainly that **no requirement currently owns input freezing**. Nine invariants carry `enforced_components`; the eight ARCH-002 rules name `runapi/checks.py`, `runapi/finalize.py` and `agents/rating.py`.
+- Schema version `1.1.0` → `1.2.0`.
+
+### F24-04 — consent wording, configuration comparison, profile authority
+
+- **Consent.** The OQ-16 note said declining aborts *"without reading the file"*. The shipped flow reads, validates and freezes **before** the confirmation prompt (`cli/input_ui.py:124-136`; `runapi/input_service.py freeze_loaded`). Decline prevents analysis and provider dispatch, not the local read. **That sentence was removed**, not quietly kept: preventing the read would be a new requirement needing its own decision. The note now also states that the gate is testable functional behaviour, not merely visual UX.
+- **Config comparison.** Fit (c) compared whole records, which must differ in `run_id` and timestamps too. It now compares **configuration projections**, excludes per-run identity and timing metadata, and *keeps* unique identity: 2/2 distinct `run_id`s and timestamps.
+- **Profile disagreement.** `assignment` lists INV-014 under A-B only, while `both` and Appendix A say A-A/A-B/A-C; `SEC-002` is in `A-B and A-C` while Appendix A splits its two clauses. **Recorded as OQ-17 — not silently reconciled**, because moving a requirement between profiles changes the acceptance population and that is C's decision. **Decision recorded: structured `assignment` is authoritative for the formal population; prose is explanatory only.**
+
+### F24-05 — two remaining validator holes
+
+| Hole | Cause | Fix |
+|---|---|---|
+| `REQ-TA-NFR-COST-999` passed | rule 17 hard-coded `REQ-TA-[A-Z]+-\d{3}` — one namespace segment | pattern taken from the schema's own `requirementId`; `finditer` used because the schema pattern contains a group, and `findall` would have returned only the group |
+| Missing `id` / null entry → traceback | cross-record rules indexed `r["id"]`; a later rule also re-read `doc["requirements"]` instead of the filtered list | non-mapping and id-less entries reported as named schema findings; dependent rules run over the well-formed remainder; the second unguarded read removed |
+
+**Four new fixtures (26-29)**: multi-segment dangling ID, entry missing its `id`, null entry, invariant without an enforcer. Suite: **31**, all failing for their stated reason.
+
+### Verification actually run
+
+```
+python3 docs/req/validate.py                 36 requirements; 3 withdrawn; 0 error(s), 0 warning(s)   exit 0
+python3 docs/req/negative-fixtures-check.py  all 31 negative fixtures fail correctly                   exit 0
+ruff check .                                 All checks passed
+rebuild_registry.py                          output byte-identical to the committed YAML
+mutation sweep                               all 8 parameter deletions + requirements key: exit 1; control: exit 0
+prose-ID sweep                               FR/SEC/INV/NFR-COST/NFR-REPRO/NFR-OBS 999: all exit 1, no traceback
+entry-shape sweep                            missing id / null / string / list entry: all exit 1, no traceback
+```
+
+### Not done here, and why
+
+- **No requirement invents a token-admission design.** The review's §4 is right: counting input+output, reserve-before-dispatch, concurrency, retries and `UNKNOWN` reservations are substantive contracts needing a B/D design and approved tests. They are stated as proposed requirements with no claim of implementation; they are not narrowed to pretend the call cap covers them.
+- **Nothing was wired into CI**, no application or test code changed, and `requirements-draft-v4.md` is untouched (`542f382c…`).

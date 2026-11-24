@@ -555,11 +555,15 @@ requirements:
     is 1 blocking finding); (c) for each of the 10 keys v0.7.1 leaves out of `run_settings()` (`temperature`,
     `max_tokens`, `max_tool_rounds`, `news_article_limit`, `global_news_article_limit`, `global_news_lookback_days`,
     `holding_period_days`, `google_thinking_level`, `openai_reasoning_effort`, `anthropic_effort`), changing
-    only that key makes the two records differ in exactly that key (10/10); (d) recorded keys = `DEFAULT_CONFIG`
-    keys minus the excluded set (0 missing, 0 extra); (e) editing one prompt template changes `prompt_hash`,
-    and leaving templates unchanged keeps it the same; (f) the SEC-002 scan finds 0 planted secrets; (g)
-    with a critical staging/commit failure injected before rename, 0 runs report a published record or
-    report, and the outcome is the persistence failure of architecture `INV-14`.
+    only that key makes the two records' *configuration projections* differ in exactly that key (10/10).
+    The projection is the set of recorded configuration keys; per-run identity and timing metadata (`run_id`,
+    `started_at`, `ended_at`, `prompt_hash`, outcome) is excluded from the projection and is never required
+    to match -- two runs must still carry **distinct** `run_id`s and distinct timestamps (2/2 distinct),
+    since unique identity is not relaxed; (d) recorded keys = `DEFAULT_CONFIG` keys minus the excluded
+    set (0 missing, 0 extra); (e) editing one prompt template changes `prompt_hash`, and leaving templates
+    unchanged keeps it the same; (f) the SEC-002 scan finds 0 planted secrets; (g) with a critical staging/commit
+    failure injected before rename, 0 runs report a published record or report, and the outcome is the
+    persistence failure of architecture `INV-14`.
   tradeoff: '`results_dir` grows faster; no automatic clean-up is proposed.'
   metric: run-record fields recorded per run; determinism of the record after publication
   threshold: 'Among runs whose record and report were successfully published, 100% carry exactly the fields
@@ -693,11 +697,27 @@ requirements:
     \ spends budget rather than being free.\n\n**Scope of the budget.** `TOKEN_BUDGET` binds the reference\
     \ configuration. Extending it to every ticker, date, analyst set and portfolio mode is a product decision\
     \ that accepts more runs stopping early, and it requires a correspondingly wider test population;\
-    \ this entry asserts the narrower scope and does not claim the wider one.\n\n**Baseline required.**\
-    \ A budget whose baseline is the optimised build cannot detect a regression: every later change would\
-    \ be measured against a figure that already contains the saving it is compared with. `TOKEN_BUDGET`\
-    \ shall therefore be set from a before/after pair under the identical named configuration, and the\
-    \ budget shall be the baseline plus a stated allowance, with both numbers recorded."
+    \ this entry asserts the narrower scope and does not claim the wider one.\n\n**Three purposes, kept\
+    \ apart.** An earlier version of this entry concluded that a budget whose baseline is the optimised\
+    \ build cannot detect a regression. That conclusion was wrong and is withdrawn here: an accepted optimised\
+    \ build can serve as a reference, and whether a cap detects a particular increase depends on its margin,\
+    \ not on which build supplied the figure. A loose cap misses regressions under either baseline. The\
+    \ three purposes are therefore stated separately.\n\n(1) **Optimization evidence** compares a controlled\
+    \ legacy/candidate pair to estimate the effect of the explicit optimisation change. Code, prompts\
+    \ or concise mode are deliberately different across the pair; that is the experimental factor, and\
+    \ it is named and frozen at everything else.\n\n(2) **Runtime budget calibration** chooses a cap and\
+    \ a stated margin for the named supported reference profile, from representative measurements plus\
+    \ quality and completion checks. An optimised reference is not inherently invalid here.\n\n(3) **Regression\
+    \ evaluation** compares subsequent builds with a named accepted reference and a defined tolerance\
+    \ under a defined profile. The reference is named, not assumed identical.\n\n**Comparability.** Two\
+    \ runs are comparable when every setting except the one named experimental factor is identical. Requiring\
+    \ the candidate and baseline to be identical in the very behaviour under evaluation is a defect, not\
+    \ a safeguard: a controlled optimisation intends to change it. The rule that remains is that the factor\
+    \ is named and everything else is frozen. Per-run identity and timing metadata (`run_id`, start and\
+    \ end times, timestamps) are recorded, not treated as settings, and are excluded from any configuration\
+    \ comparison. `TOKEN_BUDGET` shall be set from a named reference configuration and a stated margin,\
+    \ with both numbers recorded; it shall not be derived from figures taken under different, unnamed\
+    \ configurations."
   fit_criterion: Given the live profile, when 20 runs execute one after another, then 20/20 have known
     usage ≤ `TOKEN_BUDGET`, and the GOV-001 score over these runs is ≥ `QUALITY_THRESHOLD`. A run with
     `UNKNOWN` usage counts as a failure of this criterion, not as zero cost. Given any two measurements
@@ -713,15 +733,18 @@ requirements:
     then its usage is recorded `UNKNOWN`, its reservation is not returned to the pool, and 0 runs treat
     it as zero; (e) a structured-output re-request and a free-text fallback each consume budget like any
     other attempt. Any run exceeding `TOKEN_BUDGET` is 1 blocking finding.
-  tradeoff: A budget forces shorter prompts or debates, which the quality threshold partly forbids, and
+  tradeoff: 'A budget forces shorter prompts or debates, which the quality threshold partly forbids, and
     a budget tight enough to bind stops analyses before completion. Reserving input plus maximum output
     before dispatch makes the bound checkable, but it refuses attempts that would in practice have used
     less than their allowance, so the effective ceiling is lower than the token figure suggests. The budget
-    does not guarantee answer quality and does not fix a monetary cost. A provisional figure added to
-    the unoptimised baseline was 152,000 tokens (about 90% of a single unoptimised control, 160,826, rounded
-    up so that a good run is not refused); one compliant optimised run already measured 110,725, so that
-    value holds for the configuration it was derived in -- unoptimised, a single run, internal consistency
-    not verified -- and for no other.
+    does not guarantee answer quality and does not fix a monetary cost. A provisional figure derived for
+    the unoptimised baseline was 152,000 tokens. **Corrected 2026-11-24:** this line previously called
+    it ''about 90% of a single unoptimised control, 160,826'' and described it as a baseline plus an allowance.
+    Both were wrong. 152,000 is **94.51%** of 160,826, and 90% of that control is 144,743.4; and a figure
+    *below* the single control is not a baseline plus an allowance under any reading. The figure is retained
+    only as A''s unverified derivation from one run: it is not a measurement, it is not calibrated, and
+    it is not applied. One optimised run already measured 110,725, so no figure here can stand for a configuration
+    other than the one it was derived in.'
   metric: cumulative provider-reported input and output tokens per run, against TOKEN_BUDGET, under the
     reference configuration
   threshold: total input+output tokens per run <= TOKEN_BUDGET under the reference configuration, with
@@ -768,13 +791,13 @@ requirements:
     \ **unoptimised** run taken in the same session; the first baseline was two runs averaging 138,897.\
     \ So the series covers one configuration and the proposed 'reference configuration' names the optimisation\
     \ as on. **A did not set `TOKEN_BUDGET` to 120,000 for two reasons, both stated rather than implied:**\
-    \ (1) a reference configuration that includes the optimisation makes the budget a cap on the optimised\
-    \ build against itself, so a later change could give back a large part of the saving and still pass;\
-    \ the requirement's own comparability clause requires an identical baseline and candidate, and the\
-    \ six settings do not name whether the optimisation is on. (2) The three figures were produced by\
-    \ a harness kept off the repository at the time; the index of that work reached `main` as `AI-log/Member-E/2026-11-24_token-input-reduction.md`,\
-    \ but the measurement record and the raw per-run artifacts did not, so A could not check the per-run\
-    \ settings against the run artifacts. **What A did adopt, because it needs no number:** the total-not-per-call\
+    \ (1) three observations do not establish a hard runtime bound, and the figure has no stated margin:\
+    \ 120,000 is 8.38% above the highest of the three (110,725), and nothing in the record shows what\
+    \ that margin must cover across the retries, concurrency and output allowance this entry requires.\
+    \ An earlier version gave a different reason here -- that an optimised baseline 'cannot detect a regression'\
+    \ -- and that reason was wrong; see the three purposes above. (2) The three figures and their raw\
+    \ per-run artifacts are not in the repository, so A could not check the per-run settings, the quality\
+    \ outcome or the completion of each run. **What A did adopt, because it needs no number:** the total-not-per-call\
     \ definition; reserve-before-dispatch; the `INCOMPLETE`/`BUDGET` contract; and that missing usage\
     \ is `UNKNOWN` and spends budget. **The entry point is also misnamed if the reference configuration\
     \ keeps the optimisation on:** `run_transient()` is the entry point only in its `persist=False` form\
@@ -785,16 +808,22 @@ requirements:
     \ is A's derivation, not a measurement, and it is not applied.\n\n**Naming, checked in the repository\
     \ rather than assumed.** `tests/member_d_verification/token_input_benchmark.py` in `main` calls `graph.run_transient('NVDA',\
     \ '2026-01-09')` inside a `patch(...create_tier_client...)` block, over the four analysts market/news/social/fundamentals,\
-    \ with `memory_log_path` pinned to `empty-memory.md`. Two facts follow. (1) The supported harness\
-    \ is a **scripted, unoptimised** measurement: it stubs the tier client, so its token counts come from\
-    \ the scripted model, not from a live gateway, and it predates the optimisation. It can prove the\
-    \ budget mechanism works offline; it cannot supply the live before/after pair the budget needs. (2)\
-    \ The proposed reference configuration says the optimisation is **on**, so it is not the same configuration\
-    \ as the harness, and it is not the same as the unoptimised baseline either. `run_transient` is the\
-    \ graph-level entry point in its `persist=False` form; whether the optimised runs reached it through\
-    \ the run API is not recorded in the repository, so the entry point as named does not pin down which\
-    \ code ran. The comparability clause treats these as different settings, so the budget cannot be fixed\
-    \ from any of the figures currently on record. **TOKEN_BUDGET remains unset.**"
+    \ with `memory_log_path` pinned to `empty-memory.md`. **Corrected 2026-11-24:** an earlier version\
+    \ of this note called that harness *scripted and unoptimised* and said it stubs the tier client. That\
+    \ was wrong on all three counts. The harness is **live-capable and optimized by default**: `--live`\
+    \ is mandatory (lines 17-24), `concise_intermediate_reports=not args.legacy` makes the optimized mode\
+    \ the default and `--legacy` the paired control (line 39), and the wrapper installed by `patch` sets\
+    \ only `timeout=60` before calling the **real** `create_tier_client` (lines 82-84). It also builds\
+    \ the real graph and calls `graph.run_transient` directly (lines 107-109) rather than routing through\
+    \ `run_analysis_api`, and git records it as introduced in `aa3b02d`, the same commit as the optimisation,\
+    \ not before it. The separate `test_token_input_reduction.py` is the mocked offline test; it is a\
+    \ different file. Two facts follow. (1) The harness is **not evidence of an offline budget mechanism**:\
+    \ it implements no token-admission controller, so it cannot show that a cap is enforced. (2) Its default\
+    \ configuration has the optimisation **on**, which matches the proposed reference configuration. Since\
+    \ the harness is live-capable, the missing artifact is the **raw per-run output and configuration**\
+    \ of the three runs, not a live path. Until those are uploaded and checked, the three totals stay\
+    \ **E-reported**; missing evidence is a limitation this entry states, not a reason to characterise\
+    \ the source. **TOKEN_BUDGET remains unset.**"
 - id: REQ-TA-NFR-COST-002
   title: Run-wide LLM call cap
   type: cost
@@ -1149,6 +1178,10 @@ requirements:
     make `REVIEW` a model failure.
   zero_tolerance: true
   enforced_by: REQ-TA-ARCH-002
+  enforced_components:
+  - tradingagents/runapi/checks.py
+  - tradingagents/runapi/finalize.py
+  - tradingagents/agents/rating.py parse_rating
   rule_owner: REQ-TA-RUN-001
   amended_by: []
   fit_criterion: Given the unreadable-rating fixtures, when each is checked, then 100% are reported `COMPLETED`
@@ -1184,6 +1217,10 @@ requirements:
     record.
   zero_tolerance: true
   enforced_by: REQ-TA-ARCH-002
+  enforced_components:
+  - tradingagents/runapi/checks.py
+  - tradingagents/runapi/finalize.py
+  - tradingagents/agents/rating.py parse_rating
   rule_owner: REQ-TA-FR-001
   amended_by: []
   fit_criterion: Given a rendered report, when every citation is resolved, then 100% of cited IDs resolve
@@ -1220,6 +1257,10 @@ requirements:
   statement: The system shall hold that no delivered report or prompt asserts account ownership.
   zero_tolerance: true
   enforced_by: REQ-TA-ARCH-002
+  enforced_components:
+  - tradingagents/runapi/checks.py
+  - tradingagents/runapi/finalize.py
+  - tradingagents/agents/rating.py parse_rating
   rule_owner: REQ-TA-FR-007
   amended_by: []
   fit_criterion: Given the banned-phrase fixtures, when each is scanned, then 0 reports and 0 prompts
@@ -1258,6 +1299,10 @@ requirements:
   statement: The system shall hold that the sentiment score lies inside the range of its chosen band.
   zero_tolerance: true
   enforced_by: REQ-TA-ARCH-002
+  enforced_components:
+  - tradingagents/runapi/checks.py
+  - tradingagents/runapi/finalize.py
+  - tradingagents/agents/rating.py parse_rating
   rule_owner: REQ-TA-FR-008
   amended_by: []
   fit_criterion: Given 6 sentiment fixtures, when each is checked, then 6/6 are classified correctly against
@@ -1293,6 +1338,10 @@ requirements:
     `OK`, and the correction is recorded.
   zero_tolerance: true
   enforced_by: REQ-TA-ARCH-002
+  enforced_components:
+  - tradingagents/runapi/checks.py
+  - tradingagents/runapi/finalize.py
+  - tradingagents/agents/rating.py parse_rating
   rule_owner: REQ-TA-FR-008
   amended_by: []
   fit_criterion: Given a fixture with Reddit unavailable and confidence `high`, when it is checked, then
@@ -1327,6 +1376,10 @@ requirements:
   statement: The system shall hold that when none of the three sources is `OK`, the band is `Neutral`.
   zero_tolerance: true
   enforced_by: REQ-TA-ARCH-002
+  enforced_components:
+  - tradingagents/runapi/checks.py
+  - tradingagents/runapi/finalize.py
+  - tradingagents/agents/rating.py parse_rating
   rule_owner: REQ-TA-FR-008
   amended_by: []
   fit_criterion: Given a fixture with all 3 sources unavailable and band `Bullish`, when it is checked,
@@ -1364,6 +1417,10 @@ requirements:
     including `NOT_REQUESTED`.
   zero_tolerance: true
   enforced_by: REQ-TA-ARCH-002
+  enforced_components:
+  - tradingagents/runapi/checks.py
+  - tradingagents/runapi/finalize.py
+  - tradingagents/agents/rating.py parse_rating
   rule_owner: REQ-TA-FR-005
   amended_by:
   - D-1
@@ -1400,6 +1457,10 @@ requirements:
     guarantee phrase.
   zero_tolerance: true
   enforced_by: REQ-TA-ARCH-002
+  enforced_components:
+  - tradingagents/runapi/checks.py
+  - tradingagents/runapi/finalize.py
+  - tradingagents/agents/rating.py parse_rating
   rule_owner: REQ-TA-SEC-003
   amended_by: []
   fit_criterion: Given 20 rendered reports, when each is checked, then 20/20 start with the disclaimer
@@ -1564,7 +1625,11 @@ requirements:
     \ snapshot. No-portfolio and explicitly empty portfolios remain distinct.\n\n**Naming warning.** `REQ-TA-INV-014`\
     \ is **not** the architecture register's `INV-14`. Architecture `INV-14` is the persistence-failure\
     \ rule, which is still unregistered as a `REQ-TA-*` entry. This entry maps architecture `INV-04` /\
-    \ `INV-05` / `INV-05b`."
+    \ `INV-05` / `INV-05b`.\n\n**Who enforces this.** `PortfolioInputService` freezes the selection; `RunContext`\
+    \ / `FrozenSnapshot` keep it immutable and carry the fingerprint; both are named in `enforced_components`.\
+    \ **No requirement currently owns portfolio-input freezing**, so `enforced_by` is intentionally absent\
+    \ rather than pointed at an unrelated entry. The confirmation transition is a separate gap, recorded\
+    \ as open item 16."
   fit_criterion: Given a synthetic portfolio A frozen and confirmed with its full 64-character fingerprint
     and normalized contents recorded, when its source file is altered or replaced and a consumer-facing
     derived object is mutated, then the frozen contents and fingerprint remain identical to the recorded
@@ -1575,7 +1640,10 @@ requirements:
     an explicitly empty supplied portfolio, then the first records null snapshot provenance and the second
     records provided mode with a real fingerprint, and 0 instances are confused (2/2). A single observed
     violation is 1 blocking finding.
-  enforced_by: REQ-TA-FR-001
+  enforced_components:
+  - tradingagents/runapi/input_service.py PortfolioInputService
+  - tradingagents/runapi/context.py FrozenSnapshot / RunContext
+  - tradingagents/runapi/context.py snapshot_fingerprint
   dependencies: []
   tradeoff: A separate entry adds a sixth invariant and a fingerprint comparison to every run's evidence.
     It is accepted because an immutable published report does not cover an input that changes after confirmation,
