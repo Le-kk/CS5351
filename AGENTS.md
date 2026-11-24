@@ -4,7 +4,7 @@ Scope: this repository and its subdirectories. Read this file before planning or
 
 ## 1. Establish the checkout and baseline
 
-- Confirm the repository, current branch, revision and dirty files with `git remote -v`, `git status -sb` and `git rev-parse HEAD`. The team repository is `kelepawuqiusi/CS5351`; a different TradingAgents checkout is not interchangeable.
+- Confirm the repository, current branch, revision and dirty files with `git remote -v`, `git status -sb` and `git rev-parse HEAD`. The team repository is `kelepawuqiusi/CS5351`; a different TradingAgents checkout is not interchangeable. Do not display embedded credentials if a remote URL contains them.
 - Reference snapshot for these instructions: main `049ae6d`, 2026-11-25, package version **0.7.1**. The version string alone does not identify the source. Record the actual revision/dirty state used for every experiment; fetch current main when the task requires current GitHub state.
 - Preserve unrelated work, local reports and untracked files. Prefer a clean branch/worktree for changes. Do not reset, delete or overwrite another member's work to make an update or check pass.
 - Current machine-readable requirements are [docs/req/requirements.yaml](docs/req/requirements.yaml), validated by [req-schema.json](docs/req/req-schema.json). Re-read their current metadata. At the reference snapshot the registry is `proposed_for_adoption`, not adopted. `SEL-TA-*`, `REQ-TA-*` and B's `INV-*` are different namespaces; map by meaning, never numeric suffix.
@@ -50,7 +50,7 @@ Frozen/protected material:
 - `NO_PORTFOLIO` means holdings/cash are unknown; an explicitly supplied empty portfolio is a known flat book. Prompts must preserve the difference. Portfolio input is unverified research context, not a broker account or executable trading instruction.
 - [Result models](tradingagents/runapi/result.py), [finalization](tradingagents/runapi/finalize.py), [output checks](tradingagents/runapi/checks.py) and [public API snapshot](docs/code-governance/public-api-contract.json) define statuses and serialization. Deterministic Q1–Q4 authority cannot be overridden by model prose; PASSED does not certify factual correctness, evidence completeness or investment suitability.
 - [Persistence](tradingagents/runapi/persist.py), [events](tradingagents/runapi/events.py) and [redaction](tradingagents/runapi/redact.py) own isolated publication, terminal-event consistency and sanitization. Preserve the distinction between critical publication failure and best-effort event/log delivery; do not publish contradictory outcomes or raw holdings/credentials.
-- Vendor access belongs in `dataflows/`; preserve analysis-date filtering, explicit unavailable-data signals and verified-price basis. External failure is not an observed absence. Do not bypass tool interfaces with direct vendor calls from agents.
+- Vendor access belongs in `dataflows/`; preserve analysis-date filtering, explicit unavailable-data signals and verified-price basis. External failure is not an observed absence. Do not introduce new direct vendor-library calls in agents; record existing exceptions as debt rather than silently widening them.
 - Keep historical measured performance separate from enforced budgets. Token comparisons record entry point, analysts, debate rounds, ticker/date, model/provider and memory state; count reported input plus output, retaining incomplete/unknown usage honestly. A low measured total does not prove a hard run budget exists.
 
 ## 5. Verification and merge rules
