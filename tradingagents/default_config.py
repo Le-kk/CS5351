@@ -25,6 +25,7 @@ _ENV_OVERRIDES = {
     "TRADINGAGENTS_TEMPERATURE":          "temperature",
     "TRADINGAGENTS_LLM_MAX_RETRIES":      "llm_max_retries",
     "TRADINGAGENTS_MAX_TOKENS":           "max_tokens",
+    "TRADINGAGENTS_CONCISE_INTERMEDIATE_REPORTS": "concise_intermediate_reports",
     # Provider-specific reasoning/thinking knobs (None = each provider's own
     # default). Settable here for non-interactive runs; the CLI also offers an
     # interactive choice, which is skipped when the matching var is set.
@@ -123,6 +124,8 @@ def build_default_config() -> dict:
         # unbounded reasoning/output and hangs or trips a gateway idle timeout
         # (e.g. some deepseek-v4-flash deployments, #1204).
         "max_tokens": None,
+        # Concise evidence-first intermediate reports; disable for legacy prose.
+        "concise_intermediate_reports": True,
         "context_cap_tokens": 24000,
         "compaction_threshold_tokens": 19200,
         # Checkpoint/resume: when True, LangGraph saves state after each node

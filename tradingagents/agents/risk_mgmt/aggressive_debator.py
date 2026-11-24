@@ -1,5 +1,6 @@
 from tradingagents.agents.context import (
-    bound_agent_prompt,
+    bound_debate_prompt,
+    concise_analysis_instruction,
     get_instrument_context_from_state,
     get_language_instruction,
     get_portfolio_context_from_state,
@@ -16,10 +17,10 @@ def create_aggressive_debator(llm):
         aggressive_history = risk_debate_state.get("aggressive_history", "")
 
         current_conservative_response = opponent_argument_or_opening(
-            risk_debate_state.get("current_conservative_response", ""), "conservative analyst"
+            risk_debate_state.get("current_conservative_response", ""), "conservative analyst", history
         )
         current_neutral_response = opponent_argument_or_opening(
-            risk_debate_state.get("current_neutral_response", ""), "neutral analyst"
+            risk_debate_state.get("current_neutral_response", ""), "neutral analyst", history
         )
 
         market_research_report = report_or_absent(state["market_report"], "market")
@@ -45,9 +46,9 @@ Latest World Affairs Report: {news_report}
 Company Fundamentals Report: {fundamentals_report}
 Here is the current conversation history: {history} Here are the last arguments from the conservative analyst: {current_conservative_response} Here are the last arguments from the neutral analyst: {current_neutral_response}. If there are no responses from the other viewpoints yet, present your own argument based on the available data.
 
-Engage actively by addressing any specific concerns raised, refuting the weaknesses in their logic, and asserting the benefits of risk-taking to outpace market norms. Maintain a focus on debating and persuading, not just presenting data. Challenge each counterpoint to underscore why a high-risk approach is optimal. Output conversationally as if you are speaking without any special formatting.""" + get_language_instruction()
+Engage actively by addressing any specific concerns raised, refuting the weaknesses in their logic, and asserting the benefits of risk-taking to outpace market norms. Maintain a focus on debating and persuading, not just presenting data. Challenge each counterpoint to underscore why a high-risk approach is optimal. Output conversationally as if you are speaking without any special formatting.""" + get_language_instruction() + concise_analysis_instruction("debate")
 
-        response = llm.invoke(bound_agent_prompt(prompt))
+        response = llm.invoke(bound_debate_prompt(prompt, history, [(risk_debate_state.get("current_conservative_response", ""), "conservative analyst"), (risk_debate_state.get("current_neutral_response", ""), "neutral analyst")]))
 
         argument = f"Aggressive Analyst: {response.content}"
 
