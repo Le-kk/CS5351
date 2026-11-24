@@ -81,6 +81,7 @@ def _effective_config(config: dict, graph=None) -> dict:
         "max_risk_discuss_rounds": get("max_risk_discuss_rounds"),
         "output_language": get("output_language", "English"),
         "temperature": get("temperature"), "max_tokens": get("max_tokens"),
+        "concise_intermediate_reports": get("concise_intermediate_reports", True),
         "context_cap_tokens": int(get("context_cap_tokens", 24000)),
         "compaction_threshold_tokens": int(get("compaction_threshold_tokens", 19200)),
         "data_vendors": get("data_vendors", {}) or {},

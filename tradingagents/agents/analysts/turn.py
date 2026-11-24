@@ -4,7 +4,7 @@ import json
 
 from langchain_core.messages import AIMessage, HumanMessage, ToolMessage
 
-from tradingagents.agents.context import bound_agent_prompt
+from tradingagents.agents.context import bound_agent_prompt, concise_analysis_instruction
 
 WRAP_UP = (
     "You have used every tool round this report allows. Write your final report "
@@ -19,14 +19,20 @@ def take_turn(prompt, llm, tools, messages):
     whatever it is told. Its earlier calls and their results reach it as text,
     since a provider may refuse a history holding tool calls when none are bound.
     """
+    # Append to the assembled system message; keep tool schemas and call IDs intact.
+    instruction = concise_analysis_instruction()
     if messages and isinstance(messages[-1], HumanMessage) and messages[-1].content == WRAP_UP:
         # The prompt lists the tools it offers; a model told of tools it cannot
         # call may still try, and some providers then answer with nothing.
         prompt = prompt.partial(tool_names="none; your tool rounds are spent")
         assembled = prompt.invoke({"messages": _as_text(messages)}).to_messages()
+        if instruction:
+            assembled[0] = assembled[0].model_copy(update={"content": assembled[0].content + instruction})
         result = llm.invoke(bound_agent_prompt(assembled))
         return result, result.content
     assembled = prompt.invoke({"messages": messages}).to_messages()
+    if instruction:
+        assembled[0] = assembled[0].model_copy(update={"content": assembled[0].content + instruction})
     result = llm.bind_tools(tools).invoke(bound_agent_prompt(assembled))
     return result, "" if result.tool_calls else result.content
 

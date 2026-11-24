@@ -37,7 +37,7 @@ def get_language_instruction() -> str:
     )
 
 
-def opponent_argument_or_opening(text: str, opponent: str) -> str:
+def opponent_argument_or_opening(text: str, opponent: str, history: str = "") -> str:
     """Opponent's latest argument, or an explicit opening marker when empty.
 
     The first speaker in each debate round receives an empty opponent response;
@@ -47,6 +47,9 @@ def opponent_argument_or_opening(text: str, opponent: str) -> str:
     """
     text = (text or "").strip()
     if text:
+        from tradingagents.dataflows.config import get_config
+        if get_config().get("concise_intermediate_reports", True) and text in history:
+            return f"(Read the {opponent}'s latest argument in the debate history above; it is not repeated here.)"
         return text
     return f"(The {opponent} has not spoken yet — open the debate with your own case.)"
 
@@ -194,6 +197,30 @@ def get_instrument_context_from_state(state: Mapping[str, Any]) -> str:
     return build_instrument_context(
         str(state["company_of_interest"]),
         state.get("asset_type", "stock"),
+    )
+
+
+
+def concise_analysis_instruction(stage: str = "analyst") -> str:
+    """Ask for a compact evidence report without truncating tool data or output.
+
+    A word target is advisory: factual support and required disclosures take priority.
+    Original reports remain in graph state, and final managers keep their full format.
+    """
+    from tradingagents.dataflows.config import get_config
+    if not get_config().get("concise_intermediate_reports", True):
+        return ""
+    target = 450 if stage == "analyst" else 220
+    return (
+        f"\nEvidence-first brevity: aim for about {target} words, exceeding this when "
+        "needed to retain required evidence or disclosures. State material facts once, "
+        "with source, date/fiscal period, units and comparison basis for numeric claims. "
+        "Retain conflicting evidence, missing/unavailable data, historical limitations "
+        "and uncertainty. Do not reproduce whole tool tables or repeat upstream reports; "
+        "select decision-relevant values and explain their implications. For debates, "
+        "add your distinct argument and specific rebuttals rather than retelling all inputs. "
+        "Preserve every required labelled field, table, safety rule and portfolio condition. "
+        "Brevity never permits invented evidence or omission of a material caveat."
     )
 
 
@@ -346,3 +373,23 @@ def bound_agent_prompt(prompt, context_cap_tokens: int | None = None,
         if isinstance(originals[i], str):
             messages[i] = _with_message_content(message, _compact_text(content, minimum + share))
     return tuple(messages) if isinstance(prompt, tuple) else messages
+
+
+def bound_debate_prompt(prompt: str, history: str, arguments) -> str:
+    """Deduplicate only when the original prompt fits without compaction.
+
+    If compaction is needed, keep the legacy explicit latest-argument copy.
+    Otherwise a reference could point to a history passage later trimmed away.
+    """
+    from tradingagents.dataflows.config import get_config
+    original = prompt
+    for text, opponent in arguments:
+        text = (text or "").strip()
+        if text and text in history:
+            reference = opponent_argument_or_opening(text, opponent, history)
+            if reference != text:
+                original = original.replace(reference, text)
+    config = get_config()
+    threshold = min(int(config.get("context_cap_tokens", 24000)),
+                    int(config.get("compaction_threshold_tokens", 19200))) * 4
+    return bound_agent_prompt(original if len(original) > threshold else prompt)

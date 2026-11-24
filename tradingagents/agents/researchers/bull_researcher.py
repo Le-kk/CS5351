@@ -1,5 +1,6 @@
 from tradingagents.agents.context import (
-    bound_agent_prompt,
+    bound_debate_prompt,
+    concise_analysis_instruction,
     get_instrument_context_from_state,
     get_language_instruction,
     opponent_argument_or_opening,
@@ -15,7 +16,7 @@ def create_bull_researcher(llm):
         bull_history = investment_debate_state.get("bull_history", "")
 
         current_response = opponent_argument_or_opening(
-            investment_debate_state.get("current_response", ""), "bear analyst"
+            investment_debate_state.get("current_response", ""), "bear analyst", history
         )
         market_research_report = report_or_absent(state["market_report"], "market")
         sentiment_report = report_or_absent(state["sentiment_report"], "sentiment")
@@ -48,9 +49,9 @@ Latest world affairs news: {news_report}
 Conversation history of the debate: {history}
 Last bear argument: {current_response}
 Use this information to deliver a compelling bull argument, refute the bear's concerns, and engage in a dynamic debate that demonstrates the strengths of the bull position.
-""" + get_language_instruction()
+""" + get_language_instruction() + concise_analysis_instruction("debate")
 
-        response = llm.invoke(bound_agent_prompt(prompt))
+        response = llm.invoke(bound_debate_prompt(prompt, history, [(investment_debate_state.get("current_response", ""), "bear analyst")]))
 
         argument = f"Bull Analyst: {response.content}"
 
