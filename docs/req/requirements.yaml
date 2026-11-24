@@ -26,9 +26,14 @@ scope:
     \ no orders and does not check exposure against an account.\n\n**Portfolio input is in scope, on one\
     \ consistent basis.** The system accepts an optional user-supplied portfolio snapshot. A run without\
     \ one and a run with one are both in scope and are both required to behave correctly; a supplied snapshot\
-    \ enters the run only after explicit confirmation. `REQ-TA-FR-002` (consent), `REQ-TA-FR-003` (freezing\
-    \ and fingerprint), `REQ-TA-FR-004` (channels) and `REQ-TA-FR-006` (provenance) state their obligations\
-    \ for both inputs. Fixture profiles `A-A`, `A-B` and `A-C` in Appendix A exist precisely so that each\
+    \ enters the run only after explicit confirmation. The requirement set currently has **no active entry\
+    \ that owns the confirmation flow itself**: `REQ-TA-FR-001` (evidence IDs and visible source dates),\
+    \ `REQ-TA-FR-005` (data gaps and the core-data rule) and `REQ-TA-INV-014` (frozen selection and fingerprint)\
+    \ state obligations on the supplied snapshot, and `REQ-TA-INV-014` requires that confirmation authorizes\
+    \ the frozen selection rather than reloading a different one, but no entry defines the confirm/decline/EOF\
+    \ prompts or the event they emit. That gap is recorded as open item 16 rather than covered by citing\
+    \ an ID for a different obligation. `REQ-TA-FR-002` is a **withdrawn** GUI entry and is not the consent\
+    \ requirement. Fixture profiles `A-A`, `A-B` and `A-C` in Appendix A exist precisely so that each\
     \ obligation is exercised under the input it needs: nothing here claims that every fixture runs without\
     \ a portfolio.\n\n**What remains outside scope:** account ownership is never assumed, holdings are\
     \ treated as unverified user input, and no requirement here validates position size or exposure. v0.7.1's\
@@ -527,18 +532,20 @@ requirements:
   type: quality_reproducibility
   priority: Should
   status: partial
-  statement: "Every run that returns a logical result, including each rerun, shall write exactly one run\
-    \ record and one report folder, both named by a unique `run_id`. The record contains: start and end\
-    \ time, code version, every configuration key that can change what the run produces, a hash of the\
-    \ prompt templates, and the RUN-001 fields. A later run shall never overwrite or change an earlier\
-    \ run's record or report.\n\n**Conditional fields.** Which RUN-001 fields are present and which may\
-    \ be null is determined by RUN-001's validity table, not by a blanket non-null rule: an incomplete\
-    \ run has no rating, and a completed run has no stop reason. A record is non-conforming if it carries\
-    \ a null field that its own validity-table row requires to be present, or invents a value to fill\
-    \ one.\n\n**Persistence failure.** If a critical artifact (the report or the manifest) fails during\
-    \ staging or commit, the run shall not report that the artifact was written. That case is governed\
-    \ by `REQ-TA-INV-012`; this requirement does not promise a record or report in a state where the artifact\
-    \ could not be published, and does not count such a run as a silent success."
+  statement: "Every run that returns a logical result and successfully publishes its artifacts, including\
+    \ each rerun, shall write exactly one run record and one report folder, both named by a unique `run_id`.\
+    \ The record contains: start and end time, code version, every configuration key that can change what\
+    \ the run produces, a hash of the prompt templates, and the RUN-001 fields. A later run shall never\
+    \ overwrite or change an earlier run's record or report.\n\n**Conditional fields.** Which RUN-001\
+    \ fields are present and which may be null is determined by RUN-001's validity table, not by a blanket\
+    \ non-null rule: an incomplete run has no rating, and a completed run has no stop reason. A record\
+    \ is non-conforming if it carries a null field that its own validity-table row requires to be present,\
+    \ or invents a value to fill one.\n\n**Persistence failure.** If a critical artifact (the report or\
+    \ the manifest) fails during staging or commit, the run shall not report that the artifact was written.\
+    \ That case is governed by the persistence-failure rule of architecture `INV-14` (not yet registered\
+    \ as a `REQ-TA-*` entry; see this entry's note); this requirement does not promise a record or report\
+    \ in a state where the artifact could not be published, and does not count such a run as a silent\
+    \ success."
   fit_criterion: Given the offline profile, when (a) two runs of the same ticker and *D* execute one after
     the other, then 2 distinct records and 2 distinct report folders exist, and the first run's files
     are byte-identical before and after the second; (b) every record carries non-null `run_id`, `started_at`,
@@ -552,11 +559,16 @@ requirements:
     keys minus the excluded set (0 missing, 0 extra); (e) editing one prompt template changes `prompt_hash`,
     and leaving templates unchanged keeps it the same; (f) the SEC-002 scan finds 0 planted secrets; (g)
     with a critical staging/commit failure injected before rename, 0 runs report a published record or
-    report, and the outcome is the persistence failure named by REQ-TA-INV-012.
+    report, and the outcome is the persistence failure of architecture `INV-14`.
   tradeoff: '`results_dir` grows faster; no automatic clean-up is proposed.'
   metric: run-record fields recorded per run; determinism of the record after publication
-  threshold: 100% of runs have a run record with every listed field non-empty (or explicitly null); 0
-    runs whose record changes after publication
+  threshold: 'Among runs whose record and report were successfully published, 100% carry exactly the fields
+    that RUN-001''s validity table requires for that run''s outcome, and no others: an `INCOMPLETE` record
+    carries a stop reason and no rating, a `COMPLETED` record carries a rating and no stop reason (`run_id`,
+    `started_at`, `ended_at`, `version`, `prompt_hash` and `config` are non-null in every record); 0 records
+    invent a value to fill a slot; 0 records change after publication. A run whose critical artifact fails
+    during staging or commit is excluded from the denominator and must instead not report the artifact
+    as written (the persistence-failure rule); it is never counted as a compliant record.'
   verification: offline profile; hash each run record immediately after publication and again after the
     next run
   dependencies:
@@ -572,9 +584,15 @@ requirements:
     \ on an independent integration review (I24 07).** Fit (b) previously required the RUN-001 fields\
     \ to be non-null in every record, which cannot hold: RUN-001 makes the stop reason present only for\
     \ incomplete runs and the rating only for completed runs. The statement previously promised a record\
-    \ and report for every run with no exception, which contradicts REQ-TA-INV-012's persistence-failure\
-    \ rule. Both were A's own errors. The v4 baseline text is unchanged because it is a read-only recorded\
-    \ artefact; the override is dated here and in change-log.md."
+    \ and report for every run with no exception, which contradicts the persistence-failure rule of architecture\
+    \ `INV-14`. Both were A's own errors. The v4 baseline text is unchanged because it is a read-only\
+    \ recorded artefact; the override is dated here and in change-log.md.\n\n**Corrected again 2026-11-24,\
+    \ after PR #20 merged (A's own omission).** The 2026-11-24 correction shown above changed the statement\
+    \ and fit (b) but left `threshold` reading 'every listed field non-empty', which is the blanket rule\
+    \ the correction removed. A reviewer who read only the threshold would still find the contradiction\
+    \ that I24 07 reported. The threshold is restated here in the same terms as the fit. This is a wording\
+    \ fix to a field the reviewer flagged. It also restates the same rule in the `note` field, so a reader\
+    \ who consults only `note` is not left with the older wording."
   open: Widen the record, add run id, timing and prompt hash, and name files by run id.
   source:
   - kind: team_document
@@ -584,6 +602,9 @@ requirements:
   - kind: baseline_observation
     ref: Le-kk/CS5351@c0081cb
     locator: baseline statement verified against the team repository
+  note: '2026-11-24 (later): `threshold` restated against RUN-001''s validity table. Brian''s point was
+    that the acceptance wording requires every result field to be non-null; the fix to the statement and
+    fit (b) missed this third copy of the same rule. No count changed.'
 - id: REQ-TA-NFR-PERF-001
   title: Maximum run time
   type: performance
@@ -656,24 +677,71 @@ requirements:
     \ run without it do not measure the same thing). A figure produced under one configuration shall not\
     \ be compared with a figure produced under a different one, and no budget or saving percentage shall\
     \ be derived from such a comparison. The record of a measurement shall state each of these six settings\
-    \ so that a later reader can tell whether two figures are comparable."
+    \ so that a later reader can tell whether two figures are comparable.\n\n**Total, not per call.**\
+    \ The budget counts input **and** output tokens cumulatively across every model call in one run: tool-selection\
+    \ calls, analyst calls, both debates, structured-output re-requests, free-text fallback and retries\
+    \ whose usage the provider reports. It is not a per-call ceiling and not an input-only figure; `max_tokens`\
+    \ in `default_config.py` caps a single call and is not this budget.\n\n**Reserve before dispatch.**\
+    \ Before an attempt is dispatched the system shall test the remaining budget against the attempt's\
+    \ input plus its maximum permitted output, and shall not dispatch an attempt that cannot fit. Counting\
+    \ usage only after a call returns does not satisfy this clause, because concurrent branches, retries\
+    \ and output allowance all spend budget between the check and the arrival of the usage report.\n\n\
+    **Usage availability.** Missing usage metadata shall not be read as zero usage. Where a failed or\
+    \ interrupted attempt leaves consumption unknown, the record shall mark that usage `UNKNOWN` and the\
+    \ attempt's reservation shall be retained when deciding whether further attempts are permitted. The\
+    \ existing rule that an `UNKNOWN` run is not stopped is unchanged; what is added is that `UNKNOWN`\
+    \ spends budget rather than being free.\n\n**Scope of the budget.** `TOKEN_BUDGET` binds the reference\
+    \ configuration. Extending it to every ticker, date, analyst set and portfolio mode is a product decision\
+    \ that accepts more runs stopping early, and it requires a correspondingly wider test population;\
+    \ this entry asserts the narrower scope and does not claim the wider one.\n\n**Baseline required.**\
+    \ A budget whose baseline is the optimised build cannot detect a regression: every later change would\
+    \ be measured against a figure that already contains the saving it is compared with. `TOKEN_BUDGET`\
+    \ shall therefore be set from a before/after pair under the identical named configuration, and the\
+    \ budget shall be the baseline plus a stated allowance, with both numbers recorded."
   fit_criterion: Given the live profile, when 20 runs execute one after another, then 20/20 have known
     usage ≤ `TOKEN_BUDGET`, and the GOV-001 score over these runs is ≥ `QUALITY_THRESHOLD`. A run with
     `UNKNOWN` usage counts as a failure of this criterion, not as zero cost. Given any two measurements
     offered as a before/after comparison, then the record of each states all six comparability settings
     and 0 comparisons are accepted where a setting differs without being named as a changed factor (1
-    such comparison = 1 blocking finding).
-  tradeoff: A budget forces shorter prompts or debates, which the quality threshold partly forbids.
-  metric: tokens consumed per run against TOKEN_BUDGET
-  threshold: tokens_used <= TOKEN_BUDGET; a run that exhausts the budget ends INCOMPLETE with stop_reason
-    BUDGET
-  verification: offline profile with a scripted model reporting token counts; one within-budget and one
-    exhaustion fixture
+    such comparison = 1 blocking finding). Given the offline profile and a scripted model, when (a) a
+    workflow fits the remaining budget, then it completes and its recorded total equals the sum of the
+    scripted per-call usage (0 runs with an unreported call summed as zero); (b) an attempt whose input
+    plus maximum output exceeds the remaining budget, then 0 such attempts are dispatched and the run
+    ends `INCOMPLETE` with `stop_reason = BUDGET`, no rating and `output_check = NOT_RUN`; (c) 4 concurrent
+    branches contend for a remaining budget sufficient for one, then exactly 1 is dispatched and 3 are
+    refused, and the recorded total never exceeds `TOKEN_BUDGET`; (d) a call returns no usage metadata,
+    then its usage is recorded `UNKNOWN`, its reservation is not returned to the pool, and 0 runs treat
+    it as zero; (e) a structured-output re-request and a free-text fallback each consume budget like any
+    other attempt. Any run exceeding `TOKEN_BUDGET` is 1 blocking finding.
+  tradeoff: A budget forces shorter prompts or debates, which the quality threshold partly forbids, and
+    a budget tight enough to bind stops analyses before completion. Reserving input plus maximum output
+    before dispatch makes the bound checkable, but it refuses attempts that would in practice have used
+    less than their allowance, so the effective ceiling is lower than the token figure suggests. The budget
+    does not guarantee answer quality and does not fix a monetary cost. A provisional figure added to
+    the unoptimised baseline was 152,000 tokens (about 90% of a single unoptimised control, 160,826, rounded
+    up so that a good run is not refused); one compliant optimised run already measured 110,725, so that
+    value holds for the configuration it was derived in -- unoptimised, a single run, internal consistency
+    not verified -- and for no other.
+  metric: cumulative provider-reported input and output tokens per run, against TOKEN_BUDGET, under the
+    reference configuration
+  threshold: total input+output tokens per run <= TOKEN_BUDGET under the reference configuration, with
+    the baseline, the allowance and the six settings all named in the record; 0 runs exceeding the budget;
+    0 attempts dispatched without a reservation covering input plus maximum output; 0 `UNKNOWN` usages
+    counted as zero; a run that exhausts the budget ends INCOMPLETE with stop_reason BUDGET
+  verification: offline profile with a scripted model reporting per-call usage; one within-budget fixture,
+    one exhaustion fixture, one 4-way concurrency fixture against the real reservation component, one
+    missing-usage fixture, and one fixture each for structured-output re-request and free-text fallback;
+    the live before/after pair that fixes `TOKEN_BUDGET` is recorded separately and is not part of the
+    offline suite
   dependencies:
   - REQ-TA-GOV-001
   - REQ-TA-NFR-REPRO-001
   baseline: '`max_tokens` caps each call (`default_config.py`). There is no run-level count.'
-  open: Add up usage per run; set `TOKEN_BUDGET` from measurement.
+  open: 'Add up usage per run; set `TOKEN_BUDGET` from a before/after pair under the reference configuration.
+    Not yet shown: that the system can enforce the bound (concurrency, retries, output reservation), and
+    that any figure below 120,000 reproduces on a clean checkout from the repository rather than a local
+    harness. A candidate figure of 120,000 is proposed and recorded in TOKEN_BUDGET''s value text; it
+    is not applied.'
   source:
   - kind: team_document
     ref: requirements-draft-v4.md
@@ -682,16 +750,51 @@ requirements:
   - kind: baseline_observation
     ref: Le-kk/CS5351@c0081cb
     locator: baseline statement verified against the team repository
-  note: Added 2026-11-24 after an integration review of two measurement series (I24 05). The earlier series
-    reported total tokens rising ~6.8% over 138,897, measured through `propagate()`; the later series
-    reported a ~24.8% fall to 104,459, measured through `run_transient()` with `memory_log_path` pinned
-    to an empty file. `propagate()` and `run_transient()` share one code path and differ only in a `persist`
-    flag, so the entry point alone does not change token use; but `persist=True` writes a decision to
-    the memory log, and the memory log supplies `past_context` to the Portfolio Manager prompt (`graph/trading_graph.py`
-    reading it, `agents/managers/portfolio_manager.py` consuming it). A run with a populated memory log
-    therefore sends the Portfolio Manager more input than a run with an empty one. Neither series is claimed
-    here as wrong, and this entry does not assert which figure is closer to the truth. It asserts only
-    that a budget must not be derived from incomparable figures. **TOKEN_BUDGET remains unset.**
+  note: "Added 2026-11-24 after an integration review of two measurement series (I24 05). The earlier\
+    \ series reported total tokens rising ~6.8% over 138,897, measured through `propagate()`; the later\
+    \ series reported a ~24.8% fall to 104,459, measured through `run_transient()` with `memory_log_path`\
+    \ pinned to an empty file. `propagate()` and `run_transient()` share one code path and differ only\
+    \ in a `persist` flag, so the entry point alone does not change token use; but `persist=True` writes\
+    \ a decision to the memory log, and the memory log supplies `past_context` to the Portfolio Manager\
+    \ prompt (`graph/trading_graph.py` reading it, `agents/managers/portfolio_manager.py` consuming it).\
+    \ A run with a populated memory log therefore sends the Portfolio Manager more input than a run with\
+    \ an empty one. Neither series is claimed here as wrong, and this entry does not assert which figure\
+    \ is closer to the truth. It asserts only that a budget must not be derived from incomparable figures.\n\
+    \n**2026-11-24 (later): a candidate figure was offered and A did not adopt it as a number.** Member\
+    \ E proposed 120,000 tokens per run from three measurements, 99,532 / 103,120 / 110,725 (highest +\
+    \ 8.4%), and offered a reference configuration. A checked the provenance in E's own AI log before\
+    \ writing anything. Every one of the three figures is an **optimised** run: the optimisation E authored\
+    \ is the change merged as PR #18, and it is already in `main`. The second control, 160,826, is a single\
+    \ **unoptimised** run taken in the same session; the first baseline was two runs averaging 138,897.\
+    \ So the series covers one configuration and the proposed 'reference configuration' names the optimisation\
+    \ as on. **A did not set `TOKEN_BUDGET` to 120,000 for two reasons, both stated rather than implied:**\
+    \ (1) a reference configuration that includes the optimisation makes the budget a cap on the optimised\
+    \ build against itself, so a later change could give back a large part of the saving and still pass;\
+    \ the requirement's own comparability clause requires an identical baseline and candidate, and the\
+    \ six settings do not name whether the optimisation is on. (2) The three figures were produced by\
+    \ a harness kept off the repository at the time; the index of that work reached `main` as `AI-log/Member-E/2026-11-24_token-input-reduction.md`,\
+    \ but the measurement record and the raw per-run artifacts did not, so A could not check the per-run\
+    \ settings against the run artifacts. **What A did adopt, because it needs no number:** the total-not-per-call\
+    \ definition; reserve-before-dispatch; the `INCOMPLETE`/`BUDGET` contract; and that missing usage\
+    \ is `UNKNOWN` and spends budget. **The entry point is also misnamed if the reference configuration\
+    \ keeps the optimisation on:** `run_transient()` is the entry point only in its `persist=False` form\
+    \ with no run API around it, and it is not the path the optimised runs used if they passed through\
+    \ the run API. A records the budget as **proposed, not enforced, not validated**, and will not write\
+    \ a number until a before/after pair exists under one named configuration. A provisional figure for\
+    \ the **unoptimised** baseline is recorded in the tradeoff line so that a later reader has one; it\
+    \ is A's derivation, not a measurement, and it is not applied.\n\n**Naming, checked in the repository\
+    \ rather than assumed.** `tests/member_d_verification/token_input_benchmark.py` in `main` calls `graph.run_transient('NVDA',\
+    \ '2026-01-09')` inside a `patch(...create_tier_client...)` block, over the four analysts market/news/social/fundamentals,\
+    \ with `memory_log_path` pinned to `empty-memory.md`. Two facts follow. (1) The supported harness\
+    \ is a **scripted, unoptimised** measurement: it stubs the tier client, so its token counts come from\
+    \ the scripted model, not from a live gateway, and it predates the optimisation. It can prove the\
+    \ budget mechanism works offline; it cannot supply the live before/after pair the budget needs. (2)\
+    \ The proposed reference configuration says the optimisation is **on**, so it is not the same configuration\
+    \ as the harness, and it is not the same as the unoptimised baseline either. `run_transient` is the\
+    \ graph-level entry point in its `persist=False` form; whether the optimised runs reached it through\
+    \ the run API is not recorded in the repository, so the entry point as named does not pin down which\
+    \ code ran. The comparability clause treats these as different settings, so the budget cannot be fixed\
+    \ from any of the figures currently on record. **TOKEN_BUDGET remains unset.**"
 - id: REQ-TA-NFR-COST-002
   title: Run-wide LLM call cap
   type: cost
@@ -1460,7 +1563,8 @@ requirements:
     \ shall derive from that frozen selection; confirmation authorizes use and does not reload a different\
     \ snapshot. No-portfolio and explicitly empty portfolios remain distinct.\n\n**Naming warning.** `REQ-TA-INV-014`\
     \ is **not** the architecture register's `INV-14`. Architecture `INV-14` is the persistence-failure\
-    \ rule mapped by `REQ-TA-INV-012`. This entry maps architecture `INV-04` / `INV-05` / `INV-05b`."
+    \ rule, which is still unregistered as a `REQ-TA-*` entry. This entry maps architecture `INV-04` /\
+    \ `INV-05` / `INV-05b`."
   fit_criterion: Given a synthetic portfolio A frozen and confirmed with its full 64-character fingerprint
     and normalized contents recorded, when its source file is altered or replaced and a consumer-facing
     derived object is mutated, then the frozen contents and fingerprint remain identical to the recorded
@@ -1471,12 +1575,12 @@ requirements:
     an explicitly empty supplied portfolio, then the first records null snapshot provenance and the second
     records provided mode with a real fingerprint, and 0 instances are confused (2/2). A single observed
     violation is 1 blocking finding.
-  enforced_by: REQ-TA-INV-014
+  enforced_by: REQ-TA-FR-001
   dependencies: []
   tradeoff: A separate entry adds a sixth invariant and a fingerprint comparison to every run's evidence.
     It is accepted because an immutable published report does not cover an input that changes after confirmation,
-    and because folding it into REQ-TA-INV-011 would tie it to the unresolved resume design that D has
-    not answered.
+    and because folding it into the still-unregistered resume rule (architecture `INV-11`) would tie it
+    to the unresolved resume design that D has not answered.
   amended_by: []
   note: 'Added 2026-11-23 on Member B''s answer to Q-8c, option (1). B''s reason: input mutation, artifact
     isolation and publication fail differently and have different evidence, so coupling input immutability
@@ -1516,7 +1620,6 @@ requirements:
     exit and exactly 1 named finding (5/5), and the corresponding required CI check blocks the governed
     change. A green schema result accompanied by a failing cross-record check is reported as a failure,
     not a pass.
-  enforced_by: REQ-TA-GOV-003
   dependencies:
   - REQ-TA-GOV-001
   tradeoff: A blocking schema gate rejects every governed change while the schema and registry disagree,
@@ -1596,8 +1699,8 @@ fixture_profiles:
     - REQ-TA-GOV-002
     - REQ-TA-GOV-003
     - REQ-TA-GOV-004
-  both: REQ-TA-FR-002 is exercised under A-A for the no-portfolio input and A-B for the portfolio-present
-    input
+  both: REQ-TA-INV-014 is exercised under A-A for the no-portfolio input, A-B for the portfolio-present
+    input and A-C for the unrelated holding
   candidate_only: The holdings-minimisation clause lives in candidate entry INV-010, which is NOT in the
     registry. When it is adopted it takes profile A-C. Recorded here so the profile gap is visible now
     rather than appearing at adoption time.
@@ -1618,21 +1721,22 @@ fixture_profiles:
     \ = false` except FR-003 | same | same |\n\n**Profile assignment**\n\n| Requirements | Profile | Why\
     \ |\n|---|---|---|\n| FR-001, FR-005, FR-007, FR-008, NFR-001, NFR-OBS-001, NFR-PERF-002, NFR-COST-002,\
     \ NFR-COST-003, SEC-001, SEC-003, ARCH-002, INV-001…008 | **A-A** | No portfolio is part of any of\
-    \ their obligations |\n| FR-002 consent (confirm, decline, EOF) | **A-A** for the no-portfolio input;\
-    \ **A-B** for the portfolio-present input | The gate must behave the same whether or not a portfolio\
-    \ is supplied |\n| FR-003 freezing, checkpoints, resume | **A-B** | The snapshot, its fingerprint\
-    \ and its provenance are the thing being frozen |\n| FR-004 point-in-time propagation | **A-B** |\
-    \ Portfolio context is one of the propagated channels |\n| FR-006 provenance | **A-B** | The record\
-    \ must name which snapshot was used, which requires one |\n| NFR-REPRO-001 | **A-B** | Run-record\
-    \ identity includes the frozen snapshot fingerprint |\n| SEC-002 / `INV-010` clause 1 (credentials)\
-    \ | **A-A**, **A-B** and **A-C** | Credential paths must be exercised whether or not a portfolio is\
-    \ present |\n| SEC-002 / `INV-010` clause 2 (holdings minimisation) | **A-C** | The clause is about\
-    \ an unrelated position that must not appear; it cannot be tested without one |\n| NFR-EVAL-001 |\
-    \ A-A; its 10 records are a **counting fixture**, not an acceptance run | See rule 5 |\n| PERF-001,\
-    \ COST-001, GOV-001 suite | **Live profile**, unchanged | Run by Member D |\n\n**What this appendix\
-    \ does not do.** It does not change any fixture count below. If a count was computed under the old\
-    \ single profile, the count is now of unknown profile coverage and is flagged by the owner of the\
-    \ requirement, not silently re-derived.\n\n"
+    \ their obligations |\n| INV-014 frozen selection and fingerprint | **A-A** for the no-portfolio input;\
+    \ **A-B** for the portfolio-present input; **A-C** for the unrelated holding | Confirmation must authorize\
+    \ the frozen selection identically whether or not a portfolio is supplied |\n| FR-003 checkpoint list,\
+    \ resume and rerun | **A-B** | The snapshot, its fingerprint and its provenance are what a resumed\
+    \ run must reproduce |\n| FR-004 point-in-time evidence (no look-ahead) | **A-B** | Portfolio context\
+    \ is dated evidence and must obey the same no-look-ahead rule |\n| FR-006 freshness thresholds | **A-B**\
+    \ | Portfolio-derived inputs are subject to the same stale-data rule as market evidence |\n| NFR-REPRO-001\
+    \ | **A-B** | Run-record identity includes the frozen snapshot fingerprint |\n| SEC-002 / `INV-010`\
+    \ clause 1 (credentials) | **A-A**, **A-B** and **A-C** | Credential paths must be exercised whether\
+    \ or not a portfolio is present |\n| SEC-002 / `INV-010` clause 2 (holdings minimisation) | **A-C**\
+    \ | The clause is about an unrelated position that must not appear; it cannot be tested without one\
+    \ |\n| NFR-EVAL-001 | A-A; its 10 records are a **counting fixture**, not an acceptance run | See\
+    \ rule 5 |\n| PERF-001, COST-001, GOV-001 suite | **Live profile**, unchanged | Run by Member D |\n\
+    \n**What this appendix does not do.** It does not change any fixture count below. If a count was computed\
+    \ under the old single profile, the count is now of unknown profile coverage and is flagged by the\
+    \ owner of the requirement, not silently re-derived.\n\n"
 parameter_appendix:
 - name: STALE_PRICE_DAYS
   value: 10 calendar days
@@ -1660,7 +1764,8 @@ parameter_appendix:
   used_by:
   - REQ-TA-NFR-PERF-002
 - name: TOKEN_BUDGET
-  value: to be measured
+  value: to be measured; candidate 120000 total tokens per run (input+output) proposed 2026-11-24, not
+    applied
   state: open
   owner: D
   used_by:
@@ -1677,9 +1782,12 @@ parameter_appendix:
   owner: D, E
   used_by:
   - REQ-TA-GOV-001
+  - REQ-TA-NFR-COST-001
+  - REQ-TA-NFR-EVAL-001
 - name: N_EVAL
   value: 20 cases
   state: provisional
   owner: D
   used_by:
   - REQ-TA-GOV-001
+  - REQ-TA-NFR-EVAL-001

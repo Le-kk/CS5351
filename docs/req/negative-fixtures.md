@@ -4,7 +4,7 @@
 
 **Purpose:** Prove that each validation rule actually rejects the thing it claims to reject. A validator is only evidence of a rule if a negative fixture fails on it — **and fails for the stated reason**, not because a file was missing or a dependency was absent.
 
-**Rules now number 25** (21 cross-record + 4 on `fixture_profiles`).
+**Rules now number 27** (21 cross-record + 4 on `fixture_profiles` + 2 added 24 November 2026 after an external review: prose citation resolution and bidirectional parameter use).
 
 ---
 
@@ -12,7 +12,7 @@
 
 ```bash
 python3 docs/req/validate.py                    # expects: 36 requirements; 3 withdrawn; 0 error(s), 0 warning(s)
-python3 docs/req/negative-fixtures-check.py     # executes all 23 cases below
+python3 docs/req/negative-fixtures-check.py     # executes all 27 cases below
 ```
 
 Both commands resolve their default paths **relative to the file itself**, so they work from any working directory and from any clone. **Dependencies:** `pyyaml`, `jsonschema`. No others. Python 3.10+.
@@ -38,7 +38,7 @@ The review also flagged that an earlier version of this document told the reader
 
 ---
 
-## The 25 rules and one failing fixture each
+## The 27 rules and one failing fixture each
 
 All cases below are executed by `negative-fixtures-check.py`, which asserts three things per case: non-zero exit, **the expected message present**, and **no traceback / missing-file / missing-module text**. A case that fails for an unrelated reason is reported as a failure of the fixture.
 
@@ -68,10 +68,16 @@ All cases below are executed by `negative-fixtures-check.py`, which asserts thre
 | 19 | No requirement in two groups | Add `REQ-TA-FR-001` to a second group | `assigned to more than one profile group` |
 | 20 | Portfolio-holding profile exists | Drop `A-C` from `offline_variants` | `profile A-C` |
 | 21 | Schema file absent | Point `--schema` at a nonexistent file | `schema file not found` |
+| 22 | Every `REQ-TA-*` ID quoted in prose resolves (rule 17) | Name `REQ-TA-INV-012` in `REQ-TA-FR-001`'s `note` only, with no such entry | `cites undefined requirement` |
+| 23 | Parameter references resolve both ways (rule 6, multi-segment names) | Delete `STALE_PRICE_DAYS` | `references parameter` |
+| 24 | Parameter references resolve both ways (rule 6, `_EVAL` names) | Delete `N_EVAL` | `references parameter N_EVAL` |
+| 25 | A missing top-level key is a finding, not a traceback | Delete the `requirements` key | `missing or empty` |
 
 Rules 18–20 exist because of a real contradiction A had shipped: the offline profile said `Portfolio: None` while the privacy criterion needed a second position to exist. All were confirmed to fail on 2026-11-23.
 
 **Rule 13 exists because of a real incident.** A once rewrote the registry with a bulk `yaml.dump`, which silently dropped all three `withdrawn_ids` and deleted `REQ-TA-INV-005`. The first repair of rule 13 checked only the count, which is why 13b passed for a day.
+
+**Cases 22–25 exist because an external reviewer, not A, found them.** Four mutations passed a suite that claimed to check the same properties: an ID cited only in prose was never resolved (rule 4 read the structured fields only), and the parameter scan could not see `STALE_PRICE_DAYS`, `STALE_STATEMENT_DAYS` or `N_EVAL` at all — its pattern allowed one prefix segment and had no `_EVAL` suffix, and it read only three of the fields a name can appear in. Deleting `requirements` raised a traceback instead of a finding. Rule 18 (the reverse of rule 6) immediately caught two real errors in the registry: `QUALITY_THRESHOLD` and `N_EVAL` both had incomplete `used_by` lists. **A claim that a rule is enforced is only as good as the case that tries to break it.**
 
 **Rule 13c exists because of a second incident of the same family.** Duplicate mapping keys are silent in both `yaml.safe_load` and a Python dict literal; A had already lost five fixture assignments to a duplicated `A-B` key on 2026-11-23. Rejecting duplicates is now the loader's job, not a human's.
 

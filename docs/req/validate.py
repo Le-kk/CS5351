@@ -59,6 +59,24 @@ UniqueKeyLoader.add_constructor(
     yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG, _no_duplicate_keys)
 
 
+def _prose_strings(node, path=""):
+    """Yield (location, text) for every string leaf, keyed by its YAML path.
+
+    Used to resolve identifiers quoted in prose. Keeping the path in the
+    message is what makes a dangling citation actionable: a bare ID in a
+    twenty-line note tells a reviewer nothing about where to fix it.
+    """
+    if isinstance(node, dict):
+        for key, value in node.items():
+            yield from _prose_strings(value, f"{path}/{key}")
+    elif isinstance(node, list):
+        for index, value in enumerate(node):
+            label = (value.get("id") or value.get("name")) if isinstance(value, dict) else None
+            yield from _prose_strings(value, f"{path}/{label or index}")
+    elif isinstance(node, str):
+        yield path.lstrip("/") or "(root)", node
+
+
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(
         description="Validate the requirements registry against its schema and cross-record rules.")
@@ -96,13 +114,28 @@ def main(argv=None) -> int:
     Draft202012Validator.check_schema(schema)
     problems = []
 
+    if not isinstance(doc, dict):
+        print("ERROR registry is not a mapping at the top level")
+        return 1
+
     # 1. Structural validation
     validator = Draft202012Validator(schema)
     for err in sorted(validator.iter_errors(doc), key=lambda e: list(e.path)):
         where = "/".join(str(p) for p in err.path) or "(root)"
         problems.append(f"schema: {where}: {err.message}")
 
-    reqs = doc["requirements"]
+    # A missing top-level key is a schema error, already reported above. The
+    # cross-record rules cannot run without them, so report and stop rather than
+    # raising a traceback: a reviewer should read a finding, not a stack dump.
+    # The traceback on a deleted `requirements` key was reported on 2026-11-24.
+    reqs = doc.get("requirements")
+    if not isinstance(reqs, list) or not reqs:
+        problems.append("schema: /requirements: missing or empty; cross-record rules skipped")
+        for line in problems:
+            print(("ERROR " if not line.startswith("warning:") else "") + line)
+        print("\n0 requirements; 0 withdrawn; "
+              f"{len(problems)} error(s), 0 warning(s)")
+        return 1
     ids = [r["id"] for r in reqs]
 
     # 2. IDs unique
@@ -171,6 +204,8 @@ def main(argv=None) -> int:
         "NEEDS_REVIEW", "NOT_RUN", "CHECK_ERROR", "NO_DATA", "NOT_REQUESTED",
         # checkpoint states
         "CONFIG_CHANGED", "RESUMABLE",
+        # usage availability
+        "UNKNOWN",
         # configuration / mapping keys, not tunables
         "DEFAULT_CONFIG",
     }
@@ -178,15 +213,33 @@ def main(argv=None) -> int:
         "REQ", "TA", "FR", "NFR", "INV", "SEC", "ARCH", "GOV", "PERF", "COST",
         "EVAL", "REPRO", "OBS", "RUN", "GUI", "JSON", "YAML", "PRD", "D1", "D2",
         "D3", "D4", "D5", "CI", "CLI", "API", "SECONDS", "TOKENS", "CALLS",
+        # Code constants quoted to describe the baseline, not tunables this
+        # registry owns. MAX_OHLCV_STALE_DAYS is tradingagents/dataflows/
+        # vendors/yahoo/ohlcv.py:18; it is cited in FR-006's baseline to show the
+        # price rule already exists upstream. The registry's own knob is
+        # STALE_PRICE_DAYS in parameter_appendix, which is checked separately.
+        "MAX_OHLCV_STALE_DAYS",
     } | VOCABULARY
     # Tuning parameters are the names that appear in `parameter_appendix`; a
     # reference is only suspicious if it is UPPER_CASE, underscored, and not a
     # declared parameter, an exempt token, or an identifier from another namespace.
+    # Both branches allow a multi-segment prefix. The earlier pattern matched
+    # only one segment before the suffix, so STALE_PRICE_DAYS and
+    # STALE_STATEMENT_DAYS were never seen at all; `_EVAL` was missing, so
+    # N_EVAL was invisible too. Review 2026-11-24.
     param_re = re.compile(
-        r"\b([A-Z][A-Z0-9]*(?:_[A-Z0-9]+)*_CAP"
-        r"|[A-Z][A-Z0-9]*_(?:BUDGET|DAYS|LIMIT|ALLOWANCE|THRESHOLD|SIZE|RATE|COUNT|ROUNDS|TIMEOUT))\b")
+        r"\b("
+        r"[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)*_CAP"
+        r"|[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)*_(?:BUDGET|DAYS|LIMIT|ALLOWANCE|THRESHOLD|SIZE|RATE|COUNT|ROUNDS|TIMEOUT|EVAL)"
+        r")\b")
+    # Fields scanned for parameter references. Previously only statement,
+    # fit_criterion and threshold were read, so a parameter cited only in
+    # `metric` or `verification` was invisible and deleting its appendix row
+    # still validated. Reported on 2026-11-24.
+    SCANNED = ("statement", "fit_criterion", "threshold", "metric", "verification",
+               "tradeoff", "note", "open", "baseline")
     for r in reqs:
-        blob_r = json.dumps({k: r.get(k) for k in ("statement", "fit_criterion", "threshold")},
+        blob_r = json.dumps({k: r.get(k) for k in SCANNED},
                             ensure_ascii=False)
         for token in set(param_re.findall(blob_r)):
             if token in PARAM_EXEMPT or token in declared_params:
@@ -261,6 +314,34 @@ def main(argv=None) -> int:
         ident = f"REQ-TA-INV-{n:03d}"
         if ident not in seen:
             problems.append(f"missing invariant {ident}")
+
+    # 17. Every `REQ-TA-*` identifier quoted anywhere in the prose resolves.
+    #     Rule 4 only walked the structured fields (`dependencies`, `enforced_by`,
+    #     `amended_by`), so an ID named only in a statement or a note went unchecked.
+    #     That is how `REQ-TA-INV-012` was cited four times in this registry while
+    #     no such entry existed. Found by an external review on 2026-11-24.
+    id_re = re.compile(r"\bREQ-TA-[A-Z]+-\d{3}\b")
+    for where, text in _prose_strings(doc):
+        for cited in id_re.findall(text):
+            if cited not in seen and cited not in withdrawn:
+                problems.append(f"{where}: cites undefined requirement {cited}")
+
+    # 18. Every declared parameter is used by exactly the requirements its
+    #     `used_by` names. Deleting a row from `parameter_appendix` used to pass
+    #     because the text citation was never read back. Review 2026-11-24.
+    for p in doc.get("parameter_appendix", []):
+        token_re = re.compile(rf"\b{re.escape(p['name'])}\b")
+        uses = [
+            r["id"] for r in reqs
+            if any(token_re.search(str(r.get(k) or "")) for k in SCANNED)
+        ]
+        if not uses:
+            problems.append(
+                f"parameter {p['name']} is declared but no requirement uses it")
+        elif sorted(uses) != sorted(p["used_by"]):
+            problems.append(
+                f"parameter {p['name']}: used_by {sorted(p['used_by'])} but the text "
+                f"actually cites it in {sorted(uses)}")
 
     # 16. Every active ID appears exactly once in the printed total
     if len(reqs) != len(seen):

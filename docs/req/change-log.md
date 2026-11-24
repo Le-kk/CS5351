@@ -370,3 +370,106 @@ The integration review (I24 05) reported **+6.8%** tokens (138,897 → 148,392) 
 
 **Two figures in the newer series flagged for care, from its own record.** `−35.0%` divides by `160,826`, a single unoptimised control at the top of the observed range (137,223–154,514); `−24.8%` divides by the two-run 138,897 baseline and is the better-founded figure, though it too spans two memory-log conditions. The series' first round (121,207 → 82,971) was discarded **by its own author** because price data was unavailable — recorded here as correct practice.
 
+---
+
+## 2026-11-24 (later) — a 120,000-token budget was proposed; the form is adopted and the number is not
+
+Member E proposed **120,000 total tokens per run** from three measurements, 99,532 / 103,120 / 110,725 (highest + 8.4%), together with a reference configuration and an explicit rule that missing usage must not be read as zero. A adopted what needs no number and declined the figure. **Both halves of that sentence are recorded here, because the second is the one a reader should check.**
+
+**What was adopted into `REQ-TA-NFR-COST-001`.** (1) The budget counts **input and output** tokens cumulatively across every model call — tool-selection, analysts, both debates, structured-output re-requests, free-text fallback, reported retries — not per call and not input-only; `max_tokens` is a different control. (2) **Reserve before dispatch:** an attempt is dispatched only if its input plus its maximum permitted output fits the remaining budget, because counting after the call returns cannot bound concurrent branches, retries or output allowance. (3) The `INCOMPLETE` / `stop_reason: BUDGET` contract. (4) **Usage availability:** missing usage is `UNKNOWN`, is never summed as zero, and its reservation is retained — the existing rule that an `UNKNOWN` run is not stopped is unchanged, but `UNKNOWN` now spends budget instead of being free. (5) A stated **scope**: the budget binds the reference configuration, and extending it to every ticker, date, analyst set and portfolio mode is a product decision that needs a wider test population. The fit gained five offline cases (within budget, exhaustion, four-way concurrency, no usage metadata, re-request plus fallback), and `metric`, `threshold` and `verification` were restated to match.
+
+**Why the number was not written.** Not a preference: the provenance does not support the comparison the budget needs.
+
+- **All three figures are optimised runs.** The optimisation E authored is the change merged as **PR #18**, and it is already in `main`. The second control, 160,826, is one **unoptimised** run from the same session; the first baseline was two runs averaging 138,897.
+- **The proposed reference configuration names the optimisation as on.** A budget measured that way caps the optimised build against itself: a later change could give back much of the saving and still pass. The entry's own comparability clause requires an identical baseline and candidate, and none of the six settings names whether the optimisation is on.
+- **The measurement record is not in the repository.** `AI-log/Member-E/2026-11-24_token-input-reduction.md` reached `main` and is the index A read; the measurement record and the raw per-run artifacts did not, so the per-run settings could not be checked against run artifacts.
+- **The entry point is not pinned by the name.** `run_transient` is the graph-level `persist=False` form of `_run_graph`; whether the optimised runs reached it through the run API is not recorded. The supported harness, `tests/member_d_verification/token_input_benchmark.py`, is **scripted and unoptimised** — it stubs the tier client — so it can prove the mechanism offline but cannot supply the live before/after pair.
+
+**A provisional figure, labelled as A's derivation, not a measurement.** For the **unoptimised** baseline, 152,000 tokens (about 90% of the single unoptimised control 160,826, rounded up so that a good run is not refused). It is recorded in the tradeoff line and **not applied**: one compliant optimised run already measured 110,725, so the value holds only for the configuration it was derived in, and its internal consistency was never verified. **`TOKEN_BUDGET` stays `open`**, with the proposal visible in its `value` text as "candidate 120000 … not applied".
+
+**Status, stated exactly.** Proposed, **not enforced, not validated**. Three figures below 120,000 are on record; no result shows the system can hold the bound under concurrency, retries or output reservation.
+
+---
+
+## 2026-11-24 (later) — the third copy of the blanket non-null rule, found after PR #20 merged
+
+Brian's second point was that the acceptance wording demands every result field be non-null although completed runs have no stop reason and incomplete runs have no rating. The statement and fit (b) of `REQ-TA-NFR-REPRO-001` were corrected on 2026-11-24 and merged in PR #20. **The `threshold` field of the same entry was not corrected and still read "every listed field non-empty".** That is the same contradiction in a third place, and a reviewer reading only the threshold would still find it.
+
+The threshold now checks fields against RUN-001's validity table: an `INCOMPLETE` record carries a stop reason and no rating, a `COMPLETED` record carries a rating and no stop reason, the six always-present identifiers are non-null, 0 records invent a value to fill a slot, and 0 records change after publication. **No fixture count changed and nothing is claimed about the current build.** The correction is dated in the entry's `baseline` and `note`, not applied to `requirements-draft-v4.md`, which remains a read-only recorded artefact.
+
+**The validator did not catch it, and is not claimed to have.** It checks that references resolve, not that a `threshold` agrees with a `fit_criterion`. This was found by reading the entry, after the merge.
+
+---
+
+## 2026-11-24 (later) — `UNKNOWN` added to the validator's controlled vocabulary
+
+`UNKNOWN` already occurred in `REQ-TA-NFR-COST-001` before this change and passed, because the validator's parameter scan only matches tokens shaped like a tuning parameter (`*_CAP`, `*_BUDGET`, …). It does not match a bare `UNKNOWN`. The entry is recorded in the validator's `VOCABULARY` set anyway, next to the stop reasons and output-check outcomes, so that the value is named where the other controlled values are rather than relying on a regex that happens not to fire. **No rule changed, and no previously passing registry outcome changed.**
+
+
+---
+
+## 2026-11-24 (later) — external review found five defects; all five confirmed and fixed
+
+An external reviewer (`architecture-extension-review-2026-11-24.md`, plus two chat messages) reported five problems in this package. **A checked each one against the files rather than the report, and all five were accurate.** None is disputed here.
+
+### 1. Incorrect IDs in the scope statement
+
+The scope said `REQ-TA-FR-002` (consent), `REQ-TA-FR-003` (freezing and fingerprint), `REQ-TA-FR-004` (channels) and `REQ-TA-FR-006` (provenance).
+
+`REQ-TA-FR-002` is a **withdrawn GUI entry**. Worse, the whole label set was misaligned: `FR-003` is checkpoint list/resume, `FR-004` is point-in-time evidence, `FR-006` is freshness thresholds, and `FR-007` is rating meaning. Only `FR-001` matched its label.
+
+**Checking the substance turned up a real gap, not just a typo.** No active entry owns the portfolio **confirmation flow** — the confirm/decline/EOF prompts and the event they emit. `REQ-TA-INV-014` requires that confirmation authorizes the frozen selection, but nothing defines the gate itself. The scope now says so and records it as **open item 16**, instead of citing a withdrawn GUI ID. Appendix A's assignment table was rewritten against the real titles.
+
+The reviewer's second half — "other references mix older `SEL-TA-*` meanings with current `REQ-TA-*` IDs" — was checked and **not reproduced**. The three `SEL-TA-*` mentions (`GOV-002`, `GOV-004`, `GOV-005`) are each a stated crosswalk or naming warning, and each names the correct counterpart. Recorded here so the difference between the two halves is visible.
+
+### 2. Broken enforcement references
+
+- **`REQ-TA-INV-012` was cited four times and does not exist.** `INV-009`…`013` were deliberately held back pending D's answer to Q-8d, and the registry kept referencing one of them. Every citation now names architecture `INV-14`, which is where the persistence-failure rule actually lives, and says plainly that it is **not yet registered as a `REQ-TA-*` entry**. `INV-011` had the same problem in `INV-014`'s tradeoff and is fixed the same way.
+- **`INV-014.enforced_by` pointed at itself**, which names no enforcer. It now points at `REQ-TA-FR-001`, the evidence-record component that enforces a frozen selection and fingerprint.
+- **`GOV-004.enforced_by` pointed at `REQ-TA-GOV-003`**, the AI-use-log gate — a different obligation. The enforcer is `docs/req/validate.py` plus a CI job, and neither is a requirement, so `enforced_by` is **omitted** and the entry's note states why. Naming a requirement there would have misstated the executor either way.
+
+**The root cause was the validator, not carelessness.** Rule 4 walked only the structured fields; an ID quoted in prose was never resolved. That is why four dangling citations passed 36/36 with zero warnings. See item 4.
+
+### 3. Remaining acceptance inconsistencies
+
+`REQ-TA-NFR-REPRO-001`'s statement began "Every run that returns a logical result… shall write exactly one run record", while the same entry exempts a run whose critical artifact fails to publish. The statement now reads "…and successfully publishes its artifacts", and the threshold states its denominator: *among runs whose record and report were successfully published*, 100% carry exactly the fields RUN-001's validity table requires, and a run that fails during staging or commit is excluded from the denominator and must instead not report the artifact as written.
+
+The configuration-comparison and token-comparability wording were reviewed against this same standard; the six named settings and the before/after-pair rule were already stated, and no contradiction was found. **That half of the report is recorded as checked, not as changed.**
+
+### 4. Validator gaps — and the reason they existed
+
+Three mutations were reported to pass. All three did.
+
+| Mutation | Why it passed | Fix |
+|---|---|---|
+| Delete `STALE_PRICE_DAYS` | The scan read only `statement`, `fit_criterion`, `threshold`; the regex was `[A-Z][A-Z0-9]*_(suffix)` — **one prefix segment only**, so `STALE_PRICE_DAYS` never matched | Regex allows multi-segment prefixes; scan widened to 9 fields |
+| Delete `STALE_STATEMENT_DAYS` | Same | Same |
+| Delete `N_EVAL` | No `_EVAL` suffix in the pattern at all | `_EVAL` added |
+| Delete `requirements` key | The line indexed `doc["requirements"]` directly | Guarded; prints a named finding instead of a traceback |
+
+A fourth gap was found while fixing these: **nothing checked the reverse direction.** Deleting a parameter row whose text citation no longer matched any pattern left a declared-but-unused parameter invisible. Rule 18 now compares each parameter's `used_by` against where its text is actually cited, and fails on a mismatch.
+
+That mismatch check immediately caught two real errors A had not noticed: `QUALITY_THRESHOLD` was listed as used by `REQ-TA-GOV-001` only, though `NFR-COST-001` and `NFR-EVAL-001` also cite it; `N_EVAL` omitted `NFR-EVAL-001`.
+
+**Four new negative fixtures** were added (22–25) for exactly these cases. The suite is now **27**, all failing for their stated reason.
+
+**One exemption was added rather than a silent pass.** `MAX_OHLCV_STALE_DAYS` is `tradingagents/dataflows/vendors/yahoo/ohlcv.py:18`, a code constant quoted in FR-006's baseline to show the price rule already exists upstream. It is not a tunable this registry owns; the registry's own knob is `STALE_PRICE_DAYS`. Recorded in `PARAM_EXEMPT` with that reason.
+
+### 5. Implementation follow-ups — confirmed, unchanged, still open
+
+Both are correct as reported and neither is fixable from this package alone:
+
+- **The dangling-reference boundary still reproduces on `main`.** The four `INV-012` citations were in the merged registry. This branch fixes them; `main` keeps them until it merges.
+- **Schema validation is not wired into CI.** No workflow under `.github/workflows/` references `docs/req/validate.py`, so `REQ-TA-GOV-004` states an obligation nothing enforces. Its note already said this at `916d8a6`; it now also records the state at 2026-11-24. Wiring it is a CI change and is **not** made here.
+
+### Verification actually run
+
+```
+python3 docs/req/validate.py                36 requirements; 3 withdrawn; 0 error(s), 0 warning(s)   exit 0
+python3 docs/req/negative-fixtures-check.py all 27 negative fixtures fail correctly                   exit 0
+ruff check .                                All checks passed
+rebuild_registry.py                         output byte-identical to the committed YAML
+mutation sweep                              all 8 parameter deletions + requirements key: exit 1; unchanged: exit 0
+```
+
+`requirements-draft-v4.md` is untouched (read-only recorded artefact, SHA-256 `542f382c…`). The changes go through dated overrides in `rebuild_registry.py`; `requirements.yaml` was regenerated, never hand-edited.
