@@ -13,7 +13,7 @@ from pydantic import ValidationError
 from tradingagents.portfolio import PortfolioContext
 
 from .context import FrozenSnapshot, InputMode, RunContext, new_run_id, snapshot_fingerprint
-from .result import InputError
+from .result import InputError, InputErrorKind
 
 
 @dataclass(frozen=True)
@@ -29,8 +29,10 @@ class DirectoryReadError(OSError):
 
 class PortfolioInputService:
     def __init__(self, portfolio_dir: str | Path | None = None):
-        self.portfolio_dir = Path(portfolio_dir or os.getenv(
-            "PORTFOLIO_DIR", Path(__file__).resolve().parents[2] / "portfolios"))
+        directory = portfolio_dir or os.getenv("PORTFOLIO_DIR")
+        if directory is None:
+            directory = Path(__file__).resolve().parents[2] / "portfolios"
+        self.portfolio_dir = Path(directory)
 
     def discover(self) -> list[Path]:
         """List regular, direct-child JSON files in deterministic filename order."""
@@ -97,6 +99,7 @@ class PortfolioInputService:
         except ValidationError as exc:
             issue = exc.errors()[0]
             location = ".".join(str(part) for part in issue.get("loc", ())) or None
+            kind: InputErrorKind
             if issue.get("type") == "finite_number":
                 kind = "NONFINITE_NUMBER"
             elif "quantity" in str(issue.get("loc", ())):

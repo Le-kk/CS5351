@@ -9,6 +9,7 @@ InputErrorKind = Literal[
     "MALFORMED_JSON", "MISSING_POSITIONS", "MISSING_QUANTITY", "NONFINITE_NUMBER",
     "WRONG_SCALAR_TYPE", "UNREADABLE_PATH", "AS_OF_MISMATCH", "FLAG_CONFLICT",
 ]
+InputModeValue = Literal["NO_PORTFOLIO", "PORTFOLIO_PROVIDED"]
 StopReason = Literal[
     "MODEL_FAILURE", "DATA_FAILURE", "INTERNAL_ERROR", "PERSISTENCE_ERROR", "INTERRUPTED",
 ]
@@ -66,7 +67,7 @@ class RunResult:
     run_id: str
     ticker: str
     analysis_date: str
-    input_mode: Literal["NO_PORTFOLIO", "PORTFOLIO_PROVIDED"]
+    input_mode: InputModeValue
     run_outcome: RunOutcome
     stop_reason: StopReason | None
     final_rating: Rating | None

@@ -36,7 +36,7 @@ class OutputChecker:
     """Assigns PASSED/NEEDS_REVIEW; never contacts a model provider."""
 
     def evaluate(self, trusted: dict, provenance_fragment: str,
-                 final_rating: str, rendered_body: str) -> CheckResult:
+                 final_rating: str | None, rendered_body: str) -> CheckResult:
         findings = []
         allowed = {"Buy", "Overweight", "Hold", "Underweight", "Sell"}
         if final_rating not in allowed:

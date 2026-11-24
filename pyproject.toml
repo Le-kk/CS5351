@@ -9,6 +9,7 @@ description = "TradingAgents: Multi-Agents LLM Financial Trading Framework"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
+    "defusedxml>=0.7.1,<1",
     "cryptography>=42.0",
     "langchain-core>=1.6.5",
     "langchain-anthropic>=1.7.4",
@@ -32,6 +33,8 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
+    "mypy==1.20.2",
+    "bandit>=1.9.4,<2",
     "PyYAML>=6.0.2",
     "jsonschema>=4.23.0",
     "ruff>=0.16",
@@ -69,6 +72,17 @@ markers = [
 filterwarnings = [
     "ignore::DeprecationWarning",
 ]
+
+[tool.mypy]
+# Incremental coverage: all shared run boundary modules, portfolio and output contracts.
+# Third-party typing and legacy modules are not claimed as fully checked.
+files = ["tradingagents/runapi", "tradingagents/portfolio.py", "tradingagents/agents/schemas.py", "tradingagents/agents/rating.py"]
+python_version = "3.12"
+follow_imports = "silent"
+ignore_missing_imports = true
+check_untyped_defs = true
+warn_unused_ignores = true
+show_error_codes = true
 
 [tool.ruff]
 line-length = 100
