@@ -249,6 +249,8 @@ These are open and must not be read as resolved by the entries above.
 | 10 | `docs/ai-use-log.yaml` does not exist; only the `AI-log/` directory does (OQ-11) | E owns, A records | D1 deliverable completeness |
 | 11 | Whether the schema-validation gate needs its own registry entry (OQ-12) | C (crosswalk X7), B raised it | Count, GOV coverage |
 | 12 | Is the optional portfolio snapshot in input scope? (**Profile contradiction fixed 2026-11-23**; the scope itself is still for team adoption) | Team adoption | Scope, privacy fixtures, engineering evidence |
+| 13 | `INV-009`…`013` acceptance-criteria corrections (B §2) — held until D answers Q-8d | B drafts, D answers, A applies | Candidate file only; not in the registry |
+| 14 | Must/Should priority inversion: `INV-014` is Must while `FR-003`/`FR-006`/`NFR-REPRO-001` are Should | Team decides whether to raise them | Priority consistency |
 
 ---
 
@@ -313,3 +315,58 @@ No entry above claims team adoption. Adoption is recorded only in `req-final-sco
 **Validator: three new rules, all run against negative fixtures.** Every active requirement must be assigned exactly once, no assignment may name an unknown ID, and `A-C` must exist. Before this, the fix could have been "made" by deleting `A-C`, which is the same defect with fewer lines. The negative fixtures are recorded in `negative-fixtures.md` rules 18–20.
 
 **What this does not settle.** The input scope itself (OQ-13) is still a proposed change for team adoption. The profile now admits both inputs honestly instead of claiming one.
+
+---
+
+## 2026-11-23 — B's Q-8c answer applied, schema gate added: 34 → 36
+
+**Two entries added, both on B's explicit statement.** `REQ-TA-INV-014` (immutable input snapshot) answers A's re-asked Q-8c with option (1); B's reasoning is that input mutation, artifact isolation and publication fail differently, so folding the snapshot rule into `INV-011` would tie it to the resume question D has not answered. `REQ-TA-GOV-004` (registry validates against its schema) follows B's position that "CI implementation alone is insufficient" and the obligation must be a machine-readable requirement.
+
+**B did not confirm a total.** B wrote: "I cannot confirm a total of 35 without the complete current registry and all pending additions." Nothing in this change records B as agreeing to 36; B is recorded as requiring these two obligations, nothing more.
+
+**The `GOV-004` collision, recorded rather than avoided.** The team's `SEL-TA-GOV-004` is the semantic-evaluation gate, which is A's `REQ-TA-GOV-001`; `docs/architecture/invariants.md` refers to it as "C's semantic evaluation (GOV-004)". A used `REQ-TA-GOV-004` anyway because numbering must not skip, and put a naming warning in the entry. The same warning is in `REQ-TA-INV-014`, because B pointed out that `REQ-TA-INV-014` is **not** architecture `INV-14`, which is the persistence rule mapped by `REQ-TA-INV-012`.
+
+**Five validator errors on A's first draft, all real.** Missing `enforced_by`; a fit criterion that did not start with "Given"; no zero-tolerance wording; two entries with no fixture profile; and — the dangerous one — **the `A-B` assignment key written twice**, where Python silently keeps the last and drops the first. That is the same silent-data-loss shape as the earlier `yaml.dump` incident, and it was found by grep rather than by any tool complaining.
+
+**A pre-existing false reference fixed.** The fixture-profile note cited `REQ-TA-INV-010` and `NFR-FR-003`; neither ID exists, and `INV-010` is only a candidate. It now reads "candidate entry INV-010 (which is NOT in this registry)".
+
+**Three warnings left standing, deliberately.** `INV-014` is Must while the requirements it constrains (`FR-003`, `FR-006`, `NFR-REPRO-001`) are Should. A did not remove this by adding a dependency edge, which would have quietly changed another owner's priorities. It is recorded as open item 14 and named in the entry's note.
+
+**Not done, on purpose.** B's §2 corrections to `INV-009`…`013` are **not** applied, because those five are still candidates outside the registry and `INV-011`'s wording depends on D's answer to Q-8d.
+
+---
+
+## 2026-11-24 — independent integration review: four fixes, and a submission deadline
+
+An independent review of the uploaded package (`project-integration-review-2026-11-24.md`) reported against `a62b801`. **It is right on every point that concerns A.** Recorded here with what was actually done.
+
+**I24 01 — the package was in the wrong place.** PR #16 was **merged** on 2026-11-23 at 22:24, not left open, and it had put the six files at the **repository root**: `requirements.yaml`, `req-schema.json`, `validate.py`, `requirement-source-notes.md`, `negative-fixtures.md`, `change-log.md`. The validator hard-coded `docs/req/...`, so the documented command failed at that location. A did not intend this — the upload went to the root because the GitHub "upload files" flow defaulted there and A did not check the resulting path before committing. Team main then relocated them to `docs/req/` in `424974a`. **The lesson is that A shipped a file layout without ever running the documented command from a fresh clone.** Both scripts now resolve their default paths from `__file__`, and the negative-fixture harness runs from any directory.
+
+**I24 02 — the published snapshot was one revision stale.** Team main held the **34-entry** version; `REQ-TA-INV-014` and `REQ-TA-GOV-004` were in A's working copy and in correspondence but not published. **They were not removed, and A withdraws nothing.** The 36-entry version is the intended one. This entry also confirms the review's second point, which A had recorded but not fixed: `scope.statement` still said portfolio input was outside scope and every fixture ran without one, while Appendix A required a confirmed snapshot for three profiles. **Fixed today** — see below.
+
+**I24 07 — two acceptance contradictions, both A's.** `REQ-TA-NFR-REPRO-001` fit (b) required the RUN-001 fields to be non-null in every record, while `REQ-TA-RUN-001`'s validity table makes the stop reason present only for incomplete runs and the rating only for completed runs. The statement also promised a record and report for every run with no exception, contradicting `REQ-TA-INV-012`'s persistence-failure rule. **Both corrected in `rebuild_registry.py` as a dated override**, with the v4 baseline left byte-identical because it is a recorded artefact at a pinned SHA-256. The fit now checks fields against the validity table and adds a critical-persistence-failure case.
+
+**I24 04 — the validator passed things it claimed to reject.** Reproduced before fixing: deleting `CALL_CAP` exited 0; replacing withdrawn `REQ-TA-FR-002` with a fabricated ID exited 0 (rule 13 checked only the count); pointing `enforced_by` at a nonexistent ID exited 0; a duplicate top-level `schema_version` exited 0 because `yaml.safe_load` silently keeps the last. **All four now fail, and `negative-fixtures-check.py` executes 23 cases asserting non-zero exit *and* the stated reason.** Its first run found that A's own new fixtures did not mutate what they claimed — the harness caught A, which is the point of the harness.
+
+**One correction to the review, offered as a correction.** I24 04 says `validate.py` "treats its first argument as the filename" so `--registry` is unsupported. That was true, and `negative-fixtures.md` had told readers to "call `validate(registry_path)`; A will add the flag"; **that function never existed.** The flag now does, and the sentence is gone.
+
+**Scope statement rewritten, one scope only.** Portfolio input is now stated as **in scope** on a single basis: it is optional, it enters the run only after explicit confirmation, and `FR-002`/`FR-003`/`FR-004`/`FR-006` state their obligations for both inputs. Profiles `A-A`/`A-B`/`A-C` are described as existing so each obligation runs under the input it needs. **`TraderProposal.position_sizing` is recorded as a model suggestion carried in the report, not a validated size** — this keeps the research-only boundary while matching what the implementation actually produces. Whether a conditional sizing suggestion should be permitted at all is **open item 15**, the review's own question, and A does not decide it alone.
+
+**Deadline noted, and one thing A will not do.** The review states the deadline as **25 November 2026, 23:59 Hong Kong**. A's remaining obligation from §4 item 1 is to publish the reconciled snapshot under `docs/req/`; E's is to wire the gate. **A will not describe any gate as enforced, and will not sign an adoption record, on the strength of a deadline.**
+
+---
+
+## 2026-11-24 — two token series disagree in direction; a comparability clause added
+
+The integration review (I24 05) reported **+6.8%** tokens (138,897 → 148,392) measured through `graph.propagate()`. A later optimisation series reported **−24.8%** (to 104,459) measured through `graph.run_transient()`. Same ticker, same date, same model, same week. A checked the code rather than picking a side.
+
+**The entry point is not the cause.** `propagate()` and `run_transient()` both call `_run_graph`; they differ only in a `persist` flag that gates a state write and a memory-log append, neither of which makes a model request (`memory/log.py` says so explicitly: "No LLM call"). Choosing one over the other does not move token counts.
+
+**One indirect difference is real but small.** `persist=True` appends the decision to the memory log; the next run reads it back and `portfolio_manager.py` inserts it into the Portfolio Manager prompt as prior-decision lessons. The newer series pins `memory_log_path` to an empty file, so its Portfolio Manager never receives that context. **That is one call out of ~17 (9,191 tokens, 6.3%), and cannot account for a ~44,000-token gap.** Presenting it as the explanation would be false; it is recorded as a difference that exists, with its size stated.
+
+**What A did not claim.** That either series is wrong, that the fall is real, or that D's harness used a populated memory log — D's harness is untracked, and whether it did is **unknown**, which is written down as unknown.
+
+**What changed in the registry: one clause, no numbers.** `REQ-TA-NFR-COST-001` now says `TOKEN_BUDGET` may be set only from measurements that hold six settings constant — entry point, analyst set, debate round counts, ticker and analysis date, model and provider, and memory-log state — and that a measurement record must name all six. **`TOKEN_BUDGET` remains unset** (`to be measured`, owner D). The clause creates no budget and endorses no figure.
+
+**Two figures in the newer series flagged for care, from its own record.** `−35.0%` divides by `160,826`, a single unoptimised control at the top of the observed range (137,223–154,514); `−24.8%` divides by the two-run 138,897 baseline and is the better-founded figure, though it too spans two memory-log conditions. The series' first round (121,207 → 82,971) was discarded **by its own author** because price data was unavailable — recorded here as correct practice.
+
