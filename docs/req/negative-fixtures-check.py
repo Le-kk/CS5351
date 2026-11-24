@@ -140,6 +140,21 @@ def mutate_doc(doc: dict, case: dict) -> None:
             p for p in doc["parameter_appendix"] if p["name"] != "N_EVAL"]
     elif kind == "drop_requirements_key":
         doc.pop("requirements", None)
+    elif kind == "multi_segment_dangling_id":
+        # F24-05: the prose-ID pattern accepted only one namespace segment, so an
+        # undefined multi-part ID passed. `REQ-TA-NFR-COST-999` is shaped like a real
+        # ID but names nothing.
+        reqs["REQ-TA-FR-001"]["note"] = (
+            "Non-normative: cost accounting is governed by REQ-TA-NFR-COST-999.")
+    elif kind == "entry_missing_id":
+        # F24-05: cross-record rules indexed r["id"] and died with KeyError.
+        reqs["REQ-TA-FR-001"].pop("id", None)
+    elif kind == "entry_is_null":
+        # F24-05: a null entry made the same read die with TypeError.
+        doc["requirements"][3] = None
+    elif kind == "invariant_without_enforcer":
+        # F24-03: an invariant that names no component cannot be traced.
+        reqs["REQ-TA-INV-014"].pop("enforced_components", None)
     else:
         raise AssertionError(f"unknown mutation {kind}")
 
@@ -174,6 +189,11 @@ CASES = [
     ("23 freshness-days parameter deleted", "drop_freshness_param", "references parameter"),
     ("24 N_EVAL deleted from appendix", "drop_n_eval", "references parameter N_EVAL"),
     ("25 requirements key removed", "drop_requirements_key", "missing or empty"),
+    # Added 2026-11-24 after the follow-up review (F24-03, F24-05).
+    ("26 multi-segment ID with no entry", "multi_segment_dangling_id", "cites undefined requirement"),
+    ("27 requirement entry missing its id", "entry_missing_id", "has no 'id' string"),
+    ("28 requirement entry is null", "entry_is_null", "not a mapping"),
+    ("29 invariant names no enforcer", "invariant_without_enforcer", "does not name enforced_components"),
 ]
 
 

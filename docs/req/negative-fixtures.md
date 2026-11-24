@@ -4,7 +4,7 @@
 
 **Purpose:** Prove that each validation rule actually rejects the thing it claims to reject. A validator is only evidence of a rule if a negative fixture fails on it — **and fails for the stated reason**, not because a file was missing or a dependency was absent.
 
-**Rules now number 27** (21 cross-record + 4 on `fixture_profiles` + 2 added 24 November 2026 after an external review: prose citation resolution and bidirectional parameter use).
+**Rules now number 29** (21 cross-record + 4 on `fixture_profiles` + 4 added 24 November 2026: prose citation resolution, bidirectional parameter use, and the invariant-enforcer and entry-shape controls).
 
 ---
 
@@ -12,7 +12,7 @@
 
 ```bash
 python3 docs/req/validate.py                    # expects: 36 requirements; 3 withdrawn; 0 error(s), 0 warning(s)
-python3 docs/req/negative-fixtures-check.py     # executes all 27 cases below
+python3 docs/req/negative-fixtures-check.py     # executes all 31 cases below
 ```
 
 Both commands resolve their default paths **relative to the file itself**, so they work from any working directory and from any clone. **Dependencies:** `pyyaml`, `jsonschema`. No others. Python 3.10+.
@@ -38,7 +38,7 @@ The review also flagged that an earlier version of this document told the reader
 
 ---
 
-## The 27 rules and one failing fixture each
+## The 29 rules and one failing fixture each
 
 All cases below are executed by `negative-fixtures-check.py`, which asserts three things per case: non-zero exit, **the expected message present**, and **no traceback / missing-file / missing-module text**. A case that fails for an unrelated reason is reported as a failure of the fixture.
 
@@ -72,6 +72,10 @@ All cases below are executed by `negative-fixtures-check.py`, which asserts thre
 | 23 | Parameter references resolve both ways (rule 6, multi-segment names) | Delete `STALE_PRICE_DAYS` | `references parameter` |
 | 24 | Parameter references resolve both ways (rule 6, `_EVAL` names) | Delete `N_EVAL` | `references parameter N_EVAL` |
 | 25 | A missing top-level key is a finding, not a traceback | Delete the `requirements` key | `missing or empty` |
+| 26 | Multi-segment IDs resolve (rule 17) | Cite `REQ-TA-NFR-COST-999` in prose | `cites undefined requirement` |
+| 27 | Entry shape: `id` present | Delete one requirement's `id` | `has no 'id' string` |
+| 28 | Entry shape: mapping | Replace an entry with `null` | `not a mapping` |
+| 29 | Invariants name an enforcer (rule 11) | Remove `enforced_components` from `REQ-TA-INV-014` | `does not name enforced_components` |
 
 Rules 18–20 exist because of a real contradiction A had shipped: the offline profile said `Portfolio: None` while the privacy criterion needed a second position to exist. All were confirmed to fail on 2026-11-23.
 
@@ -93,3 +97,5 @@ Rules 18–20 exist because of a real contradiction A had shipped: the offline p
 ## What a reader should be able to conclude
 
 Someone who runs either command above gets the stated result on the real registry. Someone who applies any row of the table gets a failure naming that rule **and for that reason**. If either is not true, this file is wrong and A needs to know.
+
+**Cases 26-29 close the follow-up review's remaining holes (F24-03, F24-05).** Rule 17 had hard-coded a one-segment ID pattern, so `REQ-TA-NFR-COST-999` passed; it now takes the pattern from the schema's own `requirementId`. The entry-shape cases exist because a missing `id` or a `null` entry raised `KeyError`/`TypeError` — a traceback proves only that a program crashed, not that a rule ran. Case 29 exists because `enforced_by` had twice been pointed at a requirement that does not enforce the rule (itself, then FR-001); the enforcer is now a named component, and an invariant without one fails.
