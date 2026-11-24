@@ -55,10 +55,21 @@ These are **catalog triggers** (the `R*` prefix here is the catalog namespace, *
 
 **Precedence:** if a budget stop (R17) and a critical persistence failure co-occur, `PERSISTENCE_ERROR` is primary and the budget cause is secondary (R13a unchanged). Reaching `CALL_CAP` after the last needed request does not itself trigger R17.
 
-## Concise intermediate context — feature branch `9102759` (implemented on feature, not on main)
+## Concise intermediate context — integrated at `adb4dfc` (PR #18)
 
-> **Namespace note.** The `R22` row below is a **catalog trigger row** in this document's namespace — **not** a proposed output-check rule `R1–R8` (`REQ-TA-ARCH-002`), **not** the as-built checker codes `Q1–Q4`, and **not** the proposed run-budget row `R17`. It is **implemented on feature branch `9102759` (PR #18), not integrated on main**, and introduces no aggregate budget or forced truncation.
+> **Namespace note.** The `R22` row below is a **catalog trigger row** in this document's namespace — **not** a proposed output-check rule `R1–R8` (`REQ-TA-ARCH-002`), **not** the as-built checker codes `Q1–Q4`, and **not** the proposed run-budget row `R17`. It is **integrated into main via PR #18 (merge `adb4dfc`, ancestor of current `HEAD`)**; the dangling-reference boundary, quality acceptance and prior approval remain **open** (see R-CONCISE). It introduces no aggregate budget or forced truncation.
 
 | # | Trigger | Responsible component | Fallback / action | Output | Diagnostic / monitor |
 |---|---|---|---|---|---|
-| R22 | Concise intermediate context enabled (`concise_intermediate_reports`, default True; feature `9102759`) | `agents/context.py` (`concise_analysis_instruction`, `opponent_argument_or_opening(...,history)`, `bound_debate_prompt`); `agents/analysts/turn.py` (assembled system message); Bull/Bear/risk agents (assembled prompt strings) | Advisory evidence-first brevity; exact Python string-substring opponent reference; restore explicit copies before the existing guard when reconstructed-original length > `min(cap,threshold)*4` (reduces, does not eliminate, dangling-reference risk); legacy path via switch | Normal run; `prompt_hash` reflects the touched sources | `EffectiveConfig.concise_intermediate_reports`; no new forced truncation |
+| R22 | Concise intermediate context enabled (`concise_intermediate_reports`, default True; integrated at `adb4dfc`) | `agents/context.py` (`concise_analysis_instruction`, `opponent_argument_or_opening(...,history)`, `bound_debate_prompt`); `agents/analysts/turn.py` (assembled system message); Bull/Bear/risk agents (assembled prompt strings) | Advisory evidence-first brevity; exact Python string-substring opponent reference; restore explicit copies before the existing guard when reconstructed-original length > `min(cap,threshold)*4` (reduces, does not eliminate, dangling-reference risk); legacy path via switch | Normal run; `prompt_hash` reflects the touched sources | `EffectiveConfig.concise_intermediate_reports`; no new forced truncation |
+
+## Cumulative token admission — proposed (Alt-B; not implemented)
+
+> **Namespace note.** `R23`/`R24` are **catalog trigger rows** (this document's namespace) — not checker `R1–R8`, not `Q1–Q4`, not call-cap `R17`. Token admission (`REQ-TA-NFR-COST-001`, interface-contracts §15A) is **proposed, not implemented**.
+
+| # | Trigger | Responsible component | Fallback / action | Output | Diagnostic / monitor |
+|---|---|---|---|---|---|
+| R23 | A **required** model request cannot fit the remaining **token** budget (`K+R+U+need > TOKEN_BUDGET`) | `runapi/token_admission.py` + §15 `AdmissionCoordinator` (atomic with call cap) → finalizer | Refuse admission for both limits; account in-flight; preserve partial content through normal publication | `INCOMPLETE`, `stop_reason=BUDGET`, `final_rating=null`, `output_check=NOT_RUN`, `findings=[]` | budget kind, `TOKEN_BUDGET`, `K/R/U`, ticket id; no prompts/secrets |
+| R24 | **Bound/protocol violation:** provider-reported actual usage **exceeds** its reservation allowance (may occur while total < `TOKEN_BUDGET`) | `runapi/token_admission.py` → finalizer | Record actual usage **without clamping**; halt new admissions; propagate typed `TokenBoundViolation` through broad handlers; account in-flight before finalization | `INCOMPLETE`, `stop_reason=INTERNAL_ERROR` (safe diagnostic names overage), no rating, `NOT_RUN` | allowance, actual, ticket id, cumulative; no prompts/secrets |
+
+**Precedence:** if a token violation (R24) or budget stop (R23) coincides with a **critical report/manifest persistence failure**, `PERSISTENCE_ERROR` is primary (§R13a unchanged); the token/budget cause is secondary. Reaching `TOKEN_BUDGET` exactly after the last needed request does not itself trigger R23. **No new serialized stop reason** is introduced.

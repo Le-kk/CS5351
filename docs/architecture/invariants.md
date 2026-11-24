@@ -47,7 +47,7 @@ The candidate's `REQ-TA-INV-001..008` are **its** requirement-invariant entries;
 | `REQ-TA-INV-006` no sentiment direction without data | — (none) | none | sentiment-band scope only; does not force final Hold |
 | `REQ-TA-INV-007` coverage section equals record | — (none) | none | no per-run coverage record |
 | `REQ-TA-INV-008` disclaimer + no guarantee phrase | INV-03; checker rules Q3, Q4 | partial | Q3/Q4 enforce disclaimer/prohibited phrases |
-| `REQ-TA-INV-014` immutable input (**pending publication**, absent from uploaded YAML) | INV-04, INV-05, INV-05b | partial+pending | input freezing is covered; the ID is not resolvable in the uploaded registry |
+| `REQ-TA-INV-014` immutable input (present, `status: proposed`) | INV-04, INV-05, INV-05b | partial | input freezing is covered; the ID is resolvable; adoption still open |
 
 **Not equal to `INV-14`:** candidate `REQ-TA-INV-014` is input immutability; B's `INV-14` is the persistence/publication non-contradiction invariant. The numeric suffix does not map.
 
@@ -68,3 +68,11 @@ These are **new design obligations** matching interface-contracts §13–§15 an
 **Namespace caution:** proposed `INV-15..19` are B architecture IDs local to this register; they are **not** `REQ-TA-INV-*` entries. `REQ-TA-INV-002` (evidence IDs) maps to **INV-15** by meaning, not by number. The Q2 trusted-provenance guard remains a separate check (not INV-15/16).
 
 **R3 (ownership phrase) is a blocking deterministic phrase check** (target; §14.4). Contextual handling is an A/C/team alternative, not an advisory replacement; it is not represented as an INV here.
+
+## Proposed token-admission invariant (2026-11-24; **PROPOSED, not implemented**)
+
+| ID (proposed) | Source | Statement | Enforcing component (proposed) | Fallback |
+|---|---|---|---|---|
+| INV-20 | `REQ-TA-NFR-COST-001` | With mutually exclusive buckets K (known), R (reserved/in-flight), U (UNKNOWN retained): admission holds `K+R+U+(input_bound+output_allowance) <= TOKEN_BUDGET` **conditional on the asserted request bounds holding**. **No** new serialized stop reason: a detected **bound/protocol violation** (actual > allowance) ⇒ `INTERNAL_ERROR` with a safe diagnostic and admissions halted (recorded, never clamped, even if total < budget); an ordinary **required-refusal** ⇒ `BUDGET`. UNKNOWN (U) is never reported as measured actual; U stays until finalization (no late U→K in this version). The coordinator checks call-cap (§15) and token admission atomically; neither partially grants | `runapi/token_admission.py` + §15 `AdmissionCoordinator` + finalizer | Stop new admissions; settle in-flight; `PERSISTENCE_ERROR` primary; single terminal; truthful durability |
+
+**Namespace caution:** proposed `INV-20` is a B architecture ID local to this register; it is **not** `REQ-TA-INV-*`. It builds **beside** INV-18 (call cap), preserving INV-18's call-count semantics.

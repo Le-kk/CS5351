@@ -221,7 +221,7 @@ EffectiveConfig {
 ```
 Derived from `run_settings()` (`trading_graph.py:255-275`) **plus** the behaviour-affecting keys this design introduces (`temperature`, `max_tokens`, context cap/threshold, and the concise-mode flag). `backend_url`, keys, OAuth tokens, local paths are **never** included. `source_revision` is recorded **separately** from `code_version` (upstream `version` stays `0.7.1`; the revision id identifies the actual source state and is `"unknown"` when unavailable).
 
-- **Concise-mode recording (feature `9102759`):** the flag is recorded in `run_settings()` and `_effective_config()` with default `True`. An **old artifact that lacks the field** must NOT be read as having run with today's `True` default; absence is `unknown/legacy`, not `False` and not `True`. Do not infer historical mode from a missing field.
+- **Concise-mode recording (integrated at `adb4dfc`):** the flag is recorded in `run_settings()` and `_effective_config()` with default `True`. An **old artifact that lacks the field** must NOT be read as having run with today's `True` default; absence is `unknown/legacy`, not `False` and not `True`. Do not infer historical mode from a missing field.
 - **Mode is recorded separately from `prompt_hash`** (§3.8): the flag itself does not enter the hash material, but the feature's prompt-source edits do.
 
 ### 3.8 `prompt_hash` (deterministic input spec) — reconciled to the actual implementation
@@ -287,7 +287,7 @@ Incomplete, no-portfolio (persistence failure example):
 ```
 (Conditional rules hold: COMPLETED has a rating and `stop_reason=null`; INCOMPLETE has `final_rating=null`, `output_check=NOT_RUN`, `findings=[]`, a `stop_reason`, and null report paths.)
 
-### 3.11 Concise intermediate context assembly (feature `9102759`; contract scope, not implemented on main)
+### 3.11 Concise intermediate context assembly (integrated at `adb4dfc`, PR #18; contract scope)
 
 Scoped to **intermediate context assembly** during analysis execution (blueprint §5 step 6). This section does **not** change checker/evidence/budget semantics.
 
@@ -531,7 +531,7 @@ Aggregation (design):
 - Controlled before/after experiments carry `controlled_change` and are labelled as changed-factor comparisons; repeated fixed-condition benchmarks require matching controls. Exact scoring/threshold is C/A's (pending).
 
 ## 11. Pending (external owners)
-Final D1/schema (A); C's test IDs, rubric/threshold, and independent evidence; E enforcement; instructor layout. A must approve any reliance on the reduced-coverage low-level primitive (§5.3). Pending publication of `REQ-TA-INV-014` (immutable input) and `REQ-TA-GOV-004` (schema validation) does not change this contract; input freezing is covered by INV-04/05/05b and schema validation belongs to the governance/CI boundary.
+Final D1/schema (A); C's test IDs, rubric/threshold, and independent evidence; E enforcement; instructor layout. A must approve any reliance on the reduced-coverage low-level primitive (§5.3). `REQ-TA-INV-014` (immutable input) and `REQ-TA-GOV-004` (schema validation) are now present in the 36-entry registry (`status: proposed`); their presence does not change this contract — input freezing is covered by INV-04/05/05b and schema validation belongs to the governance/CI boundary.
 
 ## 12. Implementation status and deviations at `a62b801` (verified 2026-11-24)
 
@@ -556,9 +556,9 @@ This section records what the checkout **actually implements** relative to the d
 - **Critical publication failure cannot promise an artifact:** a critical report/manifest failure returns `INCOMPLETE/PERSISTENCE_ERROR` with `report_path=null`, `manifest_path=null` (§7.3). The contract does **not** promise an on-disk report/manifest on that path; a reproduction requirement should preserve the returned-logical-result vs artifact-publication distinction.
 - **Fixture shorthand:** `INCOMPLETE(MODEL)` / `INCOMPLETE(DATA)` in fixture prose are human shorthand; serialized values remain `MODEL_FAILURE` / `DATA_FAILURE` (RUN-001 spelling rule).
 
-### 12.4 Optional-portfolio scope (implemented; replacement registry unresolved)
+### 12.4 Optional-portfolio scope (implemented; registry scope now includes it, adoption/OQ-16 open)
 - The implemented contract supports `NO_PORTFOLIO` and an explicitly confirmed `PORTFOLIO_PROVIDED` snapshot, including an explicitly empty (flat) book and a supplied book that lacks the analyzed instrument (`§1`, `§2.1`). This is retained as implemented.
-- The uploaded `REQ-TA-*` candidate's scope statement excludes portfolio files while its fixture profiles include them. That replacement-scope disagreement is **unresolved (A/C/team)**; this document does not adopt either wording.
+- The current registry's scope now **includes optional portfolio input** (profiles A-A/A-B/A-C), matching the implemented optional-input flow. The confirmation-flow ownership is still open (OQ-16); this document keeps the implemented flow and does not invent a consent requirement.
 
 ### 12.5 Proposed extensions (documented impact, **not** implemented)
 Recorded here so adoption cost is visible; each is a design+D+C+E change, not implied by this contract:
@@ -875,6 +875,7 @@ Status: **proposed implementation-ready design**, consolidating `docs/architectu
 | `RunBudgetController` | One per run; issues single-use reservations; enforces `dispatch_attempts <= successful_reservations <= CALL_CAP`; exposes exhausted state | `tradingagents/runapi/budget.py` | B / D / C / E |
 
 - The controller lives at the **controlled application client boundary** (where the app issues model-request attempts), shared across quick/deep tiers, structured/plain paths, retries and in-run memory/reflection. It must **not** be a global counter across runs; it must be **separate from the frozen input snapshot** (`RunContext`).
+- **Token-cap integration (see §15A):** when cumulative token admission is enabled, the call-cap controller is consulted through the atomic `AdmissionCoordinator` (§15A.1) together with the token controller; the coordinator withholds a grant from **both** if either limit refuses. §15's call-counting rules (monotonic `granted`, no refund on invalidation) are **unchanged**; only the entry point is wrapped.
 - `CALL_CAP` is a **configuration value** (test value 8; production default open, **not a measured value**).
 
 ### 15.2 Interface (proposed signatures)
@@ -946,7 +947,7 @@ Adds catalog **R17** (see `runtime-policy-catalog.md`): trigger = required reque
 | B5 | concurrent runs | isolated budgets per run | shared counter leaks fails |
 | B6 | budget stop + critical persistence failure | PERSISTENCE_ERROR primary, budget secondary | two/zero reasons fails |
 | B7 | any controlled attempt without reservation | none possible (audit pairs 1:1) | unpaired attempt fails |
-| B8 | CAP=1: grant A, invalidate A, reserve B | B **denied** (granted already 1; no refund) | recycling that grants B fails (`granted=2 > cap=1`) |
+| B8 | CAP=1: grant A, invalidate A (unsent), reserve B | token allowance fully released, but call grant stays charged → **B denied** (granted ≤ CAP; no call refund) | a coordinator that refunds the call grant and grants B fails |
 | B9 | dispatch a reservation twice | second raises `BudgetProtocolError` | 2 consumptions from 1 reservation fails |
 | B10 | pass run-1 reservation to run-2 controller | `BudgetProtocolError` | cross-run reuse accepted fails |
 | B11 | grant then exception before dispatch → invalidate | `granted` unchanged; later reserve at cap denied | capacity freed fails |
@@ -954,6 +955,214 @@ Adds catalog **R17** (see `runtime-policy-catalog.md`): trigger = required reque
 | P2 | `llm.bind_tools(...).invoke` | exactly 1 reservation consumed | 0 (missed) or 2 (double) fails |
 | P3 | `llm.with_structured_output(...).invoke` | exactly 1 reservation consumed | 0 or 2 fails |
 | P4 | bound/structured path re-wrap check | not 2 reservations per call | double-wrap/double-charge fails |
+
+---
+
+## 15A. Atomic call + token admission — `REQ-TA-NFR-COST-001` (PROPOSED; Alt-B settlement)
+
+Status: **proposed design (detailed contracts below; provider-bound evidence and parameter values remain open)** for cumulative **token** admission, sitting **beside** the existing call-cap (§15), not replacing it. **Not implemented.** Alt-B chosen (known-usage settlement with UNKNOWN retention); see [ADR-004](adr/004-cumulative-token-admission.md). Mutable state is per-run and **outside** the frozen `RunContext`.
+
+### 15A.1 One atomic coordinator for both limits
+One per-run `AdmissionCoordinator` consults the call controller (§15) and the token controller **under one critical section**, withholding a grant from **both** if **either** limit refuses (no partial grant). It lives at the §15 controlled application client boundary (`tradingagents/llm_clients` dispatch seam; proposed `tradingagents/runapi/token_admission.py`). Integration with §15 is **targeted**: §15's counting rules are preserved; only the entry point is wrapped (§15.1 gains a cross-reference; see §15A.6).
+
+```
+Ticket { id; coordinator_run_id; call_grant; token_reservation; state: GRANTED|DISPATCHED|SETTLED_KNOWN|SETTLED_UNKNOWN|INVALIDATED }
+
+AdmissionCoordinator.admit(input_bound, output_allowance) -> Ticket
+  # atomic: (call grant ok) AND (K+R+U + input_bound + output_allowance <= TOKEN_BUDGET)
+  # if either refuses -> grant NEITHER; raise the refusing limit's typed error
+coordinate.dispatch(ticket)                     # GRANTED -> DISPATCHED, immediately BEFORE the provider request issues
+coordinate.settle_known(ticket, in_use, out_use)# DISPATCHED -> SETTLED_KNOWN
+coordinate.settle_unknown(ticket)               # DISPATCHED -> SETTLED_UNKNOWN
+coordinate.invalidate(ticket)                   # GRANTED -> INVALIDATED (unsent only; requires non-dispatch established)
+```
+
+**Reservation / request-binding type (proposed):**
+```
+TokenReservation {
+  ticket_id: str
+  allowance: int                 # input_bound + output_allowance; fixed at admit
+  request_binding: RequestBinding
+}
+RequestBinding {                 # binds the reservation to the FINAL prepared request
+  payload_fingerprint: str       # SHA-256 over the post-`_get_request_payload` serialized payload
+  provider: str; model: str
+  max_output_tokens: int         # the enforced finite allowance actually sent
+  input_bound_method: str        # e.g. "exact:<tokenizer-id>" | "family:<id>x<multiplier>"
+}
+```
+**Typed errors (proposed; no serialized stop reason):** `TokenBudgetExhausted` (required request cannot fit → `BUDGET`) and `TokenBoundViolation(reservation, actual_in, actual_out)` (actual > allowance → `INTERNAL_ERROR`); `TokenProtocolError` (reuse/duplicate/wrong-run/non-dispatched settle). `UnsupportedProfileError` (see §15A.2).
+
+### 15A.2 Defensible bounds vs estimates (required, not parameter choices)
+Reservation requires a **defensible upper bound**, not an estimate. Per enabled profile, the **provider/profile capability contract** must assert:
+- **Input upper bound** — an exact model tokenizer, **or** a tokenizer-family + safety multiplier that is **justified for the complete supported request domain**. Empirical samples alone do **not** prove an upper bound.
+- **Tool/schema overhead** — tool schemas, `bind_tools`, `with_structured_output` schema serialization and system-message overhead included in the input bound.
+- **Finite enforced output allowance** — a per-attempt maximum the client/provider **enforces** (e.g. forwarded `max_tokens`). `max_tokens=None` and advisory 450/220-word targets are **not** finite bounds.
+- **Request binding** — the reservation is bound to the **final prepared request + effective configuration**; the payload/config must not change after measurement (immutably referenced; a post-measurement mutation invalidates the ticket).
+
+A profile lacking any of these is **UNSUPPORTED**: token admission refuses to run for it and surfaces the decision; it is not silently estimated. **Unsupported-profile validation timing:** capability is validated **once, at run/controller initialization (before any dispatch)** — the run is rejected fast with `UnsupportedProfileError` mapped to `INCOMPLETE/INTERNAL_ERROR` (safe diagnostic naming the missing capability) rather than admitting attempts and failing late; a profile cannot become "supported" mid-run. Character/4 is **not** an admissible input bound. Numeric values (`TOKEN_BUDGET`, multiplier, output allowance) remain parameters; the **method + UNSUPPORTED behaviour do not**. Offline accounting tests verify the *accounting logic against a scripted provider*, **not** the deployed provider's true bounds (that is separate E evidence).
+
+### 15A.3 One precise token ledger (mutually exclusive buckets)
+- **K** — known actual usage of **settled-known** attempts.
+- **R** — outstanding reservations for **granted/dispatched (in-flight)** attempts.
+- **U** — retained allowances for **UNKNOWN** attempts (held capacity; never reported as measured actual).
+
+**Two distinct statements (do not conflate):**
+- **Admission predicate** (a *gate checked per request*): `admit` succeeds iff `K + R + U + (input_bound + output_allowance) <= TOKEN_BUDGET`.
+- **Ledger invariant** (a *postcondition on recorded state*): at all times the recorded buckets satisfy `K + R + U <= TOKEN_BUDGET`, **conditional on the asserted request bounds holding**. A detected bound/protocol violation breaks the conditional (actual may push `K` beyond allowance); that breach is **recorded and made visible** (§15A.4), not hidden or clamped.
+
+**Held capacity** `H = K + R + U` is **not monotonic** (known settlement may reduce it). Keep **monotonic cumulative counters** separately: `cumulative_admitted`, `cumulative_consumed_known`.
+
+### 15A.4 Transitions (no double charge; violations recorded, never clamped)
+| Op | Precondition | Effect | Call counters (§15) |
+|---|---|---|---|
+| `admit` | call grant ok AND token fits | token reservation → **R** (full allowance); `cumulative_admitted += allowance` | `granted += 1` |
+| `dispatch` | ticket GRANTED | ticket → DISPATCHED (request issues next) | `dispatched += 1` |
+| `settle_known` | ticket DISPATCHED; **valid** input+output usage | remove allowance from **R**, add actual to **K**; `cumulative_consumed_known += actual`. H may decrease if actual < allowance | — |
+| `settle_known` with **actual > allowance** | ticket DISPATCHED | **Bound/protocol violation — applied atomically:** in one critical section move allowance R − allowance, add actual to K in full (**not clamped**), mark violations/admissions-halted, record audit anomaly, **then** release the lock and propagate typed `TokenBoundViolation`. No partial state is observable between the ledger update and propagation. | — |
+| `settle_unknown` | ticket DISPATCHED; usage missing/partial | move allowance **R → U** (retained; **not** in K, not reported as actual) | — |
+| `invalidate` | ticket GRANTED; non-dispatch established | **release the complete token allowance** from **R** (returned to capacity); record invalidation | `invalidated += 1`; **`granted` stays `+1` permanently — the call grant is NOT refunded** |
+
+- **Settlement requires a DISPATCHED ticket.** Reuse, duplicate callbacks (settle twice), a non-dispatched settle, or **wrong-run** tickets raise `TokenProtocolError`, rejected **atomically**, with no bucket move.
+- **Dispatch/invalidation race:** exactly one of `DISPATCHED` or `INVALIDATED` per ticket; a second transition raises. If dispatch was issued, `invalidate` is refused (must settle).
+- **UNKNOWN resolution:** in this version **U stays until finalization; no late U→K**. (A future resolved-late path is out of scope here.)
+- **Token vs call invalidation are intentionally different:** token capacity **is** released on proven non-dispatch (no tokens spent); the **call** grant is **never** refunded (§15 monotonic admission). The coordinator does **not** refund call grants.
+- **Violation ≠ exhaustion:** `actual > allowance` is a bound/protocol violation that **may occur while total usage < TOKEN_BUDGET**; it is not budget exhaustion. It halts new admissions and is mapped per §15A.5.
+
+### 15A.5 Result mapping (no new serialized stop reason)
+- **Bound/protocol violation** → `INCOMPLETE` / `stop_reason=INTERNAL_ERROR` with a safe diagnostic naming the overage (budget kind, allowance, actual, ticket id; no prompts/secrets). Not `BUDGET` — total may be under budget. The ledger state change and admissions-halt are committed **atomically before** the typed exception propagates (§15A.4), so a broad handler catching the exception cannot observe a half-updated ledger.
+- **Unsupported profile** → `INCOMPLETE` / `stop_reason=INTERNAL_ERROR`, safe diagnostic naming the missing capability (validated pre-dispatch, §15A.2).
+- **Ordinary refusal** of a *required* request that cannot fit → `INCOMPLETE` / `stop_reason=BUDGET`, `final_rating=null`, `output_check=NOT_RUN`, `findings=[]`.
+- **`PERSISTENCE_ERROR` precedence** over all of the above (critical report/manifest failure). **In-flight** attempts are accounted (R→K/U or recorded overage) before **immutable** finalization; a refused-required drop preserves partial content through normal publication. Single terminal, truthful durability; **no** new enum value.
+
+**Authoritative serialized `TokenAudit` shape (proposed; no prompts/secrets).** One canonical object, redacted before persistence; it appears nested under `run_budget.token_audit` in the manifest/result and is mirrored in the `run.terminal` event.
+
+```
+TokenAudit {
+  enabled: bool                     # token admission active for this run
+  status: "DISABLED" | "UNSUPPORTED" | "ACTIVE" | "VIOLATED"
+  kind: "NONE" | "CALL_BUDGET" | "TOKEN_BUDGET" | "BOUND_VIOLATION" | "UNSUPPORTED_PROFILE"
+  budget: int | null               # TOKEN_BUDGET (tokens); null when disabled/unsupported
+  units: "tokens"                  # always tokens (input+output)
+  K: int | null                    # known actual (tokens); null when disabled/unsupported
+  R: int | null                    # reserved/in-flight (tokens); null when disabled/unsupported
+  U: int | null                    # UNKNOWN retained capacity (tokens; NEVER measured actual); null when disabled/unsupported
+  remaining: int | null            # budget - (K+R+U); null when disabled/unsupported; MAY be negative on overage (recorded, not clamped)
+  cumulative_admitted: int | null  # monotonic tokens
+  cumulative_consumed_known: int | null  # monotonic tokens
+  bound_violation: bool            # true iff any reservation was exceeded
+  violation: null | { allowance: int, actual_in: int, actual_out: int, ticket_id: str }  # present iff bound_violation
+}
+```
+**Conditional rules (authoritative — readers enforce these):**
+- `enabled=false` ⇒ `status="DISABLED"`, `kind="NONE"`, **all numeric fields `null`**, `bound_violation=false`, `violation=null`.
+- **`enabled=true` + `status="UNSUPPORTED"` is explicitly valid** ⇒ `kind="UNSUPPORTED_PROFILE"`, `budget=null`, `K/R/U/remaining/cumulative_*=null`, `bound_violation=false`, `violation=null`; the accompanying run outcome **must** be `INCOMPLETE` with `stop_reason=INTERNAL_ERROR` (see "Invalid configuration vs run artifact"). A reader **accepts** this combination with null budget/counters and does not treat nulls as malformed.
+- `status="ACTIVE"` ⇒ **`budget` must be a present non-negative integer**, `K/R/U` present, **non-negative** integers; `remaining` present (may be `≥0` here, never negative in a non-violated state); `bound_violation=false`, `violation=null`.
+- `status="VIOLATED"` ⇒ **`budget` present non-negative integer**, `K/R/U` present non-negative integers, `bound_violation=true`, `violation` present; **`remaining` may be negative** (legitimately, after a recorded overage) — negative `remaining` is valid here and is *not* an invalid count.
+- **Non-negative token counts vs `remaining`:** `budget`, `K`, `R`, `U`, `cumulative_admitted`, `cumulative_consumed_known`, and the `violation` counts are **≥ 0**; only `remaining` may be negative, and **only** under `status="VIOLATED"`.
+- `kind` is `TOKEN_BUDGET` for a required-refusal stop and `BOUND_VIOLATION` for overage (§15A.4/§15A.5); `CALL_BUDGET` appears only when the **call** cap (§15) refused; `UNSUPPORTED_PROFILE` only with `status="UNSUPPORTED"`. **UNKNOWN (`U`) is retained capacity, never reported as measured actual.**
+
+**Synthetic examples (illustrative):**
+```
+# disabled admission
+{"enabled":false,"status":"DISABLED","kind":"NONE","budget":null,"units":"tokens","K":null,"R":null,"U":null,"remaining":null,"cumulative_admitted":null,"cumulative_consumed_known":null,"bound_violation":false,"violation":null}
+# unsupported/unset configuration
+{"enabled":true,"status":"UNSUPPORTED","kind":"UNSUPPORTED_PROFILE","budget":null,"units":"tokens","K":null,"R":null,"U":null,"remaining":null,"cumulative_admitted":null,"cumulative_consumed_known":null,"bound_violation":false,"violation":null}
+# UNKNOWN usage retained (budget 100; one 60 allowance settled UNKNOWN)
+{"enabled":true,"status":"ACTIVE","kind":"NONE","budget":100,"units":"tokens","K":0,"R":0,"U":60,"remaining":40,"cumulative_admitted":60,"cumulative_consumed_known":0,"bound_violation":false,"violation":null}
+# bound overage (allowance 60, actual 75)
+{"enabled":true,"status":"VIOLATED","kind":"BOUND_VIOLATION","budget":100,"units":"tokens","K":75,"R":0,"U":0,"remaining":25,"cumulative_admitted":60,"cumulative_consumed_known":75,"bound_violation":true,"violation":{"allowance":60,"actual_in":55,"actual_out":20,"ticket_id":"t-7"}}
+# over-budget violation, chronological (budget 100)
+# 1) earlier reservation 60 settles known at 60 -> K=60, cumulative_admitted=60, cumulative_consumed_known=60
+# 2) next reservation 40: 60+40=100 <= 100 -> ADMITTED (R=40, cumulative_admitted=100)
+# 3) dispatched request returns actual_in=55, actual_out=15 -> actual 70 > allowance 40 (violation)
+# settle: K=60+70=130; R=0; U=0; remaining=100-(130+0+0)=-30; cumulative_admitted stays 100; cumulative_consumed_known=60+70=130
+{"enabled":true,"status":"VIOLATED","kind":"BOUND_VIOLATION","budget":100,"units":"tokens","K":130,"R":0,"U":0,"remaining":-30,"cumulative_admitted":100,"cumulative_consumed_known":130,"bound_violation":true,"violation":{"allowance":40,"actual_in":55,"actual_out":15,"ticket_id":"t-8"}}
+```
+
+**Invalid configuration vs run artifact:** a missing/unset `TOKEN_BUDGET` or an UNSUPPORTED profile when token admission is **enabled** produces a **valid `INCOMPLETE` artifact** (status `UNSUPPORTED`, `stop_reason=INTERNAL_ERROR`, `output_check=NOT_RUN`) — not "no run" — so the refusal is auditable with truthful durability. Token admission **disabled** simply yields `status="DISABLED"` on a normal completed/other run. (A wholly malformed CLI invocation that never starts is a separate pre-run category, not this artifact.)
+
+### 15A.6 Usage seam — request-scoped settlement with pre-dispatch capability exclusion
+
+Reading the outer structured runnable's return value is **insufficient**: `with_structured_output(...)` returns a runnable that **parses** the model reply into a schema object (or raises), discarding the raw `AIMessage`/provider response. But **no single hook covers every path**. In the installed library (`langchain-openai` 1.8.1, `chat_models/base.py`), `_generate`/`_agenerate` branch into **three** result paths and, on error, raise with **no** result hook:
+
+- **Chat-completions** (`else` branch) → `_create_chat_result(response, …)`.
+- **`response_format` parse branch** → `with_raw_response.parse` then `_create_chat_result`.
+- **Responses API** (`_use_responses_api(payload)` true) → `_construct_lc_result_from_responses_api(...)` and `return result` **without** calling `_create_chat_result`.
+- **Exceptions** (`openai.BadRequestError`/`APIError`/other) → raised after wrapping; the sync/async wrappers do not invoke a result hook.
+- **Streaming** (`_stream`/`_astream`) → yields chunks via `_convert_chunk_to_generation_chunk`; usage only if `stream_options.include_usage` is set; `_create_chat_result` is **not** called.
+
+Therefore the design does **not** claim one `_create_chat_result` override covers every path.
+
+**Pre-dispatch capability validation (exclusion, not silent miss).** At controller/run initialization, the profile is validated (already required for bounds, §15A.2). Extend that validation to assert the request **routing is token-accountable**. If the enabled profile/route would use the **Responses API**, or **streaming** without a supported usage-capture hook, or any path where the app cannot observe raw provider usage, the profile is **UNSUPPORTED** (token admission refuses to run; `UnsupportedProfileError` → `INCOMPLETE/INTERNAL_ERROR`, §15A.2/§15A.5). Concretely for the supported (chat-completions, non-streaming) route the interception point is:
+- **Interception:** override `_create_chat_result(self, response, …)` on the metered chat class (pattern already used by `DeepSeekChatOpenAI`, `openai_client.py:118`). The **raw provider `response`** is available here (`response.usage`) **before** `_create_usage_metadata` normalizes it, and the produced `ChatResult` carries `usage_metadata`.
+- **If a future profile needs Responses API or streaming,** it requires its **own** specified capture seam (e.g. wrapping `_construct_lc_result_from_responses_api` / the streaming aggregation) **and** its own tests; until specified, those routes are **excluded** by capability validation, not promised by one override.
+
+**Request-scoped ticket association under concurrency.** A bare `_create_chat_result` override is called from whichever thread issues the request; it must not rely on a single "current ticket" global (concurrent analysts/debates). Each dispatch establishes a **request-scoped binding**: `dispatch(ticket)` stores the ticket in a **thread- and context-local** slot (e.g. `contextvars.ContextVar`, or pass a `run_manager.metadata`/config tag threaded into `_generate`), and `_create_chat_result` **resolves the ticket for its own request** from that scope, settles it once, and clears the binding. If no ticket is bound to the encountered request (e.g. an unexpected/auxiliary call), that is a **protocol condition** (unmetered request observed) → `TokenProtocolError` (mapped `INTERNAL_ERROR`), never a silent skip.
+
+**Settlement when no response/result hook occurs (state-aware cleanup):**
+- **Exception path:** if the provider raises, no result hook fires. The dispatch wrapper (`dispatch`→send) uses `try/except/finally` around the send:
+  - **`except`:** settle to **UNKNOWN** (`settle_unknown`) **only if the ticket is still `DISPATCHED`** (no result hook already settled it). If the ticket is already `SETTLED_KNOWN`/`SETTLED_UNKNOWN`, leave it unchanged; if a **violation** was already recorded (e.g. overage detected before an exception in later handling), preserve it. **Never attempt a second settlement** and **never mask/replace the original exception** — re-raise the original (or a `TokenProtocolError` only if the ticket is in an impossible state, chaining the original via `from`).
+  - **`finally`:** **always** reset the request-scoped context binding (`ContextVar`/config tag) for this request, regardless of outcome, so a later request on the same thread/context cannot inherit a stale ticket.
+- **Valid usage then later failure:** if the result hook **did** run and settled known, a subsequent response-processing failure leaves the ticket `SETTLED_KNOWN` (usage already accounted); the wrapper must **not** re-settle to UNKNOWN.
+- **Atomic overage update:** on overage, in one critical section update **both** `K` **and** `cumulative_consumed_known` (add full actual) together (plus the R decrement and violation flags) before propagating (§15A.4) — never expose `K` updated without the matching cumulative counter.
+- **Streaming/Responses (if ever enabled):** must use their own hook; otherwise excluded above.
+- **No double settle:** settlement requires `DISPATCHED`; a second hook for the same ticket is rejected (`TokenProtocolError`).
+
+**Raw usage validation before normalization.** The installed normalizer (`_create_usage_metadata`) replaces missing counts with zero (`input_tokens = _input if _input is not None else 0`; same for output). Validating the **normalized** `usage_metadata` therefore **cannot** distinguish "provider reported 0" from "provider omitted the count". The metered seam must validate the **raw** provider usage **before** normalization:
+- **Provider field mapping (supported route):** chat-completions → `response.usage.prompt_tokens` / `completion_tokens`. (Responses API would map to `usage.input_tokens` / `output_tokens`, but that route is **excluded** by §15A.6 capability validation until separately designed/tested.) These are **raw** fields, not the normalized `usage_metadata`.
+- **Validity:** both raw counts must be present, integer, **≥ 0**. **Missing, partial, non-integer, negative, or absent `usage` object ⇒ `settle_unknown`** — even if the normalized `usage_metadata` contains integers (e.g. 0/0 synthesized by the normalizer). Only raw-valid values feed `settle_known(ticket, in, out)`.
+- Do **not** copy `cli/stats_handler.py`'s `.get(..., 0)` zero-default.
+
+**Admission/dispatch binding (final prepared request).** `admit` binds the reservation to the **post-`_get_request_payload`** serialized payload (provider-added fields such as DeepSeek `reasoning_content`, tool schemas, `tool_choice`, `max_tokens`) via the immutable `payload_fingerprint` (§15A.1); a caller-input mutation after measurement invalidates the ticket (`TokenProtocolError`) rather than dispatching a different request.
+
+### 15A.7 Compatibility / migration (separate axes + token-capable record matrix)
+`schema_version` (application result/manifest record format), `check_rules_version`, and the **requirements JSON-Schema version** (`docs/req/req-schema.json`, 1.2.0) are **three separate axes** (§16.7). The requirements-schema version is a D1 concern and never forces an application-format change.
+
+**`EffectiveConfig` additions (safe; no prompts/secrets):**
+```
+token_admission_enabled: bool
+token_budget: int | null              # TOKEN_BUDGET parameter (unset ⇒ null)
+input_bound_method: str | null        # e.g. "exact:<tokenizer>" | "family:<id>x<mult" | null (unsupported)
+output_allowance: int | null          # finite enforced per-attempt output allowance
+```
+plus the persisted audit fields in §15A.5.
+
+**Compatibility matrix (explicit token-capable combinations; readers):**
+| Record kind | `schema_version` | `check_rules_version` | token fields present | Reader behavior |
+|---|---|---|---|---|
+| Legacy (pre-token) | `1` | absent | no | **Explicit legacy path**: read Q1–Q4 semantics; token fields absent ⇒ no token accounting claim |
+| Token-capable, budget-only | `2` | `1` | yes (`token_admission_enabled=true`, `token_budget`…) | readers accept `BUDGET`; token fields validated; checks stay Q1–Q4 |
+| Token-capable, full checker | `2` | `2` | yes | readers understand `CORRECTED`/`corrected_fields` **and** token fields |
+| Refused/unsupported token run | `2` | `1` or `2` | yes (`run_budget.token_audit.kind`, violation flags) | readers read the safe diagnostic + `INTERNAL_ERROR`/`BUDGET`; never coerce |
+
+Rules: a `schema_version=2` record **with** token fields but an invalid `token_*` combination ⇒ readers **fail closed**. Concretely (agreeing with §15A.5 and §16.7): a missing/invalid `token_budget` is **rejected** when `token_audit.status ∈ {ACTIVE, VIOLATED}` (those require a present non-negative integer budget), while `enabled=true` + `status="UNSUPPORTED"` with `token_budget=null` and null `K/R/U/cumulative_*` is a **valid, accepted** combination (paired with `INCOMPLETE`/`INTERNAL_ERROR`); `enabled=false` (`DISABLED`) also legitimately carries nulls. Other invalid combinations — e.g. `K+R+U>budget` without `bound_violation=true`, negative `remaining` outside `VIOLATED`, or `UNSUPPORTED` carrying a non-null budget — ⇒ fail closed. Old readers that cannot interpret token fields/versions must **reject**, not silently ignore-then-claim. No new `StopReason` value is introduced. Preserve the legacy path exactly.
+
+### 15A.8 Proposed verification scenarios (C inputs; not accepted)
+| # | Scenario | Expected |
+|---|---|---|
+| T1 | reserve 60, settle known 20 (BUDGET 100) | R 60→0, K 20, H 20, remaining 80; calls granted 1, dispatched 1 |
+| T2 | reserve 60, settle UNKNOWN | R→U=60, K=0, H 60, remaining 40; UNKNOWN not reported as actual |
+| T3 | grant then invalidate unsent (CALL_CAP=1) | token fully released (H 0, remaining 100); calls granted 1, dispatched 0, invalidated 1; **next admit DENIED on call cap** |
+| T4 | four concurrent, remaining fits one | exactly 1 admit, 3 refused; K+R+U ≤ BUDGET; calls granted +1 |
+| T5 | duplicate settle / wrong-run / non-dispatched settle | `TokenProtocolError`, no bucket move |
+| T6 | actual (75) > allowance (60), total < budget | INTERNAL_ERROR (not BUDGET), K=75, overage visible, admissions halted, no clamp |
+| T7 | required request can't fit, total at budget | INCOMPLETE/BUDGET/NOT_RUN, no rating, findings [] |
+| T8 | violation + critical persistence failure | PERSISTENCE_ERROR primary |
+| T9 | usage missing/partial | settle UNKNOWN, capacity retained |
+| T10 | old reader meets new field/version | fail closed |
+| T11 | structured `.invoke` parses successfully | exactly one usage captured at `_create_chat_result`, one `settle_known`, one reservation consumed |
+| T12 | structured `.invoke` **parse fails** → free-text fallback | first reply's usage **captured** (settled) despite parser discarding payload; fallback issues a **new** dispatch/ticket (no missed/double charge) |
+| T13 | caller mutates inputs after `admit` | `payload_fingerprint` mismatch ⇒ ticket invalid / `TokenProtocolError`; no dispatch on a changed request |
+| T14 | non-token-capable profile with token admission enabled | rejected pre-dispatch, `UnsupportedProfileError` → INCOMPLETE/INTERNAL_ERROR; no provider request |
+| T15 | call cap refuses but token fits (or vice-versa) | **neither** resource granted (no partial grant); refusal is atomic |
+| T16 | provider omits raw `usage`/one raw count while normalized `usage_metadata` shows synthesized `0`/`0` | raw validation detects the omission ⇒ **`settle_unknown`** (U retains capacity), **not** a known 0/0 settlement; normalized integers are ignored for validity |
+| T17 | exception raised before any result hook | state-aware settlement (§15A.6): settle `settle_unknown` **only if the ticket is still `DISPATCHED`** (capacity retained), preserve any existing settlement/violation, original exception re-raised; `finally` **resets the request-scoped context**; no double settle (consistent with T20) |
+| T18 | Responses API or streaming route enabled | rejected pre-dispatch by capability validation (`UnsupportedProfileError`), not silently unmetered |
+| T19 | valid raw usage captured (settled known), then a **response-processing failure** occurs downstream | ticket stays `SETTLED_KNOWN` (usage accounted); wrapper does **not** re-settle to UNKNOWN; original exception preserved; request-scoped context reset in `finally` |
+| T20 | exception after dispatch but before any result hook | ticket still `DISPATCHED` ⇒ `settle_unknown` (U retains capacity); original exception re-raised; context reset; no double settle |
+
+**Handoff status:** this is a **proposed design with detailed contracts**, not an implementation commitment. Open before D can implement: provider-bound evidence per profile (E), parameter values (`TOKEN_BUDGET`/`CALL_CAP`/input multiplier/output allowance), and C's acceptance of the proposed scenarios. The usage seam (§15A.6) and failure contracts (§15A.4/15A.5) are specified; deployed-provider bound validity is **not** proven by offline tests.
 
 ---
 
@@ -1009,6 +1218,8 @@ Two **independent** version axes; do not conflate them:
 - **`schema_version`** (manifest/result record format) — e.g. `1` (legacy) → `2`.
 - **`check_rules_version`** — separate; `1` = legacy Q1–Q4 (blocking-only), `2` = R1–R8 with `CORRECTED`/`corrected_fields`.
 
+A **third, external** axis is the **requirements JSON-Schema version** (`docs/req/req-schema.json`, currently 1.2.0) — that is a D1 registry concern and is **not** the application `schema_version`; an application-format change is never forced merely because D1's schema changed. The token-admission design (§15A) adds **no new `stop_reason`** (violation → `INTERNAL_ERROR`, refusal → `BUDGET`), so it does not add a stop-reason row here.
+
 | Rollout stage | `schema_version` | `check_rules_version` | stop reasons | finding kinds | Q2 | Reader behaviour |
 |---|---|---|---|---|---|---|
 | Legacy artifacts (existing) | `1` | **absent** | five | `BLOCKING` only | on | **Explicit legacy path**: a schema-1 record with **no** `check_rules_version` is read under legacy Q1–Q4 semantics (allowed, not an error) |
@@ -1025,5 +1236,12 @@ Rules:
 - **Budget-only:** `schema_version=2, check_rules_version=1`, `run_outcome=INCOMPLETE`, `stop_reason=BUDGET`, `output_check=NOT_RUN`, `findings=[]` — accepted; findings are blocking-only.
 - **Full v2 with corrected finding:** `schema_version=2, check_rules_version=2`, `output_check=PASSED`, `findings=[R5 CORRECTED]`, `corrected_fields={sentiment_confidence:"low"}` — accepted.
 - **Rejected unknown-version:** e.g. `check_rules_version=3` (or `2` in a reader that supports only `1`), or a `CORRECTED` finding under `check_rules_version=1` — **rejected (fail closed)** with a typed reader error, not silently downgraded.
+
+**Token-capable records reconciled with this matrix (§15A.7).** `TokenAudit` is an **additive** field under `run_budget.token_audit`; it does not add a `stop_reason` or `check_rules_version`. Reader acceptance:
+- **Call-cap-only (no token admission):** `schema_version=2`, `run_budget` present without `token_audit` (or `token_audit.enabled=false`, `status="DISABLED"`). Readers accept; absence of `token_audit` or a `DISABLED` audit makes **no token-accounting claim**.
+- **Token-capable, budget-only checks:** `schema_version=2`, `check_rules_version=1`, `token_audit.status ∈ {ACTIVE, VIOLATED, UNSUPPORTED}` — readers accept, validate the `TokenAudit` conditional rules (§15A.5), and do **not** imply R1–R8 ran. **`enabled=true`+`status="UNSUPPORTED"` with null `budget`/counters is explicitly accepted**, and the record's `run_outcome` must be `INCOMPLETE` with `stop_reason=INTERNAL_ERROR`.
+- **Token-capable, full checker:** `schema_version=2`, `check_rules_version=2` with token audit — readers understand both.
+- **Require valid budgets:** `status="ACTIVE"` or `"VIOLATED"` **without** a present non-negative integer `budget` is **invalid** (fail closed). `status="UNSUPPORTED"` **must** have null `budget`/`K`/`R`/`U`/`cumulative_*` (non-null there is invalid).
+- **Fail closed (other violations):** a `schema_version=2` record whose `token_audit` violates the shape/conditional rules — e.g. `enabled=true` with `status="DISABLED"`; `ACTIVE` with `bound_violation=true`; `VIOLATED` with `violation=null`; `VIOLATED` with non-negative-required count negative; **negative `remaining` outside `VIOLATED`**; `units≠"tokens"`; `UNSUPPORTED` with a non-null budget — or a reader that cannot interpret `token_audit`, must **reject** — never coerce, never treat `U` as measured actual. The legacy `schema_version=1` path (no `run_budget`) is unchanged and makes no token claim.
 
 > **ADR 002 wording clarification (AR24 06):** “approved published target” in ADR 002 means approval to **draft this architecture target** — it is **not** final team adoption of the requirements and **not** a completed, tested ADD iteration. The new decisions (D1–D5) are genuine new proposals for review; they do not reopen or restate C2.
