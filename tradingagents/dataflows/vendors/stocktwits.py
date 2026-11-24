@@ -20,6 +20,7 @@ import http.client
 import json
 import logging
 from datetime import datetime
+from urllib.parse import urlsplit
 from urllib.request import Request, urlopen
 
 from tradingagents.dataflows.date_window import coverage_gap, in_window
@@ -95,9 +96,13 @@ def fetch_stocktwits_messages(
     caller never has to special-case None or exceptions.
     """
     url = _API.format(ticker=_stocktwits_symbol(ticker))
+    parsed = urlsplit(url)
+    if parsed.scheme != "https" or parsed.hostname != "api.stocktwits.com" or parsed.username or parsed.password:
+        return "<stocktwits unavailable: URL rejected by HTTPS host allowlist>"
     req = Request(url, headers={"User-Agent": _UA, "Accept": "application/json"})
     try:
-        with urlopen(req, timeout=timeout) as resp:
+        # B310 reviewed: the fixed HTTPS host allowlist above is tested before dispatch.
+        with urlopen(req, timeout=timeout) as resp:  # nosec B310
             data = json.loads(resp.read())
     except (OSError, http.client.HTTPException, json.JSONDecodeError) as exc:
         # OSError covers URLError/TimeoutError/connection resets; HTTPException

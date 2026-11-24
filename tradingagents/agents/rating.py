@@ -17,6 +17,9 @@ from __future__ import annotations
 
 import re
 import unicodedata
+from typing import Literal, overload
+
+RatingValue = Literal["Buy", "Overweight", "Hold", "Underweight", "Sell", "REVIEW"]
 
 # Canonical, ordered 5-tier scale (most bullish to most bearish).
 RATINGS_5_TIER: tuple[str, ...] = (
@@ -27,7 +30,7 @@ RATINGS_5_TIER: tuple[str, ...] = (
 # a tradeable position: it flags output that needs a human/re-run rather than
 # silently degrading to Hold. Callers that map the signal onto the 5-tier enum
 # (e.g. ``PortfolioRating(signal)``) should guard with ``is_review`` first.
-RATING_REVIEW = "REVIEW"
+RATING_REVIEW: Literal["REVIEW"] = "REVIEW"
 
 _RATING_SET = {r.lower() for r in RATINGS_5_TIER}
 
@@ -93,6 +96,14 @@ def extract_rating(text: str) -> str | None:
     return found[0] if found and len(set(found)) == 1 else None
 
 
+@overload
+def parse_rating(text: str, default: RatingValue = RATING_REVIEW) -> RatingValue: ...
+
+
+@overload
+def parse_rating(text: str, default: str) -> str: ...
+
+
 def parse_rating(text: str, default: str = RATING_REVIEW) -> str:
     """Extract a 5-tier rating, or ``REVIEW`` when the decision has none.
 
@@ -103,7 +114,7 @@ def parse_rating(text: str, default: str = RATING_REVIEW) -> str:
     return rating if rating is not None else default
 
 
-def run_rating(final_state: dict) -> str:
+def run_rating(final_state: dict) -> RatingValue:
     """A finished run's rating: the Portfolio Manager's own, else read from its decision.
 
     The fallback serves a state without ``final_rating``, such as a run an older

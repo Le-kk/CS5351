@@ -1,0 +1,61 @@
+{
+  "exports": [
+    "CheckResult",
+    "ConsentState",
+    "Finding",
+    "FrozenSnapshot",
+    "InputError",
+    "InputMode",
+    "RunContext",
+    "RunResult"
+  ],
+  "parameters": [
+    "run_context",
+    "config",
+    "selected_analysts",
+    "graph_factory",
+    "event_sink",
+    "redactor",
+    "engine_runner",
+    "callbacks",
+    "html",
+    "message_log_provider"
+  ],
+  "parameter_kinds": {
+    "run_context": "POSITIONAL_OR_KEYWORD",
+    "config": "KEYWORD_ONLY",
+    "selected_analysts": "KEYWORD_ONLY",
+    "graph_factory": "KEYWORD_ONLY",
+    "event_sink": "KEYWORD_ONLY",
+    "redactor": "KEYWORD_ONLY",
+    "engine_runner": "KEYWORD_ONLY",
+    "callbacks": "KEYWORD_ONLY",
+    "html": "KEYWORD_ONLY",
+    "message_log_provider": "KEYWORD_ONLY"
+  },
+  "result_fields": [
+    "run_id",
+    "ticker",
+    "analysis_date",
+    "input_mode",
+    "run_outcome",
+    "stop_reason",
+    "final_rating",
+    "output_check",
+    "findings",
+    "manifest_path",
+    "report_path"
+  ],
+  "parameter_defaults": {
+    "run_context": "required",
+    "config": "None",
+    "selected_analysts": "None",
+    "graph_factory": "None",
+    "event_sink": "None",
+    "redactor": "None",
+    "engine_runner": "None",
+    "callbacks": "None",
+    "html": "True",
+    "message_log_provider": "None"
+  }
+}

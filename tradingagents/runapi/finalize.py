@@ -2,10 +2,10 @@
 
 from __future__ import annotations
 
-from .result import CheckResult, Finding, RunResult
+from .result import CheckResult, Finding, InputModeValue, Rating, RunResult, StopReason
 
 
-def classify_exception(exc: BaseException) -> str:
+def classify_exception(exc: BaseException) -> StopReason:
     if isinstance(exc, (KeyboardInterrupt, InterruptedError)):
         return "INTERRUPTED"
     name = type(exc).__name__.casefold()
@@ -25,10 +25,11 @@ def classify_exception(exc: BaseException) -> str:
 
 class OutcomeFinalizer:
     def finalize(self, *, run_id: str, ticker: str, analysis_date: str,
-                 input_mode: str, final_rating: str | None = None,
+                 input_mode: InputModeValue, final_rating: Rating | None = None,
                  check_result: CheckResult | None = None,
                  exc: BaseException | None = None,
                  persistence_error: bool = False) -> RunResult:
+        exc_reason: StopReason | None
         if persistence_error:
             exc_reason = "PERSISTENCE_ERROR"
         elif exc is not None:
@@ -54,6 +55,6 @@ class OutcomeFinalizer:
         )
 
     def incomplete(self, *, run_id: str, ticker: str, analysis_date: str,
-                   input_mode: str, reason: str) -> RunResult:
+                   input_mode: InputModeValue, reason: StopReason) -> RunResult:
         return RunResult(run_id, ticker, analysis_date, input_mode, "INCOMPLETE",
                          reason, None, "NOT_RUN", (), None, None)

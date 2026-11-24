@@ -34,6 +34,7 @@ CRITICAL_FILES = frozenset(
         ".opencode/permissions.jsonc",
         "docs/code-governance/dependency-audit-exceptions.txt",
         "docs/code-governance/dependency-reviews.md",
+        "docs/code-governance/public-api-contract.json",
     }
 )
 LOG_PREFIX = "AI-log/"

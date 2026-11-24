@@ -22,12 +22,14 @@ import logging
 import random
 import re
 import time
-import xml.etree.ElementTree as ET
 from collections.abc import Iterable
 from datetime import UTC, datetime, timedelta
 from urllib.error import HTTPError
-from urllib.parse import urlencode
+from urllib.parse import urlencode, urlsplit
 from urllib.request import Request, urlopen
+
+from defusedxml import ElementTree as ET
+from defusedxml.common import DefusedXmlException
 
 from tradingagents.dataflows.date_window import coverage_gap, in_window
 from tradingagents.dataflows.symbols import crypto_base
@@ -201,9 +203,14 @@ def _fetch_subreddit_rss(
     discussion that was never observed (#1295).
     """
     url = _RSS.format(sub=sub, qs=_search_qs(ticker, limit))
+    parsed = urlsplit(url)
+    if parsed.scheme != "https" or parsed.hostname != "www.reddit.com" or parsed.username or parsed.password:
+        logger.warning("Reddit feed URL rejected by the HTTPS host allowlist")
+        return None
     req = Request(url, headers={"User-Agent": _UA})
     try:
-        with urlopen(req, timeout=timeout) as resp:
+        # B310 reviewed: the fixed HTTPS host allowlist above is tested before dispatch.
+        with urlopen(req, timeout=timeout) as resp:  # nosec B310
             root = ET.fromstring(_read_capped(resp))
     except HTTPError as exc:
         if exc.code == 429 and _retry:
@@ -219,7 +226,7 @@ def _fetch_subreddit_rss(
             return _fetch_subreddit_rss(ticker, sub, limit, timeout, _retry=False)
         logger.warning("Reddit RSS fetch failed for r/%s · %s: %s", sub, ticker, exc)
         return None
-    except (OSError, http.client.HTTPException, ET.ParseError) as exc:
+    except (OSError, http.client.HTTPException, ET.ParseError, DefusedXmlException) as exc:
         # OSError covers URLError/TimeoutError/connection resets; HTTPException
         # covers chunked-transfer errors (IncompleteRead/BadStatusLine, #1024).
         logger.warning("Reddit RSS fetch failed for r/%s · %s: %s", sub, ticker, exc)
