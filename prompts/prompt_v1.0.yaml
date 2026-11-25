@@ -1,0 +1,30 @@
+version: '1.0'
+scope: intermediate instruction fragments; not entire role prompts
+runtime_source: src/tradingagents/agents/context.py
+configuration:
+  concise_intermediate_reports: true
+  compact_evidence_handoff: false
+analyst: '
+
+  Evidence-first brevity: aim for about 450 words, exceeding this when needed to retain
+  required evidence or disclosures. State material facts once, with source, date/fiscal
+  period, units and comparison basis for numeric claims. Retain conflicting evidence,
+  missing/unavailable data, historical limitations and uncertainty. Do not reproduce
+  whole tool tables or repeat upstream reports; select decision-relevant values and
+  explain their implications. For debates, add your distinct argument and specific
+  rebuttals rather than retelling all inputs. Preserve every required labelled field,
+  table, safety rule and portfolio condition. Brevity never permits invented evidence
+  or omission of a material caveat.'
+debate: '
+
+  Evidence-first brevity: aim for about 220 words, exceeding this when needed to retain
+  required evidence or disclosures. State material facts once, with source, date/fiscal
+  period, units and comparison basis for numeric claims. Retain conflicting evidence,
+  missing/unavailable data, historical limitations and uncertainty. Do not reproduce
+  whole tool tables or repeat upstream reports; select decision-relevant values and
+  explain their implications. For debates, add your distinct argument and specific
+  rebuttals rather than retelling all inputs. Preserve every required labelled field,
+  table, safety rule and portfolio condition. Brevity never permits invented evidence
+  or omission of a material caveat.'
+research_manager: ''
+trader: ''

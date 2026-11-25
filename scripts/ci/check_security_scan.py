@@ -11,7 +11,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 REVIEWED_NOSEC = {
     "tradingagents/dataflows/vendors/reddit.py",
+    "src/tradingagents/dataflows/vendors/reddit.py",
     "tradingagents/dataflows/vendors/stocktwits.py",
+    "src/tradingagents/dataflows/vendors/stocktwits.py",
 }
 
 
@@ -59,7 +61,7 @@ def main() -> int:
     args.output = args.output.resolve()
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.unlink(missing_ok=True)  # never reuse a previous successful report
-    expected = {p.resolve() for name in ("tradingagents", "cli") for p in (ROOT / name).rglob("*.py")}
+    expected = {p.resolve() for name in ("src/tradingagents", "src/cli", "src/demo") for p in (ROOT / name).rglob("*.py")}
     try:
         suppressions = nosec_findings(expected, ROOT)
         if suppressions:
@@ -67,7 +69,7 @@ def main() -> int:
                 print(f"FAIL SECURITY_SCAN: {error}")
             return 1
         result = subprocess.run(
-            [sys.executable, "-m", "bandit", "-r", "tradingagents", "cli", "-ll", "-f", "json", "-o", str(args.output)],
+            [sys.executable, "-m", "bandit", "-r", "src/tradingagents", "src/cli", "src/demo", "-ll", "-f", "json", "-o", str(args.output)],
             cwd=ROOT, timeout=120, check=False,
         )
         report = json.loads(args.output.read_text())

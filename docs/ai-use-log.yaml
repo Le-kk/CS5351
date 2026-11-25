@@ -35,17 +35,17 @@ members:
   coverage: available_selected_records; contributor_confirmation_pending
   directory: AI-log/Member-B/
 - member: C
-  records: 3
+  records: 6
   provenance_indexes: 0
   coverage: available_selected_records; contributor_confirmation_pending
   directory: AI-log/Member-C/
 - member: D
-  records: 3
+  records: 4
   provenance_indexes: 0
   coverage: available_selected_records; contributor_confirmation_pending
   directory: AI-log/Member-D/
 - member: E
-  records: 36
+  records: 40
   provenance_indexes: 4
   coverage: available_selected_records; contributor_confirmation_pending
   directory: AI-log/Member-E/
@@ -101,21 +101,21 @@ source_records:
   member: B
   path: AI-log/Member-B/2026-11-18_17-10-54.md
   kind: ai_use_record
-  sha256: 5afe7f1002dfb31f98d6647decb9fa4578fd61092a986bc1a997750e02c9db50
+  sha256: 861996aff9e3fc0954446ff001c1c952555b374cd05fbcad6dc7bc4584d63d04
   record_date: '2026-11-18'
   date_basis: filename; session may span later actions
 - id: B-02
   member: B
   path: AI-log/Member-B/2026-11-21_16-17-01.md
   kind: ai_use_record
-  sha256: a52badfee8723c0f63466ab2566b0f07ebec2d835e8333fe210d13b6c2fd1a6d
+  sha256: d0b50a6b26946eed1a9affa592f7c2f312531bf50309b2f96a08b249762a5d56
   record_date: '2026-11-21'
   date_basis: filename; session may span later actions
 - id: B-03
   member: B
   path: AI-log/Member-B/2026-11-24_08-23-45.md
   kind: ai_use_record
-  sha256: 00b4c391626af539e08f71564ab04eb594735748b450f1c26f67fcb9b9566c03
+  sha256: 47b5f66c105d2eea8b77e2f6652c116785f51e5d309c0dd4464f8060b4a8df43
   record_date: '2026-11-24'
   date_basis: filename; session may span later actions
   previous_snapshot_sha256: b2651df09eb27726f1144edc4b1b79563e05e84e95e276fbbca543f12389df42
@@ -447,6 +447,62 @@ source_records:
   sha256: 470dd90ed3ca0ef5bab011168196e79f3e9443971ca3a51f858940230000ff22
   record_date: '2026-11-24'
   date_basis: filename; session may span later actions
+- id: C-04
+  member: C
+  path: AI-log/Member-C/2026-11-25-fit-criterion-coverage-reassessment-session.md
+  kind: ai_use_record
+  record_date: '2026-11-25'
+  date_basis: source filename and retained text
+  sha256: ef386387487503691a1b39c0969a5280a1d00ec8b977ac866b511792160cdf06
+- id: C-05
+  member: C
+  path: AI-log/Member-C/2026-11-25-requirements-test-alignment-and-disclaimer-probe-session.md
+  kind: ai_use_record
+  record_date: '2026-11-25'
+  date_basis: source filename and retained text
+  sha256: d5df86464fcc186213b9e1741f3b61ff62848f3fd911e34d69757b05657d483e
+- id: C-06
+  member: C
+  path: AI-log/Member-C/2026_11_25_verification_and_evidence_session.md
+  kind: ai_use_record
+  record_date: '2026-11-25'
+  date_basis: source filename and retained text
+  sha256: 48efc46ca28069b894d9f96fe50e582e1666d1da0c070f5fad3ad973dac9d83d
+- id: D-04
+  member: D
+  path: AI-log/Member-D/2026-11-23_20-10-00.md
+  kind: ai_use_record
+  record_date: '2026-11-25'
+  date_basis: source filename and retained text
+  sha256: cbab72bf18d37f02c08066f2525d272203e840234d79ca455d00151f7efb66bd
+- id: E-41
+  member: E
+  path: AI-log/Member-E/2026-11-25-compact-evidence-handoff.md
+  kind: ai_use_record
+  record_date: '2026-11-25'
+  date_basis: source filename and retained text
+  sha256: 723e50451906dca654d4d209893ea820495018f78e7ff0e02f4a46903cf44322
+- id: E-42
+  member: E
+  path: AI-log/Member-E/2026-11-25-demo-refresh-recovery.md
+  kind: ai_use_record
+  record_date: '2026-11-25'
+  date_basis: source filename and retained text
+  sha256: a723e7b64bf86c88f3dd84db1ede780054e06cd99f44dfe2733c4b8a35559b47
+- id: E-43
+  member: E
+  path: AI-log/Member-E/2026-11-25-nocode-console.md
+  kind: ai_use_record
+  record_date: '2026-11-25'
+  date_basis: source filename and retained text
+  sha256: cebbf26b7c64e37c756608ae9251c57b2cf89f616299f8250fc3fa60c799f447
+- id: E-44
+  member: E
+  path: AI-log/Member-E/2026-11-25-course-layout-sync.md
+  kind: ai_use_record
+  record_date: '2026-11-25'
+  date_basis: actual task date
+  sha256: 89cb50cb28962b478c5125091967670cfdc1f41bba3842ffdaceb05c0d82df4a
 events:
 - id: B-REVIEW
   member: B
@@ -1322,6 +1378,55 @@ events:
   - path: docs/verification/delivery-cleanup-2026-11-25.json
     availability: present
     purpose: document-only coverage/link/hash and preservation verification
+- id: E-REAL-CONSOLE
+  member: E
+  title: Real-model English console integration
+  source_records:
+  - E-43
+  task: Real-model English console integration
+  intervention: Explicit user instruction; no contributor adoption/sign-off inferred.
+  changes: Imported supplied frontend, connected the shared run API, discussions/files/usage/history.
+  verification:
+    basis: reported actual developer integration evidence
+    summary: Actual real run and developer negative probes; no semantic approval.
+  limitations: See dated source; not independent semantic acceptance or a universal performance claim.
+- id: E-COMPACT-HANDOFF
+  member: E
+  title: Compact intermediate evidence experiment
+  source_records:
+  - E-41
+  task: Compact intermediate evidence experiment
+  intervention: Explicit user instruction; no contributor adoption/sign-off inferred.
+  changes: Opt-in same-call compact writing, preserving complete generated output and core graph.
+  verification:
+    basis: reported actual developer integration evidence
+    summary: Control 130787; final candidates 96160/95023; 26.91% mean decrease for one NVDA case only.
+  limitations: See dated source; not independent semantic acceptance or a universal performance claim.
+- id: E-REFRESH-RECOVERY
+  member: E
+  title: Refresh and active-run recovery
+  source_records:
+  - E-42
+  task: Refresh and active-run recovery
+  intervention: Explicit user instruction; no contributor adoption/sign-off inferred.
+  changes: Retained run ID, visible active-run recovery, timeout configuration and preserved interrupted history.
+  verification:
+    basis: reported actual developer integration evidence
+    summary: Actual browser reload plus 2022-pass regression at that earlier snapshot.
+  limitations: See dated source; not independent semantic acceptance or a universal performance claim.
+- id: E-COURSE-LAYOUT-SYNC
+  member: E
+  title: Course-path synchronization and evidence assembly
+  source_records:
+  - E-44
+  task: Course-path synchronization and evidence assembly
+  intervention: Explicit user instruction; no contributor adoption/sign-off inferred.
+  changes: Preserved remote/local work, moved one source/test tree, added frontend verification and honest delivery
+    assembly.
+  verification:
+    basis: reported actual developer integration evidence
+    summary: 2033 passed; static/schema/security/build/audit/clean-wheel checks; hosted status pending.
+  limitations: See dated source; not independent semantic acceptance or a universal performance claim.
 outstanding_records:
 - id: G-A
   owner: A
@@ -1383,3 +1488,12 @@ integrity:
     member_confirmation_groups: 6
   archive_policy: Nine obsolete/duplicate untracked files retained under ignored local archive with original hashes;
     not delivered as current rules/tests. No original historical AI excerpt deleted.
+  current_counts:
+    source_records: 64
+    events: 39
+integration_refresh:
+  date: '2026-11-25'
+  source_records: 64
+  events: 39
+  remote_baseline: be6b902
+  new_delivery_status: Report assembly draft; contributor verification and missing D5/D6 inputs remain open.

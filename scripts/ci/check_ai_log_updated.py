@@ -18,6 +18,9 @@ import tempfile
 from pathlib import Path
 
 CRITICAL_PREFIXES = (
+    "src/",
+    "test/",
+    "demo/",
     "tradingagents/",
     "cli/",
     "tests/",

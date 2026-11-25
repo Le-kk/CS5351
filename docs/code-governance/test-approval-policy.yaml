@@ -40,6 +40,8 @@ approvers:
 # Paths whose changes are feature implementation. They must appear only after
 # the test approval commit.
 implementation_prefixes:
+  - "src/"
+  - "demo/"
   - "tradingagents/"
   - "cli/"
   - "prompts/"
@@ -52,6 +54,7 @@ implementation_files:
 
 # Tests and verification code also need a plan. They are not a blanket exemption.
 test_prefixes:
+  - "test/"
   - "tests/"
   - "scripts/"
 

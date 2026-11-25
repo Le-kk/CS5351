@@ -1,3 +1,5 @@
+> E integration update, 2026-11-25: canonical source/test paths now follow course D8. Compatibility aliases remain. Latest compact-format measurements are [separate developer evidence](../verification/compact-evidence-handoff-2026-11-25.md), not budget enforcement or independent semantic acceptance.
+
 # Final requirement trace matrix — E1
 
 Assembled by E on 2026-11-25 (Asia/Hong_Kong). Source baseline: team main
@@ -13,7 +15,7 @@ adopt or rewrite requirements. B's [trace inputs](traceability-inputs-member-b.m
 [contracts](interface-contracts.md), [invariants](invariants.md),
 [runtime policies](runtime-policy-catalog.md) and [blueprint](../../architecture-blueprint.md)
 supply allocations. C's [mapping](../verification/requirement-test-mapping.md) and
-[dated reruns](../verification/registry-test-update-2026-11-25.md) supply verification
+[retained verification index](../verification/evidence-index.md) supply verification
 references. Current source supplies implementation links in place of an additional
 D handoff. E owns assembly; A verifies IDs/adoption, B verifies allocations and
 boundaries, C verifies tests/acceptance, and D verifies implementation/measurement
@@ -73,8 +75,8 @@ Common evidence above applies to every row; per-row claims are deliberately narr
 | Trace field | Allocation / evidence |
 |---|---|
 | Registry status (A) | proposed |
-| Component / source | [tradingagents/runapi/result.py](../../tradingagents/runapi/result.py); [tradingagents/runapi/finalize.py](../../tradingagents/runapi/finalize.py); [tradingagents/runapi/execution.py](../../tradingagents/runapi/execution.py) |
-| Tests / evidence | [tests/member_c_verification/offline/test_nfr001_failures.py](../../tests/member_c_verification/offline/test_nfr001_failures.py); [tests/member_c_verification/offline/test_nfr004_persistence.py](../../tests/member_c_verification/offline/test_nfr004_persistence.py); [tests/member_c_verification/offline/test_registry_gaps.py](../../tests/member_c_verification/offline/test_registry_gaps.py); [tests/member_c_verification/test_registry_result_repairs.py](../../tests/member_c_verification/test_registry_result_repairs.py) |
+| Component / source | [tradingagents/runapi/result.py](../../src/tradingagents/runapi/result.py); [tradingagents/runapi/finalize.py](../../src/tradingagents/runapi/finalize.py); [tradingagents/runapi/execution.py](../../src/tradingagents/runapi/execution.py) |
+| Tests / evidence | [tests/member_c_verification/offline/test_nfr001_failures.py](../../test/offline/member_c_verification/offline/test_nfr001_failures.py); [tests/member_c_verification/offline/test_nfr004_persistence.py](../../test/offline/member_c_verification/offline/test_nfr004_persistence.py); [tests/member_c_verification/offline/test_registry_gaps.py](../../test/offline/member_c_verification/offline/test_registry_gaps.py); [tests/member_c_verification/test_registry_result_repairs.py](../../test/offline/member_c_verification/test_registry_result_repairs.py) |
 | Runtime monitor / observation | run.terminal; manifest run_outcome/stop_reason/output_check |
 | Implementation / verification assessment | Partial: six reasons and H2/H4 result guards present; full new coverage/correction payload is not implemented. |
 | Contributors | A: requirement; B: architecture; C: independent verification; D: implementation; E: integration |
@@ -84,8 +86,8 @@ Common evidence above applies to every row; per-row claims are deliberately narr
 | Trace field | Allocation / evidence |
 |---|---|
 | Registry status (A) | proposed |
-| Component / source | [tradingagents/runapi/checks.py](../../tradingagents/runapi/checks.py) |
-| Tests / evidence | [tests/test_no_data_handling.py](../../tests/test_no_data_handling.py) |
+| Component / source | [tradingagents/runapi/checks.py](../../src/tradingagents/runapi/checks.py) |
+| Tests / evidence | [tests/test_no_data_handling.py](../../test/offline/test_no_data_handling.py) |
 | Runtime monitor / observation | No evidence-ID resolver monitor implemented |
 | Implementation / verification assessment | Gap: no complete evidence registry/resolver; checker is an allocation target only. |
 | Contributors | A: requirement; B: architecture; C: independent verification; D: implementation; E: integration |
@@ -95,8 +97,8 @@ Common evidence above applies to every row; per-row claims are deliberately narr
 | Trace field | Allocation / evidence |
 |---|---|
 | Registry status (A) | partial |
-| Component / source | [tradingagents/graph/checkpointer.py](../../tradingagents/graph/checkpointer.py); [tradingagents/graph/trading_graph.py](../../tradingagents/graph/trading_graph.py) |
-| Tests / evidence | [tests/test_checkpoint_resume.py](../../tests/test_checkpoint_resume.py); [tests/test_checkpoint_lifecycle.py](../../tests/test_checkpoint_lifecycle.py); [tests/test_graph_end_to_end.py](../../tests/test_graph_end_to_end.py) |
+| Component / source | [tradingagents/graph/checkpointer.py](../../src/tradingagents/graph/checkpointer.py); [tradingagents/graph/trading_graph.py](../../src/tradingagents/graph/trading_graph.py) |
+| Tests / evidence | [tests/test_checkpoint_resume.py](../../test/offline/test_checkpoint_resume.py); [tests/test_checkpoint_lifecycle.py](../../test/offline/test_checkpoint_lifecycle.py); [tests/test_graph_end_to_end.py](../../test/offline/test_graph_end_to_end.py) |
 | Runtime monitor / observation | Checkpoint records; no complete CLI list/resume acceptance monitor |
 | Implementation / verification assessment | Partial: checkpoint lifecycle exists; complete user list/resume/rerun and identity contract require acceptance. |
 | Contributors | A: requirement; B: architecture; C: independent verification; D: implementation; E: integration |
@@ -106,8 +108,8 @@ Common evidence above applies to every row; per-row claims are deliberately narr
 | Trace field | Allocation / evidence |
 |---|---|
 | Registry status (A) | partial |
-| Component / source | [tradingagents/dataflows/date_window.py](../../tradingagents/dataflows/date_window.py); [tradingagents/dataflows/router.py](../../tradingagents/dataflows/router.py) |
-| Tests / evidence | [tests/test_tool_date_enforcement.py](../../tests/test_tool_date_enforcement.py); [tests/test_news_lookahead.py](../../tests/test_news_lookahead.py); [tests/test_fundamentals_lookahead.py](../../tests/test_fundamentals_lookahead.py); [tests/test_social_lookahead.py](../../tests/test_social_lookahead.py); [tests/test_undated_tools_as_of.py](../../tests/test_undated_tools_as_of.py) |
+| Component / source | [tradingagents/dataflows/date_window.py](../../src/tradingagents/dataflows/date_window.py); [tradingagents/dataflows/router.py](../../src/tradingagents/dataflows/router.py) |
+| Tests / evidence | [tests/test_tool_date_enforcement.py](../../test/offline/test_tool_date_enforcement.py); [tests/test_news_lookahead.py](../../test/offline/test_news_lookahead.py); [tests/test_fundamentals_lookahead.py](../../test/offline/test_fundamentals_lookahead.py); [tests/test_social_lookahead.py](../../test/offline/test_social_lookahead.py); [tests/test_undated_tools_as_of.py](../../test/offline/test_undated_tools_as_of.py) |
 | Runtime monitor / observation | Date-window decisions/vendor diagnostics; no universal all-channel audit |
 | Implementation / verification assessment | Partial: date filtering exists; historical snapshots and all-channel no-look-ahead are not established. |
 | Contributors | A: requirement; B: architecture; C: independent verification; D: implementation; E: integration |
@@ -117,8 +119,8 @@ Common evidence above applies to every row; per-row claims are deliberately narr
 | Trace field | Allocation / evidence |
 |---|---|
 | Registry status (A) | partial |
-| Component / source | [tradingagents/dataflows/errors.py](../../tradingagents/dataflows/errors.py); [tradingagents/runapi/finalize.py](../../tradingagents/runapi/finalize.py) |
-| Tests / evidence | [tests/test_no_data_handling.py](../../tests/test_no_data_handling.py) |
+| Component / source | [tradingagents/dataflows/errors.py](../../src/tradingagents/dataflows/errors.py); [tradingagents/runapi/finalize.py](../../src/tradingagents/runapi/finalize.py) |
+| Tests / evidence | [tests/test_no_data_handling.py](../../test/offline/test_no_data_handling.py) |
 | Runtime monitor / observation | Typed errors; manifest stop_reason; run.terminal |
 | Implementation / verification assessment | Partial: typed data failure exists; complete channel coverage/core catalog and record equality missing. |
 | Contributors | A: requirement; B: architecture; C: independent verification; D: implementation; E: integration |
@@ -128,8 +130,8 @@ Common evidence above applies to every row; per-row claims are deliberately narr
 | Trace field | Allocation / evidence |
 |---|---|
 | Registry status (A) | partial |
-| Component / source | [tradingagents/dataflows/vendors/yahoo/snapshot.py](../../tradingagents/dataflows/vendors/yahoo/snapshot.py); [tradingagents/dataflows/vendors/yahoo/fundamentals.py](../../tradingagents/dataflows/vendors/yahoo/fundamentals.py) |
-| Tests / evidence | [tests/test_yfinance_stale_ohlcv_guard.py](../../tests/test_yfinance_stale_ohlcv_guard.py); [tests/test_statement_knowledge_time.py](../../tests/test_statement_knowledge_time.py) |
+| Component / source | [tradingagents/dataflows/vendors/yahoo/snapshot.py](../../src/tradingagents/dataflows/vendors/yahoo/snapshot.py); [tradingagents/dataflows/vendors/yahoo/fundamentals.py](../../src/tradingagents/dataflows/vendors/yahoo/fundamentals.py) |
+| Tests / evidence | [tests/test_yfinance_stale_ohlcv_guard.py](../../test/offline/test_yfinance_stale_ohlcv_guard.py); [tests/test_statement_knowledge_time.py](../../test/offline/test_statement_knowledge_time.py) |
 | Runtime monitor / observation | Vendor snapshot/vintage diagnostics; no six-boundary monitor |
 | Implementation / verification assessment | Partial: existing price/fiscal checks do not implement all six freshness boundaries or adopted thresholds. |
 | Contributors | A: requirement; B: architecture; C: independent verification; D: implementation; E: integration |
@@ -139,8 +141,8 @@ Common evidence above applies to every row; per-row claims are deliberately narr
 | Trace field | Allocation / evidence |
 |---|---|
 | Registry status (A) | proposed |
-| Component / source | [tradingagents/agents/rating.py](../../tradingagents/agents/rating.py); [tradingagents/agents/context.py](../../tradingagents/agents/context.py); [tradingagents/runapi/checks.py](../../tradingagents/runapi/checks.py) |
-| Tests / evidence | [tests/member_c_verification/offline/test_fr005_ratings.py](../../tests/member_c_verification/offline/test_fr005_ratings.py); [tests/member_c_verification/offline/test_fr004_propagation.py](../../tests/member_c_verification/offline/test_fr004_propagation.py); [tests/member_b_remediation/test_r4_research_manager_context.py](../../tests/member_b_remediation/test_r4_research_manager_context.py) |
+| Component / source | [tradingagents/agents/rating.py](../../src/tradingagents/agents/rating.py); [tradingagents/agents/context.py](../../src/tradingagents/agents/context.py); [tradingagents/runapi/checks.py](../../src/tradingagents/runapi/checks.py) |
+| Tests / evidence | [tests/member_c_verification/offline/test_fr005_ratings.py](../../test/offline/member_c_verification/offline/test_fr005_ratings.py); [tests/member_c_verification/offline/test_fr004_propagation.py](../../test/offline/member_c_verification/offline/test_fr004_propagation.py); [tests/member_b_remediation/test_r4_research_manager_context.py](../../test/offline/member_b_remediation/test_r4_research_manager_context.py) |
 | Runtime monitor / observation | output.check; final_rating; rendered stage labels |
 | Implementation / verification assessment | Partial: labels/context exist; deterministic banned-ownership R3 not implemented. |
 | Contributors | A: requirement; B: architecture; C: independent verification; D: implementation; E: integration |
@@ -150,7 +152,7 @@ Common evidence above applies to every row; per-row claims are deliberately narr
 | Trace field | Allocation / evidence |
 |---|---|
 | Registry status (A) | proposed |
-| Component / source | [tradingagents/agents/schemas.py](../../tradingagents/agents/schemas.py); [tradingagents/runapi/checks.py](../../tradingagents/runapi/checks.py) |
+| Component / source | [tradingagents/agents/schemas.py](../../src/tradingagents/agents/schemas.py); [tradingagents/runapi/checks.py](../../src/tradingagents/runapi/checks.py) |
 | Tests / evidence | No dedicated acceptance probe linked in C’s current row; see the gap assessment and common evidence above. |
 | Runtime monitor / observation | No R4-R6 sentiment correction monitor |
 | Implementation / verification assessment | Gap: schemas do not implement band/cap rules or final safe correction and re-render pipeline. |
@@ -161,8 +163,8 @@ Common evidence above applies to every row; per-row claims are deliberately narr
 | Trace field | Allocation / evidence |
 |---|---|
 | Registry status (A) | partial |
-| Component / source | [tradingagents/runapi/finalize.py](../../tradingagents/runapi/finalize.py); [tradingagents/agents/structured.py](../../tradingagents/agents/structured.py) |
-| Tests / evidence | [tests/member_c_verification/offline/test_nfr001_failures.py](../../tests/member_c_verification/offline/test_nfr001_failures.py); [tests/test_vendor_errors.py](../../tests/test_vendor_errors.py); [tests/test_structured_agents.py](../../tests/test_structured_agents.py) |
+| Component / source | [tradingagents/runapi/finalize.py](../../src/tradingagents/runapi/finalize.py); [tradingagents/agents/structured.py](../../src/tradingagents/agents/structured.py) |
+| Tests / evidence | [tests/member_c_verification/offline/test_nfr001_failures.py](../../test/offline/member_c_verification/offline/test_nfr001_failures.py); [tests/test_vendor_errors.py](../../test/offline/test_vendor_errors.py); [tests/test_structured_agents.py](../../test/offline/test_structured_agents.py) |
 | Runtime monitor / observation | run.terminal; typed stop_reason |
 | Implementation / verification assessment | Partial: typed outcomes/fallback present; all required model/data failure profiles need end-to-end acceptance. |
 | Contributors | A: requirement; B: architecture; C: independent verification; D: implementation; E: integration |
@@ -172,8 +174,8 @@ Common evidence above applies to every row; per-row claims are deliberately narr
 | Trace field | Allocation / evidence |
 |---|---|
 | Registry status (A) | partial |
-| Component / source | [tradingagents/graph/analyst_execution.py](../../tradingagents/graph/analyst_execution.py); [tradingagents/graph/setup.py](../../tradingagents/graph/setup.py) |
-| Tests / evidence | [tests/test_analyst_execution.py](../../tests/test_analyst_execution.py) |
+| Component / source | [tradingagents/graph/analyst_execution.py](../../src/tradingagents/graph/analyst_execution.py); [tradingagents/graph/setup.py](../../src/tradingagents/graph/setup.py) |
+| Tests / evidence | [tests/test_analyst_execution.py](../../test/offline/test_analyst_execution.py) |
 | Runtime monitor / observation | No retained add/remove change-cost measurement |
 | Implementation / verification assessment | Partial: registration/execution tests exist; required changed-file/line experiment absent. |
 | Contributors | A: requirement; B: architecture; C: independent verification; D: implementation; E: integration |
@@ -183,8 +185,8 @@ Common evidence above applies to every row; per-row claims are deliberately narr
 | Trace field | Allocation / evidence |
 |---|---|
 | Registry status (A) | partial |
-| Component / source | [tradingagents/runapi/events.py](../../tradingagents/runapi/events.py); [tradingagents/runapi/execution.py](../../tradingagents/runapi/execution.py) |
-| Tests / evidence | [tests/member_c_verification/offline/test_nfr002_events.py](../../tests/member_c_verification/offline/test_nfr002_events.py); [tests/member_b_remediation/test_r1_logging_redaction.py](../../tests/member_b_remediation/test_r1_logging_redaction.py) |
+| Component / source | [tradingagents/runapi/events.py](../../src/tradingagents/runapi/events.py); [tradingagents/runapi/execution.py](../../src/tradingagents/runapi/execution.py) |
+| Tests / evidence | [tests/member_c_verification/offline/test_nfr002_events.py](../../test/offline/member_c_verification/offline/test_nfr002_events.py); [tests/member_b_remediation/test_r1_logging_redaction.py](../../test/offline/member_b_remediation/test_r1_logging_redaction.py) |
 | Runtime monitor / observation | JSONL ts/elapsed_ms/node/event_outcome; run.budget |
 | Implementation / verification assessment | Partial: actual lifecycle events and call-budget diagnostics exist; all requested fields/sinks and time/token stop kinds not complete. |
 | Contributors | A: requirement; B: architecture; C: independent verification; D: implementation; E: integration |
@@ -194,8 +196,8 @@ Common evidence above applies to every row; per-row claims are deliberately narr
 | Trace field | Allocation / evidence |
 |---|---|
 | Registry status (A) | partial |
-| Component / source | [tradingagents/runapi/context.py](../../tradingagents/runapi/context.py); [tradingagents/runapi/persist.py](../../tradingagents/runapi/persist.py); [tradingagents/runapi/reporting.py](../../tradingagents/runapi/reporting.py) |
-| Tests / evidence | [tests/member_c_verification/offline/test_nfr004_persistence.py](../../tests/member_c_verification/offline/test_nfr004_persistence.py); [tests/member_c_verification/offline/test_fr006_provenance.py](../../tests/member_c_verification/offline/test_fr006_provenance.py); [tests/member_b_remediation/test_r5_terminal_visibility.py](../../tests/member_b_remediation/test_r5_terminal_visibility.py) |
+| Component / source | [tradingagents/runapi/context.py](../../src/tradingagents/runapi/context.py); [tradingagents/runapi/persist.py](../../src/tradingagents/runapi/persist.py); [tradingagents/runapi/reporting.py](../../src/tradingagents/runapi/reporting.py) |
+| Tests / evidence | [tests/member_c_verification/offline/test_nfr004_persistence.py](../../test/offline/member_c_verification/offline/test_nfr004_persistence.py); [tests/member_c_verification/offline/test_fr006_provenance.py](../../test/offline/member_c_verification/offline/test_fr006_provenance.py); [tests/member_b_remediation/test_r5_terminal_visibility.py](../../test/offline/member_b_remediation/test_r5_terminal_visibility.py) |
 | Runtime monitor / observation | run_id; manifest/report paths; publication commit; run.terminal |
 | Implementation / verification assessment | Partial: isolated artifacts/frozen provenance exist; extended evidence/correction fields and resume identity remain gaps. Critical publication failure can prevent durable artifacts. |
 | Contributors | A: requirement; B: architecture; C: independent verification; D: implementation; E: integration |
@@ -205,8 +207,8 @@ Common evidence above applies to every row; per-row claims are deliberately narr
 | Trace field | Allocation / evidence |
 |---|---|
 | Registry status (A) | proposed |
-| Component / source | [tradingagents/runapi/execution.py](../../tradingagents/runapi/execution.py) |
-| Tests / evidence | [tests/member_d_verification/token_input_benchmark.py](../../tests/member_d_verification/token_input_benchmark.py) |
+| Component / source | [tradingagents/runapi/execution.py](../../src/tradingagents/runapi/execution.py) |
+| Tests / evidence | [tests/member_d_verification/token_input_benchmark.py](../../test/offline/member_d_verification/token_input_benchmark.py) |
 | Runtime monitor / observation | Elapsed events only; no qualifying 20-case timing cohort |
 | Implementation / verification assessment | Gap: maximum wall-time acceptance and fixed profile not demonstrated. |
 | Contributors | A: requirement; B: architecture; C: independent verification; D: implementation; E: integration |
@@ -216,7 +218,7 @@ Common evidence above applies to every row; per-row claims are deliberately narr
 | Trace field | Allocation / evidence |
 |---|---|
 | Registry status (A) | proposed |
-| Component / source | [tradingagents/runapi/execution.py](../../tradingagents/runapi/execution.py) |
+| Component / source | [tradingagents/runapi/execution.py](../../src/tradingagents/runapi/execution.py) |
 | Tests / evidence | No dedicated acceptance probe linked in C’s current row; see the gap assessment and common evidence above. |
 | Runtime monitor / observation | No run-wide deadline/cancellation monitor |
 | Implementation / verification assessment | Gap: call cap is not a time deadline; CANCEL_ALLOWANCE not enforced as a run-wide limit. |
@@ -227,8 +229,8 @@ Common evidence above applies to every row; per-row claims are deliberately narr
 | Trace field | Allocation / evidence |
 |---|---|
 | Registry status (A) | proposed |
-| Component / source | [tradingagents/agents/structured.py](../../tradingagents/agents/structured.py); [tradingagents/default_config.py](../../tradingagents/default_config.py) |
-| Tests / evidence | [tests/member_d_verification/test_token_input_reduction.py](../../tests/member_d_verification/test_token_input_reduction.py); [tests/member_d_verification/token_input_benchmark.py](../../tests/member_d_verification/token_input_benchmark.py) |
+| Component / source | [tradingagents/agents/structured.py](../../src/tradingagents/agents/structured.py); [tradingagents/default_config.py](../../src/tradingagents/default_config.py) |
+| Tests / evidence | [tests/member_d_verification/test_token_input_reduction.py](../../test/offline/member_d_verification/test_token_input_reduction.py); [tests/member_d_verification/token_input_benchmark.py](../../test/offline/member_d_verification/token_input_benchmark.py) |
 | Runtime monitor / observation | Provider usage/benchmark measurements where available; no total-token admission controller |
 | Implementation / verification assessment | Gap: concise context reduces measured tokens but does not enforce TOKEN_BUDGET; candidate 120000 is not an adopted/enforced ceiling. |
 | Contributors | A: requirement; B: architecture; C: independent verification; D: implementation; E: integration |
@@ -238,8 +240,8 @@ Common evidence above applies to every row; per-row claims are deliberately narr
 | Trace field | Allocation / evidence |
 |---|---|
 | Registry status (A) | proposed |
-| Component / source | [tradingagents/runapi/budget.py](../../tradingagents/runapi/budget.py); [tradingagents/llm_clients/budget_transport.py](../../tradingagents/llm_clients/budget_transport.py); [tradingagents/llm_clients/factory.py](../../tradingagents/llm_clients/factory.py); [tradingagents/runapi/execution.py](../../tradingagents/runapi/execution.py) |
-| Tests / evidence | [tests/member_d_verification/test_h1_call_budget.py](../../tests/member_d_verification/test_h1_call_budget.py) |
+| Component / source | [tradingagents/runapi/budget.py](../../src/tradingagents/runapi/budget.py); [tradingagents/llm_clients/budget_transport.py](../../src/tradingagents/llm_clients/budget_transport.py); [tradingagents/llm_clients/factory.py](../../src/tradingagents/llm_clients/factory.py); [tradingagents/runapi/execution.py](../../src/tradingagents/runapi/execution.py) |
+| Tests / evidence | [tests/member_d_verification/test_h1_call_budget.py](../../test/offline/member_d_verification/test_h1_call_budget.py) |
 | Runtime monitor / observation | run.budget; schema-2 run_budget counters; BUDGET terminal result |
 | Implementation / verification assessment | Scoped implementation: opt-in synchronous deepseek/openai_compatible, shared per-run reservations/dispatch, retries/fallback/settlement included; default cap None, async/other providers refused when enabled. Production cap and independent acceptance pending. |
 | Contributors | A: requirement; B: architecture; C: independent verification; D: implementation; E: integration |
@@ -249,8 +251,8 @@ Common evidence above applies to every row; per-row claims are deliberately narr
 | Trace field | Allocation / evidence |
 |---|---|
 | Registry status (A) | proposed |
-| Component / source | [tradingagents/graph/conditional_logic.py](../../tradingagents/graph/conditional_logic.py); [tradingagents/graph/trading_graph.py](../../tradingagents/graph/trading_graph.py) |
-| Tests / evidence | [tests/test_debate_opening.py](../../tests/test_debate_opening.py) |
+| Component / source | [tradingagents/graph/conditional_logic.py](../../src/tradingagents/graph/conditional_logic.py); [tradingagents/graph/trading_graph.py](../../src/tradingagents/graph/trading_graph.py) |
+| Tests / evidence | [tests/test_debate_opening.py](../../test/offline/test_debate_opening.py) |
 | Runtime monitor / observation | Configured debate counts; no semantic-convergence verdict |
 | Implementation / verification assessment | Gap: bounded rounds/opening optimizations do not establish convergence or required disagreement fixtures. |
 | Contributors | A: requirement; B: architecture; C: independent verification; D: implementation; E: integration |
@@ -260,8 +262,8 @@ Common evidence above applies to every row; per-row claims are deliberately narr
 | Trace field | Allocation / evidence |
 |---|---|
 | Registry status (A) | proposed |
-| Component / source | [tradingagents/runapi/result.py](../../tradingagents/runapi/result.py); [tests/member_c_verification/live/score_gov004.py](../../tests/member_c_verification/live/score_gov004.py); [tests/member_c_verification/live/replay_store.py](../../tests/member_c_verification/live/replay_store.py) |
-| Tests / evidence | [tests/member_c_verification/offline/test_nfr006_population.py](../../tests/member_c_verification/offline/test_nfr006_population.py); [tests/member_b_remediation/test_r3_replay_durability.py](../../tests/member_b_remediation/test_r3_replay_durability.py); [tests/member_c_verification/offline/test_registry_gaps.py](../../tests/member_c_verification/offline/test_registry_gaps.py); [tests/member_c_verification/test_registry_result_repairs.py](../../tests/member_c_verification/test_registry_result_repairs.py); [H3/H5 integration probes](../../tests/member_d_verification/test_h3_h5_integration.py); [follow-up evidence](../verification/h3-h5-follow-up-2026-11-25.json) |
+| Component / source | [tradingagents/runapi/result.py](../../src/tradingagents/runapi/result.py); [tests/member_c_verification/live/score_gov004.py](../../test/live/member_c_verification/score_gov004.py); [tests/member_c_verification/live/replay_store.py](../../test/live/member_c_verification/replay_store.py) |
+| Tests / evidence | [tests/member_c_verification/offline/test_nfr006_population.py](../../test/offline/member_c_verification/offline/test_nfr006_population.py); [tests/member_b_remediation/test_r3_replay_durability.py](../../test/offline/member_b_remediation/test_r3_replay_durability.py); [tests/member_c_verification/offline/test_registry_gaps.py](../../test/offline/member_c_verification/offline/test_registry_gaps.py); [tests/member_c_verification/test_registry_result_repairs.py](../../test/offline/member_c_verification/test_registry_result_repairs.py); [H3/H5 integration probes](../../test/offline/member_d_verification/test_h3_h5_integration.py); [follow-up evidence](../verification/h3-h5-follow-up-2026-11-25.json) |
 | Runtime monitor / observation | runapi EvaluationPopulation/RunRecord; scorer Evaluation counts JSON; completion/review accounting |
 | Implementation / verification assessment | Scoped enforcement: duplicate/blank identities fail; explicit population/revision/prompt/configuration bindings validate one population, unbound legacy records report null. The real scorer outputs case/population counts and refuses PASS for unknown identity. Started failures/retries remain counted. Comparison mode is explicitly refused; formal evaluator remains 5 cases / 10 attempts, so provisional N_EVAL=20 and comparison acceptance are not claimed. |
 | Contributors | A: requirement; B: architecture; C: independent verification; D: implementation; E: integration |
@@ -271,8 +273,8 @@ Common evidence above applies to every row; per-row claims are deliberately narr
 | Trace field | Allocation / evidence |
 |---|---|
 | Registry status (A) | proposed |
-| Component / source | [tradingagents/agents/structured.py](../../tradingagents/agents/structured.py); [tradingagents/runapi/checks.py](../../tradingagents/runapi/checks.py) |
-| Tests / evidence | [tests/test_prompt_integrity.py](../../tests/test_prompt_integrity.py) |
+| Component / source | [tradingagents/agents/structured.py](../../src/tradingagents/agents/structured.py); [tradingagents/runapi/checks.py](../../src/tradingagents/runapi/checks.py) |
+| Tests / evidence | [tests/test_prompt_integrity.py](../../test/offline/test_prompt_integrity.py) |
 | Runtime monitor / observation | Prompt boundaries; deterministic output.check; no full hostile-source matrix |
 | Implementation / verification assessment | Partial defenses: twenty required vendor-injection scenarios are not established by prompt-shape tests. |
 | Contributors | A: requirement; B: architecture; C: independent verification; D: implementation; E: integration |
@@ -282,8 +284,8 @@ Common evidence above applies to every row; per-row claims are deliberately narr
 | Trace field | Allocation / evidence |
 |---|---|
 | Registry status (A) | partial |
-| Component / source | [tradingagents/runapi/redact.py](../../tradingagents/runapi/redact.py); [tradingagents/runapi/persist.py](../../tradingagents/runapi/persist.py); [tradingagents/agents/structured.py](../../tradingagents/agents/structured.py) |
-| Tests / evidence | [tests/member_c_verification/offline/test_nfr003_privacy.py](../../tests/member_c_verification/offline/test_nfr003_privacy.py); [tests/member_b_remediation/test_r1_logging_redaction.py](../../tests/member_b_remediation/test_r1_logging_redaction.py); [tests/member_d_verification/test_f2_redaction.py](../../tests/member_d_verification/test_f2_redaction.py) |
+| Component / source | [tradingagents/runapi/redact.py](../../src/tradingagents/runapi/redact.py); [tradingagents/runapi/persist.py](../../src/tradingagents/runapi/persist.py); [tradingagents/agents/structured.py](../../src/tradingagents/agents/structured.py) |
+| Tests / evidence | [tests/member_c_verification/offline/test_nfr003_privacy.py](../../test/offline/member_c_verification/offline/test_nfr003_privacy.py); [tests/member_b_remediation/test_r1_logging_redaction.py](../../test/offline/member_b_remediation/test_r1_logging_redaction.py); [tests/member_d_verification/test_f2_redaction.py](../../test/offline/member_d_verification/test_f2_redaction.py) |
 | Runtime monitor / observation | Redacted published artifacts/logs; no dedicated security.redaction event |
 | Implementation / verification assessment | Partial: credential/sink probes exist; complete all-vendor/all-profile matrix pending. Holdings minimization is separate historical scope. |
 | Contributors | A: requirement; B: architecture; C: independent verification; D: implementation; E: integration |
@@ -293,8 +295,8 @@ Common evidence above applies to every row; per-row claims are deliberately narr
 | Trace field | Allocation / evidence |
 |---|---|
 | Registry status (A) | proposed |
-| Component / source | [tradingagents/runapi/reporting.py](../../tradingagents/runapi/reporting.py); [tradingagents/report_html.py](../../tradingagents/report_html.py); [tradingagents/runapi/checks.py](../../tradingagents/runapi/checks.py); [legacy complete-report writer](../../tradingagents/reporting.py) |
-| Tests / evidence | [tests/member_c_verification/offline/test_fr007_output_check.py](../../tests/member_c_verification/offline/test_fr007_output_check.py); [tests/member_c_verification/offline/test_registry_gaps.py](../../tests/member_c_verification/offline/test_registry_gaps.py); [tests/member_c_verification/test_registry_result_repairs.py](../../tests/member_c_verification/test_registry_result_repairs.py); [H3/H5 integration probes](../../tests/member_d_verification/test_h3_h5_integration.py); [follow-up evidence](../verification/h3-h5-follow-up-2026-11-25.json) |
+| Component / source | [tradingagents/runapi/reporting.py](../../src/tradingagents/runapi/reporting.py); [tradingagents/report_html.py](../../src/tradingagents/report_html.py); [tradingagents/runapi/checks.py](../../src/tradingagents/runapi/checks.py); [legacy complete-report writer](../../src/tradingagents/reporting.py) |
+| Tests / evidence | [tests/member_c_verification/offline/test_fr007_output_check.py](../../test/offline/member_c_verification/offline/test_fr007_output_check.py); [tests/member_c_verification/offline/test_registry_gaps.py](../../test/offline/member_c_verification/offline/test_registry_gaps.py); [tests/member_c_verification/test_registry_result_repairs.py](../../test/offline/member_c_verification/test_registry_result_repairs.py); [H3/H5 integration probes](../../test/offline/member_d_verification/test_h3_h5_integration.py); [follow-up evidence](../verification/h3-h5-follow-up-2026-11-25.json) |
 | Runtime monitor / observation | Canonical leading disclaimer; Q3/Q4 output.check; direct-export regressions |
 | Implementation / verification assessment | Scoped H5 layout enforcement: canonical disclaimer leads complete Markdown and visible HTML in both shared API and legacy complete exporters, including absent/empty metadata. Footer compatibility retained. Per-agent section files are source sections, not complete reports. Full R8 corpus and final B layout confirmation are separate outstanding items. |
 | Contributors | A: requirement; B: architecture; C: independent verification; D: implementation; E: integration |
@@ -304,8 +306,8 @@ Common evidence above applies to every row; per-row claims are deliberately narr
 | Trace field | Allocation / evidence |
 |---|---|
 | Registry status (A) | partial |
-| Component / source | [tradingagents/dataflows/router.py](../../tradingagents/dataflows/router.py) |
-| Tests / evidence | [tests/test_layering.py](../../tests/test_layering.py); [tests/test_vendor_routing.py](../../tests/test_vendor_routing.py) |
+| Component / source | [tradingagents/dataflows/router.py](../../src/tradingagents/dataflows/router.py) |
+| Tests / evidence | [tests/test_layering.py](../../test/offline/test_layering.py); [tests/test_vendor_routing.py](../../test/offline/test_vendor_routing.py) |
 | Runtime monitor / observation | Router dispatch diagnostics; no universal bypass monitor |
 | Implementation / verification assessment | Partial: router exists; direct helper routes mean universal routing restriction not proven. |
 | Contributors | A: requirement; B: architecture; C: independent verification; D: implementation; E: integration |
@@ -315,8 +317,8 @@ Common evidence above applies to every row; per-row claims are deliberately narr
 | Trace field | Allocation / evidence |
 |---|---|
 | Registry status (A) | proposed |
-| Component / source | [tradingagents/runapi/checks.py](../../tradingagents/runapi/checks.py); [tradingagents/runapi/result.py](../../tradingagents/runapi/result.py); [tradingagents/runapi/execution.py](../../tradingagents/runapi/execution.py) |
-| Tests / evidence | [tests/member_c_verification/offline/test_fr007_output_check.py](../../tests/member_c_verification/offline/test_fr007_output_check.py); [tests/member_c_verification/offline/test_registry_gaps.py](../../tests/member_c_verification/offline/test_registry_gaps.py); [tests/member_c_verification/test_registry_result_repairs.py](../../tests/member_c_verification/test_registry_result_repairs.py) |
+| Component / source | [tradingagents/runapi/checks.py](../../src/tradingagents/runapi/checks.py); [tradingagents/runapi/result.py](../../src/tradingagents/runapi/result.py); [tradingagents/runapi/execution.py](../../src/tradingagents/runapi/execution.py) |
+| Tests / evidence | [tests/member_c_verification/offline/test_fr007_output_check.py](../../test/offline/member_c_verification/offline/test_fr007_output_check.py); [tests/member_c_verification/offline/test_registry_gaps.py](../../test/offline/member_c_verification/offline/test_registry_gaps.py); [tests/member_c_verification/test_registry_result_repairs.py](../../test/offline/member_c_verification/test_registry_result_repairs.py) |
 | Runtime monitor / observation | output.check; manifest findings and check_rules_version when enabled |
 | Implementation / verification assessment | Partial: Q1-Q4 authoritative; corrected-only DTOs accepted by C repair, but full R1-R8 resolver/coverage/correction engine not implemented. Budget schema-2 check_rules_version=1 is not full checker v2. |
 | Contributors | A: requirement; B: architecture; C: independent verification; D: implementation; E: integration |
@@ -326,8 +328,8 @@ Common evidence above applies to every row; per-row claims are deliberately narr
 | Trace field | Allocation / evidence |
 |---|---|
 | Registry status (A) | proposed |
-| Component / source | [tradingagents/agents/rating.py](../../tradingagents/agents/rating.py); [tradingagents/runapi/result.py](../../tradingagents/runapi/result.py); [tradingagents/runapi/checks.py](../../tradingagents/runapi/checks.py) |
-| Tests / evidence | [tests/member_c_verification/offline/test_fr005_ratings.py](../../tests/member_c_verification/offline/test_fr005_ratings.py); [tests/member_c_verification/offline/test_fr007_output_check.py](../../tests/member_c_verification/offline/test_fr007_output_check.py); [tests/member_c_verification/offline/test_nfr001_failures.py](../../tests/member_c_verification/offline/test_nfr001_failures.py); [tests/member_c_verification/offline/test_registry_gaps.py](../../tests/member_c_verification/offline/test_registry_gaps.py); [tests/member_c_verification/test_registry_result_repairs.py](../../tests/member_c_verification/test_registry_result_repairs.py) |
+| Component / source | [tradingagents/agents/rating.py](../../src/tradingagents/agents/rating.py); [tradingagents/runapi/result.py](../../src/tradingagents/runapi/result.py); [tradingagents/runapi/checks.py](../../src/tradingagents/runapi/checks.py) |
+| Tests / evidence | [tests/member_c_verification/offline/test_fr005_ratings.py](../../test/offline/member_c_verification/offline/test_fr005_ratings.py); [tests/member_c_verification/offline/test_fr007_output_check.py](../../test/offline/member_c_verification/offline/test_fr007_output_check.py); [tests/member_c_verification/offline/test_nfr001_failures.py](../../test/offline/member_c_verification/offline/test_nfr001_failures.py); [tests/member_c_verification/offline/test_registry_gaps.py](../../test/offline/member_c_verification/offline/test_registry_gaps.py); [tests/member_c_verification/test_registry_result_repairs.py](../../test/offline/member_c_verification/test_registry_result_repairs.py) |
 | Runtime monitor / observation | REVIEW plus NEEDS_REVIEW; output.check |
 | Implementation / verification assessment | Scoped enforcement: C H4 rejects public REVIEW/PASSED; malformed-rating/checker probes exist. Not full semantic acceptance. |
 | Contributors | A: requirement; B: architecture; C: independent verification; D: implementation; E: integration |
@@ -337,7 +339,7 @@ Common evidence above applies to every row; per-row claims are deliberately narr
 | Trace field | Allocation / evidence |
 |---|---|
 | Registry status (A) | proposed |
-| Component / source | [tradingagents/runapi/checks.py](../../tradingagents/runapi/checks.py) |
+| Component / source | [tradingagents/runapi/checks.py](../../src/tradingagents/runapi/checks.py) |
 | Tests / evidence | No dedicated acceptance probe linked in C’s current row; see the gap assessment and common evidence above. |
 | Runtime monitor / observation | No evidence-ID resolution monitor |
 | Implementation / verification assessment | Gap: target checker has no full citation registry/resolver; no completed invariant enforcement. |
@@ -348,8 +350,8 @@ Common evidence above applies to every row; per-row claims are deliberately narr
 | Trace field | Allocation / evidence |
 |---|---|
 | Registry status (A) | proposed |
-| Component / source | [tradingagents/agents/context.py](../../tradingagents/agents/context.py); [tradingagents/runapi/checks.py](../../tradingagents/runapi/checks.py) |
-| Tests / evidence | [tests/member_c_verification/offline/test_fr004_propagation.py](../../tests/member_c_verification/offline/test_fr004_propagation.py); [tests/member_b_remediation/test_r4_research_manager_context.py](../../tests/member_b_remediation/test_r4_research_manager_context.py) |
+| Component / source | [tradingagents/agents/context.py](../../src/tradingagents/agents/context.py); [tradingagents/runapi/checks.py](../../src/tradingagents/runapi/checks.py) |
+| Tests / evidence | [tests/member_c_verification/offline/test_fr004_propagation.py](../../test/offline/member_c_verification/offline/test_fr004_propagation.py); [tests/member_b_remediation/test_r4_research_manager_context.py](../../test/offline/member_b_remediation/test_r4_research_manager_context.py) |
 | Runtime monitor / observation | Frozen context; no exhaustive banned-phrase R3 monitor |
 | Implementation / verification assessment | Partial: prompt facts preserve unknown holdings; deterministic delivered-text ban not implemented. |
 | Contributors | A: requirement; B: architecture; C: independent verification; D: implementation; E: integration |
@@ -359,7 +361,7 @@ Common evidence above applies to every row; per-row claims are deliberately narr
 | Trace field | Allocation / evidence |
 |---|---|
 | Registry status (A) | proposed |
-| Component / source | [tradingagents/agents/schemas.py](../../tradingagents/agents/schemas.py); [tradingagents/runapi/checks.py](../../tradingagents/runapi/checks.py) |
+| Component / source | [tradingagents/agents/schemas.py](../../src/tradingagents/agents/schemas.py); [tradingagents/runapi/checks.py](../../src/tradingagents/runapi/checks.py) |
 | Tests / evidence | No dedicated acceptance probe linked in C’s current row; see the gap assessment and common evidence above. |
 | Runtime monitor / observation | No R4 band/score finding |
 | Implementation / verification assessment | Gap: sentiment schema alone does not enforce required band/score invariant. |
@@ -370,7 +372,7 @@ Common evidence above applies to every row; per-row claims are deliberately narr
 | Trace field | Allocation / evidence |
 |---|---|
 | Registry status (A) | proposed |
-| Component / source | [tradingagents/runapi/checks.py](../../tradingagents/runapi/checks.py); [tradingagents/runapi/result.py](../../tradingagents/runapi/result.py) |
+| Component / source | [tradingagents/runapi/checks.py](../../src/tradingagents/runapi/checks.py); [tradingagents/runapi/result.py](../../src/tradingagents/runapi/result.py) |
 | Tests / evidence | No dedicated acceptance probe linked in C’s current row; see the gap assessment and common evidence above. |
 | Runtime monitor / observation | CORRECTED supported structurally; no automatic R5 correction event |
 | Implementation / verification assessment | Gap: H2 structure repaired, but coverage cap, safe original/corrected values, final re-render and versioned correction publication absent. |
@@ -381,7 +383,7 @@ Common evidence above applies to every row; per-row claims are deliberately narr
 | Trace field | Allocation / evidence |
 |---|---|
 | Registry status (A) | proposed |
-| Component / source | [tradingagents/runapi/checks.py](../../tradingagents/runapi/checks.py); [tradingagents/agents/schemas.py](../../tradingagents/agents/schemas.py) |
+| Component / source | [tradingagents/runapi/checks.py](../../src/tradingagents/runapi/checks.py); [tradingagents/agents/schemas.py](../../src/tradingagents/agents/schemas.py) |
 | Tests / evidence | No dedicated acceptance probe linked in C’s current row; see the gap assessment and common evidence above. |
 | Runtime monitor / observation | No R6 coverage-linked neutral-band monitor |
 | Implementation / verification assessment | Gap: all-sources-unavailable sentiment invariant not fully enforced. |
@@ -392,7 +394,7 @@ Common evidence above applies to every row; per-row claims are deliberately narr
 | Trace field | Allocation / evidence |
 |---|---|
 | Registry status (A) | proposed |
-| Component / source | [tradingagents/runapi/checks.py](../../tradingagents/runapi/checks.py) |
+| Component / source | [tradingagents/runapi/checks.py](../../src/tradingagents/runapi/checks.py) |
 | Tests / evidence | No dedicated acceptance probe linked in C’s current row; see the gap assessment and common evidence above. |
 | Runtime monitor / observation | No canonical data_coverage record/report equality monitor |
 | Implementation / verification assessment | Gap: coverage registry/channel catalog and equality check not complete. |
@@ -403,8 +405,8 @@ Common evidence above applies to every row; per-row claims are deliberately narr
 | Trace field | Allocation / evidence |
 |---|---|
 | Registry status (A) | proposed |
-| Component / source | [tradingagents/runapi/reporting.py](../../tradingagents/runapi/reporting.py); [tradingagents/report_html.py](../../tradingagents/report_html.py); [tradingagents/runapi/checks.py](../../tradingagents/runapi/checks.py); [legacy complete-report writer](../../tradingagents/reporting.py) |
-| Tests / evidence | [tests/member_c_verification/offline/test_fr007_output_check.py](../../tests/member_c_verification/offline/test_fr007_output_check.py); [tests/member_c_verification/offline/test_registry_gaps.py](../../tests/member_c_verification/offline/test_registry_gaps.py) (`TC-SEC003-c` negative position probe); [tests/member_c_verification/test_registry_result_repairs.py](../../tests/member_c_verification/test_registry_result_repairs.py); [H3/H5 integration probes](../../tests/member_d_verification/test_h3_h5_integration.py); [follow-up evidence](../verification/h3-h5-follow-up-2026-11-25.json) |
+| Component / source | [tradingagents/runapi/reporting.py](../../src/tradingagents/runapi/reporting.py); [tradingagents/report_html.py](../../src/tradingagents/report_html.py); [tradingagents/runapi/checks.py](../../src/tradingagents/runapi/checks.py); [legacy complete-report writer](../../src/tradingagents/reporting.py) |
+| Tests / evidence | [tests/member_c_verification/offline/test_fr007_output_check.py](../../test/offline/member_c_verification/offline/test_fr007_output_check.py); [tests/member_c_verification/offline/test_registry_gaps.py](../../test/offline/member_c_verification/offline/test_registry_gaps.py) (`TC-SEC003-c` negative position probe); [tests/member_c_verification/test_registry_result_repairs.py](../../test/offline/member_c_verification/test_registry_result_repairs.py); [H3/H5 integration probes](../../test/offline/member_d_verification/test_h3_h5_integration.py); [follow-up evidence](../verification/h3-h5-follow-up-2026-11-25.json) |
 | Runtime monitor / observation | Leading disclaimer in every complete-report renderer; Q3/Q4 output.check |
 | Implementation / verification assessment | Scoped H5 repair shared with SEC-003: complete Markdown/HTML leading notice now covers legacy paths and no-metadata renders. Positive nodes are complemented by `TC-SEC003-c`, which rejects a disclaimer that is present but only later (Markdown first non-blank line; HTML first visible body element). Guarantee Q4 remains; full R8 corpus and contributor design confirmation are not inferred. |
 | Contributors | A: requirement; B: architecture; C: independent verification; D: implementation; E: integration |
@@ -414,8 +416,8 @@ Common evidence above applies to every row; per-row claims are deliberately narr
 | Trace field | Allocation / evidence |
 |---|---|
 | Registry status (A) | proposed |
-| Component / source | [tests/member_c_verification/live/score_gov004.py](../../tests/member_c_verification/live/score_gov004.py); [tests/member_c_verification/live/replay_store.py](../../tests/member_c_verification/live/replay_store.py); [.github/workflows/ci.yml](../../.github/workflows/ci.yml) |
-| Tests / evidence | [tests/member_c_verification/live/test_harness_selfcheck.py](../../tests/member_c_verification/live/test_harness_selfcheck.py); [tests/member_c_verification/live/test_score_gov004_exitcodes.py](../../tests/member_c_verification/live/test_score_gov004_exitcodes.py) |
+| Component / source | [tests/member_c_verification/live/score_gov004.py](../../test/live/member_c_verification/score_gov004.py); [tests/member_c_verification/live/replay_store.py](../../test/live/member_c_verification/replay_store.py); [.github/workflows/ci.yml](../../.github/workflows/ci.yml) |
+| Tests / evidence | [tests/member_c_verification/live/test_harness_selfcheck.py](../../test/live/member_c_verification/test_harness_selfcheck.py); [tests/member_c_verification/live/test_score_gov004_exitcodes.py](../../test/live/member_c_verification/test_score_gov004_exitcodes.py) |
 | Runtime monitor / observation | Opt-in replay/scorer exit codes; Evaluation counts JSON; frozen evidence ledger |
 | Implementation / verification assessment | Framework remains opt-in: scorer now validates population identity and outputs distinct-case/population counts; historical formal PASS remains PENDING audit. Existing 5-case/10-attempt profile is not the provisional 20-case requirement, and QUALITY_THRESHOLD remains open in the registry; no required semantic CI check enabled. |
 | Contributors | A: requirement; B: architecture; C: independent verification; E: governance integration; D: runnable support |
@@ -426,7 +428,7 @@ Common evidence above applies to every row; per-row claims are deliberately narr
 |---|---|
 | Registry status (A) | proposed |
 | Component / source | [scripts/ci/check_test_approval.py](../../scripts/ci/check_test_approval.py); [.github/workflows/test-approval.yml](../../.github/workflows/test-approval.yml); [.github/workflows/test-approval-complete.yml](../../.github/workflows/test-approval-complete.yml) |
-| Tests / evidence | [tests/member_d_verification/test_test_approval_completion.py](../../tests/member_d_verification/test_test_approval_completion.py) |
+| Tests / evidence | [tests/member_d_verification/test_test_approval_completion.py](../../test/offline/member_d_verification/test_test_approval_completion.py) |
 | Runtime monitor / observation | test approval checks; receipt attachments/approval records |
 | Implementation / verification assessment | Implemented tooling, PAUSED as required merge check by user decision. Current development is not claimed compliant with prior-approval requirement; historical approvals not reconstructed. |
 | Contributors | A: requirement; B: architecture; C: independent verification; E: governance integration; D: runnable support |
@@ -437,7 +439,7 @@ Common evidence above applies to every row; per-row claims are deliberately narr
 |---|---|
 | Registry status (A) | proposed |
 | Component / source | [scripts/ci/check_ai_log_updated.py](../../scripts/ci/check_ai_log_updated.py); [.github/workflows/ci.yml](../../.github/workflows/ci.yml) |
-| Tests / evidence | [tests/member_d_verification/test_security_gate_boundaries.py](../../tests/member_d_verification/test_security_gate_boundaries.py) |
+| Tests / evidence | [tests/member_d_verification/test_security_gate_boundaries.py](../../test/offline/member_d_verification/test_security_gate_boundaries.py) |
 | Runtime monitor / observation | ai-log updated required CI check |
 | Implementation / verification assessment | Scoped enforcement: important-path changes require added/modified substantive AI-log file; format/content/complete course logs not certified. |
 | Contributors | A: requirement; B: architecture; C: independent verification; E: governance integration; D: runnable support |
@@ -447,8 +449,8 @@ Common evidence above applies to every row; per-row claims are deliberately narr
 | Trace field | Allocation / evidence |
 |---|---|
 | Registry status (A) | proposed |
-| Component / source | [tradingagents/runapi/input_service.py](../../tradingagents/runapi/input_service.py); [tradingagents/runapi/context.py](../../tradingagents/runapi/context.py); [tradingagents/runapi/execution.py](../../tradingagents/runapi/execution.py) |
-| Tests / evidence | [tests/member_c_verification/offline/test_fr003_validation_freeze.py](../../tests/member_c_verification/offline/test_fr003_validation_freeze.py); [tests/member_c_verification/offline/test_fr006_provenance.py](../../tests/member_c_verification/offline/test_fr006_provenance.py); [tests/member_c_verification/offline/test_fr002_consent.py](../../tests/member_c_verification/offline/test_fr002_consent.py); [tests/member_c_verification/offline/test_registry_gaps.py](../../tests/member_c_verification/offline/test_registry_gaps.py) |
+| Component / source | [tradingagents/runapi/input_service.py](../../src/tradingagents/runapi/input_service.py); [tradingagents/runapi/context.py](../../src/tradingagents/runapi/context.py); [tradingagents/runapi/execution.py](../../src/tradingagents/runapi/execution.py) |
+| Tests / evidence | [tests/member_c_verification/offline/test_fr003_validation_freeze.py](../../test/offline/member_c_verification/offline/test_fr003_validation_freeze.py); [tests/member_c_verification/offline/test_fr006_provenance.py](../../test/offline/member_c_verification/offline/test_fr006_provenance.py); [tests/member_c_verification/offline/test_fr002_consent.py](../../test/offline/member_c_verification/offline/test_fr002_consent.py); [tests/member_c_verification/offline/test_registry_gaps.py](../../test/offline/member_c_verification/offline/test_registry_gaps.py) |
 | Runtime monitor / observation | input.mode_resolved; frozen fingerprint/input_mode; report/manifest provenance |
 | Implementation / verification assessment | Scoped enforcement: freeze/overwrite/consumer mutation and no-portfolio-vs-empty covered by C; optional external input remains read-only, no post-freeze reread. |
 | Contributors | A: requirement; B: architecture; C: independent verification; D: implementation; E: integration |
@@ -459,7 +461,7 @@ Common evidence above applies to every row; per-row claims are deliberately narr
 |---|---|
 | Registry status (A) | proposed |
 | Component / source | [docs/req/req-schema.json](../req/req-schema.json); [docs/req/validate.py](../req/validate.py); [scripts/ci/check_requirement_schema.py](../../scripts/ci/check_requirement_schema.py); [.github/workflows/ci.yml](../../.github/workflows/ci.yml) |
-| Tests / evidence | [tests/member_d_verification/test_requirement_schema_gate.py](../../tests/member_d_verification/test_requirement_schema_gate.py) |
+| Tests / evidence | [tests/member_d_verification/test_requirement_schema_gate.py](../../test/offline/member_d_verification/test_requirement_schema_gate.py) |
 | Runtime monitor / observation | requirements schema required CI check; 36 active/3 withdrawn |
 | Implementation / verification assessment | Implemented schema/cross-record gate with positive/negative evidence; validity is not adoption or implementation acceptance. |
 | Contributors | A: requirement; B: architecture; C: independent verification; E: governance integration; D: runnable support |
@@ -501,8 +503,8 @@ These duties are not invented registry IDs. B's INV-01 etc. are architecture
 invariants, not aliases for A's REQ-TA-INV-001 etc.
 
 - **Consent/input discovery/holdings minimization:** allocation is
-  [input service](../../tradingagents/runapi/input_service.py),
-  [CLI adapter](../../cli/input_ui.py), immutable context and redaction; independent
+  [input service](../../src/tradingagents/runapi/input_service.py),
+  [CLI adapter](../../src/cli/input_ui.py), immutable context and redaction; independent
   probes are C's discovery/consent/privacy suites. `input.consent` and
   `input.mode_resolved` are actual post-confirmation events. Unconfirmed calls
   are refused before dispatch; there is no claim that a rejected pre-run request
@@ -523,8 +525,8 @@ invariants, not aliases for A's REQ-TA-INV-001 etc.
 - **Static analysis and regression:** CI invokes full configured pytest/install
   checks, Ruff, scoped mypy, dependency audits and security/API/permission probes.
   [API snapshot](../code-governance/public-api-contract.json),
-  [boundary tests](../../tests/member_d_verification/test_security_gate_boundaries.py),
-  [type probes](../../tests/member_d_verification/test_type_gate.py) and
+  [boundary tests](../../test/offline/member_d_verification/test_security_gate_boundaries.py),
+  [type probes](../../test/offline/member_d_verification/test_type_gate.py) and
   [workflow-permission checker](../../scripts/ci/check_workflow_permissions.py)
   provide concrete boundaries. Read coverage limits; passing scans do not certify
   absence of every security defect. Contract probes remain inside pytest.
@@ -533,7 +535,7 @@ invariants, not aliases for A's REQ-TA-INV-001 etc.
   and C's harness/scorer tests describe the contribution. Portable evidence and
   independent human scoring are still required for formal semantic acceptance.
 - **Token context optimization:**
-  [concise-context tests](../../tests/member_d_verification/test_token_input_reduction.py)
+  [concise-context tests](../../test/offline/member_d_verification/test_token_input_reduction.py)
   and [B's review](../reviews/token-context-architecture-review-2026-11-24.md)
   provide scope/limitations. Measurements are configuration-specific, not proof
   of an adopted cumulative token ceiling. H1 is specifically a call cap.

@@ -1,3 +1,5 @@
+> Current layout supplement, 2026-11-25: physical code is under src/tradingagents, src/cli, src/demo and src/frontend; physical tests under test/offline and test/live. Historical root names below remain compatibility aliases to that one source. See [layout and delivery status](../submission/delivery-checklist-2026-11-25.md).
+
 # Structural constraints
 
 Local E5 supplement, 2026-11-25: the [role permission package](opencode-permissions.md) now supplies explicitly loaded, native-tool-tested local permissions. Historical baseline statements below remain scoped to their reference snapshot. This is not OS access control or a new CI gate.

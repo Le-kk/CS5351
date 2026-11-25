@@ -29,3 +29,10 @@ This register tracks engineering work remaining at project closeout. The [bug di
 ## Closeout rule
 
 A/B settle scope and contract decisions, D supplies fixes, C records verification and E integrates the accepted package. Each item closes against the evidence in its final column.
+
+## E integration addendum — 2026-11-25
+
+- Frontend dependencies: audit observed five moderate findings after clearing high/critical issues. Frontend build/high-critical audit joins required tests; no vulnerability-free claim. Owner E/D; close with compatible fixes/removal plus build and audit evidence.
+- Course assembly: final Report.md is a draft. B/C personal submissions, complete identities/student IDs, agreed contribution ratios, five D5 transcript acceptance and rendered D6 length still require confirmation. Owner contributors/E.
+- Role-policy migration: canonical src/test paths have equivalent grants; original native probe hashes remain historical. Re-run native policy verification before treating the migrated policy as freshly accepted. Owner E.
+- New demo/compact format: developer regressions and limited real-model measurements are not independent semantic acceptance or cumulative token-budget enforcement. Owner C/D/E.

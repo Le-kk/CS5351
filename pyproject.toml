@@ -54,14 +54,17 @@ tradingagents = "cli.main:app"
 version = {attr = "tradingagents.__version__"}
 
 [tool.setuptools.packages.find]
-include = ["tradingagents*", "cli*"]
+where = ["src"]
+include = ["tradingagents*", "cli*", "demo*"]
 
 [tool.setuptools.package-data]
 cli = ["static/*"]
+demo = ["static/*", "*.md", "*.command"]
 tradingagents = ["assets/*.svg"]
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = ["test/offline", "test/live"]
+pythonpath = ["src", "."]
 addopts = "-ra --strict-markers -m \"not integration\""
 markers = [
     "unit: fast isolated unit tests",
@@ -76,7 +79,7 @@ filterwarnings = [
 [tool.mypy]
 # Incremental coverage: all shared run boundary modules, portfolio and output contracts.
 # Third-party typing and legacy modules are not claimed as fully checked.
-files = ["tradingagents/runapi", "tradingagents/portfolio.py", "tradingagents/agents/schemas.py", "tradingagents/agents/rating.py"]
+files = ["src/tradingagents/runapi", "src/tradingagents/portfolio.py", "src/tradingagents/agents/schemas.py", "src/tradingagents/agents/rating.py"]
 python_version = "3.12"
 follow_imports = "silent"
 ignore_missing_imports = true

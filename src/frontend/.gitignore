@@ -1,0 +1,6 @@
+node_modules
+build
+vite.config.*.timestamp-*
+core
+core.[0-9]*
+*.core

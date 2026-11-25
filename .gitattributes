@@ -1,0 +1,3 @@
+
+# Historical snapshots retain authentic whitespace and hashes.
+history/** -whitespace

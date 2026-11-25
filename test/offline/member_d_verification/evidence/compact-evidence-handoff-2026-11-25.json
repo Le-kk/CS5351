@@ -1,0 +1,401 @@
+{
+  "date": "2026-11-25",
+  "base_revision": "6b468546d5d2c1dde9a066f238207d6aab65c061",
+  "worktree": "uncommitted minimal prompt experiment on existing demo branch",
+  "control": {
+    "profile": "control",
+    "compact_evidence_handoff": false,
+    "status": {
+      "runId": "20261125T073126Z-8797227d",
+      "ticker": "NVDA",
+      "status": "COMPLETED",
+      "currentAgent": "Report published",
+      "currentStage": "Report published",
+      "startedAt": "2026-11-25T07:31:26.941813Z",
+      "elapsedSeconds": 93,
+      "modelCalls": 20,
+      "callBudget": {
+        "call_cap": 40,
+        "denied": 0,
+        "dispatched": 20,
+        "granted": 20,
+        "invalidated": 0
+      },
+      "usage": {
+        "inputTokens": 114255,
+        "outputTokens": 16532,
+        "totalTokens": 130787,
+        "complete": true
+      },
+      "finalRating": "Hold",
+      "outputCheck": "PASSED",
+      "stopReason": null,
+      "findings": [],
+      "effectiveConfig": {
+        "ticker": "NVDA",
+        "analysisDate": "2026-11-24",
+        "selectedAnalysts": [
+          "market",
+          "news",
+          "social",
+          "fundamentals"
+        ],
+        "researchRounds": 1,
+        "riskRounds": 1,
+        "maxModelRequests": 40,
+        "deepModel": "CS5351/DeepSeek-V4-Flash",
+        "quickModel": "CS5351/DeepSeek-V4-Flash",
+        "deepProvider": "openai_compatible",
+        "quickProvider": "openai_compatible",
+        "outputLanguage": "English",
+        "conciseIntermediateReports": true
+      }
+    },
+    "input_mode": "NO_PORTFOLIO",
+    "entry_point": "run_analysis_api with CLI-equivalent stream runner",
+    "memory": "isolated empty file per run",
+    "checkpoint_enabled": false,
+    "llm_max_retries": 0,
+    "vendor_cache": "shared ordinary cache; no frozen/vendor substitution",
+    "stage_words": {
+      "Fundamentals Analyst": 785,
+      "Sentiment Analyst": 1412,
+      "Market Analyst": 858,
+      "News Analyst": 859,
+      "Bull Researcher": 264,
+      "Bear Researcher": 264,
+      "Research Manager": 755,
+      "Trader": 457,
+      "Aggressive Analyst": 247,
+      "Conservative Analyst": 302,
+      "Neutral Analyst": 240,
+      "Portfolio Manager": 880
+    },
+    "source_hashes": {
+      "tradingagents/agents/context.py": "f6e5a9505eee95f0c29d005617fd19d62971672e11ab002fe013279f1dc82576",
+      "tradingagents/agents/managers/research_manager.py": "c32b4dbeab892a93e0d44eacc9d222586c52393497ddbde183223a80a4bf6f25",
+      "tradingagents/agents/trader/trader.py": "93831d2d1ad9f41b7ea54ee1b55c463a266a1b8e3f0bac2ee95695fc25b884c0"
+    }
+  },
+  "final_candidates": [
+    {
+      "profile": "compact-1",
+      "compact_evidence_handoff": true,
+      "status": {
+        "runId": "20261125T073529Z-cb4bda87",
+        "ticker": "NVDA",
+        "status": "COMPLETED",
+        "currentAgent": "Report published",
+        "currentStage": "Report published",
+        "startedAt": "2026-11-25T07:35:29.873903Z",
+        "elapsedSeconds": 69,
+        "modelCalls": 18,
+        "callBudget": {
+          "call_cap": 40,
+          "denied": 0,
+          "dispatched": 18,
+          "granted": 18,
+          "invalidated": 0
+        },
+        "usage": {
+          "inputTokens": 83732,
+          "outputTokens": 12428,
+          "totalTokens": 96160,
+          "complete": true
+        },
+        "finalRating": "Underweight",
+        "outputCheck": "PASSED",
+        "stopReason": null,
+        "findings": [],
+        "effectiveConfig": {
+          "ticker": "NVDA",
+          "analysisDate": "2026-11-24",
+          "selectedAnalysts": [
+            "market",
+            "news",
+            "social",
+            "fundamentals"
+          ],
+          "researchRounds": 1,
+          "riskRounds": 1,
+          "maxModelRequests": 40,
+          "deepModel": "CS5351/DeepSeek-V4-Flash",
+          "quickModel": "CS5351/DeepSeek-V4-Flash",
+          "deepProvider": "openai_compatible",
+          "quickProvider": "openai_compatible",
+          "outputLanguage": "English",
+          "conciseIntermediateReports": true
+        }
+      },
+      "entry_point": "run_analysis_api / CLI-equivalent streaming runner",
+      "input_mode": "NO_PORTFOLIO",
+      "memory": "isolated empty per run",
+      "llm_max_retries": 0,
+      "checkpoint_enabled": false,
+      "vendor_cache": "ordinary shared cache; live vendors not replaced",
+      "source_sha256_at_start": {
+        "agents/context.py": "8bc0cec09798a341255ac6bc7b512c8c1cc2457d1ebcf7324cb9894cb674b694",
+        "agents/analysts/sentiment_analyst.py": "8aa8b95504527b4e471fa1e4d572358c06a07e45c458038e2956b1e9dee735da",
+        "agents/managers/research_manager.py": "c32b4dbeab892a93e0d44eacc9d222586c52393497ddbde183223a80a4bf6f25",
+        "agents/trader/trader.py": "93831d2d1ad9f41b7ea54ee1b55c463a266a1b8e3f0bac2ee95695fc25b884c0",
+        "default_config.py": "7b1932fc8f6a32e7c49e360f57961aaff0d837685330aeb404e23638f8c17215",
+        "graph/trading_graph.py": "b7e0ab7407fd8cf37834566c482ecb32c8d608484c872f02c8ad5668acdab4f2",
+        "runapi/execution.py": "616b756d71caf591534f477bf433d1e78729bd720f8a38a31b453fbdc54baf0f"
+      },
+      "stage_words": {
+        "Sentiment Analyst": 552,
+        "Fundamentals Analyst": 518,
+        "News Analyst": 629,
+        "Market Analyst": 795,
+        "Bull Researcher": 384,
+        "Bear Researcher": 289,
+        "Research Manager": 267,
+        "Trader": 421,
+        "Aggressive Analyst": 265,
+        "Conservative Analyst": 279,
+        "Neutral Analyst": 303,
+        "Portfolio Manager": 436
+      }
+    },
+    {
+      "profile": "compact-2",
+      "compact_evidence_handoff": true,
+      "status": {
+        "runId": "20261125T073640Z-c8182159",
+        "ticker": "NVDA",
+        "status": "COMPLETED",
+        "currentAgent": "Report published",
+        "currentStage": "Report published",
+        "startedAt": "2026-11-25T07:36:40.029483Z",
+        "elapsedSeconds": 58,
+        "modelCalls": 18,
+        "callBudget": {
+          "call_cap": 40,
+          "denied": 0,
+          "dispatched": 18,
+          "granted": 18,
+          "invalidated": 0
+        },
+        "usage": {
+          "inputTokens": 83212,
+          "outputTokens": 11811,
+          "totalTokens": 95023,
+          "complete": true
+        },
+        "finalRating": "Hold",
+        "outputCheck": "PASSED",
+        "stopReason": null,
+        "findings": [],
+        "effectiveConfig": {
+          "ticker": "NVDA",
+          "analysisDate": "2026-11-24",
+          "selectedAnalysts": [
+            "market",
+            "news",
+            "social",
+            "fundamentals"
+          ],
+          "researchRounds": 1,
+          "riskRounds": 1,
+          "maxModelRequests": 40,
+          "deepModel": "CS5351/DeepSeek-V4-Flash",
+          "quickModel": "CS5351/DeepSeek-V4-Flash",
+          "deepProvider": "openai_compatible",
+          "quickProvider": "openai_compatible",
+          "outputLanguage": "English",
+          "conciseIntermediateReports": true
+        }
+      },
+      "entry_point": "run_analysis_api / CLI-equivalent streaming runner",
+      "input_mode": "NO_PORTFOLIO",
+      "memory": "isolated empty per run",
+      "llm_max_retries": 0,
+      "checkpoint_enabled": false,
+      "vendor_cache": "ordinary shared cache; live vendors not replaced",
+      "source_sha256_at_start": {
+        "agents/context.py": "8bc0cec09798a341255ac6bc7b512c8c1cc2457d1ebcf7324cb9894cb674b694",
+        "agents/analysts/sentiment_analyst.py": "8aa8b95504527b4e471fa1e4d572358c06a07e45c458038e2956b1e9dee735da",
+        "agents/managers/research_manager.py": "c32b4dbeab892a93e0d44eacc9d222586c52393497ddbde183223a80a4bf6f25",
+        "agents/trader/trader.py": "93831d2d1ad9f41b7ea54ee1b55c463a266a1b8e3f0bac2ee95695fc25b884c0",
+        "default_config.py": "7b1932fc8f6a32e7c49e360f57961aaff0d837685330aeb404e23638f8c17215",
+        "graph/trading_graph.py": "b7e0ab7407fd8cf37834566c482ecb32c8d608484c872f02c8ad5668acdab4f2",
+        "runapi/execution.py": "616b756d71caf591534f477bf433d1e78729bd720f8a38a31b453fbdc54baf0f"
+      },
+      "stage_words": {
+        "Sentiment Analyst": 485,
+        "Fundamentals Analyst": 568,
+        "News Analyst": 677,
+        "Market Analyst": 693,
+        "Bull Researcher": 211,
+        "Bear Researcher": 272,
+        "Research Manager": 362,
+        "Trader": 384,
+        "Aggressive Analyst": 137,
+        "Conservative Analyst": 153,
+        "Neutral Analyst": 148,
+        "Portfolio Manager": 442
+      }
+    }
+  ],
+  "mean_total_tokens": 95591.5,
+  "reduction_percent_vs_control": 26.91054921360686,
+  "preliminary_candidates_not_in_final_mean": [
+    {
+      "profile": "compact-1",
+      "compact_evidence_handoff": true,
+      "status": {
+        "runId": "20261125T073301Z-0956cab7",
+        "ticker": "NVDA",
+        "status": "COMPLETED",
+        "currentAgent": "Report published",
+        "currentStage": "Report published",
+        "startedAt": "2026-11-25T07:33:01.148618Z",
+        "elapsedSeconds": 60,
+        "modelCalls": 18,
+        "callBudget": {
+          "call_cap": 40,
+          "denied": 0,
+          "dispatched": 18,
+          "granted": 18,
+          "invalidated": 0
+        },
+        "usage": {
+          "inputTokens": 110486,
+          "outputTokens": 12625,
+          "totalTokens": 123111,
+          "complete": true
+        },
+        "finalRating": "Hold",
+        "outputCheck": "PASSED",
+        "stopReason": null,
+        "findings": [],
+        "effectiveConfig": {
+          "ticker": "NVDA",
+          "analysisDate": "2026-11-24",
+          "selectedAnalysts": [
+            "market",
+            "news",
+            "social",
+            "fundamentals"
+          ],
+          "researchRounds": 1,
+          "riskRounds": 1,
+          "maxModelRequests": 40,
+          "deepModel": "CS5351/DeepSeek-V4-Flash",
+          "quickModel": "CS5351/DeepSeek-V4-Flash",
+          "deepProvider": "openai_compatible",
+          "quickProvider": "openai_compatible",
+          "outputLanguage": "English",
+          "conciseIntermediateReports": true
+        }
+      },
+      "input_mode": "NO_PORTFOLIO",
+      "entry_point": "run_analysis_api with CLI-equivalent stream runner",
+      "memory": "isolated empty file per run",
+      "checkpoint_enabled": false,
+      "llm_max_retries": 0,
+      "vendor_cache": "shared ordinary cache; no frozen/vendor substitution",
+      "stage_words": {
+        "Sentiment Analyst": 1412,
+        "Fundamentals Analyst": 572,
+        "News Analyst": 638,
+        "Market Analyst": 700,
+        "Bull Researcher": 224,
+        "Bear Researcher": 194,
+        "Research Manager": 277,
+        "Trader": 259,
+        "Aggressive Analyst": 175,
+        "Conservative Analyst": 166,
+        "Neutral Analyst": 189,
+        "Portfolio Manager": 574
+      },
+      "source_hashes": {
+        "tradingagents/agents/context.py": "8bc0cec09798a341255ac6bc7b512c8c1cc2457d1ebcf7324cb9894cb674b694",
+        "tradingagents/agents/managers/research_manager.py": "c32b4dbeab892a93e0d44eacc9d222586c52393497ddbde183223a80a4bf6f25",
+        "tradingagents/agents/trader/trader.py": "93831d2d1ad9f41b7ea54ee1b55c463a266a1b8e3f0bac2ee95695fc25b884c0"
+      }
+    },
+    {
+      "profile": "compact-2",
+      "compact_evidence_handoff": true,
+      "status": {
+        "runId": "20261125T073403Z-cdec7edd",
+        "ticker": "NVDA",
+        "status": "COMPLETED",
+        "currentAgent": "Report published",
+        "currentStage": "Report published",
+        "startedAt": "2026-11-25T07:34:03.273995Z",
+        "elapsedSeconds": 60,
+        "modelCalls": 19,
+        "callBudget": {
+          "call_cap": 40,
+          "denied": 0,
+          "dispatched": 19,
+          "granted": 19,
+          "invalidated": 0
+        },
+        "usage": {
+          "inputTokens": 97042,
+          "outputTokens": 13171,
+          "totalTokens": 110213,
+          "complete": true
+        },
+        "finalRating": "Underweight",
+        "outputCheck": "PASSED",
+        "stopReason": null,
+        "findings": [],
+        "effectiveConfig": {
+          "ticker": "NVDA",
+          "analysisDate": "2026-11-24",
+          "selectedAnalysts": [
+            "market",
+            "news",
+            "social",
+            "fundamentals"
+          ],
+          "researchRounds": 1,
+          "riskRounds": 1,
+          "maxModelRequests": 40,
+          "deepModel": "CS5351/DeepSeek-V4-Flash",
+          "quickModel": "CS5351/DeepSeek-V4-Flash",
+          "deepProvider": "openai_compatible",
+          "quickProvider": "openai_compatible",
+          "outputLanguage": "English",
+          "conciseIntermediateReports": true
+        }
+      },
+      "input_mode": "NO_PORTFOLIO",
+      "entry_point": "run_analysis_api with CLI-equivalent stream runner",
+      "memory": "isolated empty file per run",
+      "checkpoint_enabled": false,
+      "llm_max_retries": 0,
+      "vendor_cache": "shared ordinary cache; no frozen/vendor substitution",
+      "stage_words": {
+        "Fundamentals Analyst": 545,
+        "Market Analyst": 618,
+        "News Analyst": 788,
+        "Sentiment Analyst": 1429,
+        "Bull Researcher": 242,
+        "Bear Researcher": 477,
+        "Research Manager": 243,
+        "Trader": 229,
+        "Aggressive Analyst": 356,
+        "Conservative Analyst": 293,
+        "Neutral Analyst": 150,
+        "Portfolio Manager": 415
+      },
+      "source_hashes": {
+        "tradingagents/agents/context.py": "8bc0cec09798a341255ac6bc7b512c8c1cc2457d1ebcf7324cb9894cb674b694",
+        "tradingagents/agents/managers/research_manager.py": "c32b4dbeab892a93e0d44eacc9d222586c52393497ddbde183223a80a4bf6f25",
+        "tradingagents/agents/trader/trader.py": "93831d2d1ad9f41b7ea54ee1b55c463a266a1b8e3f0bac2ee95695fc25b884c0"
+      }
+    }
+  ],
+  "limitations": [
+    "One NVDA/date case, one control and two final candidates; sampling, ordinary live vendor/cache changes and different call counts remain confounders.",
+    "Existing Q1-Q4 PASSED is structural output verification, not independent semantic/financial acceptance.",
+    "Word targets are advisory; no report or tool data was truncated. No hard token budget is implemented.",
+    "Preliminary phase did not cover the separate sentiment path. Its source_hashes are filesystem completion snapshots, not loaded-module identities. Final benchmark hashes were captured before the final two runs.",
+    "Control prompts are unchanged when compact_evidence_handoff=False, including after the conditional sentiment-path addition."
+  ]
+}

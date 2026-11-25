@@ -1,0 +1,1 @@
+"""Course-layout verification package."""
