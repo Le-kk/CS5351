@@ -4,11 +4,11 @@ Date: 2026-11-25 (Asia/Hong_Kong). Test-plan pre-approval remains paused as a re
 
 ## Checks to require after successful GitHub validation
 
-Keep `required tests`, `ruff (strict, full repo)`, `dependency check`, `ai-log updated` and `requirements schema`; add the exact names `type check` and `security checks`. All run on every PR, including renames and changes outside the safety paths. Static-analysis checks are separate jobs, not extra application stages. The six course gate categories must not be inferred by counting workflow jobs or check names.
+The seven configured names are `required tests`, `ruff (strict, full repo)`, `dependency check`, `ai-log updated`, `requirements schema`, `type check` and `security checks`. The existing regression summary also requires the frontend build/high-critical audit. All run on every PR, including renames and changes outside the safety paths. Static-analysis checks are separate jobs, not extra application stages. The six course gate categories must not be inferred by counting workflow jobs or check names.
 
 ## Type coverage
 
-`python -m mypy --config-file pyproject.toml` checks all files in `tradingagents/runapi/`, plus `portfolio.py`, `agents/schemas.py` and `agents/rating.py`: currently 14 files. Function bodies without annotations are checked where mypy can infer types. In-scope errors block; there is no in-scope error baseline or ignore-all override. Imported legacy modules use `follow_imports=silent`; missing third-party typing is tolerated. This is incremental typing, not strict typing of the whole repository.
+`python -m mypy --config-file pyproject.toml` checks all files in `src/tradingagents/runapi/`, plus `portfolio.py`, `agents/schemas.py` and `agents/rating.py`: currently 15 files. Function bodies without annotations are checked where mypy can infer types. In-scope errors block; there is no in-scope error baseline or ignore-all override. Imported legacy modules use `follow_imports=silent`; missing third-party typing is tolerated. This is incremental typing, not strict typing of the whole repository.
 
 An initial exploratory scan of all 105 application files reported 187 errors in 38 files. Broad legacy/CLI/vendor typing remains a backlog rather than being silently marked fixed. Nine errors in the selected boundary were addressed through precise literal aliases/annotations and narrowing optional values. Runtime formats and existing valid-input behavior are retained. Real mypy fixtures accept `COMPLETED` and reject both an unknown outcome and an integer outcome. The type job targets Python 3.12, matching its CI interpreter and current NumPy dependency stubs; runtime compatibility on Python 3.11–3.14 remains covered by the regression matrix.
 
@@ -23,7 +23,7 @@ This API snapshot covers the documented Python boundary, not every private helpe
 
 ## Security scan and fixes
 
-`check_security_scan.py` runs Bandit on all application Python under `tradingagents/` and `cli/` (currently 105 files), blocks medium/high findings, rejects scanner/parse errors and incomplete coverage, and retains the report as a GitHub artifact. Low-severity findings are not blocking and their counts remain in the report. CI/helper scripts are not part of this Bandit application scan; their permission/report behavior is tested separately.
+`check_security_scan.py` runs Bandit on all application Python under `src/tradingagents/`, `src/cli/` and `src/demo/` (currently 115 files), blocks medium/high findings, rejects scanner/parse errors and incomplete coverage, and retains the report as a GitHub artifact. Low-severity findings are not blocking and their counts remain in the report. CI/helper scripts are not part of this Bandit application scan; their permission/report behavior is tested separately.
 
 Initial findings were triaged rather than globally suppressed:
 
@@ -54,3 +54,7 @@ python -m pytest -q tests/member_d_verification/test_type_gate.py tests/member_d
 ```
 
 The CI security job additionally runs the named Member C offline suite and existing privacy, redaction, replay-durability, terminal-visibility, layering and RSS/StockTwits regressions. The normal full regression job remains intact. No token budget, model, live evaluation rubric or test-approval protection setting is changed.
+
+## Course-layout integration update
+
+Canonical tests are under test/offline and test/live; historical tests/ references remain compatibility aliases. The current source helper resolves the checkout root after package movement. Native role-permission snapshots remain tied to their recorded old hashes; equivalent path updates are not a fresh native-tool acceptance. npm audit/build are separate from Bandit and scoped to the frontend; five moderate npm findings remain explicit debt, while high/critical findings block its CI job.

@@ -27,3 +27,5 @@ Final pre-merge path review also gave the new demo/frontend modules the same per
 ## Hosted packaging failure caught before merge
 
 GitHub's real frontend build rejected missing src/lib/apiClient.js and utils.js. The upstream generic lib/ ignore rule had excluded these frontend source helpers even though the local working tree build could read them. Added narrow unignore rules for src/frontend/src/lib and committed the existing source files; no checks were removed or bypassed. Python matrix/installation passed in that failed run; required-tests correctly rejected the frontend failure. The failed hosted run is 45631744695.
+
+The frontend was also rebuilt successfully from a pure Git archive, excluding local ignored/untracked source. Refreshed the current type/security guide to 15 scoped type files and 115 scanned Python files while preserving the initial historical 105-file scan. Added a factual browser/layout architecture integration addendum, explicitly pending affected-owner review.

@@ -1,5 +1,7 @@
 # Architecture Blueprint — Portfolio-Aware CLI and Auditable Reporting
 
+> E integration note, 2026-11-25: the canonical source/test layout and the implemented loopback browser adapter are described in the [integration addendum](docs/architecture/proposals/layout-and-demo-integration-2026-11-25.md). Historical root paths below remain aliases. This records actual integration without declaring B approval or changing the original candidate selection; broader proposed obligations remain proposed.
+
 Status: **architecture draft, implementation-aligned (revised 2026-11-24)** for Member B's session. It describes the C2 design and now also states, separately, what the `main` checkout implements at `a62b801a51e6310f3b46860f6d2790583a95e0e0` versus what remains proposed. Not implementation approval, not verification, not an approved course deliverable until E/team assembly and instructor reconciliation. Complements the D2 artifacts under `docs/architecture/`.
 
 - Selection: **C2 — input-service + immutable `RunContext` boundary with a small lifecycle coordinator**, chosen by Brian (human) on 2026-11-12 based on **estimated** tradeoffs, not verified superiority. Preserved unchanged; no new candidate generation.

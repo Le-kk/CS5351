@@ -502,7 +502,7 @@ source_records:
   kind: ai_use_record
   record_date: '2026-11-25'
   date_basis: actual task date
-  sha256: a5c36fb8a245698cdd333dde95690fcd7f8da28c7137e4a44483c89177746841
+  sha256: 89cb50cb28962b478c5125091967670cfdc1f41bba3842ffdaceb05c0d82df4a
 events:
 - id: B-REVIEW
   member: B
