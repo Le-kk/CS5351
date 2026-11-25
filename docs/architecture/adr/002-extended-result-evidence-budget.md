@@ -42,6 +42,12 @@ The 24 November requirements snapshot (`docs/req/requirements.yaml`, `status: pr
 - Negative/limits: larger result/report/manifest/scorer surface (version gates required); R3 deterministic phrase check cannot judge context; R5 corrected-only `PASSED` requires every reader to understand `CORRECTED`; evidence registry is the largest implementation risk before the deadline.
 - Preserved: ADR 001 / C2 selection and rationale; Q2 trusted-provenance guard (kept separately from R2); as-built Q1–Q4 behaviour remains the current description until implementation.
 
+## Implementation-status addendum (2026-11-25, `6b57aad`; decision unchanged)
+Bounded dated status, **not** a new decision and **not** an acceptance:
+- **D3 (call cap) — implemented for the bounded profile:** opt-in `RunBudgetController` (`runapi/budget.py`) with the synchronous SDK transport seam (`llm_clients/budget_transport.py`); supported tiers `deepseek`/`openai_compatible`, SDK/transport retries disabled, async rejected; monotonic single-use run-bound tickets; `seal()` waits active responses; `finalize` emits `BUDGET` on refusal with `PERSISTENCE_ERROR` primary; enabled budget-only manifest `schema_version` int `2`, `check_rules_version` int `1`, `run_budget` five safe counters, reusing `validate_budget_manifest`/scorer. **Not** a token/time cap, arbitrary-code protection or gateway-internal-retry count.
+- **D1/D2/D4 (corrected findings, R1–R8, evidence/coverage) — still unimplemented:** the checker emits only Q1–Q4; types admit `CORRECTED` but no rule produces it.
+- **Cumulative token admission (`REQ-TA-NFR-COST-001`, §15A, ADR-004) — still proposed:** not implemented.
+
 ## Related
 - Canonical blueprint: [../../../architecture-blueprint.md](../../../architecture-blueprint.md)
 - [../interface-contracts.md](../interface-contracts.md) §13–§16; [001-portfolio-aware-cli.md](001-portfolio-aware-cli.md); [../runtime-policy-catalog.md](../runtime-policy-catalog.md); [../invariants.md](../invariants.md); [../traceability-inputs-member-b.md](../traceability-inputs-member-b.md)

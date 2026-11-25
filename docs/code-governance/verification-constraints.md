@@ -1,3 +1,24 @@
+# Member C acceptance constraints — current interpretation
+
+Updated 2026-11-25. [Entry point](../verification/README.md) · [Strategy](../verification/test-plan.md) · [Summary](../verification/verification-report.md)
+
+## Applicable constraints
+
+- Verify actual source/configuration against agreed requirements; schema validity does not establish adoption or implementation.
+- Preserve assertions, consent/freezing, deterministic authority, privacy and publication boundaries. Retain valid controls and intended negative rejections.
+- Report scope, commands, outcomes, evidence availability and actual reviewer provenance. Developer evidence is not automatically independent acceptance.
+- Historical GOV-004 PASS is UNVERIFIED; independent acceptance PENDING. Use the [status](../verification/semantic-evaluation.md) and [contract](../verification/gov004-evidence-package.md); Q1–Q4 and self-tests do not establish semantic acceptance.
+- Test-plan pre-approval remains paused. Prompt.md H1/H2/H3 are separate process obligations; documents do not prove approvals occurred.
+- CI token/trusted-code rules, native role permissions and OS isolation are distinct. Read the [later permission supplement](opencode-permissions.md), not only older “not deployed” statements.
+- Do not fabricate approval, adoption, independent review or remote enforcement. Record missing evidence and blocked commands explicitly.
+
+C owns criteria/evidence; E integration, A requirement meaning, B design and D implementation. These qualifications supersede conflicting present-tense/PASS language below without altering historical observations.
+
+## Historical constraints archive
+
+<details>
+<summary>Expand preserved historical record (not current acceptance)</summary>
+
 # Verification Constraints (Member C)
 
 > Current acceptance status: historical GOV-004 PASS claims below are not independently auditable in this checkout and remain PENDING. The November 18 integration review supersedes unconditional acceptance claims. See `docs/verification/gov004-evidence-package.md` for corrected evidence requirements; fresh developer diagnostics do not constitute independent formal acceptance. Current regression results and limitations: `docs/reviews/remediation-2026-11-21.md`.
@@ -382,3 +403,6 @@ flagged here rather than silently assumed:
   GOV-004 PASS.
 - This document records observed numbers only; it invents no approvals, signatures
   or results.
+
+
+</details>

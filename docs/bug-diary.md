@@ -1,3 +1,79 @@
+# Bug diary — closeout dispositions
+
+Date: 25 November 2026
+
+## Closeout dispositions
+
+| Entry | Classification | Final recorded disposition | Evidence |
+|---|---|---|---|
+| BD-001 | Test isolation | Repaired; 6 Bedrock tests pass under ordinary and conflicting AWS environments | ER-04/06; final full regression ER-07 |
+| BD-002 | Verification boundary | Closed by targeting the as-of guard in resolve_run_context | Original reproduction below |
+| BD-003 | Test expectation | Closed by testing provider-specific classification and preserving bare ConnectionError behavior | Original reproduction below |
+| BD-004 | Result contract | Repaired in the recorded focused batch | ER-01 |
+| BD-005 | Population accounting | Repaired in the recorded focused batch | ER-01 |
+| BD-006 | Report layout | Repaired in the recorded focused batch | ER-01 |
+
+[Evidence index](verification/evidence-index.md) · [Review memo](review-memo.md) · [Remaining engineering work](debt-register.md)
+
+## BD-001 — Final isolation repair
+
+**Symptom.** Bedrock construction used ambient credential/proxy configuration. An initial repair still allowed a conflicting AWS region to affect the bearer-token test.
+
+**Root cause.** Constructor setup and test execution shared the process AWS environment and cached SDK state.
+
+**Repair.** The module fixture removes ambient AWS overrides, uses synthetic credentials and empty configuration files, and disables metadata discovery. The real-construction case resets the SDK session and blocks HTTP sends.
+
+**Verification.** ER-05 retains the initial 1-failed/5-passed probe. ER-04 and ER-06 each record 6 passes; ER-07 records the final full regression.
+
+**Invariant gap addressed.** Offline constructor tests require controlled provider configuration and network isolation.
+
+## BD-004 — Result and finding consistency
+
+**Symptom.** The registry tests exposed missing BUDGET vocabulary, rejected corrected-only PASSED envelopes and accepted REVIEW/PASSED combinations.
+
+**Reproduction.** Run the focused command in the [evidence index](verification/evidence-index.md#recorded-commands), including the output-check, failure and registry-gap modules.
+
+**Root cause.** Result vocabulary and validation did not represent the required combinations consistently.
+
+**Fix.** The result contract represents BUDGET, retains corrected findings and rejects invalid verdict/finding combinations.
+
+**Verification.** The post-repair focused batch records 237 passes. [Repair regressions](../tests/member_c_verification/test_registry_result_repairs.py) cover valid corrected findings, mixed blocking findings and invalid combinations.
+
+**Invariant gap addressed.** Public result fields must agree with deterministic check authority.
+
+## BD-005 — Cases and attempts in population accounting
+
+**Symptom.** The distinct-case probe failed, and the summary did not expose the required case identity.
+
+**Reproduction.** Run test_case_identity_is_not_attempt_identity in the [population module](../tests/member_c_verification/offline/test_nfr006_population.py).
+
+**Root cause.** Attempt identity and case identity were not represented separately in the observable population summary.
+
+**Fix.** Explicit case identity drives distinct-case counts; unresolved starts remain in the attempt denominator.
+
+**Verification.** ER-01 includes the repaired population tests and developer regressions for missing case identity and unresolved attempts.
+
+**Invariant gap addressed.** Completion accounting must retain every started attempt while counting distinct cases separately.
+
+## BD-006 — Leading disclaimer placement
+
+**Symptom.** Twenty report fixtures failed the required leading-disclaimer layout.
+
+**Reproduction.** Run test_sec003_rendered_report_starts_with_disclaimer in the [registry-gap module](../tests/member_c_verification/offline/test_registry_gaps.py).
+
+**Root cause.** The rendered report placed its title and metadata before the disclaimer.
+
+**Fix.** The report layout places the disclaimer before the title and trusted metadata.
+
+**Verification.** ER-01 includes the repaired disclaimer fixtures and the HTML notice-order regression.
+
+**Invariant gap addressed.** Report presentation must preserve the required disclosure ordering.
+
+## Historical bug records
+
+<details>
+<summary>Earlier reproductions and investigation records</summary>
+
 > Latest results: Linux rerun below reports 1882 passed / 26 failed; earlier Windows counts remain historical.
 
 # Bug Diary (Member C)
@@ -88,3 +164,5 @@ H6 replay locking, H7 schema-gate fixtures, H8 symlink isolation and H10 loopbac
 Only verification documentation was changed in this rerun; prior test edits are preserved. No live model replay, human semantic scoring, remote CI/branch-protection inspection, commit or publication occurred. Full registry acceptance remains blocked; prior historical records are retained.
 
 Documentation check: default Linux git diff --check flags CRLF in pre-existing dirty files; the CR-at-EOL-aware check is recorded separately. No test line endings were changed.
+
+</details>

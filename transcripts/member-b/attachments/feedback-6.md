@@ -1,0 +1,20 @@
+# Approved live-found arithmetic repair L1 + provider-override correction
+
+Continue SAME session. The coordinator ran live models FIRST, inspected all delivered decision stages, found an actual C3 arithmetic error, prepared a concrete new six-case test plan, and obtained Brian's actual response: **“Approve the test plan and bounded repair”** (Codex request_user_input_async call `call_2db0878ac84346e7b389654c3e999e80`). Read `docs/verification/proposals/live-trader-numeric-test-plan-2026-11-21.md`; status is now approved, with the original pre-approval bytes/hash privately retained. This authorization covers the bounded prompt/test repair, not a new deterministic financial-math validator or Q5.
+
+## L1 implementation
+
+The completed live C3 run `20261121T093733Z-8c832879` returned COMPLETED/PASSED. Its Trader text said: stop=255.33 is “roughly 1.5×ATR (6.6 points) below the current 258.47 close”, ATR=4.39. Real difference=3.14, multiple≈0.715. PM corrected it later but delivered Trader text remained false. Do not erase the actual failure or claim the previous offline prompt tests covered it.
+
+Implement the approved BOUNDED numerical-grounding prompt correction in `tradingagents/agents/trader/trader.py`, with captured actual structured + fallback regressions. Require arithmetic distances/multiples to be computed from the explicit quoted anchors (abs(anchor−level), divided by positive ATR for a multiple), not copied from inconsistent research prose; do not call mark-to-market gains locked/guaranteed; omit unsupported ratios / say unknown when necessary inputs are absent or nonpositive. Keep the instruction modest, protected through the existing system-prompt boundary, stage-appropriate, general (do not hardcode the observed prices), and preserve all source/portfolio facts. No new tools/checker/public enums or auto-rewriting report text. Absolute-price fields and ratings/actions remain unchanged. Coordinator will run the 3 fresh real-model fixture attempts, forced free-text real fallback and missing-ATR case, then all 10 full end-to-end cases. Do NOT make duplicate live calls from this coding process.
+
+## Confirmed remaining operational flaw from your last pass
+
+`_apply_llm_provider_override` claims it switches both tiers but sets the MODEL IDs to the fixed school strings while leaving tier-provider overrides alone. This silently repairs a caller's invalid model selection before validation, and can report provider=deepseek while a configured tier still uses another adapter. Correct this minimally:
+
+- GOV004_LLM_PROVIDER selects provider only: base + both tier providers must agree (or inherited stale tier overrides explicitly cleared so the effective adapter is the requested provider).
+- Do NOT overwrite model IDs; saved or caller-selected model IDs must still reach strict FIXED_CONFIG validation. Bad IDs must yield zero live dispatch rather than being silently converted to valid IDs.
+- Ensure `_live_config` uses the effective tier-provider selection consistently despite DEFAULT_CONFIG being imported before the override. Default no-override behavior stays saved settings.
+- Tests: wrong saved model + GOV004_LLM_PROVIDER=deepseek retains wrong model and rejects preflight, and saved conflicting deep/quick providers + explicit deepseek actually configures both tiers deepseek. Use synthetic mocks, no credential reads. Keep documentation exact.
+
+No commits/pushes, .env/key/auth reads, subagents, canonical requirements/governance or unrelated draft edits. All actual application tests are controlled by coordinator using saved school credentials and synthetic portfolios. Use targeted regressions first, appropriate full suite and Ruff/pip/diff once stable. Preserve coordinator report sections; add an implementer subsection for code changes and pending/live test status. Do not claim real L1 PASS before coordinator checks it; prompt constraints are mitigation, not universal math verification. Finish CODE_READY_FOR_LIVE_L1_AND_REPLAY with actual results.

@@ -1,0 +1,12 @@
+# Test-quality consolidation only; production/harness source is now frozen
+
+The final current-source ten-case live cohort is running. DO NOT edit any production file, tests/conftest.py, live harness, pyproject, dependencies or other frozen runtime source. Your write set is restricted to `test_l2_fundamentals_vintage.py` and the two report/evidence-guide documents.
+
+Reviewer found L2's 27 tests mostly repeat the same model invocation once per literal keyword. That inflates the count and is brittle to equivalent wording; checking `unknown` or `post-cutoff` anywhere in the assembled input can even match the fixture rather than the system instruction. Consolidate to a small set of meaningful scenarios within the already approved L2-01..04 criteria:
+
+- Capture the ACTUAL regular tool-using analyst path: correct tool tuple, dynamic instrument/analysis date, full original dated tool packet unchanged, and the core source/period/cutoff/summary contract in the SYSTEM message (not accidentally from tool payload). Group essential instruction checks in one scenario, not one test per word.
+- Capture the ACTUAL existing WRAP_UP path used by the real live fixtures: no tool binding, actual llm.invoke called, dated ToolMessages preserved through `_as_text`, same system contract present.
+- Missing-data packet and post-cutoff packet remain intact; code does not invent financial figures or treat source dates as instruction constants. Check the exclusion/timing constraint in SYSTEM specifically. Do not assert a fake model's response proves semantic compliance.
+- Different ticker/date inputs verify that the instruction is general rather than a hardcoded Apple/year patch. Preserve useful current negative/pass-through tests and clear test names; remove duplicated keyword parametrization.
+
+This is test-only consolidation, not a new requirement or a behavior change. Real L2 outputs now pass the targeted future-metadata timing exclusion in all 3 unique calls, and old-period/missing-data calls respected the approved cases; the coordinator will record actual evidence separately. Do not invent live details or C acceptance. Run meaningful targeted tests, one stable full offline suite, Ruff/pip/diff; update the report's final count honestly (a lower count after consolidation is expected). Do not repeat full suite after docs-only edits. Keep coordinator sections/raw evidence/AI-log untouched. No live calls, subagents, credentials/.env reads, commits/pushes or unrelated edits. Finish TEST_REVIEW_COMPLETE_SOURCE_UNCHANGED.

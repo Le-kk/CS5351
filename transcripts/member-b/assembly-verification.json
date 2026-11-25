@@ -1,0 +1,43 @@
+{
+  "verified_hkt": "2026-11-25T20:55:47.876515+08:00",
+  "checkout": "2840f1f9a1fe5fb606050f9bd4bf4c92b5f5a773",
+  "student_id": "57611829",
+  "native_sessions": 4,
+  "native_messages": 1902,
+  "native_parts": 7686,
+  "part_counts": {
+    "text": 1454,
+    "step-start": 1828,
+    "tool": 1995,
+    "step-finish": 1828,
+    "patch": 566,
+    "file": 15
+  },
+  "native_user_interventions": 71,
+  "codex_review_entries": 96,
+  "codex_user_interventions": 3,
+  "all_source_message_ids_parts_and_metadata_preserved": true,
+  "every_rendered_native_block_matches_sharing_json": true,
+  "every_changed_string_declared_and_hash_verified": true,
+  "privacy_edited_string_locations": 187,
+  "unmodified_private_native_exports_hash_verified": true,
+  "three_prior_ai_log_records_byte_identical": true,
+  "three_approval_receipts_and_preapproved_plan_hashes_verified": true,
+  "approval_record_times_before_relay_turns": true,
+  "current_facing_local_links_broken": 0,
+  "potential_credential_pattern_findings": 0,
+  "all_33_preexisting_local_files_hash_preserved": true,
+  "focused_pulled_test_file": {
+    "command": ".venv/bin/python -m pytest tests/member_c_verification/offline/test_registry_gaps.py -q",
+    "outcome": "42 passed in 4.10s",
+    "not_historical_transcript_result": true
+  },
+  "paid_application_calls": 0,
+  "commit_or_push": false,
+  "limitations": [
+    "Privacy-reviewed sharing copies are not byte-identical raw originals.",
+    "Original tool truncation and source snapshot boundaries remain.",
+    "Annotations are retrospective editorial rationale, not new signatures or approvals.",
+    "Full multi-day supervising Codex chat and other students D5 files are not claimed complete."
+  ]
+}
