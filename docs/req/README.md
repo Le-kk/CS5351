@@ -46,4 +46,10 @@ python -m pytest -q tests/member_d_verification/test_requirement_schema_gate.py
 
 Merge-protection activation (required check on `main`) is **E-reported** with a direct-read limitation (administrative endpoint HTTP 401 in the reviewing session); see [the schema-gate review](../reviews/requirements-schema-gate-review-2026-11-24.md). The registry remains `proposed_for_adoption`; the gate is not A's adoption decision.
 
+## Other implemented CI gates and agent guidance (2026-11-25)
+
+Beyond `requirements schema`, `type check` (mypy, Python 3.12, **14** runapi/portfolio/rating/output-schema files; incremental, not whole-repo) and `security checks` (Bandit over **105** application files, medium/high blocking, five workflow-permission boundaries, API/consent/privacy probes; two reviewed URL suppressions) are implemented CI jobs. Root [`AGENTS.md`](../../AGENTS.md) now exists as startup/ownership guidance; it does **not** install `.opencode` role ACLs. Seven required check names (`required tests`, `ruff (strict, full repo)`, `dependency check`, `ai-log updated`, `requirements schema`, `type check`, `security checks`) are **E-reported** required (admin HTTP 401). Coverage/limits: [`types-and-security-coverage.md`](../code-governance/types-and-security-coverage.md); review [`types-security-gates-review-2026-11-25.md`](../reviews/types-security-gates-review-2026-11-25.md).
+
+> **Test-plan pre-approval is paused** as a required merge check per `AGENTS.md`; the `/approve-tests` receipt protocol is inactive/historical for current use. None of these CI gates adopt the registry or certify semantic adequacy.
+
 Current architecture reading paths point here. The historical integration review retains its original findings and now links to the exact reviewed root-layout revision. Authentic AI transcripts and retained measurement evidence are not rewritten by this relocation.

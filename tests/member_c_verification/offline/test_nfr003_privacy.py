@@ -1,4 +1,4 @@
-"""SEL-TA-NFR-003 — Credential and holdings privacy.
+"""REQ-TA-SEC-002 (plus retained holdings regression) — Credential and holdings privacy.
 
 Fit: four planted secret types across sinks/error paths yield zero values; an
 unrelated-holding marker does not appear in report/manifest; source files are
@@ -259,3 +259,20 @@ def test_tc_nfr003_g_published_narrative_redacts_credential(tmp_path):
         assert benign in text, f"benign sentence missing from {name} report"
         assert fake_credential not in text, f"credential leaked into {name} report"
         assert "[REDACTED]" in text, f"no redaction marker in {name} report"
+
+
+@pytest.mark.parametrize("severity", ["CORRECTED", "BLOCKING"])
+@pytest.mark.parametrize("name", list(SECRETS))
+def test_finding_diagnostics_redact_without_losing_severity(severity, name):
+    """Safe diagnostic projection; raw corrected values must not leak secrets."""
+    import json
+
+    raw = {"status": severity, "detail": SECRETS[name],
+           "original": {"api_key": "planted-original"},
+           "corrected": {"access_token": "planted-corrected"}}
+    safe = Redactor().scrub(raw)
+    assert safe["status"] == severity
+    assert safe["original"]["api_key"] == "[REDACTED]"
+    assert safe["corrected"]["access_token"] == "[REDACTED]"
+    assert SECRETS[name] not in json.dumps(safe)
+    assert raw["original"]["api_key"] == "planted-original"

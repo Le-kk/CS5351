@@ -30,6 +30,7 @@ def build_envelope(metadata: dict, run_outcome: str, stop_reason: str | None,
                    findings: tuple, redactor) -> str:
     provenance = render_provenance(metadata)
     lines = [
+        DISCLAIMER, "",
         f"# Trading Analysis Report: {metadata['ticker']}", "", provenance,
         f"- Run outcome: {run_outcome}",
     ]

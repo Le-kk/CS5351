@@ -3,6 +3,7 @@ artifact: Structured AI-use event index
 updated_on: '2026-11-25'
 timezone: Asia/Hong_Kong
 source_baseline: 345d98354bf0448048c93ed67512c906c4c8bdce
+integration_note: "Historical inventory snapshot: member A logs and newer B/C records arrived in main after this index was compiled. Missing-record entries below describe that snapshot, not current repository availability. Refresh and member confirmation remain pending."
 status: compiled_from_available_records; outstanding records and member confirmation pending
 owner: E
 path_basis: All source and artifact paths are relative to repository root.
