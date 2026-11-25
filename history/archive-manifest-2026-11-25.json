@@ -1,0 +1,26 @@
+[
+  {
+    "old_path": "README.md",
+    "archive": "history/README-before-course-layout-2026-11-25.md",
+    "sha256": "ee63ee1f282821faf28c569f953a0a77844eb2bf273278605ba069bdf1377297",
+    "reason": "Superseded entry instructions; preserved, not treated as current acceptance."
+  },
+  {
+    "old_path": "src/demo/README.md",
+    "archive": "history/demo-prototype/README.md",
+    "sha256": "34ee6400741507e12d24181f7f5e85eaa8e6b94e5d76bae7e06df19229da4642",
+    "reason": "Superseded entry instructions; preserved, not treated as current acceptance."
+  },
+  {
+    "old_path": "src/demo/NO_CODE_DEPLOYMENT.md",
+    "archive": "history/demo-prototype/NO_CODE_DEPLOYMENT-before-packaging.md",
+    "sha256": "bc9acca5c4b3b414fdfdf0edc8cd9c308809f73cef52107d51b72d2a54c43724",
+    "reason": "Superseded entry instructions; preserved, not treated as current acceptance."
+  },
+  {
+    "old_path": "src/frontend/hmr-client.js",
+    "archive": "history/frontend/unused-export-hmr-client.js",
+    "sha256": "94c1af16b537120dad48f539b7a0b04267741f04534ba7c1442d5071b793a895",
+    "reason": "Superseded entry instructions; preserved, not treated as current acceptance."
+  }
+]

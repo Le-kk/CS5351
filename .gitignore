@@ -225,3 +225,9 @@ reports/
 # Private live outputs are packaged deliberately after redaction and review.
 /tests/member_c_verification/live/evidence/
 /.local-review/
+
+# Canonical course-layout generated artifacts
+**/node_modules/
+/src/frontend/build/
+/src/*.egg-info/
+/test/live/member_c_verification/evidence/

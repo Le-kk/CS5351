@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Aggregate the pytest matrix and clean-install smoke into one check.
 
-The check passes only when both GitHub job results are exactly ``success``.
+The check passes only when all required GitHub job results are exactly ``success``.
 Failure, cancellation, skip, or a missing result fails the check. Success means
 those workflow jobs succeeded. It does not mean skipped live model tests ran.
 """
@@ -12,7 +12,7 @@ import argparse
 import os
 import sys
 
-JOBS = ("pytest", "clean-install smoke")
+JOBS = ("pytest", "clean-install smoke", "frontend build")
 
 
 def unsuccessful(results: dict[str, str]) -> list[str]:
@@ -32,22 +32,12 @@ def expect(condition: bool, label: str, failures: list[str]) -> None:
 
 def self_test() -> int:
     failures: list[str] = []
-    expect(unsuccessful({"pytest": "success", "clean-install smoke": "success"}) == [], "both successes pass", failures)
-    expect(
-        bool(unsuccessful({"pytest": "failure", "clean-install smoke": "success"})),
-        "a failed pytest job fails the summary",
-        failures,
-    )
-    expect(
-        bool(unsuccessful({"pytest": "success", "clean-install smoke": "cancelled"})),
-        "a cancelled install job fails the summary",
-        failures,
-    )
-    expect(
-        bool(unsuccessful({"pytest": "skipped", "clean-install smoke": "skipped"})),
-        "skipped jobs fail the summary",
-        failures,
-    )
+    good = dict.fromkeys(JOBS, "success")
+    expect(unsuccessful(good) == [], "all required jobs succeed", failures)
+    for name in JOBS:
+        for state in ("failure", "cancelled", "skipped", ""):
+            expect(bool(unsuccessful({**good, name: state})),
+                   f"{name} {state or 'missing'} is rejected", failures)
     expect(bool(unsuccessful({})), "missing job results fail the summary", failures)
     if failures:
         print(f"{len(failures)} required-tests self-test(s) failed.")
@@ -72,7 +62,7 @@ def main(argv: list[str] | None = None) -> int:
         print("required tests failed. A skipped, failed, or cancelled job does not pass.")
         print("\n".join(problems))
         return 1
-    print("required tests passed: pytest jobs and clean-install smoke succeeded.")
+    print("required tests passed: pytest, clean-install smoke and frontend build succeeded.")
     print("This does not mean skipped live model tests ran.")
     return 0
 

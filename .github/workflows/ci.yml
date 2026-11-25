@@ -37,7 +37,7 @@ jobs:
       - name: Check shared API and safety-critical types
         run: python -m mypy --config-file pyproject.toml
       - name: Prove invalid types are rejected
-        run: python -m pytest -q tests/member_d_verification/test_type_gate.py
+        run: python -m pytest -q test/offline/member_d_verification/test_type_gate.py
 
   security-checks:
     name: security checks
@@ -56,16 +56,16 @@ jobs:
       - name: Verify contracts, API surface, privacy and permissions
         run: >-
           python -m pytest -q
-          tests/member_c_verification/offline
-          tests/test_layering.py
-          tests/member_d_verification/test_f2_redaction.py
-          tests/member_d_verification/test_review_regressions.py
-          tests/member_d_verification/test_security_gate_boundaries.py
-          tests/member_b_remediation/test_r1_logging_redaction.py
-          tests/member_b_remediation/test_r3_replay_durability.py
-          tests/member_b_remediation/test_r5_terminal_visibility.py
-          tests/test_reddit_fallback.py
-          tests/test_stocktwits_resilience.py
+          test/offline/member_c_verification/offline
+          test/offline/test_layering.py
+          test/offline/member_d_verification/test_f2_redaction.py
+          test/offline/member_d_verification/test_review_regressions.py
+          test/offline/member_d_verification/test_security_gate_boundaries.py
+          test/offline/member_b_remediation/test_r1_logging_redaction.py
+          test/offline/member_b_remediation/test_r3_replay_durability.py
+          test/offline/member_b_remediation/test_r5_terminal_visibility.py
+          test/offline/test_reddit_fallback.py
+          test/offline/test_stocktwits_resilience.py
       - name: Retain scanner report
         if: always()
         uses: actions/upload-artifact@v4
@@ -91,7 +91,7 @@ jobs:
       - name: Validate current registry, schema and cross-record rules
         run: python scripts/ci/check_requirement_schema.py
       - name: Prove valid, invalid and execution-error outcomes
-        run: python -m pytest -q tests/member_d_verification/test_requirement_schema_gate.py
+        run: python -m pytest -q test/offline/member_d_verification/test_requirement_schema_gate.py
 
   test:
     name: tests (py${{ matrix.python-version }}${{ matrix.tz && format(', {0}', matrix.tz) || '' }})
@@ -134,9 +134,29 @@ jobs:
           # install must import the package and the CLI module.
           python -c "import tradingagents, cli.main; print('clean-install import OK')"
 
+  frontend:
+    name: frontend build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: src/frontend/package-lock.json
+      - name: Install reviewed frontend dependencies
+        working-directory: src/frontend
+        run: npm ci --ignore-scripts
+      - name: Reject high and critical dependency vulnerabilities
+        working-directory: src/frontend
+        run: npm audit --audit-level=high
+      - name: Build English presentation frontend
+        working-directory: src/frontend
+        run: npm run build
+
   required-tests:
     name: required tests
-    needs: [test, smoke-install]
+    needs: [test, smoke-install, frontend]
     if: always()
     runs-on: ubuntu-latest
     steps:
@@ -150,6 +170,7 @@ jobs:
         env:
           PYTEST_RESULT: ${{ needs.test.result }}
           SMOKE_RESULT: ${{ needs.smoke-install.result }}
+          FRONTEND_RESULT: ${{ needs.frontend.result }}
         run: python scripts/ci/check_required_tests.py
 
   lint:
