@@ -1,6 +1,6 @@
 # Member A — A2 handoff for E: final requirement identity and adoption
 
-Prepared 25 November 2026 (Asia/Hong_Kong). Reference: A's branch at `5200f14`, based on upstream main `ddfcaf3`.
+Prepared 25 November 2026 (Asia/Hong_Kong). Reference: A's branch `req-a-h3-h5-v2`, based on upstream main `761918e` (which already contains E's H3/H5 follow-up `dc6f2ee`).
 
 ## Status
 
@@ -14,8 +14,8 @@ Prepared 25 November 2026 (Asia/Hong_Kong). Reference: A's branch at `5200f14`, 
 | `docs/req/requirements.yaml` | 36 active entries, 3 withdrawn IDs, `schema_version` 1.2.0 |
 | `docs/req/req-schema.json` | 1.2.0 |
 | `document.status` | **`proposed_for_adoption` — unchanged.** No five-member adoption record exists, so it is not and must not be set to `adopted`. |
-| A's last commit | `5200f14` (on `docs/req-v3-budget-and-repro-threshold`) |
-| Upstream main at time of writing | `ddfcaf3` — **does not yet contain** `1960cfc`, `ff337dd` or `5200f14` |
+| A's branch | `req-a-h3-h5-v2`, one commit on top of `761918e` (pending A's own push; no merge or adoption implied) |
+| Upstream main at time of writing | `761918e` — contains E's H3/H5 follow-up `dc6f2ee`; **does not yet contain** this branch |
 
 ```
 python3 docs/req/validate.py                 36 requirements; 3 withdrawn; 0 error(s), 0 warning(s)   exit 0
