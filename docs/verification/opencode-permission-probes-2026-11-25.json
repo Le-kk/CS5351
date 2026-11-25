@@ -1,0 +1,501 @@
+{
+  "schema_version": 1,
+  "tool": "OpenCode",
+  "version": "1.19.5",
+  "time_utc": "2026-11-24T17:39:14.263284+00:00",
+  "policy_sha256": "8786596aa97abc9f5169433b0622a239a97f67e17d4d02e2376541a80c33e145",
+  "mode": "native-debug-tools; synthetic workspace; no model inference",
+  "passed": true,
+  "cases": [
+    {
+      "role": "A",
+      "tool": "read",
+      "path": "AGENTS.md",
+      "expected": "allow",
+      "exit_code": 0,
+      "permission_denial": false,
+      "target_unchanged": true,
+      "passed": true
+    },
+    {
+      "role": "A",
+      "tool": "edit",
+      "path": "docs/req/e5-allowed.md",
+      "expected": "allow",
+      "exit_code": 0,
+      "permission_denial": false,
+      "target_unchanged": false,
+      "passed": true
+    },
+    {
+      "role": "A",
+      "tool": "edit",
+      "path": ".opencode/rules.md",
+      "expected": "deny",
+      "exit_code": 1,
+      "permission_denial": true,
+      "target_unchanged": true,
+      "passed": true
+    },
+    {
+      "role": "A",
+      "tool": "read",
+      "path": "docs/architecture/.env.A",
+      "expected": "deny",
+      "exit_code": 1,
+      "permission_denial": true,
+      "target_unchanged": true,
+      "passed": true
+    },
+    {
+      "role": "A",
+      "tool": "read",
+      "path": "../external-private.txt",
+      "expected": "deny",
+      "exit_code": 1,
+      "permission_denial": true,
+      "target_unchanged": true,
+      "passed": true
+    },
+    {
+      "role": "A",
+      "tool": "read",
+      "path": "docs/architecture/credentials.json",
+      "expected": "deny",
+      "exit_code": 1,
+      "permission_denial": true,
+      "target_unchanged": true,
+      "passed": true
+    },
+    {
+      "role": "B",
+      "tool": "read",
+      "path": "AGENTS.md",
+      "expected": "allow",
+      "exit_code": 0,
+      "permission_denial": false,
+      "target_unchanged": true,
+      "passed": true
+    },
+    {
+      "role": "B",
+      "tool": "edit",
+      "path": "docs/architecture/adr/e5-allowed.md",
+      "expected": "allow",
+      "exit_code": 0,
+      "permission_denial": false,
+      "target_unchanged": false,
+      "passed": true
+    },
+    {
+      "role": "B",
+      "tool": "edit",
+      "path": ".opencode/rules.md",
+      "expected": "deny",
+      "exit_code": 1,
+      "permission_denial": true,
+      "target_unchanged": true,
+      "passed": true
+    },
+    {
+      "role": "B",
+      "tool": "read",
+      "path": "docs/architecture/.env.B",
+      "expected": "deny",
+      "exit_code": 1,
+      "permission_denial": true,
+      "target_unchanged": true,
+      "passed": true
+    },
+    {
+      "role": "B",
+      "tool": "read",
+      "path": "../external-private.txt",
+      "expected": "deny",
+      "exit_code": 1,
+      "permission_denial": true,
+      "target_unchanged": true,
+      "passed": true
+    },
+    {
+      "role": "B",
+      "tool": "read",
+      "path": "docs/architecture/credentials.json",
+      "expected": "deny",
+      "exit_code": 1,
+      "permission_denial": true,
+      "target_unchanged": true,
+      "passed": true
+    },
+    {
+      "role": "C",
+      "tool": "read",
+      "path": "AGENTS.md",
+      "expected": "allow",
+      "exit_code": 0,
+      "permission_denial": false,
+      "target_unchanged": true,
+      "passed": true
+    },
+    {
+      "role": "C",
+      "tool": "edit",
+      "path": "tests/e5-allowed.txt",
+      "expected": "allow",
+      "exit_code": 0,
+      "permission_denial": false,
+      "target_unchanged": false,
+      "passed": true
+    },
+    {
+      "role": "C",
+      "tool": "edit",
+      "path": ".opencode/rules.md",
+      "expected": "deny",
+      "exit_code": 1,
+      "permission_denial": true,
+      "target_unchanged": true,
+      "passed": true
+    },
+    {
+      "role": "C",
+      "tool": "read",
+      "path": "docs/architecture/.env.C",
+      "expected": "deny",
+      "exit_code": 1,
+      "permission_denial": true,
+      "target_unchanged": true,
+      "passed": true
+    },
+    {
+      "role": "C",
+      "tool": "read",
+      "path": "../external-private.txt",
+      "expected": "deny",
+      "exit_code": 1,
+      "permission_denial": true,
+      "target_unchanged": true,
+      "passed": true
+    },
+    {
+      "role": "C",
+      "tool": "read",
+      "path": "docs/architecture/credentials.json",
+      "expected": "deny",
+      "exit_code": 1,
+      "permission_denial": true,
+      "target_unchanged": true,
+      "passed": true
+    },
+    {
+      "role": "D",
+      "tool": "read",
+      "path": "AGENTS.md",
+      "expected": "allow",
+      "exit_code": 0,
+      "permission_denial": false,
+      "target_unchanged": true,
+      "passed": true
+    },
+    {
+      "role": "D",
+      "tool": "edit",
+      "path": "tradingagents/e5-allowed.txt",
+      "expected": "allow",
+      "exit_code": 0,
+      "permission_denial": false,
+      "target_unchanged": false,
+      "passed": true
+    },
+    {
+      "role": "D",
+      "tool": "edit",
+      "path": ".opencode/rules.md",
+      "expected": "deny",
+      "exit_code": 1,
+      "permission_denial": true,
+      "target_unchanged": true,
+      "passed": true
+    },
+    {
+      "role": "D",
+      "tool": "read",
+      "path": "docs/architecture/.env.D",
+      "expected": "deny",
+      "exit_code": 1,
+      "permission_denial": true,
+      "target_unchanged": true,
+      "passed": true
+    },
+    {
+      "role": "D",
+      "tool": "read",
+      "path": "../external-private.txt",
+      "expected": "deny",
+      "exit_code": 1,
+      "permission_denial": true,
+      "target_unchanged": true,
+      "passed": true
+    },
+    {
+      "role": "D",
+      "tool": "read",
+      "path": "docs/architecture/credentials.json",
+      "expected": "deny",
+      "exit_code": 1,
+      "permission_denial": true,
+      "target_unchanged": true,
+      "passed": true
+    },
+    {
+      "role": "E",
+      "tool": "read",
+      "path": "AGENTS.md",
+      "expected": "allow",
+      "exit_code": 0,
+      "permission_denial": false,
+      "target_unchanged": true,
+      "passed": true
+    },
+    {
+      "role": "E",
+      "tool": "edit",
+      "path": "docs/code-governance/e5-allowed.md",
+      "expected": "allow",
+      "exit_code": 0,
+      "permission_denial": false,
+      "target_unchanged": false,
+      "passed": true
+    },
+    {
+      "role": "E",
+      "tool": "edit",
+      "path": ".opencode/rules.md",
+      "expected": "deny",
+      "exit_code": 1,
+      "permission_denial": true,
+      "target_unchanged": true,
+      "passed": true
+    },
+    {
+      "role": "E",
+      "tool": "read",
+      "path": "docs/architecture/.env.E",
+      "expected": "deny",
+      "exit_code": 1,
+      "permission_denial": true,
+      "target_unchanged": true,
+      "passed": true
+    },
+    {
+      "role": "E",
+      "tool": "read",
+      "path": "../external-private.txt",
+      "expected": "deny",
+      "exit_code": 1,
+      "permission_denial": true,
+      "target_unchanged": true,
+      "passed": true
+    },
+    {
+      "role": "E",
+      "tool": "read",
+      "path": "docs/architecture/credentials.json",
+      "expected": "deny",
+      "exit_code": 1,
+      "permission_denial": true,
+      "target_unchanged": true,
+      "passed": true
+    },
+    {
+      "role": "A",
+      "tool": "edit",
+      "path": "tradingagents/a-denied.txt",
+      "expected": "deny",
+      "exit_code": 1,
+      "permission_denial": true,
+      "target_unchanged": true,
+      "passed": true
+    },
+    {
+      "role": "B",
+      "tool": "edit",
+      "path": "docs/architecture/trace-matrix.md",
+      "expected": "deny",
+      "exit_code": 1,
+      "permission_denial": true,
+      "target_unchanged": true,
+      "passed": true
+    },
+    {
+      "role": "C",
+      "tool": "edit",
+      "path": "tradingagents/c-denied.txt",
+      "expected": "deny",
+      "exit_code": 1,
+      "permission_denial": true,
+      "target_unchanged": true,
+      "passed": true
+    },
+    {
+      "role": "D",
+      "tool": "edit",
+      "path": "tests/d-denied.txt",
+      "expected": "deny",
+      "exit_code": 1,
+      "permission_denial": true,
+      "target_unchanged": true,
+      "passed": true
+    },
+    {
+      "role": "E",
+      "tool": "edit",
+      "path": "docs/req/e-denied.txt",
+      "expected": "deny",
+      "exit_code": 1,
+      "permission_denial": true,
+      "target_unchanged": true,
+      "passed": true
+    },
+    {
+      "role": "E",
+      "tool": "edit",
+      "path": "docs/code-governance/verification-constraints.md",
+      "expected": "deny",
+      "exit_code": 1,
+      "permission_denial": true,
+      "target_unchanged": true,
+      "passed": true
+    },
+    {
+      "role": "E",
+      "tool": "edit",
+      "path": ".opencode/rules.md",
+      "expected": "deny",
+      "exit_code": 1,
+      "permission_denial": true,
+      "target_unchanged": true,
+      "passed": true
+    },
+    {
+      "role": "D",
+      "tool": "edit",
+      "path": "tradingagents/.env.new",
+      "expected": "deny",
+      "exit_code": 1,
+      "permission_denial": true,
+      "target_unchanged": true,
+      "passed": true
+    },
+    {
+      "role": "A",
+      "tool": "read",
+      "path": "portfolios/private.json",
+      "expected": "deny",
+      "exit_code": 1,
+      "permission_denial": true,
+      "target_unchanged": true,
+      "passed": true
+    },
+    {
+      "role": "B",
+      "tool": "read",
+      "path": "portfolios/private.json",
+      "expected": "deny",
+      "exit_code": 1,
+      "permission_denial": true,
+      "target_unchanged": true,
+      "passed": true
+    },
+    {
+      "role": "C",
+      "tool": "read",
+      "path": "portfolios/private.json",
+      "expected": "deny",
+      "exit_code": 1,
+      "permission_denial": true,
+      "target_unchanged": true,
+      "passed": true
+    },
+    {
+      "role": "D",
+      "tool": "read",
+      "path": "portfolios/private.json",
+      "expected": "deny",
+      "exit_code": 1,
+      "permission_denial": true,
+      "target_unchanged": true,
+      "passed": true
+    },
+    {
+      "role": "E",
+      "tool": "read",
+      "path": "portfolios/private.json",
+      "expected": "deny",
+      "exit_code": 1,
+      "permission_denial": true,
+      "target_unchanged": true,
+      "passed": true
+    },
+    {
+      "role": "C",
+      "tool": "edit",
+      "path": "docs/code-governance/verification-constraints.md",
+      "expected": "allow",
+      "exit_code": 0,
+      "permission_denial": false,
+      "target_unchanged": false,
+      "passed": true
+    },
+    {
+      "role": "E",
+      "tool": "edit",
+      "path": "docs/architecture/trace-matrix.md",
+      "expected": "allow",
+      "exit_code": 0,
+      "permission_denial": false,
+      "target_unchanged": false,
+      "passed": true
+    },
+    {
+      "role": "D",
+      "tool": "read",
+      "path": "tests/readable-fixture.txt",
+      "expected": "allow",
+      "exit_code": 0,
+      "permission_denial": false,
+      "target_unchanged": true,
+      "passed": true
+    },
+    {
+      "role": "C",
+      "tool": "write",
+      "path": "tests/native-write.txt",
+      "expected": "allow",
+      "exit_code": 0,
+      "permission_denial": false,
+      "passed": true
+    },
+    {
+      "role": "D",
+      "tool": "write",
+      "path": "tests/denied-write.txt",
+      "expected": "deny",
+      "exit_code": 1,
+      "permission_denial": true,
+      "passed": true
+    },
+    {
+      "role": "D",
+      "tool": "bash",
+      "expected": "deny",
+      "exit_code": 1,
+      "passed": true
+    },
+    {
+      "tool": "startup-symlink-guard",
+      "expected": "deny",
+      "passed": true
+    }
+  ]
+}

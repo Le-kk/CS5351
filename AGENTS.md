@@ -11,7 +11,7 @@ Scope: this repository and its subdirectories. Read this file before planning or
 
 ## 2. Read architecture and verification in this order
 
-1. This file, then [architecture-blueprint.md](architecture-blueprint.md), the canonical root blueprint. The [architecture-directory pointer](docs/architecture/architecture-blueprint.md) is not a second authoritative blueprint.
+1. This file, then the [project covenant](.agent/rules.md), then [architecture-blueprint.md](architecture-blueprint.md), the canonical root blueprint. The [architecture-directory pointer](docs/architecture/architecture-blueprint.md) is not a second authoritative blueprint.
 2. [Requirement package notes](docs/req/README.md), the current registry/schema, and the affected requirement entries. Consult [selected-requirements.md](docs/req/selected-requirements.md) for the implemented historical selection; distinguish it from registry adoption.
 3. [Interface contracts](docs/architecture/interface-contracts.md), [invariants](docs/architecture/invariants.md) and [runtime policies](docs/architecture/runtime-policy-catalog.md). For affected decisions read [ADR-001](docs/architecture/adr/001-portfolio-aware-cli.md) and [ADR-002](docs/architecture/adr/002-extended-result-evidence-budget.md).
 4. [Permission model](docs/architecture/permission-model.md) and [verification constraints](docs/code-governance/verification-constraints.md). Read dated status notices and superseding corrections before relying on historical PASS claims or proposed interfaces.
@@ -19,6 +19,8 @@ Scope: this repository and its subdirectories. Read this file before planning or
 6. Inspect the actual affected source/tests and [.github/workflows/ci.yml](.github/workflows/ci.yml). The [type/security coverage guide](docs/code-governance/types-and-security-coverage.md) and [schema-gate guide](docs/code-governance/requirements-schema-gate.md) state current implementation limits.
 
 If root `Prompt.md`, root `Report.md`, `docs/project-deliverables-and-ownership.md` or `docs/architecture/trace-matrix.md` exists in a later checkout, read the relevant one. They are missing at the reference snapshot; do not invent their contents or claim their delivery. The final trace matrix belongs at the course Markdown path, not in a competing CSV source.
+
+Local E8 supplement (2026-11-25): root [Prompt.md](Prompt.md) now defines the static development launch procedure: execution plan, explicit human approval before build, scoped implementation, self-verification and human review/acceptance. Read it for new tasks launched under that procedure. It is separate from product runtime prompts and does not reactivate the paused test-approval merge gate.
 
 ## 3. Readable, modifiable and frozen areas
 
@@ -41,6 +43,10 @@ Frozen/protected material:
 - Do not weaken, delete or skip existing tests/required checks to hide regressions. Update a public API contract or frozen string only as an intentional, task-authorized change with matching fixtures and evidence.
 - Do not edit generated caches, build output or `.git` internals as implementation. Use normal Git commands for authorized version-control actions; do not commit local `.env`, `.DS_Store`, `.local-review/` or real account data.
 - Changes outside the assigned scope need existing explicit user authorization or an owner handoff. Record genuine gaps and keep progressing on unaffected work; do not claim an owner has approved something they have not.
+
+Local E5 supplement (2026-11-25): [OpenCode role configuration and verification](docs/code-governance/opencode-permissions.md) documents the native V1 permission file, explicit role launcher and synthetic allowed/denied tool probes. Use that launcher to activate these local tool restrictions. This supplements the reference snapshot above; it does not install OS ACLs, establish member identity or change the paused test-approval gate.
+
+Local E6 supplement (2026-11-25): [.opencode/rules.md](.opencode/rules.md) is the shared behavioral prompt for all five configured roles. The launcher verifies its native loading; every role can read it, and native writes remain denied. Its initial creation is explicitly user-authorized. Future rule maintenance is human-controlled.
 
 ## 4. Module and authority contracts
 
