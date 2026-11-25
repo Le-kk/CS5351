@@ -583,11 +583,11 @@ C classified H3 as a requirement/interface ambiguity, not an implementation defe
 
 C's twenty fixtures show the delivered report starting with the provenance/envelope header and ending with the disclaimer, and C warned explicitly: do not read "starts with" as "contains". The architecture confirms what it currently does — `docs/architecture/interface-contracts.md` §6.2 (`final_doc_md = envelope + body`) and §6.4 (disclaimer rendered into the body; Q3 tests presence only).
 
-**Decision: the disclaimer is the first non-blank element of the delivered document.** A safety qualifier that a reader must scroll past a header to find is weakened by layout; redefining the requirement to "contains" would make it untestable in the one respect that matters; and no content check is lost, because Q1–Q4 and R1–R8 inspect content, not position.
+**Decision: the disclaimer is the first rendered visible content of the delivered document.** A safety qualifier that a reader must scroll past a header to find is weakened by layout; redefining the requirement to "contains" would make it untestable in the one respect that matters; and no content check is lost, because Q1–Q4 and R1–R8 inspect content, not position.
 
 Consequences recorded rather than assumed:
 
-- `REQ-TA-SEC-003` and `REQ-TA-INV-008` statements, metrics, thresholds and fit criteria now say "first non-blank element ... with no run metadata, title, header or provenance block before it".
+- `REQ-TA-SEC-003` and `REQ-TA-INV-008` statements, metrics, thresholds and fit criteria now require the disclaimer as the first rendered visible content (Markdown: first non-blank line; HTML: first visible element with structure markup excluded), with no logo, title, banner or provenance block before it.
 - Validator **rule 19** rejects a later edit that softens either fit criterion back to "contains"; **negative fixture 30** exercises it (suite now **32** cases).
 - **B's layout contract conflicts with this.** B must choose the mechanism (OQ-18): emit the disclaimer inside the envelope before the provenance lines, or render it as the first body element and build the envelope after it. A does not choose. Weakening the requirement is rejected and is now caught by rule 19.
 
@@ -606,3 +606,36 @@ ruff check .                                  All checks passed
 ```
 
 Not claimed: adoption (`document.status` stays `proposed_for_adoption`), implementation, B's agreement to the layout consequence, or any C test result. H1, H2 and H4 are untouched. Open questions added: **OQ-18** (H5 mechanism, B) and **OQ-19** (H3 entry point, B).
+
+### Reconciled 2026-11-25 with E's H3/H5 follow-up (commit `dc6f2ee`, PR #37)
+
+E implemented both items after this entry was first written and asked A to check whether the code can now be written into the requirement. It can, with two corrections to A's own wording.
+
+**H5 — A's first wording could not be satisfied by valid HTML.** "First non-blank element" is measured on rendered text, which is right for Markdown and wrong for HTML: element-wise the first element of a rendered page is the wrapper `div`, and `<!doctype>`, `<html>`, `<head>` and `<style>` necessarily precede any body content. Both entries now say **first rendered visible content** — Markdown measured as the first non-blank line, HTML as the first visible element with structure markup excluded. That is exactly the rule E applied and stated.
+
+**H3 — A's first wording described an API that does not exist.** A had written `population_result_count` as `2` for a refused comparison and required it to "match rule 6 in all 4 fixtures". The implemented contract is narrower and better: `summarize_records(records, *, population=None)` returns
+
+| Situation | `distinct_case_count` | `population_result_count` |
+|---|---|---|
+| Explicit `EvaluationPopulation` binds every started record | distinct case identities | `1` |
+| Started records, no declared population | distinct case identities, or `null` if any lacks one | `null` (unknown, not guessed) |
+| Attempts with no case identity | `null` | `null` |
+| Nothing started | `null` | `0` |
+
+and `score_gov004.py` prints both in a machine-readable `Evaluation counts:` line. The fit criterion and threshold now say this.
+
+**One gap is recorded rather than papered over.** The single-configuration API *raises* on a `controlled_change` record instead of reporting a refused comparison, so rule 6's three comparison fixtures are exercised by the script's comparison path, not by `summarize_records`. Whether that path satisfies them is C's verification; A does not claim it.
+
+**What the code now satisfies, and what it does not.**
+
+| Item | Status after `dc6f2ee` |
+|---|---|
+| `complete_report.md` starts with the disclaimer | **compliant** — `write_report_tree` writes `DISCLAIMER` before the header |
+| HTML starts with the disclaimer as first visible content | **compliant** — the leading notice is the first element inside `<body>`, before the masthead logo/title/provenance |
+| RunAPI envelope path (`envelope + body`, disclaimer at the foot of the body) | **not compliant** — remains B's work under OQ-18 |
+| H3 fields present with the values in the table above | **compliant** |
+| Rule 6 comparison fixtures through `summarize_records` | **not covered** by that function; script path only |
+
+A did not merge, waive or approve E's commit. A's role here was to check the wording against the code and correct the requirement where the code showed the wording was wrong.
+
+Verification after the reconciliation: `validate.py` 36/3, 0 errors, 0 warnings; `negative-fixtures-check.py` all 32 fixtures fail correctly; `rebuild_registry.py` reproduces the registry byte-for-byte.
