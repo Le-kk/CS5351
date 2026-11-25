@@ -1,0 +1,192 @@
+{
+  "review_date_hkt": "2026-11-25",
+  "before": "32f2be8a806405b7f168bbfe71b266a24fdca009",
+  "after": "14b06a57e3e779435614d066dfd6ab94510b0d2b",
+  "incoming_files": [
+    ".github/workflows/ci.yml",
+    "AGENTS.md",
+    "AI-log/Member-E/2026-11-25_agents-startup.md",
+    "AI-log/Member-E/2026-11-25_types-and-security-gates.md",
+    "docs/code-governance/dependency-reviews.md",
+    "docs/code-governance/public-api-contract.json",
+    "docs/code-governance/types-and-security-coverage.md",
+    "pyproject.toml",
+    "scripts/ci/check_ai_log_updated.py",
+    "scripts/ci/check_security_scan.py",
+    "scripts/ci/check_workflow_permissions.py",
+    "tests/member_d_verification/test_security_gate_boundaries.py",
+    "tests/member_d_verification/test_type_gate.py",
+    "tradingagents/agents/analysts/market_analyst.py",
+    "tradingagents/agents/rating.py",
+    "tradingagents/dataflows/vendors/reddit.py",
+    "tradingagents/dataflows/vendors/stocktwits.py",
+    "tradingagents/graph/checkpointer.py",
+    "tradingagents/runapi/checks.py",
+    "tradingagents/runapi/finalize.py",
+    "tradingagents/runapi/input_service.py",
+    "tradingagents/runapi/result.py"
+  ],
+  "local_verification": {
+    "mypy": {
+      "exit_code": 0,
+      "tail": "Success: no issues found in 14 source files\n"
+    },
+    "permissions": {
+      "exit_code": 0,
+      "tail": "PASS workflow permission boundaries: 5 workflow files\n"
+    },
+    "bandit": {
+      "exit_code": 0,
+      "tail": "Working... \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 100% 0:00:01\nPASS security scan: 105 Python files; zero medium/high findings\n[main]\tINFO\tprofile include tests: None\n[main]\tINFO\tprofile exclude tests: None\n[main]\tINFO\tcli include tests: None\n[main]\tINFO\tcli exclude tests: None\n[json]\tINFO\tJSON output written to file: /home/brian/.local/state/cs5351-handoffs/2026-11-25-types-security-gates-review/20261125T010940615485Z/bandit.json\n"
+    },
+    "schema": {
+      "exit_code": 0,
+      "tail": "PASS requirements schema: 36 requirements; 3 withdrawn; 0 errors; 0 warnings\nSchema and cross-record checks passed; no semantic, implementation or adoption approval is implied.\n"
+    },
+    "pip_check": {
+      "exit_code": 0,
+      "tail": "No broken requirements found.\n"
+    },
+    "ruff": {
+      "exit_code": 0,
+      "tail": "All checks passed!\n"
+    },
+    "security_regressions": {
+      "exit_code": 0,
+      "tail": "........................................................................ [ 25%]\n........................................................................ [ 51%]\n........................................................................ [ 76%]\n..................................................................       [100%]\n282 passed in 25.71s\n"
+    },
+    "market_prompt_expression_identical": true,
+    "all_prior_local_files_preserved": true
+  },
+  "new_dependencies_installed": [
+    "mypy==1.20.2",
+    "bandit>=1.9.4,<2",
+    "defusedxml>=0.7.1,<1"
+  ],
+  "github_main_checks": [
+    {
+      "name": "complete-approval",
+      "conclusion": "skipped",
+      "url": "https://github.com/kelepawuqiusi/CS5351/actions/runs/45523853692/job/138902183099"
+    },
+    {
+      "name": "required tests",
+      "conclusion": "success",
+      "url": "https://github.com/kelepawuqiusi/CS5351/actions/runs/45441829523/job/138615755399"
+    },
+    {
+      "name": "tests (py3.13)",
+      "conclusion": "success",
+      "url": "https://github.com/kelepawuqiusi/CS5351/actions/runs/45441829523/job/138614759887"
+    },
+    {
+      "name": "clean-install smoke",
+      "conclusion": "success",
+      "url": "https://github.com/kelepawuqiusi/CS5351/actions/runs/45441829523/job/138614759770"
+    },
+    {
+      "name": "tests (py3.11)",
+      "conclusion": "success",
+      "url": "https://github.com/kelepawuqiusi/CS5351/actions/runs/45441829523/job/138614759748"
+    },
+    {
+      "name": "tests (py3.12, America/New_York)",
+      "conclusion": "success",
+      "url": "https://github.com/kelepawuqiusi/CS5351/actions/runs/45441829523/job/138614759699"
+    },
+    {
+      "name": "tests (py3.14)",
+      "conclusion": "success",
+      "url": "https://github.com/kelepawuqiusi/CS5351/actions/runs/45441829523/job/138614759671"
+    },
+    {
+      "name": "ruff (strict, full repo)",
+      "conclusion": "success",
+      "url": "https://github.com/kelepawuqiusi/CS5351/actions/runs/45441829523/job/138614759668"
+    },
+    {
+      "name": "type check",
+      "conclusion": "success",
+      "url": "https://github.com/kelepawuqiusi/CS5351/actions/runs/45441829523/job/138614759549"
+    },
+    {
+      "name": "requirements schema",
+      "conclusion": "success",
+      "url": "https://github.com/kelepawuqiusi/CS5351/actions/runs/45441829523/job/138614759463"
+    },
+    {
+      "name": "security checks",
+      "conclusion": "success",
+      "url": "https://github.com/kelepawuqiusi/CS5351/actions/runs/45441829523/job/138614759401"
+    },
+    {
+      "name": "dependency check",
+      "conclusion": "success",
+      "url": "https://github.com/kelepawuqiusi/CS5351/actions/runs/45441829523/job/138614759349"
+    },
+    {
+      "name": "ai-log updated",
+      "conclusion": "success",
+      "url": "https://github.com/kelepawuqiusi/CS5351/actions/runs/45441829523/job/138614758605"
+    }
+  ],
+  "branch_protection": {
+    "direct_read_http_status": 401,
+    "seven_required_checks": "owner-reported in AGENTS.md / PR #29; do not equate hosted success with independent administrative inspection",
+    "owner_report": "Add `type check` and `security checks` without restoring test-plan pre-approval. Both jobs run for every PR, while the existing five required checks remain.\n\nType coverage is explicitly incremental: all 14 shared runapi/portfolio/rating/output-schema files, with bodies checked and zero in-scope error baseline. Fix nine boundary typing errors using precise annotations and Optional narrowing. An exploratory whole-application scan found 187 legacy errors in 38 files; this PR does not claim whole-repository strict typing or complete third-party typing.\n\nSecurity coverage:\n- Bandit covers all 105 application Python files, blocks medium/high findings and rejects incomplete reports/coverage. Two guarded-HTTPS B310 suppressions are narrowly documented; arbitrary new/blanket suppressions fail.\n- Harden untrusted RSS XML with defusedxml, validate initial Reddit/StockTwits HTTPS hosts, and use literal checkpoint DELETE statements with bound IDs.\n- Refactor only the assembly of a fixed market-prompt constant: assembled prompt text was compared byte-for-byte and is unchanged.\n- Add a committed public API export/signature/default/result-field contract, real invalid-type and shell-injection probes, workflow token/trusted-checkout checks, and an explicit offline safety suite covering consent, paths, freezing, privacy, redaction, replay, publication and layering.\n- CI now explicitly uses read-only contents permissions. OpenCode per-role file ACLs remain uninstalled and are not claimed as covered; see the coverage document.\n\nDeclare/review mypy, Bandit and defusedxml; include the requested AI-use log. No model calls, token-budget change or semantic acceptance claim.\n\nValidation: full local regression 1,840 passed, 2 skipped, 1 deselected, 100 subtests passed; scoped mypy clean; complete application Bandit scan clean at medium/high; workflow permission checks, Ruff, actionlint and current requirements schema passed. All final code was exercised before submission.\n\nAfter real CI passes, add the exact check names `type check` and `security checks` while preserving the five current required checks, strict up-to-date protection and paused test approval. Verify an unmerged negative probe actually fails both new checks before declaring deployment complete.\n\n\nObserved deployment (2026-11-25, Asia/Hong_Kong): merged normally as `049ae6d` after the updated-base CI passed. Both `type check` and `security checks` are now required alongside the previous five, with strict up-to-date protection preserved. The initial NumPy-stub compatibility issue was fixed by aligning the mypy target to the type job's Python 3.12, without suppressing the error. Negative probe PR #30 was observed BLOCKED with a real mypy assignment failure and a HIGH Bandit B602 finding; it was closed without merging and the dormant function was never called. Test pre-approval remains paused. OpenCode role-based file ACLs remain explicitly outside the deployed coverage. Evidence: https://github.com/kelepawuqiusi/CS5351/actions/runs/45437138181 .\n"
+  },
+  "negative_probe": {
+    "url": "https://github.com/kelepawuqiusi/CS5351/pull/30",
+    "state": "closed",
+    "merged": false,
+    "checks": [
+      {
+        "name": "security checks",
+        "conclusion": "failure",
+        "details_url": "https://github.com/kelepawuqiusi/CS5351/actions/runs/45437138181/job/138597907223"
+      },
+      {
+        "name": "type check",
+        "conclusion": "failure",
+        "details_url": "https://github.com/kelepawuqiusi/CS5351/actions/runs/45437138181/job/138597906178"
+      }
+    ]
+  },
+  "source_sha256": {
+    ".github/workflows/ci.yml": "483b335d8532ac834793dc056fb59fb70e88986c6d8f7db20db1d32f9b7feb5a",
+    "AGENTS.md": "e5c26761da53cbe7045f5d5e762685926e0fa963735d3ccc011d326a0546dd93",
+    "AI-log/Member-E/2026-11-25_agents-startup.md": "bec6a7f3235d6e97361a46a5ec367c018d2aec1d6a0956e20bc35349e54ea1b4",
+    "AI-log/Member-E/2026-11-25_types-and-security-gates.md": "2434f394cdfd908e0d6c379cd788d35f920ef992cc2c4b90fdd76d24612475e8",
+    "docs/code-governance/dependency-reviews.md": "faf7fbd51df10eb6b874bc644c95b0eb6b95e87b66a8991b5c2e70452b74aa11",
+    "docs/code-governance/public-api-contract.json": "8afd22b7fe610c72631c97aca0ce51494cb17ac285d187f559448c4b9793eb84",
+    "docs/code-governance/types-and-security-coverage.md": "081ebd4b32a77006e0d3d0b5dab24d4414df23784be8f4f9f9a04f8be54b2186",
+    "pyproject.toml": "d5cf243b93f96bf5f1916b7b6d9a7c3c246d357bf77c9ca42fa2364189b0f563",
+    "scripts/ci/check_ai_log_updated.py": "7ed2724b3a321aeb4033ad55e9f0168b21583c00c313579a762f85d48861cf59",
+    "scripts/ci/check_security_scan.py": "8be0a082dd0d66e6d6de0e43035a41dbc3f9076ef069d2cafc77754c180842f3",
+    "scripts/ci/check_workflow_permissions.py": "77bf4bdaf11865370e174d4ed4ade591afadf1aa94deb465bd5b1ebcb926397b",
+    "tests/member_d_verification/test_security_gate_boundaries.py": "574c9893438df3515d26cccf1989565188a933d08f8db386edb92cce22caa233",
+    "tests/member_d_verification/test_type_gate.py": "8a886ab7dd9fc6c91705f9504a14e371d85aa300deae1f29d819d2b61dd044f2",
+    "tradingagents/agents/analysts/market_analyst.py": "8dc3976118f9bca41d7f52e8f13e2221453de37081d511e3324645e56ac1b9a4",
+    "tradingagents/agents/rating.py": "3002e131763313d89331d31f6d0ed0f4a554dc5748e7f4f5da02a0bcec5e484e",
+    "tradingagents/dataflows/vendors/reddit.py": "7fa5cd2d193f6e6eb61a3876d407dee80195de063c18f46060237df307dffdcd",
+    "tradingagents/dataflows/vendors/stocktwits.py": "b241dddd93ae3ee9cc94e6bd398fd422ecc8f8d7525cb336f84cbad1dfa77055",
+    "tradingagents/graph/checkpointer.py": "0e591cc1532f7aa568ffcbcf2e4b7d98a4c2eb5ce9a79b4da525a0299a243db4",
+    "tradingagents/runapi/checks.py": "bf0fb47ac7e0f5db7a663da956ebee656f36d14f37c5d2ee1aab58f3f42db7a7",
+    "tradingagents/runapi/finalize.py": "e3b62f274b0d25fcdab756601b5140f877df8cda2a98dc7aa2d0591d1f391bed",
+    "tradingagents/runapi/input_service.py": "3a9a855d48e687fc519e64281a63a2a1be0296b33cd6ffce36262c79163ea6a7",
+    "tradingagents/runapi/result.py": "5e30082c39cc0b20b1523e8c4d9172fc78882ec9d3bbc3773e35745ff54e91ab"
+  },
+  "proposed_architecture_write_set": [
+    "architecture-blueprint.md",
+    "docs/architecture/permission-model.md",
+    "docs/architecture/risk-list.md",
+    "docs/architecture/traceability-inputs-member-b.md",
+    "docs/architecture/evaluation-logbook.md",
+    "docs/architecture/interface-contracts.md",
+    "docs/architecture/memory-design.md",
+    "docs/architecture/proposals/implementation-prompt-pack-2026-11-24.md",
+    "docs/req/README.md"
+  ],
+  "live_model_calls": 0,
+  "canonical_architecture_changed_by_review": false
+}
