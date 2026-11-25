@@ -92,3 +92,7 @@ The token-admission controller (interface-contracts §15A, ADR-004, Alt-B) holds
 - **does not** resolve UNKNOWN late: `U` remains until finalization in this version (no `U→K` conversion), and a bound/protocol violation is recorded truthfully (never clamped), not hidden inside the manifest.
 
 **Independence preserved:** this is distinct from the existing per-prompt character/4 guard and the concise-context feature (ADR-003); it is the run-wide cumulative-token design that sits beside ADR-002's call-cap (§15), not a replacement for it.
+
+## 11. Checkpoint/security integration status (2026-11-25; hardening, not a resume redesign)
+
+A bounded application-hardening change at baseline `14b06a5` (`tradingagents/graph/checkpointer.py`) replaced the f-string `DELETE FROM {table}` interpolation with **two literal `DELETE` statements** bound by thread id (`DELETE FROM writes WHERE thread_id = ?`; `DELETE FROM checkpoints WHERE thread_id = ?`). This removes an SQL/static-analysis finding only; it does **not** change checkpoint identity, the 12-char checkpoint fingerprint, resume semantics, or the deferred resume/identity decision (ADR-002 D5 / OQ-8). Reddit RSS parsing now uses `defusedxml` with a reviewed catch and an entity-expansion negative fixture; Reddit/StockTwits initial URLs are checked against fixed HTTPS hosts without embedded userinfo before dispatch (two reviewed `B310` suppressions; initial-URL checks are **not** a redirect/DNS guarantee). No budget, stop reason, checker rule or input/report contract is affected.

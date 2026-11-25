@@ -23,7 +23,7 @@ Legend: **Enforced-by** = design component present in the checkout; **Fallback**
 | SEL-TA-NFR-006 | `RunRecord` aggregation (`runapi/result.py`; interface-contracts §10) | (risk R-LABEL) | `run.started`/`run.terminal` | zero-completed ⇒ insufficient evidence | `tests/member_c_verification/offline/test_nfr006_population.py` | `tradingagents/runapi/result.py` |
 | SEL-TA-GOV-001 | C/E/human (test-plan approval) | — | — | — | owned C/E | n/a |
 | SEL-TA-GOV-002 | A (`docs/req/validate.py` cross-record) → E (`requirements schema` job) | `REQ-TA-GOV-004` schema validation | `requirements schema` CI job | gate non-zero on invalid; E-reported required | `tests/member_d_verification/test_requirement_schema_gate.py` (CI probe; **not** C independent acceptance) | `scripts/ci/check_requirement_schema.py`, `docs/req/validate.py`, `.github/workflows/ci.yml` |
-| SEL-TA-GOV-003 | C/E (CI gates) | — | — | — | owned C/E | n/a |
+| SEL-TA-GOV-003 | C/E (CI gates) | `type check`/`security checks`/`required tests`/`ruff`/`dependency`/`ai-log` jobs | CI job outcomes | blocking on failure | `test_type_gate.py`, `test_security_gate_boundaries.py` (E/D CI probes; **not** C independent acceptance) | `.github/workflows/ci.yml`, `scripts/ci/{check_security_scan,check_workflow_permissions}.py` |
 | SEL-TA-GOV-004 | C/D/E (semantic threshold) | — | — | — | owned C/D/E | n/a |
 | SEL-TA-GOV-005 | E/all (AI-use log) | — | — | — | owned E | n/a |
 | SEL-TA-GOV-006 | B (permission design) → E (enforce) | (permission-model.md) | denied-write log | block denied write | owned C/E | partial: `scripts/ci/`, `docs/code-governance/` present; OpenCode package absent |
@@ -51,7 +51,7 @@ The uploaded `REQ-TA-*` candidate uses different meanings for shared numeric suf
 | NFR-006 evaluation population | started-run accounting | `REQ-TA-NFR-EVAL-001` | same | proposed |
 | GOV-001 test-plan approval | prior approval gate | `REQ-TA-GOV-002` | same | proposed |
 | GOV-002 registry schema | schema validation: A's validator + `scripts/ci/check_requirement_schema.py` + `requirements schema` CI job + `test_requirement_schema_gate.py` | `REQ-TA-GOV-004` (present, `status: proposed`; gate **implemented+verified**) | same | proposed (registry not adopted; gate implemented) |
-| GOV-003 CI gates | lint/tests/deps + safety paths | `REQ-TA-GOV-003` = *AI-log gate* (misfiled) | partial | proposed |
+| GOV-003 CI gates | `REQ-TA-GOV-003` = **AI-log merge obligation** (registry status: `proposed`); observed CI also runs `type check`, `security checks`, `required tests`, `ruff`, `dependency` (implemented, hosted-verified) — these are *different* course duties, not `REQ-TA-GOV-003` | `REQ-TA-GOV-003` (AI-log) | **partial** | registry `proposed`; AI-log gate implemented separately |
 | GOV-004 semantic threshold | semantic eval gate | `REQ-TA-GOV-001` semantic suite | same | proposed |
 | GOV-005 AI-use log | AI-log-gated merge | `REQ-TA-GOV-003` | same | proposed |
 | GOV-006 permissions/branch protection | default-deny + ADR review | — (no direct candidate entry) | none | proposed-only |
