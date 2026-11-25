@@ -1,0 +1,55 @@
+{
+  "historical_baseline": [
+    {
+      "label": "B1",
+      "tokens": 139011,
+      "input": 114911,
+      "output": 24100
+    },
+    {
+      "label": "B2",
+      "tokens": 138782,
+      "input": 116314,
+      "output": 22468
+    }
+  ],
+  "same_day_control": [
+    {
+      "label": "Control",
+      "tokens": 160826,
+      "input": 135790,
+      "output": 25036
+    }
+  ],
+  "optimized": [
+    {
+      "label": "O1",
+      "tokens": 99532,
+      "input": 86331,
+      "output": 13201
+    },
+    {
+      "label": "O2",
+      "tokens": 103120,
+      "input": 89062,
+      "output": 14058
+    },
+    {
+      "label": "O3",
+      "tokens": 110725,
+      "input": 96963,
+      "output": 13762
+    }
+  ],
+  "historical_mean": 138896.5,
+  "optimized_mean": 104459.0,
+  "same_day_reduction_pct": 35.04843744170719,
+  "historical_reduction_pct": 24.793641308456294,
+  "coverage": {
+    "partial": 18,
+    "pending implementation": 11,
+    "needing clarification": 3,
+    "covered": 4
+  },
+  "data_note": "Historical baseline and same-day control are distinct cohorts. Counts are retained observations, not new live measurements."
+}

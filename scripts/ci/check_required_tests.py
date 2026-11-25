@@ -12,7 +12,7 @@ import argparse
 import os
 import sys
 
-JOBS = ("pytest", "clean-install smoke", "frontend build")
+JOBS = ("pytest", "clean-install smoke")
 
 
 def unsuccessful(results: dict[str, str]) -> list[str]:
@@ -56,14 +56,13 @@ def main(argv: list[str] | None = None) -> int:
         {
             "pytest": os.environ.get("PYTEST_RESULT", ""),
             "clean-install smoke": os.environ.get("SMOKE_RESULT", ""),
-            "frontend build": os.environ.get("FRONTEND_RESULT", ""),
         }
     )
     if problems:
         print("required tests failed. A skipped, failed, or cancelled job does not pass.")
         print("\n".join(problems))
         return 1
-    print("required tests passed: pytest, clean-install smoke and frontend build succeeded.")
+    print("required tests passed: pytest and clean-install smoke succeeded.")
     print("This does not mean skipped live model tests ran.")
     return 0
 

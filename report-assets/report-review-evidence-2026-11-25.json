@@ -1,0 +1,235 @@
+{
+  "prepared_hkt": "2026-11-25T21:46:51.840530+08:00",
+  "local_source_revision": "06e87029d8e88a976fd624c17115dac8314614f3",
+  "team_revision": "2840f1f9a1fe5fb606050f9bd4bf4c92b5f5a773",
+  "report_role": "B cross-project synthesis for D integration; not final team sign-off",
+  "source_sha256": {
+    "architecture-blueprint.md": "0e4babb751d17cd23e8bbba9925cb9a8b036bddda5d5618d41d96b16a7d5e8e1",
+    "tradingagents/portfolio.py": "24716e836e4f65706bf771cf248b466cee95e1b2d233131913cb770811d6a59b",
+    "docs/reviews/project-review-2026-11-18.md": "f827543474e170a8096afe74121ada8ca6bf1a85ef85313c2177085df92d62ee",
+    "docs/reviews/remediation-r1-r5-2026-11-21.md": "9ac5622c796469d067085af2e0b08aa0bc6f88c8f405eb72b18aff6991612d39",
+    "docs/verification/token-optimization-architecture-and-measurement-report-2026-11-24.md": "eb62b69f4bc90939c381b5d8982b972ae87143e2b94c493828f92949d6a57312",
+    "docs/verification/semantic-evaluation.md": "feb8e93545a5a84c4182dfa2f7c67d3da59b5e3c62cd097153aff1c16e0f17c4",
+    "tradingagents/runapi/execution.py": "6e486adc0c2493fa5e636a0012ab439d6a687cf1011d31bb66c0243e4006fc97",
+    "docs/submission/member-a/a-written-report-2026-11-25.md": "826619b06062ca0cb21c7912783f3e8e26352f6f0bd73744a3356a3cca389fbe",
+    "AI-log/Member-D/written-report-2026-11-25.md": "b013a21617e638f62d491c6671e908345738bed4a857c5d69b440721b6c013cb",
+    "docs/architecture/evaluation-logbook.md": "dfa2ceeeee8d4c3d71462637a0929b5c984790febd3edd91240a7a4ea2e8305d",
+    "Prompt.md": "3a188154cd2ef72e9eb631305504e7e8b706c4b3a77fb85968c5395b903b1b78",
+    "docs/req/selected-requirements.md": "c3218d4555c0d0b1d60ebf08e69ecf0d4bb2aded5d2d76bb0b519d18cb8e102a",
+    "docs/req/requirements.yaml": "25b6c3acdfe43cf8baadcb6583b6e58ff0e3a6aada93daba0fb1bacb6d69295e",
+    "docs/verification/requirement-test-mapping.md": "8df8821955ea2ae1dd66e711a06c35a7fa6916fe1ef869dad456d58520e60770",
+    "docs/req/negative-fixtures-check.py": "f44056cafe4df0580161a800d4851d701b406697e02aa733ecdfdb390180b3c2",
+    "docs/architecture/evaluation-table.md": "43a0854d7f889a12ef839c29144706337fae6c66fa7c3a97d531545aac961a45",
+    "docs/architecture/adr/004-cumulative-token-admission.md": "2334a10a77d71632d97da9857a116c8145350e830ecf0f0bfb9cbeb89cd5cea6",
+    "tests/member_b_remediation/test_r4_research_manager_context.py": "937bfe8b9735c35443a01e11b4fc81acd9a622b3169acc1f576321bec67138bc",
+    "tradingagents/runapi/result.py": "c10a9365308371ce9a30397807d8a430d73d1dc3cfdc83f5fac5109e841b2795",
+    "docs/code-governance/h3-h5-follow-up.md": "68888e5d5d92eb0b71e661bd9a8c4169c533faaa00abd1d2a32840b9f57a9dc4",
+    "tradingagents/runapi/persist.py": "1419e6259547267ca517d7b2e817a9a72510f2e26cf3a08098a7319b98320a62",
+    "docs/reviews/evidence/token-context-reference-probe-2026-11-24.json": "3a77b9cb583c26d6e9ec07297785049cfc0733b0eebbe8e7b1239371c91b5d4c",
+    "docs/code-governance/h1-call-budget.md": "b5c41e1e9783f330637e911714795f1a5d378c04acd9809c356afc63b75c2bec",
+    "docs/code-governance/verification-constraints.md": "5731d7fcf8849e715c796db88ed05b779f406bcc896f5b25f0bf27f3b76ab776",
+    "docs/reviews/evidence/live-verification-2026-11-21/review-facts.json": "578dbe30bfa811a5e885709bc2e3f286c76704e95c4cb161901662369bd7193d",
+    "docs/architecture/trace-matrix.md": "a1631935fe57d47aa1e060c5c635713512e1b16f16e19535f2745bc606b1c19b",
+    ".github/workflows/ci.yml": "483b335d8532ac834793dc056fb59fb70e88986c6d8f7db20db1d32f9b7feb5a",
+    "docs/architecture/interface-contracts.md": "4f8cbd164526c8fdca7cda922cf69eec72aa6a51b1f7cf3052cca45ee1f8e4a2",
+    "docs/code-governance/opencode-permissions.md": "5a5f882a8284bd2bcb37a2f1383bca524128c5599a54c94ed271ddb91d3435f4",
+    "transcripts/57611829-Leung-Kwan-Kit.md": "2a87b90ce37baaea79914e31a5832d2243500e0a64346d8400e994b2f1a8869f",
+    "transcripts/member-b/source-manifest.json": "193e1af19b04270cc4af50dd254b06e24bf544a1026fd67ac62517c31000a841",
+    "docs/debt-register.md": "12b72512f5ddcacd7826789ac794f6098c3b627f2f3b1ee0e9fc676e789f521e",
+    "docs/bug-diary.md": "ee25c68f62c0ab00f0ce3789c7ac513fc4c78db50772deaeb97c89215293c705",
+    "tests/member_d_verification/evidence/token-input-reduction-2026-11-24.json": "8a56ac9b31354667a27987be51c9a67b9f06fa5d4036fc2fbd592fdecf8a4410"
+  },
+  "course_sources": [
+    {
+      "file": "C:\\Users\\brian\\Documents\\ChatGPT\\CS5351 Group project\\CS5351-local-handoff-2026-11-18\\CS5351-local-handoff-2026-11-18\\sources\\CS5351-2026-2027-project.pdf",
+      "sha256": "6af742d3cbc0973b056a084ba54ff413a5885b1bb4d6a97b0b08b93f64f2ef7e",
+      "page_count": 10
+    },
+    {
+      "file": "C:\\Users\\brian\\Documents\\ChatGPT\\CS5351 Group project\\CS5351-local-handoff-2026-11-18\\CS5351-local-handoff-2026-11-18\\sources\\CS5351-introduction-group-project-extract.pdf",
+      "sha256": "b9efef89e07b27d548057fc4e7608715620015b5d1ad3e0098460210462ae25d",
+      "page_count": 4
+    }
+  ],
+  "registry": {
+    "registry_status": "proposed_for_adoption",
+    "registry_count": 36,
+    "status_counts": {
+      "proposed": 26,
+      "partial": 10
+    },
+    "priority_counts": {
+      "Must": 23,
+      "Should": 11,
+      "Could": 2
+    },
+    "coverage_counts": {
+      "partial": 18,
+      "pending implementation": 11,
+      "needing clarification": 3,
+      "covered": 4
+    }
+  },
+  "fresh_checks": {
+    "offline_pytest": {
+      "command": ".venv/bin/python -m pytest -q",
+      "exit": 0,
+      "passed": 1976,
+      "skipped": 2,
+      "deselected": 1,
+      "warnings": 24,
+      "subtests_passed": 100,
+      "seconds": 47.55,
+      "skip_reasons": [
+        "GOV004_LIVE not set",
+        "optional langchain_aws absent"
+      ]
+    },
+    "mypy": {
+      "exit": 0,
+      "source_files": 15
+    },
+    "ruff": {
+      "exit": 0,
+      "result": "All checks passed"
+    },
+    "pip_check": {
+      "exit": 0,
+      "result": "No broken requirements found"
+    },
+    "requirements_validator": {
+      "exit": 0,
+      "requirements": 36,
+      "withdrawn": 3,
+      "errors": 0,
+      "warnings": 0
+    },
+    "negative_fixtures": {
+      "exit": 0,
+      "correctly_failed": 32
+    },
+    "workflow_permissions": {
+      "exit": 0,
+      "workflow_files": 5
+    },
+    "security_scan": {
+      "exit": 0,
+      "application_python_files": 107,
+      "medium_high_findings": 0
+    }
+  },
+  "words": {
+    "main_report_words_excluding_mermaid_and_reflections": 7314,
+    "reflection_paragraph_words": 400,
+    "upper_total_with_five_500_word_reflections": 9814,
+    "counting_method": "Unicode word tokens after excluding Mermaid blocks/reference URL definitions/image markup; source bibliography titles/tables/captions retained. Independent reflections are not present in main report."
+  },
+  "chart_data": {
+    "historical_baseline": [
+      {
+        "label": "B1",
+        "tokens": 139011,
+        "input": 114911,
+        "output": 24100
+      },
+      {
+        "label": "B2",
+        "tokens": 138782,
+        "input": 116314,
+        "output": 22468
+      }
+    ],
+    "same_day_control": [
+      {
+        "label": "Control",
+        "tokens": 160826,
+        "input": 135790,
+        "output": 25036
+      }
+    ],
+    "optimized": [
+      {
+        "label": "O1",
+        "tokens": 99532,
+        "input": 86331,
+        "output": 13201
+      },
+      {
+        "label": "O2",
+        "tokens": 103120,
+        "input": 89062,
+        "output": 14058
+      },
+      {
+        "label": "O3",
+        "tokens": 110725,
+        "input": 96963,
+        "output": 13762
+      }
+    ],
+    "historical_mean": 138896.5,
+    "optimized_mean": 104459.0,
+    "same_day_reduction_pct": 35.04843744170719,
+    "historical_reduction_pct": 24.793641308456294,
+    "coverage": {
+      "partial": 18,
+      "pending implementation": 11,
+      "needing clarification": 3,
+      "covered": 4
+    },
+    "data_note": "Historical baseline and same-day control are distinct cohorts. Counts are retained observations, not new live measurements."
+  },
+  "paid_model_calls_for_this_review": 0,
+  "team_identifiers_weights": "User directed leaving other member identities/weights for D; no values invented.",
+  "reflection_scope": "Only B reflection drafted; other four are not manufactured.",
+  "known_material_gaps": [
+    "Registry remains proposed_for_adoption",
+    "Formal semantic acceptance PENDING",
+    "Required pre-approval gate paused",
+    "Required prompt/model semantic gate absent",
+    "Broader R1-R8/evidence/coverage and cumulative token/time mechanisms incomplete",
+    "Post-check budget appendix and context-reference/hash caveats retained"
+  ],
+  "document_link_audit": {
+    "files": [
+      "docs/architecture/trace-matrix.md",
+      "docs/verification/README.md",
+      "docs/verification/evidence-index.md",
+      "docs/verification/verification-report.md",
+      "docs/verification/requirement-test-mapping.md",
+      "docs/req/README.md"
+    ],
+    "broken_current_local_links": [
+      {
+        "source": "docs/architecture/trace-matrix.md",
+        "target": "../verification/registry-test-update-2026-11-25.md"
+      }
+    ],
+    "treatment": "Reported for D/E integration; other owners files not edited."
+  },
+  "layout_review": {
+    "pages": 19,
+    "body_font": "12pt Times New Roman",
+    "line_height": "single",
+    "mermaid_rendered": 3,
+    "plots": 2,
+    "visual_qa": "All-page contact sheet and pages 1, 7, 11, 13, 14 inspected; no clipping/overlap observed.",
+    "computed_body_font_size": "16px (12pt)",
+    "computed_line_height": "16px (single spacing)",
+    "cover_role_header": "nowrap; visually reviewed",
+    "preview_pdf_sha256": "51a69a903adc6486a1d75c35626a9a66ab3c59fb7a98a1cfdcbff82e462c196e"
+  },
+  "package_verification": {
+    "verified_hkt": "2026-11-25T21:48:46.022619+08:00",
+    "source_links_defined": 36,
+    "all_pinned_source_objects_exist": true,
+    "source_hashes_unchanged": true,
+    "all_three_mermaid_diagrams_rendered": true,
+    "plot_totals_found_in_primary_json": true,
+    "main_and_reflection_separate": true,
+    "app_or_test_code_modified": false,
+    "commit_or_push": false,
+    "report_sha256": "c6c25b50034aea5400d140bd399d7df585a9f627f95e6bbf6c8521de11a738a3",
+    "reflection_sha256": "1e4b706cf2da8ebe05e0c210b046e7d8feb7c8b61c044f8716adc15e38e51d60"
+  }
+}

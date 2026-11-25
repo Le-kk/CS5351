@@ -23,7 +23,7 @@ def test_canonical_paths_require_ai_log_updates():
     spec = importlib.util.spec_from_file_location('layout_log_gate', ROOT / 'scripts/ci/check_ai_log_updated.py')
     gate = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(gate)
-    for path in ['src/tradingagents/runapi/result.py', 'src/frontend/package.json',
+    for path in ['src/tradingagents/runapi/result.py', 'src/cli/main.py',
                  'src/demo/console.py', 'test/live/example.py', 'test/offline/example.py']:
         assert gate.is_critical(path)
     assert not gate.is_critical('docs/submission/notes.md')
@@ -39,26 +39,25 @@ def test_prompt_snapshot_matches_actual_runtime_fragments(version, enabled):
         assert data['trader'] == compact_handoff_instruction('trader')
 
 
-def test_frontend_failure_or_missing_result_blocks_required_summary():
+def test_upstream_failure_or_missing_result_blocks_required_summary():
     spec = importlib.util.spec_from_file_location('layout_summary_gate', ROOT / 'scripts/ci/check_required_tests.py')
     gate = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(gate)
-    good = {'pytest': 'success', 'clean-install smoke': 'success', 'frontend build': 'success'}
+    good = {'pytest': 'success', 'clean-install smoke': 'success'}
     assert not gate.unsuccessful(good)
     for state in ['failure', 'cancelled', 'skipped', '']:
-        assert gate.unsuccessful({**good, 'frontend build': state})
-    assert gate.unsuccessful({k: v for k, v in good.items() if k != 'frontend build'})
+        assert gate.unsuccessful({**good, 'clean-install smoke': state})
+    assert gate.unsuccessful({k: v for k, v in good.items() if k != 'clean-install smoke'})
 
 
-def test_required_summary_reads_frontend_environment(monkeypatch):
+def test_required_summary_reads_upstream_environment(monkeypatch):
     spec = importlib.util.spec_from_file_location('layout_summary_environment', ROOT / 'scripts/ci/check_required_tests.py')
     gate = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(gate)
     monkeypatch.setenv('PYTEST_RESULT', 'success')
     monkeypatch.setenv('SMOKE_RESULT', 'success')
-    monkeypatch.setenv('FRONTEND_RESULT', 'success')
     assert gate.main([]) == 0
-    monkeypatch.delenv('FRONTEND_RESULT')
+    monkeypatch.delenv('SMOKE_RESULT')
     assert gate.main([]) == 1
-    monkeypatch.setenv('FRONTEND_RESULT', 'failure')
+    monkeypatch.setenv('SMOKE_RESULT', 'failure')
     assert gate.main([]) == 1

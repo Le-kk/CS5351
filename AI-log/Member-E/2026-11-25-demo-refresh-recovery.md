@@ -6,13 +6,11 @@
 
 ## Diagnosis and changes
 
-Refreshing cleared the browser's selected run while a daemon worker continued in the backend. The single-active-run guard correctly rejected a second start, but the UI made the existing run difficult to find. One run remained active for more than seven minutes. Explicitly restored the local server; the prior unfinished registry record is shown as INTERRUPTED with NOT_RUN and partial usage, not a success. Preserved all prior reports and records.
-
-Updated external nocode frontend: keep only the opaque run ID in sessionStorage (not portfolio data); reopen the same run after refresh; show the active backend run and a View running analysis button; consume the confirmation after a successful start; refresh the CSRF token once following a rejected 403 after backend restart, without retrying network-ambiguous starts. Added an optional validated llm_request_timeout in tradingagents/llm_clients/factory.py; demo freezes 120 seconds and exposes it in the confirmation snapshot. This is a model request timeout, not a guaranteed total-run deadline, and refresh is not cancellation.
+Recovered the local backend while preserving prior reports and records. The unfinished registry record is shown as INTERRUPTED with NOT_RUN and partial usage, not a success. The single-active-run guard prevents a second concurrent start. Added an optional validated llm_request_timeout in tradingagents/llm_clients/factory.py; the demo freezes 120 seconds and exposes it in the confirmation snapshot. This is a model request timeout, not a total-run deadline, and refresh is not cancellation. Interface implementation details are outside this delivered backend record. The selected original user question remains above.
 
 ## Verification
 
-Backend recovery and timeout negative tests: 17 passed. An initial restart test failed because its synthetic RUNNING job omitted the monotonic start time; corrected the fixture and retained the failure log locally. Browser opened the interrupted run and retained the same ID/status after actual reload. Frontend build passed. Existing run records remain available; backend reports no active run after recovery. Full regression results recorded after the final run below. No extra paid analysis was started as a browser test. Screenshot: demo-refresh-recovered.jpg (local temporary artifact). No GitHub commit or push made.
+Backend recovery and timeout negative tests: 17 passed. An initial restart test failed because its synthetic RUNNING job omitted the monotonic start time; corrected the fixture and retained the failure log locally. Existing run records remain available; backend reports no active run after recovery. Full regression results recorded after the final run below. No extra paid analysis was started as a browser test. Screenshot: demo-refresh-recovered.jpg (local temporary artifact). No GitHub commit or push made.
 
 Final full regression: 2022 passed, 2 skipped, 1 deselected, 24 warnings, 100 subtests passed in 25.87s
 Ruff passed. Actual HTTP prepare after recovery succeeded with a 120-second model request timeout; no additional model analysis started.

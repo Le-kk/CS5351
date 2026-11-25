@@ -45,7 +45,7 @@ members:
   coverage: available_selected_records; contributor_confirmation_pending
   directory: AI-log/Member-D/
 - member: E
-  records: 40
+  records: 41
   provenance_indexes: 4
   coverage: available_selected_records; contributor_confirmation_pending
   directory: AI-log/Member-E/
@@ -488,7 +488,9 @@ source_records:
   kind: ai_use_record
   record_date: '2026-11-25'
   date_basis: source filename and retained text
-  sha256: a723e7b64bf86c88f3dd84db1ede780054e06cd99f44dfe2733c4b8a35559b47
+  sha256: 74844aba03a2f9a18ffea124078fa5e3ee617fb6e14aa61268b142d4ac28ed8a
+  previous_snapshot_sha256: a723e7b64bf86c88f3dd84db1ede780054e06cd99f44dfe2733c4b8a35559b47
+  snapshot_note: Current selected record refreshed; prior hash retained.
 - id: E-43
   member: E
   path: AI-log/Member-E/2026-11-25-nocode-console.md
@@ -502,7 +504,16 @@ source_records:
   kind: ai_use_record
   record_date: '2026-11-25'
   date_basis: actual task date
-  sha256: 89cb50cb28962b478c5125091967670cfdc1f41bba3842ffdaceb05c0d82df4a
+  sha256: fa35ba825b90e89b243ee40d8e341c22a7212f4a162876954adfa90e97c18528
+  previous_snapshot_sha256: 89cb50cb28962b478c5125091967670cfdc1f41bba3842ffdaceb05c0d82df4a
+  snapshot_note: Current selected record refreshed; prior hash retained.
+- id: E-45
+  member: E
+  path: AI-log/Member-E/2026-11-25-final-report-integration.md
+  kind: ai_use_record
+  record_date: '2026-11-25'
+  date_basis: current authorized integration session; no precise timestamp invented
+  sha256: b813f6a58def0e21e17dcb17cd39076b0eeb13dd8f53204ac2edef4783185cf8
 events:
 - id: B-REVIEW
   member: B
@@ -1409,7 +1420,7 @@ events:
   - E-42
   task: Refresh and active-run recovery
   intervention: Explicit user instruction; no contributor adoption/sign-off inferred.
-  changes: Retained run ID, visible active-run recovery, timeout configuration and preserved interrupted history.
+  changes: Backend active-run recovery, timeout configuration and preserved interrupted history.
   verification:
     basis: reported actual developer integration evidence
     summary: Actual browser reload plus 2022-pass regression at that earlier snapshot.
@@ -1421,12 +1432,37 @@ events:
   - E-44
   task: Course-path synchronization and evidence assembly
   intervention: Explicit user instruction; no contributor adoption/sign-off inferred.
-  changes: Preserved remote/local work, moved one source/test tree, added frontend verification and honest delivery
+  changes: Preserved remote/local work, moved one source/test tree, added application verification and delivery
     assembly.
   verification:
     basis: reported actual developer integration evidence
-    summary: 2033 passed; static/schema/security/build/audit/clean-wheel checks; hosted status pending.
+    summary: 2033 passed; static/schema/security/clean-wheel checks at that earlier snapshot.
   limitations: See dated source; not independent semantic acceptance or a universal performance claim.
+- id: E-FINAL-REPORT
+  member: E
+  title: Supplied report replacement and five-member reflection integration
+  source_records:
+  - E-45
+  task: Integrate the designated report and original reflections; deliver Markdown and PDF.
+  intervention: User supplied names, original Word reflections and confirmed contribution percentages 18/23/18/18/23.
+  changes: Replaced prior assembly, integrated five identities/allocations/reflections and figure assets; excluded
+    local-only interface sources from the current delivery tree.
+  verification:
+    basis: current document/PDF inspection plus repository regression and required hosted checks
+    summary: 25 pages; 9489 words; five reflections within 300–500 words; current integration metadata links source
+      hashes and rendering checks.
+  limitations: Assembly is not semantic acceptance, adoption or fabricated contributor sign-off; historical measurements
+    retain original scope.
+  artifacts:
+  - path: Report.md
+    availability: present
+    purpose: integrated report or verifiable assembly metadata
+  - path: Report.pdf
+    availability: present
+    purpose: integrated report or verifiable assembly metadata
+  - path: report-assets/integration-verification.json
+    availability: present
+    purpose: integrated report or verifiable assembly metadata
 outstanding_records:
 - id: G-A
   owner: A
@@ -1489,11 +1525,12 @@ integrity:
   archive_policy: Nine obsolete/duplicate untracked files retained under ignored local archive with original hashes;
     not delivered as current rules/tests. No original historical AI excerpt deleted.
   current_counts:
-    source_records: 64
-    events: 39
+    source_records: 65
+    events: 40
 integration_refresh:
   date: '2026-11-25'
-  source_records: 64
-  events: 39
-  remote_baseline: be6b902
-  new_delivery_status: Report assembly draft; contributor verification and missing D5/D6 inputs remain open.
+  source_records: 65
+  events: 40
+  remote_baseline: f103e4e
+  new_delivery_status: Five identities, user-confirmed contributions and five original reflections integrated in
+    Report.md/PDF. D5 collection and independent technical acceptance remain separate.

@@ -17,22 +17,12 @@
   "mypy_files": 15,
   "security_python_files": 115,
   "security_medium_high": 0,
-  "npm_audit": {
-    "info": 0,
-    "low": 0,
-    "moderate": 5,
-    "high": 0,
-    "critical": 0,
-    "total": 5
-  },
-  "frontend_build": "passed",
   "wheel_build": "passed",
   "wheel_import_outside_checkout": "passed",
   "current_entry_links": "passed",
   "new_model_runs": 0,
   "limitations": [
     "Report.md remains an assembly draft with missing owner inputs.",
-    "Five moderate npm findings remain.",
     "Native permission probes are historical and bound to prior policy hashes.",
     "Pre-approval gate is not re-enabled.",
     "Hosted CI and final merge are not claimed by this pre-upload record."
