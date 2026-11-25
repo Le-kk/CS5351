@@ -9,3 +9,7 @@ This folder stores the team's AI usage records, organized by team member.
 - Save each separate interaction as a Markdown file named with the timestamp of its first message: `YYYY-MM-DD_HH-MM-SS.md`.
 
 Use the `Asia/Hong_Kong` time zone consistently. Begin each record with a short English summary of the tasks covered. The original interaction may remain in any language. Do not add example or placeholder interaction records. Remove secrets, access tokens, and sensitive personal or portfolio data before saving.
+
+## Structured event index
+
+[docs/ai-use-log.yaml](../docs/ai-use-log.yaml) describes important tasks, interventions, changes, measurements and verification with links to these original-language records. It contains summaries, not transcript copies. Outstanding member records and confirmation gaps remain explicit; an indexed claim is not independent acceptance.

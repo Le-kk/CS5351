@@ -55,7 +55,7 @@ DEFAULT_ANALYSIS_DATE = "2026-01-09"
 RATINGS = {"Buy", "Overweight", "Hold", "Underweight", "Sell", "REVIEW"}
 OUTPUT_CHECKS = {"PASSED", "NEEDS_REVIEW"}
 STOP_REASONS = {"MODEL_FAILURE", "DATA_FAILURE", "INTERNAL_ERROR", "PERSISTENCE_ERROR",
-                "INTERRUPTED"}
+                "INTERRUPTED", "BUDGET"}
 # The application manifest schema this scorer understands (``runapi.execution``).
 MANIFEST_SCHEMA_VERSION = "1"
 # The frozen formal cohort schema, now requiring explicit ticker/analysis_date
@@ -360,8 +360,16 @@ def _check_conditional_fields(attempt):
 
 
 def _check_manifest_correspondence(attempt, manifest, controls, manifest_path, report):
-    if manifest.get("schema_version") != MANIFEST_SCHEMA_VERSION:
-        raise ValueError("Unsupported or missing manifest schema_version")
+    from tradingagents.runapi.budget import validate_budget_manifest
+    validate_budget_manifest(manifest)
+    if manifest.get("schema_version") == 2:
+        cap = manifest["run_budget"]["call_cap"]
+        if type(controls.get("call_cap")) is not int or controls["call_cap"] != cap:
+            raise ValueError("Budgeted replay requires a matching frozen call_cap")
+        if type(attempt.model_config.get("call_cap")) is not int or attempt.model_config["call_cap"] != cap:
+            raise ValueError("Evidence model configuration omits or changes call_cap")
+    elif "call_cap" in controls:
+        raise ValueError("Frozen call_cap requires a budget-version manifest")
     ticker = controls.get("ticker", DEFAULT_TICKER)
     analysis_date = controls.get("analysis_date", DEFAULT_ANALYSIS_DATE)
     # These keys must be present with the exact expected value; a missing key is
@@ -671,9 +679,14 @@ def validate_formal_cohort(cohort, *, expected_source_revision=None,
     ids = [m.get("run_id") for m in members]
     if len(set(ids)) != 10 or any(not isinstance(i, str) or not i for i in ids):
         raise ValueError("Duplicate or missing cohort run ID")
-    return {"ticker": cohort["ticker"], "analysis_date": cohort["analysis_date"],
-            "source_revision": cohort.get("source_revision"),
-            "prompt_hash": cohort.get("prompt_hash")}
+    controls = {"ticker": cohort["ticker"], "analysis_date": cohort["analysis_date"],
+                "source_revision": cohort.get("source_revision"),
+                "prompt_hash": cohort.get("prompt_hash")}
+    if "call_cap" in cohort:
+        if type(cohort["call_cap"]) is not int or cohort["call_cap"] < 0:
+            raise ValueError("Frozen call_cap must be a non-negative integer")
+        controls["call_cap"] = cohort["call_cap"]
+    return controls
 
 
 def cohort_controls():

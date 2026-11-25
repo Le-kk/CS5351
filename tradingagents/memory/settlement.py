@@ -171,6 +171,10 @@ def settle_pending(ticker: str, memory_log, reflector, config: dict, wait: bool 
                     holding_days=days,
                 )
             except Exception as exc:
+                from tradingagents.runapi.budget import budget_cause
+                cause = budget_cause(exc)
+                if cause is not None:
+                    raise cause from None
                 # Reflection calls a provider: a transient failure leaves the entry
                 # pending for the next pass rather than stopping the analysis.
                 logger.warning("Reflection failed for %s on %s: %s", ticker, entry["date"], exc)

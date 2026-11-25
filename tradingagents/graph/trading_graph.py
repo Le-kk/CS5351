@@ -147,7 +147,8 @@ class TradingAgentsGraph:
         resume must not carry reports that other settings produced. Only where
         the run keeps its files and how it retries are left out.
         """
-        settings = {k: v for k, v in self.config.items() if k not in _NOT_IN_SIGNATURE}
+        settings = {k: v for k, v in self.config.items() if k not in _NOT_IN_SIGNATURE
+                    and not (k == "call_cap" and v is None)}
         digest = hashlib.sha256(json.dumps(settings, sort_keys=True, default=str).encode()).hexdigest()[:12]
         return "|".join([
             "analysts=" + ",".join(self.selected_analysts),
@@ -327,6 +328,10 @@ class TradingAgentsGraph:
                 note = (f"{len(done.failed)} past decision(s) could not be settled this run "
                         "and stay pending.")
         except Exception as exc:
+            from tradingagents.runapi.budget import budget_cause
+            cause = budget_cause(exc)
+            if cause is not None:
+                raise cause from None
             logger.warning("Settling past decisions failed: %s", exc)
             note = f"Past decisions could not be settled this run ({type(exc).__name__}); they stay pending."
         try:

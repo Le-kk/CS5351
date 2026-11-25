@@ -96,6 +96,10 @@ def invoke_structured(structured_llm: Any | None, prompt: Any, agent_name: str) 
     except ContextBudgetError:
         raise
     except Exception as exc:
+        from tradingagents.runapi.budget import budget_cause
+        cause = budget_cause(exc)
+        if cause is not None:
+            raise cause from None
         logger.warning(
             "%s: structured-output invocation failed (%s); retrying once as free text",
             agent_name, _diagnostic(exc),

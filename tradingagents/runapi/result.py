@@ -11,7 +11,7 @@ InputErrorKind = Literal[
 ]
 InputModeValue = Literal["NO_PORTFOLIO", "PORTFOLIO_PROVIDED"]
 StopReason = Literal[
-    "MODEL_FAILURE", "DATA_FAILURE", "INTERNAL_ERROR", "PERSISTENCE_ERROR", "INTERRUPTED",
+    "MODEL_FAILURE", "DATA_FAILURE", "INTERNAL_ERROR", "PERSISTENCE_ERROR", "INTERRUPTED", "BUDGET",
 ]
 OutputCheck = Literal["PASSED", "NEEDS_REVIEW", "NOT_RUN"]
 RunOutcome = Literal["COMPLETED", "INCOMPLETE"]
@@ -36,9 +36,14 @@ class InputError(ValueError):
 
 @dataclass(frozen=True)
 class Finding:
-    rule: Literal["Q1", "Q2", "Q3", "Q4", "CHECK_ERROR"]
-    status: Literal["BLOCKING"] = "BLOCKING"
+    rule: Literal["Q1", "Q2", "Q3", "Q4", "CHECK_ERROR",
+                  "R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8"]
+    status: Literal["BLOCKING", "CORRECTED"] = "BLOCKING"
     detail: str = ""
+
+    def __post_init__(self):
+        if self.status not in ("BLOCKING", "CORRECTED"):
+            raise ValueError("Unknown finding status")
 
     def as_dict(self) -> dict:
         return {"rule": self.rule, "status": self.status, "detail": self.detail}
@@ -50,10 +55,13 @@ class CheckResult:
     findings: tuple[Finding, ...] = field(default_factory=tuple)
 
     def __post_init__(self):
-        if self.output_check == "PASSED" and self.findings:
-            raise ValueError("PASSED check cannot contain findings")
-        if self.output_check == "NEEDS_REVIEW" and not self.findings:
-            raise ValueError("NEEDS_REVIEW requires at least one finding")
+        if self.output_check not in ("PASSED", "NEEDS_REVIEW", "NOT_RUN"):
+            raise ValueError("Unknown output check status")
+        blocking = any(finding.status == "BLOCKING" for finding in self.findings)
+        if self.output_check == "PASSED" and blocking:
+            raise ValueError("PASSED check cannot contain blocking findings")
+        if self.output_check == "NEEDS_REVIEW" and not blocking:
+            raise ValueError("NEEDS_REVIEW requires at least one blocking finding")
         if self.output_check == "NOT_RUN" and self.findings:
             raise ValueError("NOT_RUN cannot contain findings")
 
@@ -82,8 +90,9 @@ class RunResult:
                 raise ValueError("COMPLETED requires a rating and no stop reason")
             if self.output_check == "NOT_RUN":
                 raise ValueError("COMPLETED cannot have NOT_RUN output check")
-            if (self.output_check == "PASSED") != (len(self.findings) == 0):
-                raise ValueError("Completed check status and findings disagree")
+            if self.final_rating == "REVIEW" and self.output_check != "NEEDS_REVIEW":
+                raise ValueError("REVIEW requires NEEDS_REVIEW output check")
+            CheckResult(self.output_check, self.findings)
         else:
             if self.final_rating is not None or self.stop_reason is None:
                 raise ValueError("INCOMPLETE requires no rating and a stop reason")

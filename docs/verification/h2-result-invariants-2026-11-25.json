@@ -1,0 +1,29 @@
+{
+  "date": "2026-11-25",
+  "scope": "H2 structural CheckResult and RunResult invariants only",
+  "baseline": "345d983 plus local H1/H4; no independent C acceptance",
+  "before": "11 failed, 13 passed in new developer probes",
+  "after": {
+    "h2_probes": 24,
+    "h2_and_h4": 31,
+    "full_passed": 1908,
+    "skipped": 2,
+    "deselected": 1,
+    "subtests_passed": 100,
+    "ruff": "passed",
+    "mypy": "15 files passed",
+    "security_scan": "107 files; zero medium/high",
+    "requirements_schema": "passed",
+    "workflow_permissions": "passed"
+  },
+  "limitations": [
+    "No R5 correction engine or rule-version-2 artifact publisher",
+    "No real-model semantic acceptance",
+    "Legacy scorer remains fail-closed for unsupported corrections"
+  ],
+  "sha256": {
+    "tradingagents/runapi/result.py": "5b8102df1c017ea8b1c1dc410987879e1447e546481378270cca293690c79798",
+    "tests/member_d_verification/test_h2_corrected_findings.py": "e181d91c3df4d785d12252f80711482eadbbf33430f12ed527de48aea2748f7e",
+    "docs/code-governance/h2-result-invariants.md": "82208a4c057e250ca05b6f00a3f3d44c3ec2c58f0c3715c1e288a1fcc97b3b4e"
+  }
+}
