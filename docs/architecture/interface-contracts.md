@@ -1,6 +1,6 @@
 # Interface Contracts (Member B)
 
-Status: architecture draft (revised 2026-11-12 per the Stage-3 architecture review; implementation-aligned 2026-11-24; status refreshed to baseline `32ec858`, 2026-11-25). Typed shapes were **proposed design contracts** for C (test seams) and D (implementation). As of `a62b801` the core `runapi/` contracts are **implemented** (verified against source; see §12). Where the implementation is narrower than this spec, §12 records the difference; the contract text below is the design of record. Independent acceptance (C) and enforcement (E) remain their owners'. Local role-permission control **exists and is E-native-verified** (69 cases on OpenCode V1 1.19.5), but is **conditionally active only under the explicit compatible launcher/profile**; **local version compatibility and activation remain unresolved** here (the known local executable reports 1.18.34 and launcher startup was refused), so this documentation session is not shown to run strict B. Synthetic examples are **document examples**, not passing application tests; see §11.
+Status: architecture draft (revised 2026-11-12 per the Stage-3 architecture review; implementation-aligned 2026-11-24; status refreshed to baseline `6b57aad`, 2026-11-25). Typed shapes were **proposed design contracts** for C (test seams) and D (implementation). As of `a62b801` the core `runapi/` contracts are **implemented** (verified against source; see §12). Where the implementation is narrower than this spec, §12 records the difference; the contract text below is the design of record. Independent acceptance (C) and enforcement (E) remain their owners'. Local role-permission control **exists and is E-native-verified** (69 cases on OpenCode V1 1.19.5), but is **conditionally active only under the explicit compatible launcher/profile**; **local version compatibility and activation remain unresolved** here (the known local executable reports 1.18.34 and launcher startup was refused), so this documentation session is not shown to run strict B. Synthetic examples are **document examples**, not passing application tests; see §11.
 
 This revision designs the required contracts rather than deferring them to D. External-owner items remain: final D1 **adoption** of the 36-entry registry (which **contains** `REQ-TA-INV-014` and `REQ-TA-GOV-004`, both `status: proposed`) (A); C's tests/rubric and independent semantic acceptance; local activation/version-compatibility follow-up for the configured, E-native-verified role-permission package, confirmation of the seven required check names (E-reported; admin HTTP 401), and public-API-snapshot coordination for intentional migrations; instructor layout. `REQ-TA-GOV-004` (schema validation, `SEL-TA-GOV-002`) now has an implemented CI gate (`requirements schema`); runtime contracts here are unchanged by it.
 
@@ -401,7 +401,7 @@ result: RunResult = run_analysis_api(ctx_confirmed, event_sink=..., redactor=...
 ### 6.1 Two-part document
 - **Body** (model-generated sections + trusted frozen notice/disclaimer): rendered once from `final_state` + `RunContext`, **redacted before check**.
 - **Pre-check provenance fragment** (trusted, deterministic): the exact header lines Q2 will inspect — analysis date, input mode, basename, full-64 fingerprint, as-of/basis — rendered from `SafeInputMetadata` **before** the check. This is the object Q2 compares; it is not the checker comparing metadata to itself, because it is an independently produced text fragment.
-- **Envelope** (trusted): the final delivered header, built **after** the check from `SafeRunMetadata` (which now includes outcome/check). It must byte-match the pre-check provenance fragment for its Q2 fields (verified again before publication, §6.4).
+- **Envelope** (trusted): the delivered header, built **after** the check from `SafeRunMetadata` (which now includes outcome/check). It opens with the trusted frozen `DISCLAIMER` + blank separator, then the title/provenance/outcome/check lines, and must byte-match the pre-check provenance fragment for its Q2 fields (verified again before publication, §6.4). The deliverable is `final_doc_md = envelope + body`; the body keeps its own disclaimer footer (§6.4).
 
 ### 6.2 Single authoritative check — completed path only (F4)
 ```
@@ -439,7 +439,8 @@ The checker signature never receives graph-returned data on this path, so there 
 - `OutputChecker.evaluate(trusted, provenance_fragment, final_rating, rendered_body)` calls no provider. Q1 = rating readable; **Q2 = every Q2 field in `provenance_fragment` equals the explicit trusted `SafeInputMetadata`** argument; Q3 = disclaimer present in body; Q4 = prohibited phrases absent in body (disclaimer excluded).
 - **Publication-time guard — against authoritative metadata:** before the commit, the build verifies that the envelope's Q2 fields equal the **trusted `SafeInputMetadata`** (the same authoritative expected values). The guard does **not** compare the envelope to the possibly-defective `provenance_fragment`; it validates both the fragment's finding (already recorded by the checker) and the delivered envelope against the authoritative values.
 - **Q2-defect path (consistent):** if the fragment disagrees with trusted metadata, the checker records a `Q2` finding (`NEEDS_REVIEW`) and that finding is **retained**; the envelope is built from trusted metadata (a **corrected** header) and passes the guard because it matches authoritative values. The run delivers the corrected header labelled `NEEDS_REVIEW` with the original Q2 finding — it is neither silently marked clean nor claimed to have equal-but-unequal values.
-- **Single source for the disclaimer:** the disclaimer is rendered **once** into the body from the frozen string; the envelope references its presence (Q3) rather than re-emitting a second copy, avoiding body/envelope duplication mismatch.
+- **Disclaimer placement — leading notice + retained footer (as-built H5).** The Markdown deliverable is `final_doc_md = envelope + body`. The **envelope** begins with the trusted frozen `DISCLAIMER` followed by a blank separator, then the title/trusted provenance/outcome/check lines (`build_envelope`); the **body** retains its existing `## Disclaimer` footer (`render_body`). The frozen disclaimer string is a **single content source** even though its text appears in **two locations** (leading notice and footer); the notice is emitted by the **trusted renderer, not an LLM**. Q3 continues to check the disclaimer's presence in the **redacted rendered body**; Q2 continues to check trusted provenance — the check subject is unchanged. The static leading disclaimer does **not by itself** require a product schema bump.
+- **HTML + legacy-exporter layout (as-built H5).** `report_html.render_report` emits an **escaped** disclaimer paragraph (`<p class="disclaimer">` with the frozen string) **before the masthead**, inside the valid `<!doctype html>`/`<head>`/`<body>` structure — visible leading report content, **not** literal prose before the doctype. This leading notice is **unconditional** (present whether `run_metadata` is `None`, empty or populated); the earlier metadata-only limitation is removed. The legacy `reporting.write_report_tree` now **prefixes `complete_report.md`** with the same frozen `DISCLAIMER` + blank separator. A explicitly chose **first rendered visible content** (Markdown: first nonblank line; HTML: structural markup excluded) and **permits the retained compatibility footer**. Broader consumer/reader acceptance and per-agent section fragments (which are not complete reports) are only established where a specific test/probe exists, else pending.
 - **Redaction precedes checks**, so a checked artifact cannot later be invalidated by redaction.
 
 ### 6.5 Walkthroughs (synthetic; document examples; verified against §6.2–§6.4)
@@ -510,34 +511,64 @@ No walkthrough publishes a report that contradicts the returned terminal result.
 ## 9. Escaping and provenance values
 - HTML escapes all model/file/provenance values (`report_html.py:10,226,255`); envelope values escaped too. Header uses `SafeInputMetadata`, never the payload.
 
-## 10. Evaluation population interface (addresses B3-11)
+## 10. Evaluation population interface (addresses B3-11; as-built `EvaluationPopulation` + `summarize_records`)
 
-NFR-006 requires completion accounting over **started fresh runs**, with pre-run cancellations counted separately and **zero-completed ⇒ insufficient evidence**. Defined interface (owner component: evaluation data model, proposed `tradingagents/runapi/result.py` `RunRecord`; aggregation is a reporting concern for C/D):
+NFR-006 requires completion accounting over **started fresh runs**, with pre-run cancellations counted separately and **zero-completed ⇒ insufficient evidence**. The merged helper (`tradingagents/runapi/result.py`) is a **single-configuration declaration**, not the earlier deferred per-case sidecar design.
 
 ```
-RunRecord (one per attempt; persisted only in evaluation datasets, NOT in the run manifest)
+summarize_records(records: list[RunRecord], *, population: EvaluationPopulation | None = None) -> dict
+```
+
+`RunRecord` (one per attempt; persisted only in evaluation datasets, **NOT** in the run manifest) keeps its existing fields, then **four optional binding fields**:
+```
+RunRecord
   attempt_id: str
   category: "STARTED" | "PRE_RUN_REJECTED" | "PRE_RUN_CANCELLED"
-  run_outcome: "COMPLETED" | "INCOMPLETE" | null   # null for pre-run categories
+  run_outcome: "COMPLETED" | "INCOMPLETE" | null
   output_check: "PASSED" | "NEEDS_REVIEW" | "NOT_RUN" | null
   stop_reason: ... | null
-  controlled_change: {factor: str, value: str} | null   # for before/after experiments
+  controlled_change: {factor: str, value: str} | null
+  case_id: str | None = None
+  population_id: str | None = None
+  source_revision: str | None = None
+  prompt_hash: str | None = None
+  configuration_fingerprint: str | None = None
 ```
-Aggregation (design):
-- `completion_fraction = count(category=STARTED and run_outcome=COMPLETED) / count(category=STARTED)` (pre-run categories excluded from the denominator but reported separately).
-- Report `completed_count`, `needs_review_count`, `incomplete_reason_counts`, `pre_run_rejected`, `pre_run_cancelled`.
-- `completed_count == 0` ⇒ **insufficient evidence** (never a passing quality result).
-- A pre-run attempt records **no** `run_outcome`, creates **no** completed artifact, and is never counted as a started run.
-- Controlled before/after experiments carry `controlled_change` and are labelled as changed-factor comparisons; repeated fixed-condition benchmarks require matching controls. Exact scoring/threshold is C/A's (pending).
+
+```
+EvaluationPopulation(population_id, source_revision, prompt_hash, configuration_fingerprint, case_ids)
+  # population_id, source_revision: nonblank strings
+  # prompt_hash, configuration_fingerprint: lower-case SHA-256 ([0-9a-f]{64})
+  # case_ids: non-empty tuple of unique nonblank strings
+```
+These validate a **caller declaration**; they are **not** signatures, human approval or acceptance. `source_revision` is a nonblank label, not necessarily a 40-hex commit.
+
+**Validation performed by the helper (raises `ValueError`):** duplicate or blank `attempt_id`; unknown `category`; a present but invalid `case_id` (non-string/blank). **When a `population` is supplied**, every `STARTED` record must have a `case_id` in `population.case_ids`, and must match the population's `population_id`/`source_revision`/`prompt_hash`/`configuration_fingerprint`; a **truthy `controlled_change`** on a bound `STARTED` record is **refused** (comparisons need a separate agreed interface). The helper does **not** require every declared case to be observed, and does **not** fully validate all outcome combinations.
+
+The returned dict has **exactly** these ten fields:
+`distinct_case_count, population_result_count, status, started_count, completed_count, completion_fraction, needs_review_count, incomplete_reason_counts, pre_run_rejected, pre_run_cancelled`.
+
+**Exact behavior (from source):**
+- **Denominator:** `STARTED` includes **unresolved** starts; only `COMPLETED` is in the numerator. No `STARTED` ⇒ `completion_fraction = None`; STARTED-but-none-completed ⇒ `0`.
+- Pre-run categories are counted in their own fields, never in `STARTED`. `needs_review_count` is **completed-only**; `incomplete_reason_counts` is terminal-incomplete-only.
+- **Status:** zero `COMPLETED` ⇒ `"INSUFFICIENT_EVIDENCE"`; `"AVAILABLE"` means **accounting data exists**, never a semantic PASS.
+- **`distinct_case_count`:** size of the distinct `STARTED` `case_id` set **when STARTED is non-empty and every record has a truthy `case_id`**; otherwise `None`. Known explicit IDs can establish it **even with no population**; IDs are never inferred from `attempt_id`.
+- **`population_result_count`** (null/1/0 matrix): **`1`** for non-empty STARTED **bound to a supplied population**; **`null`** for non-empty STARTED with **no** population; **`0`** when nothing `STARTED` (and then `distinct_case_count` is `null`).
+- **`controlled_change` / comparisons:** a truthy `controlled_change` is refused **only** in bound (population-supplied) mode. The **unscoped** helper does **not** implement comparison validation; it is neither a validated before/after comparison mode nor `N_EVAL`/full-coverage proof.
+- **Worked example:** 20 explicit cases × 2 attempts = **40 attempts**, **20 distinct cases**, **1 aggregate**; an unresolved attempt remains countable. This is **developer arithmetic**, not adoption of a 20-case formal profile.
+
+**Retained-evidence adapter (`tests/member_c_verification/live/score_gov004.py::evaluation_counts`).** Before binding `RunRecord`s, it validates eligibility, the actual manifest and pre-start controls, and cohort identity, then calls `summarize_records(records, population=...)` and prints a machine-readable `Evaluation counts:` line beside completion/`NEEDS_REVIEW`. It preserves the scorer's anti-counterfeit/chronology/provider/config protections. The **pure summary alone does not authenticate evidence**; the adapter's cohort/manifest checks are what bind artifacts. The current **five cases / two trials** are a **project trial** relative to the provisional `N_EVAL=20` (five cases, not ten of twenty); the 20/40/1 example is developer arithmetic, not a formal cohort, and a raw legacy scorer PASS is not registry acceptance.
+
+**Comparison / acceptance remain separate.** Fixed/versioned population, matching comparison controls and a declared single-factor comparison are still **requirement obligations** (`REQ-TA-NFR-EVAL-001` / `SEL-TA-NFR-006`), but the helper has **no** comparison reporter, evidence sidecar, expected-case-coverage requirement or `N_EVAL` acceptance. Whole requirement remains **partial**; ownership of a comparison interface is unresolved (owner question).
 
 ## 11. Pending (external owners)
 Final D1/schema (A); C's test IDs, rubric/threshold, and independent evidence; E enforcement; instructor layout. A must approve any reliance on the reduced-coverage low-level primitive (§5.3). `REQ-TA-INV-014` (immutable input) and `REQ-TA-GOV-004` (schema validation) are now present in the 36-entry registry (`status: proposed`); their presence does not change this contract — input freezing is covered by INV-04/05/05b and schema validation belongs to the governance/CI boundary, where `REQ-TA-GOV-004` now has an implemented `requirements schema` CI gate (E-reported required; not adoption).
 
-**Public-API compatibility guard (E-owned).** `docs/code-governance/public-api-contract.json` freezes the `runapi` exports, `run_analysis_api` parameter names/kinds/defaults and `RunResult` field names; drift fails CI. The **planned** budget/checker contract changes in §13–§15A (e.g. adding `BUDGET`, `corrected_fields`, token fields, or a coordinator signature) are **not** applied here: an intentional contract migration must be coordinated as a single authorized change — E's snapshot update, D's implementation, the matching tests, the relevant `schema_version`/`check_rules_version` bumps, and the AI-log update — under explicit authorization. This document does not edit or weaken that snapshot.
+**Public-API compatibility guard (E-owned).** `docs/code-governance/public-api-contract.json` freezes the `runapi` exports, `run_analysis_api` parameter names/kinds/defaults and `RunResult` field names; drift fails CI. The **type-layer** additions are merged in source (`StopReason` now includes `BUDGET`; `Finding.status` includes `CORRECTED`; `Rating` includes `REVIEW` — §12.2/§12.5), the **call-cap admission controller is now merged** (`runapi/budget.py` + `llm_clients/budget_transport.py`), but the **remaining** mechanisms in §13–§15A (R1–R8 emission, `corrected_fields` rendering, cumulative **token** fields/coordinator) are **not** applied here. Any intentional contract migration must be coordinated as a single authorized change — E's public-API-snapshot update, D's implementation, the matching tests, the relevant `schema_version`/`check_rules_version` bumps, and the AI-log update — under explicit authorization. This document does not edit or weaken that snapshot, and merged type support does not by itself change the frozen API/version contract.
 
 **Role-permission/handoff note (external, E-owned; runtime contracts unchanged).** Local coding-agent controls are now **configured** (`.opencode/permissions.jsonc`, launcher `scripts/run_role_agent.py`, `.opencode/rules.md` role prompt, `.agent/rules.md` covenant) and **E-native-verified** (69 cases on OpenCode V1 1.19.5), but **active only under the explicit compatible launcher/profile**; native precedence is last-matching-rule-wins (see `docs/architecture/permission-model.md` §4a). Strict B denies shell/Git/tests/search/delegation/web/MCP and edits to the prompt-pack proposal and `docs/req/README.md`; those two paths are **deferred to an owner/authorized external session** or a recorded configuration exception. This does not alter any interface or runtime contract below; OS ACLs, member identity and tamper-proof CI remain outside the guarantee.
 
-## 12. Implementation status and deviations at `a62b801` (verified 2026-11-24)
+## 12. Implementation status and deviations (verified at `a62b801`; updated for merged changes through `6b57aad`)
 
 This section records what the checkout **actually implements** relative to the design above. Where the design is broader, the deviation is stated; none of these is a claim that a proposed `REQ-TA-*` obligation is met.
 
@@ -550,10 +581,10 @@ This section records what the checkout **actually implements** relative to the d
 - **Envelope + header guard (§6.4):** `runapi/reporting.py` `build_envelope` and `verify_envelope_header_matches`.
 - **Evaluation population interface (§10):** `RunRecord` and `summarize_records` exist in `runapi/result.py` (`INSUFFICIENT_EVIDENCE` when no completed run).
 
-### 12.2 As-built vocabulary (narrower than `REQ-TA-*`)
-- **`StopReason`:** five values — `MODEL_FAILURE`, `DATA_FAILURE`, `INTERNAL_ERROR`, `PERSISTENCE_ERROR`, `INTERRUPTED` (`runapi/result.py:12-14`). **No `BUDGET`.** `classify_exception` maps auth/provider/langchain exceptions to `MODEL_FAILURE`, vendor/data to `DATA_FAILURE`, else `INTERNAL_ERROR`; `KeyboardInterrupt`/`InterruptedError` → `INTERRUPTED`.
-- **`Finding.status`:** only `BLOCKING` (`result.py:39`). **`CheckResult`:** `PASSED` with any findings raises; `NEEDS_REVIEW` requires ≥1 finding; `NOT_RUN` forbids findings (`result.py:51-57`). There is **no corrected-finding state**, so proposed R5 (`PASSED` with corrected-only findings) is **not** supported by the current types.
-- **Checker rules:** Q1–Q4 only; no evidence-ID, sentiment or coverage rules. Proposed `R1–R8` (`REQ-TA-ARCH-002`) are **not** implemented; R1≈Q1, R8≈Q3/Q4, R2/R4–R7 have no enforcing code.
+### 12.2 As-built vocabulary (call cap emitted; token/R1–R8 still unimplemented)
+- **`StopReason` + BUDGET emission (call cap — implemented):** six values incl. **`BUDGET`** (`MODEL_FAILURE`, `DATA_FAILURE`, `BUDGET`, `INTERNAL_ERROR`, `PERSISTENCE_ERROR`, `INTERRUPTED`). The call-cap controller (`runapi/budget.py` `RunBudgetController`, transport seam `llm_clients/budget_transport.py`) is **implemented for the bounded profile**; `finalize.classify_exception` maps `RunBudgetExhausted` → `BUDGET`. `PERSISTENCE_ERROR` remains primary over BUDGET. **Cumulative token/time admission (`REQ-TA-NFR-COST-001`, §15A, ADR-004) is still proposed/unimplemented** — call-count cap ≠ token cap.
+- **`Finding.status` + `CheckResult`:** `status ∈ {BLOCKING, CORRECTED}`; `PASSED` permits corrected-only findings and rejects any `BLOCKING` finding; `NEEDS_REVIEW` still requires ≥1 **blocking** finding; `NOT_RUN` forbids findings. But the **checker emits only Q1–Q4** — no rule produces `CORRECTED`, and `Finding` carries no `original`/`corrected` fields here. R1–R8, evidence/coverage remain **unimplemented** (R1≈Q1, R8≈Q3/Q4, R2/R4–R7 no enforcing code).
+- **Rating:** `Rating` includes `REVIEW` (unreadable-rating path). Types admit `BUDGET`/`CORRECTED`/`REVIEW`; **call-cap emission and the budget manifest schema are present**, while R1–R8 rules and cumulative-token admission are not.
 
 ### 12.3 Conditional-semantics corrections (aligned with the 24 November review)
 - **Outcome-dependent fields, not blanket non-null:** `stop_reason` is present **only** for `INCOMPLETE`; `final_rating` is present **only** for `COMPLETED` (§3.4). Any proposed requirement wording that requires both fields non-null in every record is **inconsistent** with this contract and with `REQ-TA-RUN-001`'s own validity table; the correct check validates field presence/nullability per the validity table, not a blanket non-null assertion. (This is the `REQ-TA-NFR-REPRO-001` fit-(b) vs `REQ-TA-RUN-001` tension identified in the review; it is a requirements-wording item, not an architecture change.)
@@ -564,12 +595,11 @@ This section records what the checkout **actually implements** relative to the d
 - The implemented contract supports `NO_PORTFOLIO` and an explicitly confirmed `PORTFOLIO_PROVIDED` snapshot, including an explicitly empty (flat) book and a supplied book that lacks the analyzed instrument (`§1`, `§2.1`). This is retained as implemented.
 - The current registry's scope now **includes optional portfolio input** (profiles A-A/A-B/A-C), matching the implemented optional-input flow. The confirmation-flow ownership is still open (OQ-16); this document keeps the implemented flow and does not invent a consent requirement.
 
-### 12.5 Proposed extensions (documented impact, **not** implemented)
-Recorded here so adoption cost is visible; each is a design+D+C+E change, not implied by this contract:
-- `BUDGET` enum value + run-wide single-use call-reservation controller (`REQ-TA-NFR-COST-002`), including updating every reader that enumerates `StopReason`.
-- `R1–R8` checker with evidence-ID registry and per-run `data_coverage` record (`REQ-TA-FR-001/005`, `INV-002/007`).
-- Corrected-only `PASSED`: requires adding a non-blocking `Finding` status and relaxing `CheckResult(PASSED)` (`result.py:51-57`) together across checks/report/scorer and their tests.
-- Aggregate time/token budgets and resume identity (D-5), which conflicts with the fresh-run-ID/immutability invariants (INV-11/INV-12).
+### 12.5 Call-cap implemented; schema/version and remaining mechanisms
+- **Implemented — call-cap admission + BUDGET (bounded profile):** opt-in `RunBudgetController` (`runapi/budget.py`) with the synchronous SDK transport seam (`llm_clients/budget_transport.py`); supported tiers `deepseek`/`openai_compatible`, synchronous in-tree factory, **SDK/transport retries disabled**, async rejected; both tiers/plain/tools/structured/fallback/reflection share one run-local controller; grants monotonic/no refund, tickets single-use/run-bound, `seal()` waits active responses, counters per-run. `finalize` emits `BUDGET` on refusal; `PERSISTENCE_ERROR` primary. `call_cap=None` disables; `0` allows no dispatch; `TRADINGAGENTS_CALL_CAP` exposes the standard config. **Not** a token cap, elapsed-time cancellation guarantee, arbitrary-custom-code protection, or count of gateway-internal retries.
+- **Implemented — budget manifest schema (validated):** `validate_budget_manifest`/scorer recognize **disabled legacy** `schema_version` string `'1'` with **no** `run_budget`/`check_rules_version`/`BUDGET`; **enabled budget-only** `schema_version` integer `2`, `check_rules_version` integer `1`, `run_budget` exactly `{call_cap, granted, dispatched, invalidated, denied}` (non-negative ints; `dispatched+invalidated == granted ≤ call_cap`; `effective_config.call_cap` agrees; `BUDGET` requires `denied`). Unknown/invalid versions fail closed. No fabricated R1–R8/cumulative-token migration.
+- **Not implemented — R1–R8 / corrected emission / evidence-coverage:** checker emits only Q1–Q4; no `CORRECTED` emission; R1–R8, evidence-ID registry and per-run `data_coverage` absent; `corrected_fields` rendering under a version gate to be built.
+- **Not implemented — cumulative token/time admission & resume:** `REQ-TA-NFR-COST-001`/`PERF` (§15A, ADR-004) and D-5 resume remain proposed (resume conflicts with INV-11/INV-12).
 
 ---
 
@@ -869,16 +899,17 @@ R3 is retained as a **deterministic blocking phrase/pattern check** over the del
 
 ---
 
-## 15. Run-wide request-budget boundary — `REQ-TA-NFR-COST-002` + `BUDGET` (PROPOSED; prioritized first handoff)
+## 15. Run-wide request-budget boundary — `REQ-TA-NFR-COST-002` + `BUDGET` (IMPLEMENTED, bounded profile)
 
-Status: **proposed implementation-ready design**, consolidating `docs/architecture/proposals/reply-to-A-cost002-2026-11-22.md` and the stop-reason reply. **Not implemented.** This is the **first recommended implementation handoff** (§16): most isolated, offline-testable, unblocks a Must (`COST-002`) plus RUN-001's `BUDGET`.
+Status: **implemented** at `6b57aad` for the bounded profile (`tradingagents/runapi/budget.py` + the SDK transport seam `tradingagents/llm_clients/budget_transport.py`; `finalize` emits `BUDGET`). The sections below began as the design and now describe the as-built mechanism; the **cumulative token/time** cap (§15A, ADR-004) remains **proposed**. Original design replies: `docs/architecture/proposals/reply-to-A-cost002-2026-11-22.md`.
 
 ### 15.1 Component and boundary
 | Component | Responsibility | Proposed path (new) | Owner |
 |---|---|---|---|
-| `RunBudgetController` | One per run; issues single-use reservations; enforces `dispatch_attempts <= successful_reservations <= CALL_CAP`; exposes exhausted state | `tradingagents/runapi/budget.py` | B / D / C / E |
+| `RunBudgetController` | One per run; issues single-use, run-bound reservations; enforces `dispatch_attempts <= successful_reservations <= CALL_CAP`; monotonic grants (no refund); `seal()` waits for active responses; exposes safe audit counters | `tradingagents/runapi/budget.py` | B / D / C / E |
+| `BudgetTransport` | **The actual SDK enforcement seam**: a synchronous transport wrapper over the **SDK-native HTTP transport family — `httpx` or `httpx2`, selected dynamically by `budget_transport.py` from `DefaultHttpxClient`'s MRO** — that meters each real SDK HTTP attempt (SDK/transport retries `0`); **async is rejected before network access** | `tradingagents/llm_clients/budget_transport.py` | B / D / C / E |
 
-- The controller lives at the **controlled application client boundary** (where the app issues model-request attempts), shared across quick/deep tiers, structured/plain paths, retries and in-run memory/reflection. It must **not** be a global counter across runs; it must be **separate from the frozen input snapshot** (`RunContext`).
+- The controller is **run-local** (set via `ACTIVE_BUDGET`), shared across quick/deep tiers and structured/plain/fallback/reflection paths **because they all issue their network attempt through the same synchronous SDK transport**; it must **not** be a global counter across runs and is **separate from the frozen input snapshot** (`RunContext`). Supported factory tiers: `deepseek`/`openai_compatible`, synchronous in-tree factory; **async and unsupported clients are rejected**; it does **not** bound arbitrary custom code, gateway-internal retries, or elapsed wall-clock time.
 - **Token-cap integration (see §15A):** when cumulative token admission is enabled, the call-cap controller is consulted through the atomic `AdmissionCoordinator` (§15A.1) together with the token controller; the coordinator withholds a grant from **both** if either limit refuses. §15's call-counting rules (monotonic `granted`, no refund on invalidation) are **unchanged**; only the entry point is wrapped.
 - `CALL_CAP` is a **configuration value** (test value 8; production default open, **not a measured value**).
 
@@ -915,15 +946,8 @@ class RunBudgetController:
 - **Concurrency:** `reserve()` is atomic under a single lock/condition per controller; with 1 slot remaining and N concurrent callers, exactly 1 grants and N-1 raise. No branch overshoot allowance is needed (each concurrent branch holds its own reservation). Default START branches = 4 analysts + Memory Log (derived from constructed plan, not a hard-coded constant; branch count irrelevant to the strict bound).
 - **SDK retries:** `max_retries=0` for the guaranteed-budget mode; every application retry takes a **fresh** reservation. If a client cannot disable hidden retries, that client is **rejected** in guaranteed-budget mode (not silently uncovered). Gateway-internal retries are outside the client-side guarantee (stated, not hidden).
 
-### 15.4a Metering exactly once across plain / tool-bound / structured dispatch
-The controller is attached to the run's **tier chat-model objects** created at `trading_graph.py:79-80` (`create_tier_client(config,"deep"|"quick").get_llm()`), so every dispatch through them is metered:
-- **Plain:** `llm.invoke(...)` → one `reserve()+dispatch()`.
-- **Tool-bound:** `llm.bind_tools(tools).invoke(...)` — the bound runnable delegates to the same underlying metered `invoke`; the controller is on the model object, **not** re-wrapped per call site, so exactly one reservation is consumed (no missed, no double charge).
-- **Structured:** `llm.with_structured_output(schema).invoke(...)` — likewise routes through the same metered `invoke`.
-- **Memory/reflection:** `Reflector` uses the same `quick_thinking_llm`; settlement and the graph `_memory_step` calls inherit the metered object.
-- **No double charge:** because metering lives on the shared model object, wrapping it once covers all bound/proxied runnables; a probe asserts a bound/structured call does not create a second reservation.
-- **Proposed probes (C inputs; not yet run):** P1 plain=1 reservation; P2 tool-bound=1; P3 structured=1; P4 no double-wrap ⇒ not 2 per call; P5 each reservation pairs with ≤1 dispatched attempt; P6 wrong-run/reuse rejected. **Do not claim the runtime guarantee until these pass.**
-
+### 15.4a Metering exactly once — SDK transport seam (as-built)
+The cap is enforced at the **synchronous SDK-native HTTP transport** (`llm_clients/budget_transport.py` `BudgetTransport`), which wraps whichever family the installed SDK's `DefaultHttpxClient` uses — **`httpx` or `httpx2`, selected dynamically** — **not** by wrapping model objects or `invoke`. Every real request attempt — plain `invoke`, `bind_tools(...).invoke`, `with_structured_output(...).invoke`, free-text fallback and in-run reflection — issues its HTTP attempt through that transport, so each attempt is metered once; SDK/transport retries are `0`, and **async is rejected before any network access**. A stream wrapper (`BudgetStream`) holds the controller until the response closes so `seal()` waits for active responses. This is a client-side **call-count** cap only: it is **not** a token cap, an elapsed-time cancellation guarantee, protection against arbitrary custom code, or a count of gateway-internal retries. The earlier model-object invoke-wrapper sketch is **superseded** by this transport seam. Proposed C probes: P1 plain=1; P2 tool-bound=1; P3 structured=1; P4 no double-count; P5 each reservation pairs with ≤1 dispatch; P6 wrong-run/reuse rejected — **no runtime guarantee is claimed before these pass.**
 
 ### 15.4 Exhaustion propagation (must survive broad handlers)
 - `RunBudgetExhausted` must **not** be swallowed by `agents/structured.py` free-text fallback, `memory/settlement.py` (`except Exception`), or the graph memory step. D must either re-raise it or consult an authoritative exhausted-state check, so a refused **required** attempt reaches finalization as `BUDGET`.
@@ -1208,8 +1232,8 @@ These are a **genuine new design cycle** for the new requirements, **separate** 
 - Resume identity (separate, not implied).
 - Optional-portfolio scope: **resolved** — the current registry scope includes optional portfolio input (profiles A-A/A-B/A-C), matching the implemented flow (OQ-13 closed). Separate open items remain: confirmation-flow ownership (**OQ-16**; no `REQ-TA-FR-009` invented) and the formal fixture population (**OQ-17**; structured `fixture_profiles.assignment` authoritative).
 
-### 16.6 Slice C execution-readiness status (budget + `BUDGET`)
-**Status: READY FOR EXECUTION/TEST PLANNING.** Design complete (§15); no unresolved Slice A/B policy blocks it. Pre-build requirements are standard gates, not architecture:
+### 16.6 Slice C status (call-cap + `BUDGET`)
+**Status: IMPLEMENTED for the bounded profile at `6b57aad`** (see §15/§12.5); the items below are retained as the original pre-build gate record for historical/review purposes, not as open requirements:
 - **Explicit human authorization** for the change, an **approved test plan/review**, and bounded scope (prompt pack Templates 1/2/4/5). **Test-plan pre-approval is paused** per `AGENTS.md`; the `/approve-tests <SHA>` receipt is **optional/inactive while paused** and becomes a prerequisite only if explicitly re-enabled.
 - Confirm `CALL_CAP` test value (8) and that the production default is a configuration decision (open, not measured).
 - Include the mandatory hook files in the approved `implementation_paths[]` (`trading_graph.py`, `agents/structured.py`, `memory/settlement.py`, `llm_clients/factory.py`) plus `runapi/{budget,result,finalize,execution,reporting,persist,events}.py`.
@@ -1249,3 +1273,96 @@ Rules:
 - **Fail closed (other violations):** a `schema_version=2` record whose `token_audit` violates the shape/conditional rules — e.g. `enabled=true` with `status="DISABLED"`; `ACTIVE` with `bound_violation=true`; `VIOLATED` with `violation=null`; `VIOLATED` with non-negative-required count negative; **negative `remaining` outside `VIOLATED`**; `units≠"tokens"`; `UNSUPPORTED` with a non-null budget — or a reader that cannot interpret `token_audit`, must **reject** — never coerce, never treat `U` as measured actual. The legacy `schema_version=1` path (no `run_budget`) is unchanged and makes no token claim.
 
 > **ADR 002 wording clarification (AR24 06):** “approved published target” in ADR 002 means approval to **draft this architecture target** — it is **not** final team adoption of the requirements and **not** a completed, tested ADD iteration. The new decisions (D1–D5) are genuine new proposals for review; they do not reopen or restate C2.
+
+---
+
+## 17. Proposed semantic gate — trigger, binding, scoring and lifecycle (PROPOSED; not installed)
+
+Status: **proposed interface** for `REQ-TA-GOV-001` (semantic evaluation; historical `SEL-TA-GOV-004`) — **distinct** from `REQ-TA-GOV-004` (requirements schema gate). The replay/scorer/packager **exist**; the **path classifier, gate wrapper/`GateEvaluation` metadata and CI blocking are NOT installed**. The current seven required checks do **not** include a semantic check; `ci.yml` keeps live replay opt-in. This section adds **no** required check, threshold, profile or provider change; it answers E's four interface questions and separates three layers: (1) existing opt-in tools, (2) this proposed trigger/head/CI adapter, (3) acceptance & activation owned by A/C/D/E.
+
+### 17.1 GOV_PATHS v1 (proposed E-owned policy; not a committed enforcement file)
+File-level conservative trigger — a matched edit triggers even if comment-only; **no ad-hoc per-PR exemption**. Case-sensitive repository-relative POSIX, no leading slash; trailing `/` = prefix, else exact. Use trusted base/head diff; add/modify/delete/type-change/copy and **both old and new paths of a rename**; moving a governed file out still triggers. Multiple matched files ⇒ **one decision per candidate commit**. Classification/diff failure ⇒ **UNKNOWN**, never NOT_APPLICABLE.
+
+Prefix entries: `tradingagents/`, `cli/`, `prompts/`, `config/`, `configs/`, `.github/workflows/`. (prompts/config/configs reserved if absent.)
+
+Exact entries (fully expanded): `main.py`; `pyproject.toml`; `requirements.txt`; `uv.lock`; `poetry.lock`; `tests/member_c_verification/live/cases.py`; `tests/member_c_verification/live/conftest.py`; `tests/member_c_verification/live/runner.py`; `tests/member_c_verification/live/replay_store.py`; `tests/member_c_verification/live/score_gov004.py`; `tests/member_c_verification/live/package_gov004.py`; `tests/member_c_verification/live/test_gov004_live.py`; `docs/verification/semantic-evaluation.md`; `docs/verification/gov004-evidence-package.md`; `docs/code-governance/verification-constraints.md`; `docs/req/requirements.yaml`; `docs/architecture/interface-contracts.md`; and the **future E-owned** (not current files) `scripts/ci/check_semantic_gate.py`; `docs/code-governance/semantic-gate-policy.json`.
+
+No automatic live-replay trigger for changes confined to `AI-log/`, `docs/reviews/`, `docs/submission/`, ordinary architecture/ADR/README prose (other than the listed contract), images/video, `tests/member_c_verification/offline/`, `live/test_harness_selfcheck.py`, `live/test_score_gov004_exitcodes.py`, other test-only files, or generated/sanitized evidence. **Matched-path policy takes precedence** over these exclusions. Private runtime config changes still alter the config fingerprint and invalidate unmatched evidence.
+
+### 17.2 Reuse existing tools; complete command templates; candidate binding
+Reuse (no second scorer/counter). Complete templates (POSIX, from repo root, project venv):
+
+```sh
+# Replay (paid/live only when GOV004_LIVE=1; formal slots trial 1|2)
+GOV004_LIVE=1 GOV004_TRIAL=1 GOV004_EVIDENCE_DIR="$PWD/<evidence-root>" \
+  .venv/bin/python -m pytest -q -s -p no:cacheprovider tests/member_c_verification/live/test_gov004_live.py
+
+# (A) Score the SOURCE evidence with the human scores file
+GOV004_EVIDENCE_DIR="$PWD/<evidence-root>" \
+  .venv/bin/python tests/member_c_verification/live/score_gov004.py <scores.json>
+
+# (B) Package to a NEW independent destination (exports the scores file with the package)
+.venv/bin/python tests/member_c_verification/live/package_gov004.py "$PWD/<evidence-root>" "<new-dest>" --scores <scores.json>
+
+# (C) Re-score the PORTABLE package using ITS OWN exported scores file
+GOV004_EVIDENCE_DIR="<new-dest>" .venv/bin/python tests/member_c_verification/live/score_gov004.py "<new-dest>/gov004_scores.json"
+```
+(`runner.run_case`→`run_analysis_api`, `replay_store.dispatch_slots`; ticker/date must match the frozen cohort; packaging success is not a semantic verdict.)
+
+**Candidate binding:** evaluate the PR's **exact full head SHA**, not a mutable branch/merge; clean isolated checkout for formal approval. `_source_revision()`'s short git label (may append `+dirty`) is **not** exact PR-head proof — the adapter must independently bind the full SHA and require `evaluated_head_sha == current target_head_sha` immediately before posting. A **new head invalidates** approval (no cross-commit cache reuse). Dirty runs are diagnostics only. Reuse existing runner preflight (source/prompt identity, cohort schema/slots/chronology, ticker/date, model IDs, both tier providers). **Source-inventory `prompt_hash`** (identifies source; currently skips unreadable files — an R-HASH risk the gate must preflight) ≠ **per-call `PromptCapture.prompt_sha256`** (hashes assembled prompts, not stored). Separate purposes: source hash / per-call digest / commit identity / config-cohort identity.
+
+**Proposed governance safeguards (PROPOSED, not enforced):**
+- **A policy change cannot remove its own obligation:** classify the PR's changed paths against the **trusted previously-approved policy** and the **candidate policy**, and treat the **union of matches** as required — so editing `semantic-gate-policy.json`/GOV_PATHS to drop a path cannot exempt that same PR.
+- **Grading tools are frozen before use:** changes to case catalog/rubric/scorer/packager/preflight require **owner (C/E) review and freeze** at approved immutable revisions **before** evaluation; code controlled by the PR under test cannot award itself a PASS. Compare results under the trusted approved policy/tools, not candidate-modified ones.
+
+### 17.3 Scores, artifacts, typed `GateEvaluation`, retention
+**Scores/submission distinction:** a scores JSON with a real reviewer, per item `case_id`, `run_id`, `trial`, `item`, integer `score ∈ {0,1}`, and an exact nonempty citation in the corresponding report; the scorer derives applicability (no fabricated N/A/identity/citation). **Missing/unsubmitted scoring ⇒ PENDING (2)**; a **submitted but incomplete/invalid** score matrix (bad schema, missing required applicable cells, wrong reviewer fields) is **FAIL (1)** under the existing scorer — these are different outcomes.
+
+Evidence under a fresh `GOV004_EVIDENCE_DIR`: `cohort.json` (schema 2), `gov004_starts.json` (versioned STARTED ledger, durably claimed before dispatch), `gov004_attempt_<run_id>.json` mirrors, `runs/<stamp>/<case>/` artifacts; reports/manifests by portable relative path + SHA-256. `package_gov004.py` copies refs into a new destination and emits `integrity.json` (file digests); re-score the portable copy from a fresh directory.
+
+**`GateEvaluation` — outer E-owned envelope (single typed shape; beside, not inside, the tool package; no new `RunResult`/manifest fields):**
+```
+GateEvaluation
+  gate_contract_version: 1                 # int, exactly 1
+  gate_mode: "PILOT" | "BLOCKING"          # enum
+  applicability: "REQUIRED" | "NOT_APPLICABLE" | "UNKNOWN"   # enum
+  policy_digest: str                       # lower-case SHA-256 hex
+  base_sha: str | null                     # full commit id (null if unknown)
+  target_head_sha: str | null              # full commit id
+  evaluated_head_sha: str | null           # full commit id
+  runner_revision: str | null              # immutable approved tool revision
+  scorer_revision: str | null
+  packager_revision: str | null
+  case_catalog_sha256: str | null          # lower-case SHA-256 hex
+  rubric_sha256: str | null
+  cohort_sha256: str | null
+  config_sha256: str | null
+  prompt_hash: str | null
+  evidence_root_ref: str | null            # safe relative ref
+  portable_package_ref: str | null
+  package_integrity_sha256: str | null
+  scores_sha256: str | null
+  raw_scorer_exit: int | null              # raw process exit; 0/1/2 are the recognized scorer protocol codes (PASS/FAIL/PENDING); any other exit is preserved for diagnostics
+  semantic_verdict: "PASS" | "FAIL" | "PENDING" | null
+  reason_code: str                         # bounded safe code (nonempty)
+```
+Unavailable fields are `null` and the verdict is `PENDING` — **`null` is never accepted as a matching binding**, and `NOT_APPLICABLE` carries `semantic_verdict = null` (not `PASS`). **Scorer-exit protocol:** `0/1/2` are the recognized protocol codes (PASS/FAIL/PENDING). Other process exits are recorded as-is for diagnostics but are **not** a verdict. An unexpected exit, a missing valid terminal verdict, or an **exit/verdict mismatch cannot establish PASS** — report **PENDING** with an execution/protocol `reason_code`, and formal acceptance is blocked. An **already-established valid FAIL is preserved** (do not overwrite it with PENDING).
+
+**Retention/index binding (PROPOSED):** reviewed, **sanitized** package copies may be retained durably (E-owned CI artifact / archive / approved review location); the original private evidence stays ignored. The E-owned outer index must bind each `GateEvaluation` **digest** to `integrity.json` **and** the `scores`/package refs; an expiring unarchived artifact is **not** durable final-submission evidence. Commit only authorized sanitized artifacts.
+
+### 17.4 Verdicts, lifecycle and PILOT/BLOCKING
+Raw scorer semantics preserved: **PASS=0, FAIL=1, PENDING=2**; no permissive second scorer, no inferring PASS from pytest/package success, no lowered thresholds.
+- **Valid, applicable, current-head scores satisfying fixed conditions** ⇒ PASS (limited to declared profile/mode).
+- **Below threshold / critical / failed eligibility / malformed evidence / invalid score schema** ⇒ FAIL (distinguish invalid evidence from bad narrative).
+- **No evidence / missing score file / scoring incomplete** ⇒ PENDING (never PASS); supplied-but-malformed scores ⇒ FAIL.
+- **API unavailable before any start / no verdict / interrupted with no valid final scorer result** ⇒ PENDING (infra reason); retain logs/starts; do not overwrite an existing FAIL.
+- **Failure/interruption after STARTED** ⇒ retain INCOMPLETE/`MODEL_FAILURE`/`INTERRUPTED`/unresolved; no fabricated rating; run scorer on retained evidence and keep its actual verdict (may PASS only if all acceptance still holds, with the incomplete attempt reported).
+- **Hash/head mismatch or foreign-head evidence** ⇒ FAIL binding; old valid result ≠ current PASS (current state PENDING if no current-head run).
+- **Classifier unavailable / required job skipped-cancelled / unsupported profile / missing policy adoption** ⇒ PENDING (explicit reason), never "no impacted path".
+- **No GOV_PATHS change** ⇒ NOT_APPLICABLE, `semantic_verdict=null` (not PASS); no live calls.
+
+**Unfinished evaluation ≠ incomplete application attempt.** This adds **no 100%-completion rule**: the existing formal policy may accept nine eligible completed + one correctly bound pending start (completion 9/10), with all cases covered, human scores complete and other conditions met — while still showing that one attempt is incomplete; missing required scoring/evidence is never PASS.
+
+**PILOT** (current intent, per A's OQ-20): report raw PASS/FAIL/PENDING with target/profile + infrastructure status; it is **not** a required merge check while `QUALITY_THRESHOLD` remains open, so FAIL/PENDING may be nonblocking **because the gate is not blocking**, not because the verdict changed. Execution success of a report-uploading wrapper is labelled separately from the semantic verdict; never blanket `|| true`. **This does not waive behavior checks:** `REQ-TA-FR-005` (missing-data disclosure), `REQ-TA-FR-007` (ownership wording), `REQ-TA-SEC-001` (injection) and `REQ-TA-SEC-003`/`REQ-TA-INV-008` (guarantee/disclaimer) remain **minimum required behaviors in both phases** — expected, and **not claimed to pass** (each is `proposed`/`partial`); they are the *minimum* suite contents, not the whole 36-entry population. **BLOCKING** (future, explicit E/team activation only): only REQUIRED + current-head valid PASS satisfies; FAIL/PENDING block; missing/cancelled/skipped not success; NOT_APPLICABLE ≠ PASS. Enter BLOCKING only after the owners establish the required baseline/`QUALITY_THRESHOLD`/`N_EVAL`/profile/parameter and integration conditions, trigger/preflight/adapter tests exist, evidence access is available, and **E records activation**; this proposal makes **no current CI change**. Existing `MIN_SCORE=0.90` and green offline tests do not satisfy that transition.
+
+**Boundary and owner map:** B (this section + current-vs-proposed), C (cases/rubric/scores/independent acceptance), D/E (adapter/workflow/retention), A (requirement meaning). The current **five cases / two trials** are a **project trial** relative to the provisional `N_EVAL=20` — **five cases remain five, not ten of twenty**; the raw legacy scorer `0/1/2` semantics, the 90% policy and cohort serialization (incl. tool-level formal/trial labels) are preserved, and a raw legacy scorer PASS is **not** registry acceptance. `N_EVAL` stays provisional 20 (any D-owned change is recorded in the parameter appendix/change log); `QUALITY_THRESHOLD` remains D/E-owned. Full `REQ-TA-GOV-001` compliance is **not** established by existing constants, and no team adoption is implied.
