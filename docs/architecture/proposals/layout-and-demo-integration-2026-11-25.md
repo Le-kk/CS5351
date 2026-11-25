@@ -2,9 +2,9 @@
 
 Status: implementation/integration record, not a new B architecture approval. The original C2 shared run boundary remains authoritative; proposed budget/semantic/evidence obligations are not adopted by this file.
 
-Physical source is now under src/tradingagents, src/cli, src/demo and src/frontend. Deterministic tests and opt-in live tests are under test/offline and test/live. Historical root names are compatibility aliases to the same files, not second modules. Package names/entry contracts are unchanged; a stable project_root helper replaces assumptions about source-directory depth.
+Physical source is now under src/tradingagents, src/cli and src/demo. Deterministic tests and opt-in live tests are under test/offline and test/live. Historical root names are compatibility aliases to the same files, not second modules. Package names/entry contracts are unchanged; a stable project_root helper replaces assumptions about source-directory depth.
 
-The English browser adapter prepares and freezes inputs through the input service and invokes run_analysis_api only after explicit confirmation. It uses loopback HTTP, same-origin requests, an ephemeral CSRF token, a whitelist of public stage records/file IDs and existing redaction/publication. Model credentials stay server-side. It does not expose system prompts or hidden reasoning and is not a public authenticated deployment or broker integration.
+The backend for a separately maintained local presentation interface prepares and freezes inputs through the input service and invokes run_analysis_api only after explicit confirmation. It uses loopback HTTP, same-origin requests, an ephemeral CSRF token, a whitelist of public stage records/file IDs and existing redaction/publication. Model credentials stay server-side. It does not expose system prompts or hidden reasoning and is not a public authenticated deployment or broker integration.
 
 Browser sessionStorage retains only a run ID. The adapter keeps local registry/stage records under ignored local storage and restores interrupted jobs as INTERRUPTED/NOT_RUN with partial usage, never a forged completed result. Refresh is not cancellation; one background run is active at a time. A 120-second request timeout is not a run-wide deadline or a process-safe cancellation mechanism. Actual in-flight usage can remain unknown after interruption.
 

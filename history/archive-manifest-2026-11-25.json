@@ -16,11 +16,5 @@
     "archive": "history/demo-prototype/NO_CODE_DEPLOYMENT-before-packaging.md",
     "sha256": "bc9acca5c4b3b414fdfdf0edc8cd9c308809f73cef52107d51b72d2a54c43724",
     "reason": "Superseded entry instructions; preserved, not treated as current acceptance."
-  },
-  {
-    "old_path": "src/frontend/hmr-client.js",
-    "archive": "history/frontend/unused-export-hmr-client.js",
-    "sha256": "94c1af16b537120dad48f539b7a0b04267741f04534ba7c1442d5071b793a895",
-    "reason": "Superseded entry instructions; preserved, not treated as current acceptance."
   }
 ]

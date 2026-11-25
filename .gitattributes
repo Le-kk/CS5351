@@ -1,3 +1,7 @@
 
 # Historical snapshots retain authentic whitespace and hashes.
 history/** -whitespace
+
+# PDF delivery is binary; supplied figure/evidence assets retain CRLF bytes.
+*.pdf binary
+report-assets/* whitespace=cr-at-eol

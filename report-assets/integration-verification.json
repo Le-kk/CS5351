@@ -1,0 +1,65 @@
+{
+  "source_report_sha256": "c6c25b50034aea5400d140bd399d7df585a9f627f95e6bbf6c8521de11a738a3",
+  "report_words_excluding_mermaid_and_link_targets": 9489,
+  "members": [
+    {
+      "role": "A",
+      "name": "ZUO Qian",
+      "student_number": "61048550",
+      "reflection_words": 458
+    },
+    {
+      "role": "B",
+      "name": "Leung Kwan Kit",
+      "student_number": "57611829",
+      "reflection_words": 400
+    },
+    {
+      "role": "C",
+      "name": "Liu Shuhui",
+      "student_number": "60469881",
+      "reflection_words": 419
+    },
+    {
+      "role": "D",
+      "name": "Seilkhanova Aiaru",
+      "student_number": "61017260",
+      "reflection_words": 455
+    },
+    {
+      "role": "E",
+      "name": "Hu Yifeng",
+      "student_number": "60889168",
+      "reflection_words": 390
+    }
+  ],
+  "contribution_percentages": [
+    18,
+    23,
+    18,
+    18,
+    23
+  ],
+  "relative_weights": [
+    0.9,
+    1.15,
+    0.9,
+    0.9,
+    1.15
+  ],
+  "frontend_in_delivery": false,
+  "source_report": "user-supplied CS5351-report-review-2026-11-25; replaces prior assembly draft",
+  "reflection_sources": {
+    "A": "GitHub member A submission",
+    "B": "user-designated report handoff folder",
+    "C": "user-supplied self-reflection_LSH.docx",
+    "D": "GitHub member D submission",
+    "E": "user-supplied member E reflection.docx"
+  },
+  "pdf_pages": 25,
+  "body_font": "Times New Roman 12pt",
+  "body_line_spacing": "single (12pt leading)",
+  "diagram_layout": "A4 portrait; Figure 2 on A4 landscape",
+  "member_identity_checks": "passed",
+  "pdf_sha256": "1c2cfe5bc15913fb8bf89624f6dde25306ff1a7f98fd8b47b24139e36e553245"
+}

@@ -9,13 +9,13 @@ Recent local additions include an English real-model console, an opt-in compact 
 ## Course deliverables and file organization
 
 - `AGENTS.md`, `architecture-blueprint.md`, `Prompt.md`: coding-agent entry, canonical blueprint and static human-gated launch prompt.
-- `Report.md`: single process-report assembly draft, with source-attributed member material; unresolved identities/contributions and missing member evidence are explicitly marked.
+- `Report.md`: integrated process report, based on the supplied cross-project synthesis, with five named members, confirmed contributions and original individual reflections. `Report.pdf` is the rendered delivery copy.
 - `docs/req/`: requirement registry, JSON schema and validator. The registry's proposed status is preserved.
 - `docs/architecture/`: ADRs, invariants, trace matrix, memory, permissions, runtime policies and evaluations. The blueprint pointer refers to the one root canonical blueprint.
 - `docs/code-governance/`, `.opencode/`, `.agent/`: coding/verification constraints, scoped local permissions and covenant.
 - `docs/review-memo.md`, `docs/debt-register.md`, `docs/bug-diary.md`: review, debt and defect records.
 - `docs/ai-use-log.yaml` and `AI-log/`: structured task index and selected original-language conversations. They do not replace D5 full annotated transcripts.
-- `src/tradingagents/`, `src/cli/`, `src/demo/`, `src/frontend/`: canonical application, terminal adapter, local demo backend and React frontend.
+- `src/tradingagents/`, `src/cli/`, `src/demo/`: canonical application, terminal adapter and local demo backend.
 - `test/offline/`: deterministic tests and independent/developer verification. `test/live/`: opt-in live evaluation and its harness self-checks.
 - `prompts/`: versioned snapshots of actual intermediate instruction fragments, not a replacement runtime loader.
 - `transcripts/`: annotated D5 submission evidence. Collection is incomplete; see its index.
@@ -37,17 +37,7 @@ tradingagents
 
 Configure provider credentials privately through the existing backend environment. Never commit `.env` or real holdings. The legacy root `main.py` can invoke real models; it is not an import smoke test.
 
-Browser demo (Node 22.12+ or 24 recommended for its current build tools):
-
-```sh
-cd src/frontend
-npm ci --ignore-scripts
-npm run build
-cd ../..
-python -m demo.console --compact-evidence-handoff --open
-```
-
-Open http://127.0.0.1:8766. The service binds loopback only. Validate and confirm before any model execution. Refreshing does not cancel a run; its ID is remembered in that browser tab. Interrupted runs remain in local history with partial usage. See [demo deployment](src/demo/README.md).
+Local demo backend: the frontend is maintained separately on the presenter’s machine and is not uploaded with this repository. Use `python -m demo.console --frontend-dir /path/to/local/build --compact-evidence-handoff --open`. See [backend deployment](src/demo/README.md).
 
 ## Tests and gates
 
@@ -65,7 +55,7 @@ python scripts/ci/check_workflow_permissions.py
 python scripts/ci/check_security_scan.py
 ```
 
-Seven existing required check names are preserved: `required tests`, `ruff (strict, full repo)`, `dependency check`, `ai-log updated`, `requirements schema`, `type check`, `security checks`. The regression summary also requires frontend build and high/critical npm audit. Dependency checks fail closed and use only documented, unexpired exceptions. AI-log checks cover canonical source/test paths and legacy important paths; log format is not certified. Type coverage remains scoped; security scanning now includes the demo. Contract tests remain in pytest. Test pre-approval is still paused as a required check; live semantic acceptance is not made mandatory by this reorganization. Workflow code and successful runs do not by themselves prove branch protection settings.
+Seven existing required check names are preserved: `required tests`, `ruff (strict, full repo)`, `dependency check`, `ai-log updated`, `requirements schema`, `type check`, `security checks`. Dependency checks fail closed and use only documented, unexpired exceptions. AI-log checks cover canonical source/test paths and legacy important paths; log format is not certified. Type coverage remains scoped; security scanning now includes the demo. Contract tests remain in pytest. Test pre-approval is still paused as a required check; live semantic acceptance is not made mandatory by this reorganization. Workflow code and successful runs do not by themselves prove branch protection settings.
 
 ## Verification and remaining delivery work
 

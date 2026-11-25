@@ -1,4 +1,4 @@
-> Current layout supplement, 2026-11-25: physical code is under src/tradingagents, src/cli, src/demo and src/frontend; physical tests under test/offline and test/live. Historical root names below remain compatibility aliases to that one source. See [layout and delivery status](../submission/delivery-checklist-2026-11-25.md).
+> Current layout supplement, 2026-11-25: physical code is under src/tradingagents, src/cli, src/demo; physical tests under test/offline and test/live. Historical root names below remain compatibility aliases to that one source. See [layout and delivery status](../submission/delivery-checklist-2026-11-25.md).
 
 # Structural constraints
 

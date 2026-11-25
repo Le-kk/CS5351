@@ -4,7 +4,7 @@ Date: 2026-11-25 (Asia/Hong_Kong). Test-plan pre-approval remains paused as a re
 
 ## Checks to require after successful GitHub validation
 
-The seven configured names are `required tests`, `ruff (strict, full repo)`, `dependency check`, `ai-log updated`, `requirements schema`, `type check` and `security checks`. The existing regression summary also requires the frontend build/high-critical audit. All run on every PR, including renames and changes outside the safety paths. Static-analysis checks are separate jobs, not extra application stages. The six course gate categories must not be inferred by counting workflow jobs or check names.
+The seven configured names are `required tests`, `ruff (strict, full repo)`, `dependency check`, `ai-log updated`, `requirements schema`, `type check` and `security checks`. All run on every PR, including renames and changes outside the safety paths. Static-analysis checks are separate jobs, not extra application stages. The six course gate categories must not be inferred by counting workflow jobs or check names.
 
 ## Type coverage
 
@@ -57,4 +57,4 @@ The CI security job additionally runs the named Member C offline suite and exist
 
 ## Course-layout integration update
 
-Canonical tests are under test/offline and test/live; historical tests/ references remain compatibility aliases. The current source helper resolves the checkout root after package movement. Native role-permission snapshots remain tied to their recorded old hashes; equivalent path updates are not a fresh native-tool acceptance. npm audit/build are separate from Bandit and scoped to the frontend; five moderate npm findings remain explicit debt, while high/critical findings block its CI job.
+Canonical tests are under test/offline and test/live; historical tests/ references remain compatibility aliases. The current source helper resolves the checkout root after package movement. Native role-permission snapshots remain tied to their recorded old hashes; equivalent path updates are not a fresh native-tool acceptance.

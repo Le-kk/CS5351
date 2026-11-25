@@ -232,6 +232,9 @@ reports/
 /src/*.egg-info/
 /test/live/member_c_verification/evidence/
 
-# Frontend source helpers are not Python build libraries.
-!src/frontend/src/lib/
-!src/frontend/src/lib/**
+
+# Local presentation frontend is intentionally not part of the repository delivery.
+/src/frontend/
+/history/frontend/
+
+/src/demo/static/

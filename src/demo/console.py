@@ -130,7 +130,7 @@ class ConsoleHandler(Handler):
 def main(argv=None):
     parser = argparse.ArgumentParser(description='Real-model presentation console, local deployment.')
     parser.add_argument('--port', type=int, default=8766)
-    parser.add_argument('--frontend-dir', type=Path, default=ROOT / 'src/frontend/build')
+    parser.add_argument('--frontend-dir', type=Path, default=ROOT.parents[1] / 'nocode/build')
     parser.add_argument('--state-dir', type=Path, default=ROOT / '.local-review/presentation-console')
     parser.add_argument('--open', action='store_true')
     parser.add_argument('--compact-evidence-handoff', action='store_true',
