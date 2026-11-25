@@ -1,0 +1,26 @@
+{
+  "date": "2026-11-25",
+  "task": "E1 canonical trace-matrix assembly",
+  "baseline": "761918e",
+  "verification_kind": "document coverage and reference integrity only",
+  "active_ids": 36,
+  "withdrawn_ids": 3,
+  "markdown_links": 194,
+  "local_targets": "all exist",
+  "registry_order_and_unique_coverage": "passed",
+  "required_check_observation": "Seven required names directly inspected; PR37 seven passed; prior approval and semantic checks remain non-required.",
+  "matrix_sha256": "42782a6158a4ed12ff5d59d06657c7b83c2b79481568a0b71f6abc43c3efbdab",
+  "registry_sha256": "1df45e8ac59fa355faeeec7236c2cc79b2179bb5400c5362e4631958506898a4",
+  "limitations": [
+    "No new product tests/model replay/human semantic scores",
+    "No contributor sign-off or requirements adoption inferred",
+    "External ownership/CSV agreement not located or edited",
+    "Historical test evidence remains attributed to its original baseline"
+  ],
+  "previous_snapshot": {
+    "baseline": "d82d24e",
+    "matrix_sha256": "0e1b0c42b4ca6456bae9d92089a2a6d2e3c27bb9b13ce73aab5c50c65ba3ff3f",
+    "registry_sha256": "0b99b08ac53701229a431a5b9e5f1a17cc114223e777d494730bf5bf51231e7a",
+    "markdown_links": 182
+  }
+}
