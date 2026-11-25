@@ -1,0 +1,21 @@
+{
+  "head": "6b468546d5d2c1dde9a066f238207d6aab65c061",
+  "probe_kind": "synthetic renderer/checker only; no graph/provider/network calls",
+  "first_nonblank_line_is_disclaimer": true,
+  "disclaimer_copies": 2,
+  "existing_body_check": {
+    "output_check": "PASSED",
+    "findings": []
+  },
+  "remove_footer_only_body_check": {
+    "output_check": "NEEDS_REVIEW",
+    "findings": [
+      {
+        "rule": "Q3",
+        "status": "BLOCKING",
+        "detail": "Required research disclaimer is missing."
+      }
+    ]
+  },
+  "product_changes": false
+}
