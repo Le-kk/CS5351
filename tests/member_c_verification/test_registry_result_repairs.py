@@ -42,7 +42,7 @@ def test_explicit_case_identity_keeps_unresolved_attempt_in_denominator():
         RunRecord("c", "PRE_RUN_CANCELLED", case_id="other"),
     ])
     assert result["distinct_case_count"] == 1
-    assert result["population_result_count"] == 1
+    assert result["population_result_count"] is None  # no frozen population controls
     assert result["started_count"] == 2
     assert result["completion_fraction"] == 0.5
     assert result["pre_run_cancelled"] == 1

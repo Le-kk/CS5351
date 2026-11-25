@@ -42,15 +42,18 @@ def test_tc_nfr006_b_zero_completed_is_insufficient():
 
 def test_case_identity_is_not_attempt_identity():
     """REQ-TA-NFR-EVAL-001: 20 fixed cases, 40 attempts, one population result."""
-    from types import SimpleNamespace
+    from tradingagents.runapi.result import EvaluationPopulation
 
-    records = [SimpleNamespace(
+    population = EvaluationPopulation("fixture", "git:fixture", "a" * 64, "b" * 64,
+                                      tuple(f"case-{i}" for i in range(20)))
+    records = [RunRecord(
         attempt_id=f"case-{case}-trial-{trial}", case_id=f"case-{case}",
         category="STARTED", run_outcome="COMPLETED", output_check="PASSED",
-        stop_reason=None, controlled_change=None, config={"model": "scripted"},
-        prompt_hash="fixed",
+        stop_reason=None, controlled_change=None, population_id="fixture",
+        source_revision="git:fixture", prompt_hash="a" * 64,
+        configuration_fingerprint="b" * 64,
     ) for case in range(20) for trial in range(2)]
-    result = summarize_records(records)
+    result = summarize_records(records, population=population)
     assert result["started_count"] == 40
     assert result["completed_count"] == 40
     assert result.get("distinct_case_count") == 20

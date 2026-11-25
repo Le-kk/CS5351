@@ -301,10 +301,8 @@ def render_report(ticker: str, final_state: dict, settings: dict | None, parts, 
                     '<span class="label">Analysis</span></a></li>']
 
     page_title = " ".join(x for x in (ticker, date, rating) if x)
-    leading_notice = ""
-    if run_metadata is not None:
-        from tradingagents.runapi.checks import DISCLAIMER
-        leading_notice = f'<p class="disclaimer">{escape(DISCLAIMER)}</p>'
+    from tradingagents.runapi.checks import DISCLAIMER
+    leading_notice = f'<p class="disclaimer">{escape(DISCLAIMER)}</p>'
     return f"""<!doctype html>
 <html lang="en">
 <head>

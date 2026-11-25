@@ -210,7 +210,7 @@ CHALLENGE_MARKERS = {
 }
 
 
-def test_pass_returns_exit_0(tmp_path, monkeypatch):
+def test_pass_returns_exit_0(tmp_path, monkeypatch, capsys):
     """Full synthetic evidence (10/10 completed, challenge exposed) yields PASS -> 0."""
     evidence_dir = tmp_path / "evidence"
     cases = []
@@ -229,6 +229,13 @@ def test_pass_returns_exit_0(tmp_path, monkeypatch):
     module = _fresh_scorer(evidence_dir, monkeypatch)
     code = module.main(["score_gov004.py", str(scores)])
     assert code == module.EXIT_PASS == 0
+    output = capsys.readouterr().out
+    counts = json.loads(next(line.removeprefix("Evaluation counts: ")
+                             for line in output.splitlines()
+                             if line.startswith("Evaluation counts: ")))
+    assert counts["started_count"] == 10
+    assert counts["distinct_case_count"] == 5
+    assert counts["population_result_count"] == 1
 
 
 def test_fail_returns_exit_1(tmp_path, monkeypatch):
@@ -268,3 +275,55 @@ def test_exit_code_mapping_is_total(monkeypatch):
     assert module._exit_code_for("PASS") == 0
     assert module._exit_code_for("FAIL") == 1
     assert module._exit_code_for("PENDING (semantic scores not supplied)") == 2
+
+
+@pytest.mark.parametrize('extra_kind', ['same-controls', 'source_revision', 'prompt_hash', 'incomplete'])
+def test_population_counts_validate_outside_cohort_attempts(tmp_path, monkeypatch, capsys, extra_kind):
+    """An extra started slot stays counted; mixed revisions/prompts cannot borrow the cohort."""
+    evidence_dir = tmp_path / 'evidence'
+    cases = []
+    for case in FIXED_CASES:
+        marker = CHALLENGE_MARKERS.get(case)
+        for suffix in ('a', 'b'):
+            cases.append(_make_run(
+                evidence_dir, case, f'{case}-{suffix}', challenge_marker=marker,
+                challenge_reached=True if marker else None))
+    _write_evidence(evidence_dir, '1', cases)
+    scores = tmp_path / 'scores.json'
+    _scores_all_pass(scores, [c['run_id'] for c in cases])
+    overrides = {}
+    if extra_kind in ('source_revision', 'prompt_hash'):
+        overrides[extra_kind] = 'git:other' if extra_kind == 'source_revision' else 'b' * 64
+    incomplete = extra_kind == 'incomplete'
+    extra = _make_run(
+        evidence_dir, FIXED_CASES[0], 'extra-attempt',
+        outcome='INCOMPLETE' if incomplete else 'COMPLETED',
+        final_rating=None if incomplete else 'Hold',
+        output_check='NOT_RUN' if incomplete else 'PASSED', manifest_overrides=overrides)
+    if extra_kind == 'source_revision':
+        extra['source_revision'] = overrides['source_revision']
+    # Preserve the frozen ten-member cohort; add an outside-cohort started attempt.
+    (evidence_dir / 'gov004_extra.json').write_text(json.dumps({
+        'gate': 'GOV-004', 'kind': 'formal', 'trial': '1', 'cases': [extra]}))
+    module = _fresh_scorer(evidence_dir, monkeypatch)
+    code = module.main(['score_gov004.py', str(scores)])
+    output = capsys.readouterr().out
+    if extra_kind in ('source_revision', 'prompt_hash'):
+        assert code == module.EXIT_FAIL
+        assert 'FINAL VERDICT: FAIL' in output
+        attempts = module._load_attempts()
+        controls = module.cohort_controls()
+        for attempt in attempts:
+            module._check_eligibility(attempt, controls)
+        assert all(attempt.eligible for attempt in attempts)
+        with pytest.raises(ValueError, match='outside frozen population controls'):
+            module.evaluation_counts(attempts, controls)
+    else:
+        assert code == module.EXIT_PASS
+        counts = json.loads(next(line.removeprefix('Evaluation counts: ')
+                                 for line in output.splitlines()
+                                 if line.startswith('Evaluation counts: ')))
+        assert counts['started_count'] == 11
+        assert counts['distinct_case_count'] == 5
+        assert counts['population_result_count'] == 1
+        assert counts['completed_count'] == (10 if incomplete else 11)

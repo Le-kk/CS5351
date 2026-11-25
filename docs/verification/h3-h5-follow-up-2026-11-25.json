@@ -1,0 +1,40 @@
+{
+  "date": "2026-11-25",
+  "baseline": "d82d24e",
+  "scope": "H3 population identity/count reporting; H5 legacy complete report export",
+  "before_new_probes": {
+    "failed": 14,
+    "passed": 2
+  },
+  "after": {
+    "new_probes_passed": 16,
+    "focused_passed": 65,
+    "full_passed": 1974,
+    "skipped": 2,
+    "deselected": 1,
+    "subtests_passed": 100,
+    "ruff": "passed",
+    "mypy": "15 files passed",
+    "schema": "36 active / 3 withdrawn; passed",
+    "workflow_permissions": "5 workflows passed",
+    "security_scan": "107 files; zero medium/high",
+    "formal_scorer_population_scenarios": 4
+  },
+  "limits": [
+    "Offline/synthetic developer verification, not independent C acceptance",
+    "No new semantic threshold or model/profile adoption",
+    "Historical prior approval not reconstructed; gate remains paused",
+    "Declared generic population controls are not a digital signature"
+  ],
+  "sha256": {
+    "tradingagents/runapi/result.py": "c10a9365308371ce9a30397807d8a430d73d1dc3cfdc83f5fac5109e841b2795",
+    "tradingagents/reporting.py": "1579917709d40d26989880cba852cd22e615f4895da1c8e12e539e6e2be3bd8c",
+    "tradingagents/report_html.py": "3b9d6f76c3df2995164e9fb6d3ee48735b628e025a46e1b9deea6357bcb890c0",
+    "tests/member_c_verification/live/score_gov004.py": "36756fae110faaedda94d737321e5e7d5760d8cff22130149b3e0d27bdf705a8",
+    "tests/member_c_verification/live/test_score_gov004_exitcodes.py": "3cb9279828f557477726a2cecde780a326ce9d49f0884bc19e1e14a24028c144",
+    "tests/member_c_verification/offline/test_nfr006_population.py": "8558acff26906a50c7fe43b13a4390eda3769ce042f01b34f519992fdff9d7bc",
+    "tests/member_c_verification/test_registry_result_repairs.py": "20df8613c08b3092135c57ae16b724f9094dbb0e91b527c6fb11d9164d780efb",
+    "tests/member_d_verification/test_h3_h5_integration.py": "e4d0809bbc127297b2ae45894aeb6f8975ccfcf3d48a4b0e003c20fd9f950f7f",
+    "docs/code-governance/h3-h5-follow-up.md": "38ec7c1e9e35b0a55311566ef46789d44b8320bbffcc59a37c7caf8c9a1e280b"
+  }
+}
