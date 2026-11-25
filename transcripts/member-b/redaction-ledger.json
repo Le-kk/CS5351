@@ -1,0 +1,1128 @@
+{
+  "policy": "Only declared privacy string edits; no messages/parts/tool payloads suppressed. Unchanged source bytes remain private.",
+  "edited_string_locations": 187,
+  "entries": [
+    {
+      "json_pointer": "/architecture-candidates/messages/4/parts/1/state/output",
+      "original_utf8_sha256": "c3218d4555c0d0b1d60ebf08e69ecf0d4bb2aded5d2d76bb0b519d18cb8e102a",
+      "shared_utf8_sha256": "d74487df54d4299e7a4628071b183db9a6191e6082c92b85b250379f284c3f87",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-candidates/messages/4/parts/1/state/metadata/output",
+      "original_utf8_sha256": "c3218d4555c0d0b1d60ebf08e69ecf0d4bb2aded5d2d76bb0b519d18cb8e102a",
+      "shared_utf8_sha256": "d74487df54d4299e7a4628071b183db9a6191e6082c92b85b250379f284c3f87",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-candidates/messages/29/parts/1/state/input/content",
+      "original_utf8_sha256": "f919e650dfda27839d402635648e22bff6a9c734aec30a407d5395953818172b",
+      "shared_utf8_sha256": "3e8debbc14a3ae62084a515a160922e82a02695742d68651eba68f6862e4a46a",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-candidates/messages/33/parts/1/state/input/content",
+      "original_utf8_sha256": "f125047e637998745b3fd655251e0e4961cf813e3f264776727cda71e4aed8df",
+      "shared_utf8_sha256": "14a007950d7eaed41976dc135365309799bf47e6a197577d994dcdfeb0d98d60",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-candidates/messages/65/parts/2/state/input/content",
+      "original_utf8_sha256": "c76c134b279c76df8d411756f510bd91c9e6252b7db777797fd06a3aea7c758f",
+      "shared_utf8_sha256": "d8f702aea5d4d09c6fca501d121cd532c56a5ae9d6a8d818d5a564269846eb4e",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-candidates/messages/67/parts/2/state/input/content",
+      "original_utf8_sha256": "a524a1c5282d312c1e757b22e1a5f8e9d31fb6d8731614ff4dcc7a257726f7c3",
+      "shared_utf8_sha256": "3b4f3a825bfd0148b15555224c79e888a535e750705a3cbdf4f51bf1c1b0e877",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-candidates/messages/117/parts/2/state/output",
+      "original_utf8_sha256": "6954b9c3f9f14f24d0c9180f6110cb8dff15a950f25d82e7a306c589aed7a4b9",
+      "shared_utf8_sha256": "fce784ae88a083141f8455376c8a0d146ea520627823364645ef4290b6f63a00",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-candidates/messages/117/parts/2/state/metadata/display/text",
+      "original_utf8_sha256": "6a93aab4142d2a675dbf101511b2a22945de0a42921e200e1db0a50c77f29b73",
+      "shared_utf8_sha256": "d3c51761ad8425b8aa52ecd767296d333646c02350b02564242c7326ef05a641",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-candidates/messages/118/parts/2/state/input/newString",
+      "original_utf8_sha256": "a95dd93d1016057b6e94444aab0649ece80f541aac77785f116ade9a72b4da8c",
+      "shared_utf8_sha256": "db9a851b1388e9940d08d923c4c95023ea8237fca8a7d2c814c469a696deb3c2",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-candidates/messages/118/parts/2/state/input/oldString",
+      "original_utf8_sha256": "c78ff019d3d971f0936af6b1418933908ffb858d15309b66dd03e606fbba8379",
+      "shared_utf8_sha256": "26b88d58b50b878dfb8677c9e31198b9aee632b0192e4347593eaff48c6fe337",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-candidates/messages/176/parts/2/state/output",
+      "original_utf8_sha256": "d488f5e7040fa7fb42e62cbc87eaeee7064da7d2f737058c8156bdc451a096fa",
+      "shared_utf8_sha256": "ebd21aad744b37771d65bb64b07119f4257ee1af360cbe6eca3c7724788ad846",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-candidates/messages/176/parts/2/state/metadata/display/text",
+      "original_utf8_sha256": "88fb3fe89e49222d6e9c468015e88b91c0280371a113505d5a5441b6b4b0d62f",
+      "shared_utf8_sha256": "4adf10056dacdb1196b1e9e31285fa848252eae426ff5fac2ed18574d2a35c37",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-candidates/messages/188/info/error/data/metadata/url",
+      "original_utf8_sha256": "49dc83730e2979da43fd7a88062c7491a418182292836ecac45474a97f9e92f7",
+      "shared_utf8_sha256": "67a6077c8d0ed3cd16e3b32a3cc3d63fe4d86b3ba60ed5fa8eaf0ed8546b57d5",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/requirements/messages/4/parts/2/state/output",
+      "original_utf8_sha256": "45a81898d78b6f0530ca479da20c686ec76922ba6385aac5545b9e7c9717920b",
+      "shared_utf8_sha256": "652bbe550bc63c48d9a031952018be4cddd0f58598a033776b588f094c9c6af9",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/requirements/messages/4/parts/2/state/metadata/display/text",
+      "original_utf8_sha256": "24ca63a40d14c2bdcd9d1c4bb0529fbfe32227c9b9406bfc7e53fd3bc0ea2b68",
+      "shared_utf8_sha256": "2661c6688e5e0f7c9db0674d5072006ed3151331ad6adad4f672a1a0a4a09734",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/requirements/messages/6/parts/1/state/output",
+      "original_utf8_sha256": "7f97a3064612796a06a9d8f4078152cb9f6292af1e2303eb3160f76bec4767a5",
+      "shared_utf8_sha256": "d6513cf77c6a87f3ff983868990aeba63025dae5bd6aa0348bb36a19d58ffeb5",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/requirements/messages/6/parts/1/state/metadata/display/text",
+      "original_utf8_sha256": "9fbb00f81c2f7aa5f4e9a871282771eee7b5e098755a0a8d22c06f12ba87a8b1",
+      "shared_utf8_sha256": "3f2a0e925471c2ddc1dfbbe4219414c35f99651060fa6a5f79c88dc22e6ac0dd",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/requirements/messages/22/parts/3/state/output",
+      "original_utf8_sha256": "55c80728215e1ea294541501a90d76e88a5b2ee3124b05dd5083ed3456dd95c9",
+      "shared_utf8_sha256": "668d3d712ad7055389fef5db875355744edbbecbdc40edc272e739ff7eb9928a",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/requirements/messages/22/parts/3/state/metadata/display/text",
+      "original_utf8_sha256": "3f62742bc5eb9c361a120f5a7e25a76f1f67b4fc014b5ca6d31d00ba084d62e1",
+      "shared_utf8_sha256": "ff6a4b5bf058f3b13bb8fa65ae30721b7d9a3ec7ee02730d57ab6a8e1cef2719",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/requirements/messages/25/parts/1/state/output",
+      "original_utf8_sha256": "d488f5e7040fa7fb42e62cbc87eaeee7064da7d2f737058c8156bdc451a096fa",
+      "shared_utf8_sha256": "ebd21aad744b37771d65bb64b07119f4257ee1af360cbe6eca3c7724788ad846",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/requirements/messages/25/parts/1/state/metadata/display/text",
+      "original_utf8_sha256": "88fb3fe89e49222d6e9c468015e88b91c0280371a113505d5a5441b6b4b0d62f",
+      "shared_utf8_sha256": "4adf10056dacdb1196b1e9e31285fa848252eae426ff5fac2ed18574d2a35c37",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/requirements/messages/39/parts/1/text",
+      "original_utf8_sha256": "a064149a9daad2772113718ae092ed2daf9ef7966926ac237697610ce2e4b17c",
+      "shared_utf8_sha256": "243ef00f2474c643022086cd97e01eb1239a18f01a2258f324884d27ee5108eb",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/requirements/messages/54/info/summary/diffs/0/patch",
+      "original_utf8_sha256": "0e26b10b1c5ea2061b69d5d9323ea3beaf92ea6c633d5fc4d04b5d2707962f5b",
+      "shared_utf8_sha256": "5c8fe94f235e34fa13b12ee997666c6945a43d475b07a7c93cf6d55ec8296ad0",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/requirements/messages/63/parts/2/state/input/newString",
+      "original_utf8_sha256": "1133f88d3e8ff11aa7da3085a140bbc4b33144c300d2693f5835e5c9ed4da5f3",
+      "shared_utf8_sha256": "3c6fbc6ec4e55d3c48db995b200b145f19c23b53a5e94a7f28acc6ddf2a1c71a",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/requirements/messages/63/parts/2/state/metadata/diff",
+      "original_utf8_sha256": "cc82740e96fcf41b4eb5e090f5790380b6bb955d9d627ee6864b8a6e70499634",
+      "shared_utf8_sha256": "27e999ebcd0c35952408f945d9394bbc7a2979b3ae12f6d2deb0b95a1127a06c",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/requirements/messages/63/parts/2/state/metadata/filediff/patch",
+      "original_utf8_sha256": "cc82740e96fcf41b4eb5e090f5790380b6bb955d9d627ee6864b8a6e70499634",
+      "shared_utf8_sha256": "27e999ebcd0c35952408f945d9394bbc7a2979b3ae12f6d2deb0b95a1127a06c",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/0/info/summary/diffs/2/patch",
+      "original_utf8_sha256": "7e204754347b3a0f137fdb33b62317e7e45cd2e82f65dfaba7f0bf399990f8a3",
+      "shared_utf8_sha256": "ab28fee08a77e771eb3097660029b5443c191dbcad52077a58435bb851a6458f",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/0/info/summary/diffs/4/patch",
+      "original_utf8_sha256": "791532d25ec99b8c21496405204d1884749e2b61a11f78b26373ac751272f58a",
+      "shared_utf8_sha256": "e9e3413a69e7557f05e628cb7e6f148d1f5960a02673d2229110d24b858dce87",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/0/info/summary/diffs/8/patch",
+      "original_utf8_sha256": "b941786752736de6672356a3bce6d48f6cfb079da9dc0e98940db96503abb86f",
+      "shared_utf8_sha256": "24c4a960d557e436653d8cd744aefc25c509aa743d2d0ac28813605f9ef2540e",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/0/info/summary/diffs/9/patch",
+      "original_utf8_sha256": "979f23680de17fe34b5d7f58ea6ff889c1ec42f2a5608b078cff6cc7c3bf5952",
+      "shared_utf8_sha256": "c3524f0437ecfa5c7216077752b3346b61996e5b753b171221db448f28dac612",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/0/info/summary/diffs/21/patch",
+      "original_utf8_sha256": "44b86627db24ef8e0dd383b9a94847eef4768e6e913126b783d8ff5394594da9",
+      "shared_utf8_sha256": "fcdee3d8e884b4fa2c0de04e1de3e07f694ca02a437a410104a499fb395ee246",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/1/parts/2/state/output",
+      "original_utf8_sha256": "4877bba0268730a79ca948288a15efcab6cb85689ef60bb28829ca9e1d6064c9",
+      "shared_utf8_sha256": "c32c8242e8e1e1ac20becf2cbd2b795cced61939e09b7b3cd96c807a9c92aa6c",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/1/parts/2/state/metadata/display/text",
+      "original_utf8_sha256": "42038599910fab02e3a3cbf2b29e2beeb579222fb2239cb9c1adaae42d5fc24b",
+      "shared_utf8_sha256": "602842847c785d64939263180edcc1ccd09c83c0a81be64476beeea0a181c6c5",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/1/parts/3/state/output",
+      "original_utf8_sha256": "8d3534c17e79f1426ca1f88343c00106bc2e8ae9a921b4619b5823a7d98b60b7",
+      "shared_utf8_sha256": "bbe156d525b44aa205a62b56bde23b2e86a81f3d22c72f0d8a0843ad28a5d530",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/1/parts/3/state/metadata/display/text",
+      "original_utf8_sha256": "50d49579e0905eb724ddda77d8f48e2e27b54762f66e3770e00778d2bec2d87f",
+      "shared_utf8_sha256": "6815c82033a6e8d5350c58b31885845ff3091b717731651d4af41233bed66138",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/16/parts/3/state/output",
+      "original_utf8_sha256": "78210ca1aa880a8f06cfc696d0e292831ecf023f95e27f52b236e2317ce2e6f9",
+      "shared_utf8_sha256": "2c3af3889ab98c9f4cd9ae0b05dab747d539ed52eb99db3dc4af718c6c0e00a0",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/16/parts/3/state/metadata/display/text",
+      "original_utf8_sha256": "1b968d73c73c7bb2b40282dd6e84ebc7d029f00b2bcd9330da153d1a4cf8f722",
+      "shared_utf8_sha256": "40d24a4d5db505c7bfa3a16eccab6cfa5d768d08f3cccf0537f9c1f6264c4ae2",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/22/parts/2/state/output",
+      "original_utf8_sha256": "521184e8544e7704f58cba4e15fdf54932d565ce49e5ca2d6ae8b7b8d42b77c5",
+      "shared_utf8_sha256": "e567a53b9080d4300c91e57dd23181b3edbd8a782ea5efdc800d54b25be95b5b",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/22/parts/2/state/metadata/preview",
+      "original_utf8_sha256": "b134b716c7e88a57bd7f2222c1a2b00a5c074836739ed906d508cad4fa7519e2",
+      "shared_utf8_sha256": "ff554631dd7b1d47863544655e1a455e8acfce5acbc7ea069b17c83f0a56167d",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/22/parts/2/state/metadata/display/text",
+      "original_utf8_sha256": "ef62ba48c788e0f1c2d6454d0a166a2e4b9d20e0aa67cc9ee438f42bfd693edc",
+      "shared_utf8_sha256": "05fdfa06664080e3a1b3980c75c259ceba1791e18f60e7278532f7d244ecab82",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/31/parts/2/state/output",
+      "original_utf8_sha256": "ec2b2bca21ab2aaaca956faf25bb507e20d91fb8c95a3920d9771961e118b5bc",
+      "shared_utf8_sha256": "3f99174ab37479e391b58c2082de1666782c9879e7a61859f055b2d535f5afc4",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/31/parts/2/state/metadata/preview",
+      "original_utf8_sha256": "477ccec72d54e843206124bfa690f0f825fa4f19ae05d118689fa92b767f2f7d",
+      "shared_utf8_sha256": "76d2e67b339274a5fe8220a4af37269bc5a6d287f68b0271774fdf4bfb637a1a",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/31/parts/2/state/metadata/display/text",
+      "original_utf8_sha256": "7bb424e81726d5eb8dd155a57d222e4e6f75ff3a330240594f9d9706a69a0d6c",
+      "shared_utf8_sha256": "188f8d5b986bf3fd392a587a128cd418d87f1a0280086fdc8b51d007729bfd00",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/33/parts/3/state/output",
+      "original_utf8_sha256": "4e5507f72d4a48cd0d3c60aa22855ffad32888e260bc9ed3aa4a333af19ffb70",
+      "shared_utf8_sha256": "8d2575c95cdb19b763955ea8819ecb1def0c65cf0734e349801ae7244ce4d529",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/33/parts/3/state/metadata/display/text",
+      "original_utf8_sha256": "aedbd5a663f959da3bb0092932c8ba824219882b2654bf10bb1a48317eb54612",
+      "shared_utf8_sha256": "bf3f008ce843c0fd8c4fbb420c3c70bf29a942f20b0b5b13b26b5282538da50f",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/37/parts/1/state/output",
+      "original_utf8_sha256": "dcf136e85985695e14aeb5cc9af2454cfe2ffb2175ca30fdfeba8eacae943b79",
+      "shared_utf8_sha256": "b896be702747c22e696472a99bfddd2a5ba0da38cacdba85d405690bd56f195d",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/37/parts/1/state/metadata/preview",
+      "original_utf8_sha256": "d9e496e418c7ed3c4332342bbcc8e3a0c1c9e0f0ad274befa7cb11f03855625a",
+      "shared_utf8_sha256": "b443627392383a272ab502dadbb94d1ca7ecb2db05a995bb31b9597c91274f96",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/37/parts/1/state/metadata/display/text",
+      "original_utf8_sha256": "d9368a359a2494bbb7f4d21befc13e1f0a3acd578b98ba94fd0504415b9aebda",
+      "shared_utf8_sha256": "7ab6f797b7d217712ea8fcf2e3ceea127ebbca3da7517854554f1802368c21c7",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/44/parts/1/state/input/content",
+      "original_utf8_sha256": "d339c90f8401359091b6fe22528cc694d9731305a68e894888a76e64712562b5",
+      "shared_utf8_sha256": "545ae48e0096a5f7375a754e0021bee57c4fa68f3931656d4d8aae642f249005",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/45/parts/2/state/input/oldString",
+      "original_utf8_sha256": "fe0871b5af2b42f8d3d4e9a37f9c5701e367a89e06e5c2f281ec3533e3d42b95",
+      "shared_utf8_sha256": "5f5760a0f3f6c7445f069bc2d1ebd79ec1565bc40255990bc43c27e66efc37ac",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/45/parts/2/state/input/newString",
+      "original_utf8_sha256": "004c9f5b1d3cae2f2a9c38e52c25ee3b7950d5695d29c5c7cc65cf54231235eb",
+      "shared_utf8_sha256": "1a8439489f059bfa21ad1c4b57895f421a880292046026349fd270ee87140b50",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/45/parts/2/state/metadata/diff",
+      "original_utf8_sha256": "f5ead721aeb5dd24b0c06309d649f425fe8d2c98ac826d82f4af9c88e5d450dd",
+      "shared_utf8_sha256": "df4dedf942e8b018fc2972e94f7c4aa3116745f1da05777eeb9022563d914200",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/45/parts/2/state/metadata/filediff/patch",
+      "original_utf8_sha256": "f5ead721aeb5dd24b0c06309d649f425fe8d2c98ac826d82f4af9c88e5d450dd",
+      "shared_utf8_sha256": "df4dedf942e8b018fc2972e94f7c4aa3116745f1da05777eeb9022563d914200",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/46/parts/1/state/output",
+      "original_utf8_sha256": "fb00aaaeb2ae15e46843ec05559964adb4fbd0213894056f3c63550cac7c7db0",
+      "shared_utf8_sha256": "b7e1337cd9814480256923415f85091a83c5efdb8c3cf5a7f939c12bf6effbed",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/46/parts/1/state/metadata/output",
+      "original_utf8_sha256": "fb00aaaeb2ae15e46843ec05559964adb4fbd0213894056f3c63550cac7c7db0",
+      "shared_utf8_sha256": "b7e1337cd9814480256923415f85091a83c5efdb8c3cf5a7f939c12bf6effbed",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/47/parts/2/state/metadata/diff",
+      "original_utf8_sha256": "75e228caf553ada0bfb1ea7fdfebc937422d2216f487fcb934a08235e1b5d2c7",
+      "shared_utf8_sha256": "10c707ff8f3c467a52b909248efbedc2377ebc6b58991eb9707560cabf9f7d6b",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/47/parts/2/state/metadata/filediff/patch",
+      "original_utf8_sha256": "75e228caf553ada0bfb1ea7fdfebc937422d2216f487fcb934a08235e1b5d2c7",
+      "shared_utf8_sha256": "10c707ff8f3c467a52b909248efbedc2377ebc6b58991eb9707560cabf9f7d6b",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/48/parts/2/state/input/newString",
+      "original_utf8_sha256": "81c1365137820b596fc19c1f49e6393ac0a5e33f234cce15caf76a4ba45cebaf",
+      "shared_utf8_sha256": "4d95d91991b784edcd7318b38a787616c86f49885bd9639ab4a2f85b63fbf9cd",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/48/parts/2/state/metadata/diff",
+      "original_utf8_sha256": "80f68c8b84d04b19250c36b2f33551b3433bfe5bf84af32f83ef91b1a7b32517",
+      "shared_utf8_sha256": "7c537d12d8e7b010e250d9b565ae2b035440532511bd3318d461940dc11b9efa",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/48/parts/2/state/metadata/filediff/patch",
+      "original_utf8_sha256": "80f68c8b84d04b19250c36b2f33551b3433bfe5bf84af32f83ef91b1a7b32517",
+      "shared_utf8_sha256": "7c537d12d8e7b010e250d9b565ae2b035440532511bd3318d461940dc11b9efa",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/50/parts/1/state/output",
+      "original_utf8_sha256": "291069b3493328188ff11dd0965491be947b06bc24cb83a2b579ffe19a1d39c8",
+      "shared_utf8_sha256": "3acdd45bd32b9bc347458670b12dc9667d4f69164f5b49a4fdc295be2b75101a",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/50/parts/1/state/metadata/output",
+      "original_utf8_sha256": "291069b3493328188ff11dd0965491be947b06bc24cb83a2b579ffe19a1d39c8",
+      "shared_utf8_sha256": "3acdd45bd32b9bc347458670b12dc9667d4f69164f5b49a4fdc295be2b75101a",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/51/parts/1/state/metadata/diff",
+      "original_utf8_sha256": "0d4017cb36b9f9cd2edfd6d1fec94ad370d903fa8f29d3d94b3a210089609c4d",
+      "shared_utf8_sha256": "9decdf46c1340ccbeedfc06f83568dd73f87dd03f68341ab69eb857415669fdc",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/51/parts/1/state/metadata/filediff/patch",
+      "original_utf8_sha256": "0d4017cb36b9f9cd2edfd6d1fec94ad370d903fa8f29d3d94b3a210089609c4d",
+      "shared_utf8_sha256": "9decdf46c1340ccbeedfc06f83568dd73f87dd03f68341ab69eb857415669fdc",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/51/parts/2/state/input/newString",
+      "original_utf8_sha256": "2d11e1e78410c90fe6f085ee89db0ebbe34d99366fde978d4ae160d85bcf741d",
+      "shared_utf8_sha256": "a8fbb06a265713d2fcad5a3b9031363e486cda77c7cba08ec4f2515fb9151c7b",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/51/parts/2/state/input/oldString",
+      "original_utf8_sha256": "d64ae7fa67bce23d75c042c2f014a24911365aef8e9f7130fdc3b1a76a064866",
+      "shared_utf8_sha256": "c988c08b237de4cf6b385741412b1d4d4efc23e4bfb5cc4e8d10fac8614d45b9",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/51/parts/2/state/metadata/diff",
+      "original_utf8_sha256": "b01996336cdd50af2b03a75b2868ea7466aa5e98b2bd1ac94e76c993338896d6",
+      "shared_utf8_sha256": "e996ce383b61c4d2a029f403f813a7d71f7314e0e17cd0f5e756bfb5bb44a5ae",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/51/parts/2/state/metadata/filediff/patch",
+      "original_utf8_sha256": "b01996336cdd50af2b03a75b2868ea7466aa5e98b2bd1ac94e76c993338896d6",
+      "shared_utf8_sha256": "e996ce383b61c4d2a029f403f813a7d71f7314e0e17cd0f5e756bfb5bb44a5ae",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/148/parts/2/state/input/newString",
+      "original_utf8_sha256": "75bdaa8ddf148786fe6e35ce06774a266ba8a5188dd4f3a44dcafce32c4259eb",
+      "shared_utf8_sha256": "0c80d4cee5559e8671b3cfbd9b3b44657423e3d202fa3e59f6c4aeacba647722",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/148/parts/2/state/input/oldString",
+      "original_utf8_sha256": "8b56054f9318f71aec1fcb6d8f0d1e33b59aae99382017d6af54063e1e7b5e2e",
+      "shared_utf8_sha256": "956b03a5c4245f4a6fa3f62d0b652a573b3658cec0f3c8b1b4cd64d8003a0b50",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/148/parts/2/state/metadata/diff",
+      "original_utf8_sha256": "534d3b01608eee0e2b6836efd3353b4c6d9d000e1313803b322929dd5f465d8b",
+      "shared_utf8_sha256": "7e9203469e3a84603c9e9b1bbab2b80289e49f5485a58e0aeb3ef99fcd86faad",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/148/parts/2/state/metadata/filediff/patch",
+      "original_utf8_sha256": "534d3b01608eee0e2b6836efd3353b4c6d9d000e1313803b322929dd5f465d8b",
+      "shared_utf8_sha256": "7e9203469e3a84603c9e9b1bbab2b80289e49f5485a58e0aeb3ef99fcd86faad",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/153/parts/2/state/input/content",
+      "original_utf8_sha256": "68b74bd3bc5dd32f1f50ef6ef2a7a1a3854bdc1549cc3dfbe9e20ff0bf57cb0c",
+      "shared_utf8_sha256": "f1469d6d6a2b0146e48ae594d3457f7ab98a1ea9883661d9ca2d2a339f0f2578",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/159/parts/2/state/output",
+      "original_utf8_sha256": "6c16bb6e03755e6987b3af8f4149a1631e831477ae0dfe38c8fc01db43eef9b5",
+      "shared_utf8_sha256": "7f70b3125ccfd504ff197c3c120e9fa43a3ce4f14acec623f732e1a7edce4e2c",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/159/parts/2/state/metadata/output",
+      "original_utf8_sha256": "6c16bb6e03755e6987b3af8f4149a1631e831477ae0dfe38c8fc01db43eef9b5",
+      "shared_utf8_sha256": "7f70b3125ccfd504ff197c3c120e9fa43a3ce4f14acec623f732e1a7edce4e2c",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/160/parts/2/state/input/content",
+      "original_utf8_sha256": "2f8b3286388266d607bef5549d8ab6bef80a8d8d91b90afd28bdb25558a841bb",
+      "shared_utf8_sha256": "e694818eaca869f5cbdf21e34b218100fcb029c9caac29f1bdb76ca0dd5d5b06",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/161/parts/2/state/input/content",
+      "original_utf8_sha256": "2f8b3286388266d607bef5549d8ab6bef80a8d8d91b90afd28bdb25558a841bb",
+      "shared_utf8_sha256": "e694818eaca869f5cbdf21e34b218100fcb029c9caac29f1bdb76ca0dd5d5b06",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/178/info/summary/diffs/0/patch",
+      "original_utf8_sha256": "a853ad5a397751d8e1f5438b7c59fc2ff4efe7aff9fe2444566f54a727cbfa08",
+      "shared_utf8_sha256": "f5d60f260fd31a10ec9195b11189d46a5c4a01c7fce13695cc036e2efa404d92",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/178/info/summary/diffs/2/patch",
+      "original_utf8_sha256": "35735617a5a160a002e5b946efa43493063e30d0bcef2f114f80ea63b1d48d7d",
+      "shared_utf8_sha256": "a5ecd39200d446e8fdb53a946c55b764fac97bc8c2fe5be840d4d74f4b8a1988",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/182/parts/3/state/output",
+      "original_utf8_sha256": "4450f8c51ff53ddd3cecbeebd8f7a63ecc36f740a769e8c0565ea3999290e19d",
+      "shared_utf8_sha256": "ebcc58725e990af1dd78f88fe89a553a5cfd5f5ae4d16cd4effe33cacd14570a",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/182/parts/3/state/metadata/display/text",
+      "original_utf8_sha256": "5ed56f21301f19531de665772db6ca2bc7073c3cd95b278b4fe5aab88c9ecb21",
+      "shared_utf8_sha256": "99b87c545288d946d9a34ffd47e1efb96758eaacc0439b9d3b48e80093a65036",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/291/parts/2/state/input/newString",
+      "original_utf8_sha256": "5338ec59cc1d90cb26a7f5d1833b51f92e5dabc1f120a6f060616677b6302555",
+      "shared_utf8_sha256": "e12d1db5bc3b83ece22292ba46c9f4c64a5ca960df6795a1894e084036981dd2",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/291/parts/2/state/input/oldString",
+      "original_utf8_sha256": "120bfe790344887192e2669280ae0c2797fc1a85cff4f43cc30b253810e184e1",
+      "shared_utf8_sha256": "795a6f6a14eb2179715d164a34b32a8f13decd281c83b45a1ef9a6e7fb04c704",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/291/parts/2/state/metadata/diff",
+      "original_utf8_sha256": "2520492f7eca87f4115deeeaabb187fdc276ee5d2fdfd5b2f4e08f366fed9766",
+      "shared_utf8_sha256": "d2fae554fea4413ceca68addc75521f632b0dd47ceededf14cbf4362b63d6382",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/291/parts/2/state/metadata/filediff/patch",
+      "original_utf8_sha256": "2520492f7eca87f4115deeeaabb187fdc276ee5d2fdfd5b2f4e08f366fed9766",
+      "shared_utf8_sha256": "d2fae554fea4413ceca68addc75521f632b0dd47ceededf14cbf4362b63d6382",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/294/parts/2/state/output",
+      "original_utf8_sha256": "d8d27ae3397ae0178094a0c8dcb49a8eaece69f18cadd5b1821a79004202a8e1",
+      "shared_utf8_sha256": "0026ef1faadc078a911f7e2d3d62c629ed005223163dbd31792cb97e8820594f",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/294/parts/2/state/metadata/preview",
+      "original_utf8_sha256": "e60d8c3cad9bbb0effa7aa765cfb796f987126415ba6fb06e6db72f93d30d945",
+      "shared_utf8_sha256": "bc39a5d2f16595e469fa60bfc4aae2b6bb1731e9dea17c606d15faf8fef61cfa",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/294/parts/2/state/metadata/display/text",
+      "original_utf8_sha256": "e7130d1289d0fcb86683f8159a207c6c1818eb009011fdd6991bd99a0fcc79c8",
+      "shared_utf8_sha256": "fe231798ab4fee5836050ff3761e1a4407bc7bc7626e1d3c971320267e3997ac",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/295/parts/1/state/input/newString",
+      "original_utf8_sha256": "d0892fc667d310649206d327eb8700f98015c18cab4837f40b3ff38d1b37d23a",
+      "shared_utf8_sha256": "0bb49888d2e0d342f34d47337d771b516cda32da4a1bc42af468df3efa7a876c",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/295/parts/1/state/metadata/diff",
+      "original_utf8_sha256": "a5b1f4db0cb148201ecee40830b78a542b90750aa498bb1e1dbf46d29e923d6b",
+      "shared_utf8_sha256": "12f73a8866debef632f6042d80b8605c06344af37f1e6aa0014650b108dc210c",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/295/parts/1/state/metadata/filediff/patch",
+      "original_utf8_sha256": "a5b1f4db0cb148201ecee40830b78a542b90750aa498bb1e1dbf46d29e923d6b",
+      "shared_utf8_sha256": "12f73a8866debef632f6042d80b8605c06344af37f1e6aa0014650b108dc210c",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/331/info/summary/diffs/1/patch",
+      "original_utf8_sha256": "55122664e7c25c185b7f0de6d56e6cf2173d4558a55010acc01f864a7d054481",
+      "shared_utf8_sha256": "382c4046c2d7e6f2e3f540fca326c6fe7314c3d9bfaae1caa49d027054f37053",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/331/info/summary/diffs/4/patch",
+      "original_utf8_sha256": "62f376b2a828af0035cf638f9d9476cfd4c96ac641a0dde71219a7e9da25869c",
+      "shared_utf8_sha256": "93ff7edcfda2618e90cde572c4b0bb9637f33d5efe98dbd117c4e2a0eb6a3d1f",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/475/info/summary/diffs/3/patch",
+      "original_utf8_sha256": "cc9bf4473f7f62923835175dfbe91e2cf553b11aa013a3334ff0a34e511e7427",
+      "shared_utf8_sha256": "922b3b24a861197917f3b14383718202becf3ff81cfb89f14a1b519666e54e20",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/475/parts/1/text",
+      "original_utf8_sha256": "2399954997adecf48796541a42a579bd5d711880128c42239a57b2fa363490be",
+      "shared_utf8_sha256": "dac92474b5ce272f59a32c2c5621b380ffbc492b8195bb14aa33c3a4300070cc",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/483/parts/2/state/input/content",
+      "original_utf8_sha256": "def7a4ac5d54399e5f8ad717db74bb608e579c42489ea6e9894a20e2aaeee84e",
+      "shared_utf8_sha256": "286885703b91d3ec2233c58e76d68800068a5530c0a4aed0757f0df334fc30be",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/484/parts/1/state/output",
+      "original_utf8_sha256": "9f3450bdd6b13f1fe46c874794880fabebdf6bd36523ca5a8fa197c9e041b19b",
+      "shared_utf8_sha256": "427dedf22bc4d2aee56ffcbd1b50eb6b508880aac1ad33cfb4e17f3da5f9cfe1",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/484/parts/1/state/metadata/output",
+      "original_utf8_sha256": "9f3450bdd6b13f1fe46c874794880fabebdf6bd36523ca5a8fa197c9e041b19b",
+      "shared_utf8_sha256": "427dedf22bc4d2aee56ffcbd1b50eb6b508880aac1ad33cfb4e17f3da5f9cfe1",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/491/parts/2/state/input/newString",
+      "original_utf8_sha256": "01303bb7c5efe0cabd54d43cb1de6cf1c27bf9b54cfdbd23ff8e9e3ac5208c15",
+      "shared_utf8_sha256": "5ae88bcc5aca22826009e00e4c9f9c9c8eddc674e01f4feab42d3a2279ea4458",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/491/parts/2/state/metadata/diff",
+      "original_utf8_sha256": "d87afe34a60c8733df3e7b7f11ef03bbcfa3461b8a0fcc6b203b7976af91d5b2",
+      "shared_utf8_sha256": "b1dd0c88c933363cbe399a6eaf6463ece4aab8f2d67e6e6c405d5c8cc547d8ab",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/491/parts/2/state/metadata/filediff/patch",
+      "original_utf8_sha256": "d87afe34a60c8733df3e7b7f11ef03bbcfa3461b8a0fcc6b203b7976af91d5b2",
+      "shared_utf8_sha256": "b1dd0c88c933363cbe399a6eaf6463ece4aab8f2d67e6e6c405d5c8cc547d8ab",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/514/info/summary/diffs/3/patch",
+      "original_utf8_sha256": "abc6c22d714a58c30cb5c9c7fd7ba86b69faddd299b251290afae5ba05a410b1",
+      "shared_utf8_sha256": "11caf7468c41f8aff0c2865b17652774eb464037dc2caff4ccf11ae5957b2bce",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/524/parts/2/state/output",
+      "original_utf8_sha256": "f9b8e231c5af99e9e434a9b8cf78cad141e8b127b714dc59c48d31c8e18876f6",
+      "shared_utf8_sha256": "1e1a6efeae400dca3fa7a426d8e53ccfc49e2e84ecb735ed4f686495c9f944a3",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/524/parts/2/state/metadata/display/text",
+      "original_utf8_sha256": "5dbe97c8949730b2e6ecbd8e4001fb668a4d1999e39cc95ef14413853ae88502",
+      "shared_utf8_sha256": "1e2cc1f95049e4a89f0d21a3b6c6a4b06474417303901f0f8a42e725d6f19323",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/525/parts/2/state/input/newString",
+      "original_utf8_sha256": "35dcf7e552f86cad2ae6cd56d674f3592d59521d4af37c0d978d1f560c220d6d",
+      "shared_utf8_sha256": "fd7f0054a8403f0de6283f829a82698318a5fbcb92bae653ac3b4ead409f8cf4",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/525/parts/2/state/input/oldString",
+      "original_utf8_sha256": "0f5197896e0d5dc1d7de4907f05e781d8ec6d40ba947410701d12aed19f68463",
+      "shared_utf8_sha256": "e1e19406d4ff54999cc97e6a7ea2abcb7c5dcd3a1771ef9cea439065f8e95c1f",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/525/parts/2/state/metadata/diff",
+      "original_utf8_sha256": "497ca6a8e9c80d492a32b3c6738ec5c24309c741d57bd903a48ff68605595f2c",
+      "shared_utf8_sha256": "2d2640f7daa58f7d1b1cb34426b91aed48629aa51279726999b4b4db18d3750d",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/525/parts/2/state/metadata/filediff/patch",
+      "original_utf8_sha256": "497ca6a8e9c80d492a32b3c6738ec5c24309c741d57bd903a48ff68605595f2c",
+      "shared_utf8_sha256": "2d2640f7daa58f7d1b1cb34426b91aed48629aa51279726999b4b4db18d3750d",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/588/parts/1/state/output",
+      "original_utf8_sha256": "ab816684465edc883e4a0a2dcb8ac1e9ab9c0ac7231aab4d2a0e27da42acc71a",
+      "shared_utf8_sha256": "96e0e437516bd0e62ec7be78320e81c21d2a0d769bee8cdf6c2c69e61abf1865",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/588/parts/1/state/metadata/output",
+      "original_utf8_sha256": "ab816684465edc883e4a0a2dcb8ac1e9ab9c0ac7231aab4d2a0e27da42acc71a",
+      "shared_utf8_sha256": "96e0e437516bd0e62ec7be78320e81c21d2a0d769bee8cdf6c2c69e61abf1865",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/603/info/summary/diffs/3/patch",
+      "original_utf8_sha256": "5b1135cfb5b8f2680a8936161f0f8fed63551c219b55e79022f998042ab0c5d6",
+      "shared_utf8_sha256": "6435c33c7933bf9541e41091dc441e6583982c560754b660d013fef70d18687f",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/604/parts/3/state/output",
+      "original_utf8_sha256": "b10eec3cc4639f2a9a6dddd9670114c7bdc3238860dcaee38f0ec6c599acc348",
+      "shared_utf8_sha256": "5a66802934f8d035aeb32de7738ecbfca03687fe6698bd35b8a7878e2b76ebe0",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/604/parts/3/state/metadata/display/text",
+      "original_utf8_sha256": "7511803f7b023b811eff55bf057af89232969fe9c6b69d7261a1e97f2c89c14a",
+      "shared_utf8_sha256": "209ad10597f8abee77dfad7d295d94cda1456549ce3010b732c879e823b24c55",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/611/parts/2/state/input/newString",
+      "original_utf8_sha256": "52c12772b88e478d4e04e8fb91c2b442af0bcfbbc0c42e84f9657333ac33f314",
+      "shared_utf8_sha256": "dca7d51df30a339100fcea4905ee6cfea2dedf53402c01a66c5b4f7c07fc3e5b",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/611/parts/2/state/input/oldString",
+      "original_utf8_sha256": "8bd7ea2802f67eae07ca9eb7d63f19b2382e8319bab8c49bf0e6deaf20ceb4a2",
+      "shared_utf8_sha256": "1526ea6389838cdb135999579e631ef905e5705c864b26424c9d4bda6d3d9cac",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/611/parts/2/state/metadata/diff",
+      "original_utf8_sha256": "cdd7be18ae7e85bd78999049634f28d95e4959705e7f95a352461f7abd4fc95b",
+      "shared_utf8_sha256": "46f496c89010b6b4ddf1b9eefee59c2a9f2f382f0160fbd7d24393e99e200584",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/611/parts/2/state/metadata/filediff/patch",
+      "original_utf8_sha256": "cdd7be18ae7e85bd78999049634f28d95e4959705e7f95a352461f7abd4fc95b",
+      "shared_utf8_sha256": "46f496c89010b6b4ddf1b9eefee59c2a9f2f382f0160fbd7d24393e99e200584",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/617/parts/4/state/output",
+      "original_utf8_sha256": "5ff2996ac49164ed3ff19db0c4b545f87f4a4143b84453518dfca260066b7306",
+      "shared_utf8_sha256": "1583231a84416a724b09827d27cd7768f63963b22afbbe08c588e48732d753b5",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/617/parts/4/state/metadata/output",
+      "original_utf8_sha256": "5ff2996ac49164ed3ff19db0c4b545f87f4a4143b84453518dfca260066b7306",
+      "shared_utf8_sha256": "1583231a84416a724b09827d27cd7768f63963b22afbbe08c588e48732d753b5",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/626/info/summary/diffs/3/patch",
+      "original_utf8_sha256": "c1e87946a0f03bce22936c8356362c7dc4089010d8b83ca4dd3fb3938243574a",
+      "shared_utf8_sha256": "f5172697203293e5c84bcff1fdfaafe4808ef0793b5774a5039f11c11e1e9823",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/627/parts/2/state/output",
+      "original_utf8_sha256": "e12a820ae1780086da2937f21a3b51fc4298f244ea54f9adbe6e954840f62b50",
+      "shared_utf8_sha256": "afee9462fa60389dd4e391a55d26de266eb2d008b84e325663e1ae40715a2433",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/627/parts/2/state/metadata/preview",
+      "original_utf8_sha256": "fbcfceafa5c72115f543075b5355072c7c3e0e2842aa4b87333aeab57c749450",
+      "shared_utf8_sha256": "7ac7732e6e5f74f96821c430d2b9249e19252fe837601b17b055df528211a87c",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/627/parts/2/state/metadata/display/text",
+      "original_utf8_sha256": "fbcfceafa5c72115f543075b5355072c7c3e0e2842aa4b87333aeab57c749450",
+      "shared_utf8_sha256": "7ac7732e6e5f74f96821c430d2b9249e19252fe837601b17b055df528211a87c",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/637/parts/4/state/output",
+      "original_utf8_sha256": "a88795f3b0ecce7f3d235962a8854d3825aa3ddd74d3994007124656923c459c",
+      "shared_utf8_sha256": "e384dd10d7f1f98566ef8c57db5cb60fdb5ee905526de3eaa9baa25b44d69147",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/637/parts/4/state/metadata/output",
+      "original_utf8_sha256": "a88795f3b0ecce7f3d235962a8854d3825aa3ddd74d3994007124656923c459c",
+      "shared_utf8_sha256": "e384dd10d7f1f98566ef8c57db5cb60fdb5ee905526de3eaa9baa25b44d69147",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/implementation/messages/667/parts/3/state/output",
+      "original_utf8_sha256": "d8f6dceebaffb17ef08312857ab447e367e5be09fb8ccd5d0d884246a8448d4c",
+      "shared_utf8_sha256": "1bc37d7bfd36a5c7280bfcbbd31acfb26ef114026b85478fc9d027c96bb080aa",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/0/info/summary/diffs/6/patch",
+      "original_utf8_sha256": "1825e41a6820e4b2de3cd5abb8dd80125d76ef5ed4f65371421b5af8e3cbda90",
+      "shared_utf8_sha256": "31a07c4af9c9d9a962c75315dbb19fb7762a2fc0f221e1aeb912bd491ecb09e4",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/0/info/summary/diffs/9/patch",
+      "original_utf8_sha256": "d856370a8443efb432401dd07aae06f6d77e1201803ec13c93c41ca6a73d2dd5",
+      "shared_utf8_sha256": "04c30ae9e3f260f24f113cbd405aaa9295475d942d7738f99d714a4be9a51559",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/11/parts/1/state/output",
+      "original_utf8_sha256": "7a5596aeceb63d6ab908c6389a6742fe08672550ede6fc1513605e47bfac28f3",
+      "shared_utf8_sha256": "30f81975247cb51f30122a4d6ff9d5a7e92c4cc517ae83af1f97de020575875b",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/11/parts/1/state/metadata/preview",
+      "original_utf8_sha256": "4f3485a570947e3a2bde8d81ca059a9d54b03b0a311dab28cfa5e46cfc1fba62",
+      "shared_utf8_sha256": "2d311f410535128bcbf0e3cba23a4e4c07c0dc8c9b339f64e237a47b405a8f3b",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/11/parts/1/state/metadata/display/text",
+      "original_utf8_sha256": "7bd1890947a9d7d91421e21c5a136ea821979eb442d01540f12fcb027d6ad129",
+      "shared_utf8_sha256": "d9813b56f3ae04a839e907419eb35412232c11742bd74694aff67dda6e647e54",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/12/parts/2/state/output",
+      "original_utf8_sha256": "54e1ee00d3ba0a48142f989a706e34256cade20399ecfc9e8cce2dd2fc61a21b",
+      "shared_utf8_sha256": "fd75a21ebdd75d3c99ee780b28dcc5b415faf5d9b6d5fe9761de24da84c5bc70",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/12/parts/2/state/metadata/display/text",
+      "original_utf8_sha256": "743bf68e3ee1f2d660966d1803d379008bd449f8e4dfb896fda78d86c1a65b5e",
+      "shared_utf8_sha256": "646249bfaa8aa042e3c7658b3d99c66f64e6fdc66cc2a3ec0733958f5c06370c",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/14/parts/2/state/output",
+      "original_utf8_sha256": "55c80728215e1ea294541501a90d76e88a5b2ee3124b05dd5083ed3456dd95c9",
+      "shared_utf8_sha256": "668d3d712ad7055389fef5db875355744edbbecbdc40edc272e739ff7eb9928a",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/14/parts/2/state/metadata/display/text",
+      "original_utf8_sha256": "3f62742bc5eb9c361a120f5a7e25a76f1f67b4fc014b5ca6d31d00ba084d62e1",
+      "shared_utf8_sha256": "ff6a4b5bf058f3b13bb8fa65ae30721b7d9a3ec7ee02730d57ab6a8e1cef2719",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/18/parts/1/state/output",
+      "original_utf8_sha256": "955c357592f7b26771a45ffff5120a87614b4572364d248a0d8903733f04c087",
+      "shared_utf8_sha256": "402bb9c2a30dec9ac6d850ec617d58dc7c569491a7a05badec1e94c3b29800c5",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/18/parts/1/state/metadata/display/text",
+      "original_utf8_sha256": "be591e474c7c06eb35e78e85fd5ffa6eea6ea62c0492f89d56e47d15223f16cc",
+      "shared_utf8_sha256": "4543a4c651762bd9925904024220b8c6c24869077c9918cd6c6e147346e9829f",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/59/parts/1/state/metadata/diff",
+      "original_utf8_sha256": "e56426f20f51cd720b048bc66ba61ae2dcbbe65a73ab3cd9430e9b2f676598f7",
+      "shared_utf8_sha256": "f61ea3d92b774684817f6287d9bdb44172ce086afcd8c07b280f132756c492c3",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/59/parts/1/state/metadata/filediff/patch",
+      "original_utf8_sha256": "e56426f20f51cd720b048bc66ba61ae2dcbbe65a73ab3cd9430e9b2f676598f7",
+      "shared_utf8_sha256": "f61ea3d92b774684817f6287d9bdb44172ce086afcd8c07b280f132756c492c3",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/119/parts/1/state/output",
+      "original_utf8_sha256": "859ac9a5db03a61b4ed7b9e38096a83294a13d2886980602ab895dd2133e8ff8",
+      "shared_utf8_sha256": "6805451828e571c1bb5e8fddaaf825cd0ddea6265f0c3502bc571789b6a319da",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/119/parts/1/state/metadata/output",
+      "original_utf8_sha256": "859ac9a5db03a61b4ed7b9e38096a83294a13d2886980602ab895dd2133e8ff8",
+      "shared_utf8_sha256": "6805451828e571c1bb5e8fddaaf825cd0ddea6265f0c3502bc571789b6a319da",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/121/parts/2/state/output",
+      "original_utf8_sha256": "7200a5d8e457f19be1db52c900ae2d49a16ef20b3eb2c68b02504ff40ce047ed",
+      "shared_utf8_sha256": "fb0ef7e20aaf427bd8f31f8885e5d57b3ad0f0972bb68dec4b92e1fd14f82d85",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/121/parts/2/state/metadata/output",
+      "original_utf8_sha256": "7200a5d8e457f19be1db52c900ae2d49a16ef20b3eb2c68b02504ff40ce047ed",
+      "shared_utf8_sha256": "fb0ef7e20aaf427bd8f31f8885e5d57b3ad0f0972bb68dec4b92e1fd14f82d85",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/126/parts/2/state/output",
+      "original_utf8_sha256": "5f0844d062081b6638c00afc55d6e4948b3466dcaa661589c05cd2cc54594b52",
+      "shared_utf8_sha256": "a6efc4b0173f7db26b8d0ddda65e0af6ddd6cf7ec3dab2d64914766f65540f7e",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/126/parts/2/state/metadata/output",
+      "original_utf8_sha256": "5f0844d062081b6638c00afc55d6e4948b3466dcaa661589c05cd2cc54594b52",
+      "shared_utf8_sha256": "a6efc4b0173f7db26b8d0ddda65e0af6ddd6cf7ec3dab2d64914766f65540f7e",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/127/parts/2/state/output",
+      "original_utf8_sha256": "adab44d8fb13fdfc5267c6d1e1d415b85f3b66fd35b7b2e5d1e7efeff8c8163b",
+      "shared_utf8_sha256": "12a9927fb8ab35a7102f89b532248defda4a3584a9f43837e1d57aa06bd9fd99",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/127/parts/2/state/metadata/output",
+      "original_utf8_sha256": "adab44d8fb13fdfc5267c6d1e1d415b85f3b66fd35b7b2e5d1e7efeff8c8163b",
+      "shared_utf8_sha256": "12a9927fb8ab35a7102f89b532248defda4a3584a9f43837e1d57aa06bd9fd99",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/129/parts/1/text",
+      "original_utf8_sha256": "0dfe4734daa49bacd2d0fc927bb20b3b80465db3ec7c7fdc304dce290b667851",
+      "shared_utf8_sha256": "78d3115ac77d8e1ad25df12e0d9556957ead437584b68db3e55688e49379e498",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/138/parts/2/state/output",
+      "original_utf8_sha256": "b8a6e3fb4d9a9a799f2253b5d20b9308a3f2038a13244da6d757bfd69ae9ec86",
+      "shared_utf8_sha256": "4cc52472fb79a8626503256a747f60514cef8173d5fc09d6008759409898dc99",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/138/parts/2/state/metadata/output",
+      "original_utf8_sha256": "b8a6e3fb4d9a9a799f2253b5d20b9308a3f2038a13244da6d757bfd69ae9ec86",
+      "shared_utf8_sha256": "4cc52472fb79a8626503256a747f60514cef8173d5fc09d6008759409898dc99",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/141/info/summary/diffs/4/patch",
+      "original_utf8_sha256": "06c77cc31d5e3ce692d664a1b2374896efaf185bde43f2583857559d0832d743",
+      "shared_utf8_sha256": "8a9b41f9da1b4bc75e018bf2dae8a95cdc4aaac1f76aab4a2828f5c968396ef0",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/141/info/summary/diffs/6/patch",
+      "original_utf8_sha256": "fe81edf26dbef47af77eed1612888ccd2a6b11b2df5cfc5fedbb9b8e67c8e82b",
+      "shared_utf8_sha256": "9f84e1da93a43a98ffa496316411370391da861eb90cc4201fa62f06f6952f07",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/191/parts/1/state/output",
+      "original_utf8_sha256": "94460155ac3759938ccf8d86fc5bed60a4414a8b426b5b1cbf19d1455e7be268",
+      "shared_utf8_sha256": "e989da8ab850597738de343f3e90ba9e7591e9d4ecebaf3314cd25e28afc115e",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/191/parts/1/state/metadata/output",
+      "original_utf8_sha256": "94460155ac3759938ccf8d86fc5bed60a4414a8b426b5b1cbf19d1455e7be268",
+      "shared_utf8_sha256": "e989da8ab850597738de343f3e90ba9e7591e9d4ecebaf3314cd25e28afc115e",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/195/parts/1/state/output",
+      "original_utf8_sha256": "1687b560acfbea3f1b9d6ce263a33b7731f558569601665cc32a39bfda976ea3",
+      "shared_utf8_sha256": "e043be2c636d6af4ba7b1868017bdd4308a33f7c8f5c687553f0a313a8bb1e99",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/195/parts/1/state/metadata/output",
+      "original_utf8_sha256": "1687b560acfbea3f1b9d6ce263a33b7731f558569601665cc32a39bfda976ea3",
+      "shared_utf8_sha256": "e043be2c636d6af4ba7b1868017bdd4308a33f7c8f5c687553f0a313a8bb1e99",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/203/info/summary/diffs/2/patch",
+      "original_utf8_sha256": "11d4d9a6d5c52ee003e0a90c76b09ae588b1b7776c3a8345d7c0824a00b63bc0",
+      "shared_utf8_sha256": "7d54a94f0e6761b3fbacc1a2a7011abb2fb77af65fa43304b0836236ac4241e7",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/248/info/summary/diffs/1/patch",
+      "original_utf8_sha256": "5e06f27d8097e27e68f3f40e069eb69da02babc8b80a2ea7cb5462a735725c32",
+      "shared_utf8_sha256": "40968ca95779543dd9f212930e640a91990e61ec20d21835f25f8600bde20298",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/418/info/summary/diffs/5/patch",
+      "original_utf8_sha256": "4ad2bd1c26662ce0fe4bfcbcd194376b18207b2f3426fe7a41e82e285daaf553",
+      "shared_utf8_sha256": "f273cbf725b78c31d6414cb01798299fade4c356e1da93fdb9a35a795251f784",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/451/info/summary/diffs/4/patch",
+      "original_utf8_sha256": "08842c563c54c41af6625d12ef36598edc0b84180cd37c645c150ecca782bb5b",
+      "shared_utf8_sha256": "4d3d1c309d2263c4f1d98a0fcc49ffb50003641cc2f2b3443a67277e804b044c",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/541/info/summary/diffs/3/patch",
+      "original_utf8_sha256": "8e8f1ff922343f8a967db6e4244a1fe7f22c4ef532bdd7db4bd37423b6eb083c",
+      "shared_utf8_sha256": "7eb1a703a80b3dc2cd629d00bcd68861b08ca4bddcbbf86a7ecd276bdf84ea64",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/583/info/summary/diffs/4/patch",
+      "original_utf8_sha256": "3bc822a26bc26e9dec8c678bf7ed191ba1d62eae76bb62fa818beda74bf28cf2",
+      "shared_utf8_sha256": "eccb5cbba4e586885e46ccbc6a2d6abbf385d482c8a5bc49bb9e242b7b66b131",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/585/parts/2/state/input/command",
+      "original_utf8_sha256": "88f16608a38afa5b71777f1d38660d5954668c3b05a341e3533f3fc3733117b4",
+      "shared_utf8_sha256": "bc96f31f0ba82fe119d05ca386b4522db3043528cc24b706a21de81147cb54d2",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/585/parts/2/state/title",
+      "original_utf8_sha256": "88f16608a38afa5b71777f1d38660d5954668c3b05a341e3533f3fc3733117b4",
+      "shared_utf8_sha256": "bc96f31f0ba82fe119d05ca386b4522db3043528cc24b706a21de81147cb54d2",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/591/parts/1/state/output",
+      "original_utf8_sha256": "334c663517ea8a76499ae5571f7f2638f6c83617fc723a65b5896686497a8795",
+      "shared_utf8_sha256": "ef7f8cba9641b5400369d71b609a6d8ce4e7ec03e93e46831b7e1762199f31bf",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/591/parts/1/state/metadata/output",
+      "original_utf8_sha256": "334c663517ea8a76499ae5571f7f2638f6c83617fc723a65b5896686497a8795",
+      "shared_utf8_sha256": "ef7f8cba9641b5400369d71b609a6d8ce4e7ec03e93e46831b7e1762199f31bf",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/595/parts/1/state/output",
+      "original_utf8_sha256": "ee512c5a2a207aaa9caaf1aff8fddcd88ba1a8d7fa645ce0b5c92db9cd67f202",
+      "shared_utf8_sha256": "982a803dd30cea79a8b0f39688d672ccc2debb68c2d675df5ba7a126e301c7b3",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/595/parts/1/state/metadata/output",
+      "original_utf8_sha256": "ee512c5a2a207aaa9caaf1aff8fddcd88ba1a8d7fa645ce0b5c92db9cd67f202",
+      "shared_utf8_sha256": "982a803dd30cea79a8b0f39688d672ccc2debb68c2d675df5ba7a126e301c7b3",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/596/parts/1/state/metadata/diff",
+      "original_utf8_sha256": "b30e717e55a57c9b32264485281da3f369de2e71c12a9afd3fa4fa2624f99719",
+      "shared_utf8_sha256": "856fec9e70702920f1c469187e8776e7d4e6ffc9be2b178b8662e08834c44061",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/596/parts/1/state/metadata/filediff/patch",
+      "original_utf8_sha256": "b30e717e55a57c9b32264485281da3f369de2e71c12a9afd3fa4fa2624f99719",
+      "shared_utf8_sha256": "856fec9e70702920f1c469187e8776e7d4e6ffc9be2b178b8662e08834c44061",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/626/info/summary/diffs/1/patch",
+      "original_utf8_sha256": "7ad6ef9b122cabeffdada63815389afbb6ea00bb3c6246d6c058279cc7c96180",
+      "shared_utf8_sha256": "d2b5e025d4573997cbce7eefc1a46583c024ca2b21ea88896236c65bbfa8d991",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/639/parts/1/text",
+      "original_utf8_sha256": "8e68db2ab1cb7ca4a9541e06fab6f0befcb77b0a0938c82997e4e095de63f1c5",
+      "shared_utf8_sha256": "d8b02dc235dc600b569a4eb66df4ceb52024cc08d449d76a586998d21e8c6c92",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/645/parts/2/state/output",
+      "original_utf8_sha256": "f699e32f8a939ca9e369b6996754836970ae1ada7aa096e9def0265cbf9acbe9",
+      "shared_utf8_sha256": "4aef410fee13e3b8265d3cb50768675884dd18928850e1faa29f78fca81f2157",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/645/parts/2/state/metadata/display/text",
+      "original_utf8_sha256": "f2b9e4c8025226dd5e3254577de0d725b0972b0640350b89dcec49718af9f470",
+      "shared_utf8_sha256": "f5acf41660455dd3f61ad530de3ae191952b7f6c02da2d05dd52ee2eacd5f3fc",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/647/parts/1/state/output",
+      "original_utf8_sha256": "570b89afd15c4833260f96e5c63cd0c9978708d29b3e891a39e847bc436d5ce1",
+      "shared_utf8_sha256": "c84afdd500795228a98a919abf85afcd8cd83beab36b8253a7a8d5dad7017539",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/647/parts/1/state/metadata/output",
+      "original_utf8_sha256": "570b89afd15c4833260f96e5c63cd0c9978708d29b3e891a39e847bc436d5ce1",
+      "shared_utf8_sha256": "c84afdd500795228a98a919abf85afcd8cd83beab36b8253a7a8d5dad7017539",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/654/info/summary/diffs/3/patch",
+      "original_utf8_sha256": "5d5ec0e038cca406211904cd08599b1cbac74107c62418ce1dcff8fae681319e",
+      "shared_utf8_sha256": "c60cf87c593c1235c582e177788e990ba6d51e36e9f61b88f9ddfa02a0116c5e",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/657/parts/1/state/output",
+      "original_utf8_sha256": "cc9348cb90003b14c56f5d5f4a6c5d96eea1bdd1f0bbaa66b03890547ec36d86",
+      "shared_utf8_sha256": "0944978be3fc2ce17bd0531124317268b7cdc759ccf757403e4c402e8104bbf3",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/657/parts/1/state/metadata/display/text",
+      "original_utf8_sha256": "01e20431390c756a84e14dab16249a1dbb818943c8c80d4f6a5734c5a3de3adf",
+      "shared_utf8_sha256": "67a80a043f68c17e92146477cabc2f189bb6fdf56e37e6c6670d716a37362f33",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/681/info/summary/diffs/2/patch",
+      "original_utf8_sha256": "4b0d09f38bb424799053110d2dc8c101167648e16b453b13f563b1e560bb188b",
+      "shared_utf8_sha256": "579c7d0be49bbbdd66ac548f66217d7972d92e5b5765ad27153f7ba94545ea22",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/717/info/summary/diffs/3/patch",
+      "original_utf8_sha256": "fce784c8525ccc65c2943840b414b13087d700f9c928640b5dac9074ed5e9fad",
+      "shared_utf8_sha256": "7406f6dfb5e92086c0583e72d58a906e5e580dc4a6abfb3a4acd6abbe9d0c529",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/750/info/summary/diffs/2/patch",
+      "original_utf8_sha256": "91050db44564e22ae2854f9585a9cf338abf71cd49dbdd73dcfcb81a68bf74d7",
+      "shared_utf8_sha256": "a1fe39ab1b1eec5406d9695c17de57654dd7d75d8accd21a0a31fec71b1af56f",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/789/info/summary/diffs/4/patch",
+      "original_utf8_sha256": "acd55f4f530a10bb62223baab6ee096bc69e00d8e8fc1c9714af7189ac7170a5",
+      "shared_utf8_sha256": "ec2ac5c772d6135acc33b945f5b1ec8cbca7181da4e4b0d5e29c7d838f57cd94",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/877/info/summary/diffs/0/patch",
+      "original_utf8_sha256": "71994a5f0c74685a5d425fa18f34d354eb6348a0b9d1d281782bea47c7e9341c",
+      "shared_utf8_sha256": "ad51243fc9643d137f8ef43da37032ed886a2f1b73c8883059dd77bfc276972a",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/883/parts/2/state/output",
+      "original_utf8_sha256": "15f40b6677196a0462af561451e68b705bfa34ade3b807b0929a2eb5c1009956",
+      "shared_utf8_sha256": "cd953bddea3620294fdd1aa88ceac837f36201c26c2ba97990685152698c3c71",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/architecture-revision/messages/883/parts/2/state/metadata/output",
+      "original_utf8_sha256": "15f40b6677196a0462af561451e68b705bfa34ade3b807b0929a2eb5c1009956",
+      "shared_utf8_sha256": "cd953bddea3620294fdd1aa88ceac837f36201c26c2ba97990685152698c3c71",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    },
+    {
+      "json_pointer": "/attachments/feedback-5.md",
+      "original_utf8_sha256": "f8671853777e118cc427e960dc45150932c6639e58e854a21f3b53d4e3d100f9",
+      "shared_utf8_sha256": "3e818a5dc514d78ad6634db69a934014a7249bf0bce2584869679ad117a13f26",
+      "reason": "privacy review: credentials/private URLs/email or explicitly excluded personal attribution; substantive tool/write content retained"
+    }
+  ]
+}
