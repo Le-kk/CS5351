@@ -325,3 +325,34 @@ The registry states profile membership twice: structured `fixture_profiles.assig
 **Decision recorded here: the structured `assignment` is authoritative for the formal evaluation population.** Prose is explanatory and may be finer-grained than a group name, but prose does not add a requirement to a profile. The two disagreements above are therefore **recorded, not silently reconciled**: moving a requirement between profiles changes the acceptance population, and that is C's decision, not a wording fix. The two places to bring into line once C decides are: (1) the `both` note and the Appendix A row for `INV-014`; (2) the `SEC-002` prose, which should say "group `A-B and A-C`; clause 2 additionally requires A-C". Until then, **`assignment` is the population.**
 
 **Not a disagreement:** `SEC-002` clause 1 genuinely applies with or without a portfolio, which is why its Appendix row spans A-A as well. That is the finer-grained-prose case, not a second population.
+
+---
+
+## OQ-18 — Which layout satisfies "the disclaimer is the first element"? — OPEN 2026-11-25
+
+**Asked by:** A, after Member C's H5. **Owner:** B (layout), with A confirming meaning and D implementing.
+
+C's register records that the delivered report begins with the provenance/envelope header and ends with the disclaimer, and that twenty fixtures fail on that basis. C classified it as a requirement/architecture alignment gap and warned that "starts" must not be silently read as "contains". A agreed and fixed the requirement side: the disclaimer is the first non-blank element of the delivered document. A did not choose the mechanism, because the mechanism is B's.
+
+Two designs comply, and B chooses:
+
+1. **Envelope-first, disclaimer inside it** — the envelope emits the frozen disclaimer as its first line, before the provenance lines. Keeps `final_doc_md = envelope + body` unchanged; the single-copy rule in §6.4 needs restating as "rendered once, in the envelope".
+2. **Body-first** — the disclaimer is the first body element and the envelope is appended after it. Keeps the single-copy rule; changes the concatenation order and anything that assumes the header leads.
+
+A third option is refused: rewriting the requirement to "contains". Validator rule 19 and negative fixture 30 now reject that edit, so it cannot happen by accident.
+
+### Clarifications A gave Member E on 2026-11-25
+
+1. **HTML rendering.** "First non-blank element" means the first *visible* report content. `<!DOCTYPE>`, `<html>` and `<head>` with charset and title are document structure, not visible content, and may precede it. What must not precede it is visible content: report title, rating banner, provenance/envelope block, ticker, date, logo.
+2. **Footer compatibility copy.** Retaining the existing footer disclaimer as a compatibility copy is permitted and does not weaken the rule, provided the leading disclaimer is present and byte-identical to the frozen string. The footer copy is not a substitute: a report carrying only the footer copy fails. Removing it later is a layout decision for B and needs no requirements change.
+3. **Entry points.** The rule applies to every report the system writes to disk or displays — the delivered document, however produced — including the CLI/RunAPI path and legacy direct-export paths. Internal renderings count only insofar as they are published. A does not enumerate function names: naming the wrong entry point is the error this registry already made twice with `INV-014`.
+
+**Until B decides:** the twenty H5 fixtures should stay failing rather than be adjusted to whatever the code currently does. A failing test against a stated requirement is information; a test rewritten to match the implementation is not.
+
+## OQ-19 — Which entry point reports `distinct_case_count`? — OPEN 2026-11-25
+
+**Asked by:** A, after Member C's H3. **Owner:** B (interface), D implementing, C binding the test.
+
+A has written the arithmetic into `REQ-TA-NFR-EVAL-001` rule 7: the evaluation report carries `distinct_case_count` and `population_result_count`, and `N_EVAL` is checked against the case count rather than the attempt total. C's tests currently read a summary that reports attempts only.
+
+What remains open is where the two fields are produced: a new field on the existing summary, a separate population summary object, or a projection in the report layer. A deliberately did not name a function, because the last time this registry named an enforcer it named the wrong one. B's interface contract should name whichever object owns it; D implements; C binds the twenty-case test to that object once it exists.

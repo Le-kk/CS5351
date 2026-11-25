@@ -561,3 +561,48 @@ A further note from the reviewer: `REQ-TA-NFR-COST-001`'s **first** comparison p
 while the later section deliberately permits exactly that, provided the experimental factor is named and everything else is frozen (F24-02). A reader following the earlier sentence would reject every controlled comparison, including the optimisation evidence the same entry now requires. **That sentence is removed.** The paragraph keeps the six settings that must be held constant and adds one clause pointing to the exception, so the two sections no longer disagree. `fit_criterion` already stated the corrected rule ("0 comparisons accepted where a setting differs without being named as a changed factor") and needed no change; a scan for the old wording finds no other copy.
 
 Verified after the change: `validate.py` 36/3 with 0 errors and 0 warnings; 31 negative fixtures pass; `ruff check .` passes; `rebuild_registry.py` reproduces the committed registry byte-for-byte.
+
+---
+
+## 2026-11-25 — Member C's H3 and H5 answered
+
+Source: C's failure register of 2026-11-25 (`registry-test-update-2026-11-25.md`), where H1–H5 remain open with the same 25 failing nodes: BUDGET vocabulary (1), corrected-only findings rejected (2), distinct-case population interface ambiguity (1), REVIEW/PASSED accepted (1), leading-disclaimer contract mismatch (20). Two are A's to decide.
+
+### H3 — `REQ-TA-NFR-EVAL-001`: cases, not attempts, made observable
+
+C classified H3 as a requirement/interface ambiguity, not an implementation defect, and refused to treat the proposed `distinct_case_count` / `population_result_count` keys as evidence of an adopted API. That refusal was correct: an interface nobody wrote cannot be violated. The requirement side is A's, so it is fixed there.
+
+1. **New rule 7** in the statement: the evaluation report shall carry `distinct_case_count` (distinct semantic cases) and `population_result_count` (`1` single population; `2` where a comparison was refused or exactly one declared factor was compared) beside the completion rate and the `NEEDS_REVIEW` count. `N_EVAL` is checked against the case count, never the attempt total.
+2. Fit criterion requires both fields in every fixture, with `distinct_case_count` = 20 and an attempt total of 40 on the 20-case cohort.
+3. Threshold names the arithmetic: case count equals `N_EVAL`; `population_result_count` matches rule 6 in all 4 fixtures; 0 reports omit either field.
+4. New parameter `COUNTS_CASES` (`state: fixed`, owner A, used by EVAL-001 only) so attempts cannot become countable again by a silent edit.
+
+**Not fixed, by design:** the entry point (OQ-19, B) and the rubric, critical items, profile and `QUALITY_THRESHOLD` (D/E). The obligation is on report output, so no function name is dictated.
+
+### H5 — `REQ-TA-SEC-003` / `REQ-TA-INV-008`: the disclaimer is first, not merely present
+
+C's twenty fixtures show the delivered report starting with the provenance/envelope header and ending with the disclaimer, and C warned explicitly: do not read "starts with" as "contains". The architecture confirms what it currently does — `docs/architecture/interface-contracts.md` §6.2 (`final_doc_md = envelope + body`) and §6.4 (disclaimer rendered into the body; Q3 tests presence only).
+
+**Decision: the disclaimer is the first non-blank element of the delivered document.** A safety qualifier that a reader must scroll past a header to find is weakened by layout; redefining the requirement to "contains" would make it untestable in the one respect that matters; and no content check is lost, because Q1–Q4 and R1–R8 inspect content, not position.
+
+Consequences recorded rather than assumed:
+
+- `REQ-TA-SEC-003` and `REQ-TA-INV-008` statements, metrics, thresholds and fit criteria now say "first non-blank element ... with no run metadata, title, header or provenance block before it".
+- Validator **rule 19** rejects a later edit that softens either fit criterion back to "contains"; **negative fixture 30** exercises it (suite now **32** cases).
+- **B's layout contract conflicts with this.** B must choose the mechanism (OQ-18): emit the disclaimer inside the envelope before the provenance lines, or render it as the first body element and build the envelope after it. A does not choose. Weakening the requirement is rejected and is now caught by rule 19.
+
+### H5 details confirmed by A for E (2026-11-25)
+
+1. **HTML.** "First non-blank element" means the first *visible* content. `<!DOCTYPE>`, `<html>` and `<head>` are structure, not visible content; what may not precede the disclaimer is a title, rating banner, provenance block, ticker, date or logo.
+2. **Footer compatibility copy.** Permitted and not a weakening, provided the leading disclaimer is present and byte-identical to the frozen string. The footer copy is not a substitute; a report with only the footer copy fails. Removing it later is a layout decision for B and needs no requirements change.
+3. **Entry points.** Every report written to disk or displayed, including legacy direct-export paths. Internal renderings count only insofar as they are published. No function names are enumerated: naming the wrong entry point is the error this registry already made twice with INV-014.
+
+### Verification
+
+```
+python3 docs/req/validate.py                  36 requirements; 3 withdrawn; 0 error(s), 0 warning(s)
+python3 docs/req/negative-fixtures-check.py   all 32 negative fixtures fail correctly
+ruff check .                                  All checks passed
+```
+
+Not claimed: adoption (`document.status` stays `proposed_for_adoption`), implementation, B's agreement to the layout consequence, or any C test result. H1, H2 and H4 are untouched. Open questions added: **OQ-18** (H5 mechanism, B) and **OQ-19** (H3 entry point, B).
