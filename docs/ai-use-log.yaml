@@ -1,0 +1,1385 @@
+schema_version: 1
+artifact: Structured AI-use event index
+updated_on: '2026-11-25'
+timezone: Asia/Hong_Kong
+source_baseline: 761918e
+integration_note: Delivery refresh includes A logs, content-identical C renames, C requirement verification and
+  later E H1/H3/H5/E1 work. Previous snapshot claims retain their original dates and limits.
+status: refreshed_from_available_records; contributor_confirmation_and_formal_acceptance_pending
+owner: E
+path_basis: All source and artifact paths are relative to repository root.
+scope:
+  format: English event descriptions; original-language records remain linked, not reproduced
+  selection: Important updates, interventions, measurements and verification; not every turn or tool call
+  date_policy: Dated filenames identify record dates; B sessions span later updates and C creation-time timezone
+    is unspecified. No exact event time is invented.
+  verification_policy: Numbers are attributed source reports unless explicitly described as index integrity checks.
+    This task does not rerun product/model acceptance.
+  deduplication: Shared work can have B/C/D/E viewpoints. Cohorts, cumulative file counts and successive permission
+    snapshots must not be summed as independent results.
+  snapshot: All substantive Markdown records and provenance JSON currently under AI-log/Member-A..E; README/system
+    files excluded. Includes the current cleanup record; no external/private session is invented.
+  delivery_boundary: No contacted-member response, requirements adoption, independent acceptance, OS isolation or
+    full course evidence completion is inferred.
+  attribution: Member attribution follows source folders, not exclusive authorship. Tool/model identity is retained
+    in linked originals; no unknown model or human decision is inferred.
+members:
+- member: A
+  records: 6
+  provenance_indexes: 1
+  coverage: available_selected_records; contributor_confirmation_pending
+  directory: AI-log/Member-A/
+- member: B
+  records: 3
+  provenance_indexes: 0
+  coverage: available_selected_records; contributor_confirmation_pending
+  directory: AI-log/Member-B/
+- member: C
+  records: 3
+  provenance_indexes: 0
+  coverage: available_selected_records; contributor_confirmation_pending
+  directory: AI-log/Member-C/
+- member: D
+  records: 3
+  provenance_indexes: 0
+  coverage: available_selected_records; contributor_confirmation_pending
+  directory: AI-log/Member-D/
+- member: E
+  records: 36
+  provenance_indexes: 4
+  coverage: available_selected_records; contributor_confirmation_pending
+  directory: AI-log/Member-E/
+source_records:
+- id: A-01
+  member: A
+  path: AI-log/Member-A/2026-11-10_19-46-00.md
+  kind: ai_use_record
+  record_date: '2026-11-10'
+  date_basis: record filename; multi-day events and native source timestamps remain as stated in the record
+  sha256: e591c5ab7e98b35a3b81cfcb5c8538f5ccb401f922c45ecb05296654cc25af6c
+- id: A-02
+  member: A
+  path: AI-log/Member-A/2026-11-11_09-42-10.md
+  kind: ai_use_record
+  record_date: '2026-11-11'
+  date_basis: record filename; multi-day events and native source timestamps remain as stated in the record
+  sha256: 963779155191b6e73fbad7d524983c04a7da5a7d021c4c6af33e3a5ffe01bf40
+- id: A-03
+  member: A
+  path: AI-log/Member-A/2026-11-22_19-17-32.md
+  kind: ai_use_record
+  record_date: '2026-11-22'
+  date_basis: record filename; multi-day events and native source timestamps remain as stated in the record
+  sha256: 965d354f6eb08b6e5631b6a87297765e63706c3cbdcc594fc8209ecf04afd77e
+- id: A-04
+  member: A
+  path: AI-log/Member-A/2026-11-23_01-03-05.md
+  kind: ai_use_record
+  record_date: '2026-11-23'
+  date_basis: record filename; multi-day events and native source timestamps remain as stated in the record
+  sha256: e27dfc68537bf8cbfb30a68ce90c9f4fa11570368ed6d76a0d2f368ba743369c
+- id: A-05
+  member: A
+  path: AI-log/Member-A/2026-11-24_16-23-49.md
+  kind: ai_use_record
+  record_date: '2026-11-24'
+  date_basis: record filename; multi-day events and native source timestamps remain as stated in the record
+  sha256: 5852054e4a6e06b6e144a64fb293a5918dc023300d938dbb6464c8d98fee77a8
+- id: A-06
+  member: A
+  path: AI-log/Member-A/2026-11-25_11-10-46.md
+  kind: ai_use_record
+  record_date: '2026-11-25'
+  date_basis: record filename; multi-day events and native source timestamps remain as stated in the record
+  sha256: e5257676ae842266f4f2052b21890b23a09933f4278f7f442a5103abc09e6e99
+- id: A-07
+  member: A
+  path: AI-log/Member-A/transcript-index-2026-11-10-25-a.json
+  kind: provenance_index
+  sha256: 822b7c664719deefcfda7855e19c8836b881eb2a2c438b069f5f42f9283f71a8
+- id: B-01
+  member: B
+  path: AI-log/Member-B/2026-11-18_17-10-54.md
+  kind: ai_use_record
+  sha256: 5afe7f1002dfb31f98d6647decb9fa4578fd61092a986bc1a997750e02c9db50
+  record_date: '2026-11-18'
+  date_basis: filename; session may span later actions
+- id: B-02
+  member: B
+  path: AI-log/Member-B/2026-11-21_16-17-01.md
+  kind: ai_use_record
+  sha256: a52badfee8723c0f63466ab2566b0f07ebec2d835e8333fe210d13b6c2fd1a6d
+  record_date: '2026-11-21'
+  date_basis: filename; session may span later actions
+- id: B-03
+  member: B
+  path: AI-log/Member-B/2026-11-24_08-23-45.md
+  kind: ai_use_record
+  sha256: 00b4c391626af539e08f71564ab04eb594735748b450f1c26f67fcb9b9566c03
+  record_date: '2026-11-24'
+  date_basis: filename; session may span later actions
+  previous_snapshot_sha256: b2651df09eb27726f1144edc4b1b79563e05e84e95e276fbbca543f12389df42
+  snapshot_note: Current published/selected source bytes; prior index hash retained for historical distinction.
+- id: C-02
+  member: C
+  path: AI-log/Member-C/2016_11_16_test_offline.md
+  kind: ai_use_record
+  sha256: 580ae9d6a1c3545dc93175f221a3cc057a24813561f9b60ac12f6f3fa35ed3a2
+  created_as_recorded: 11/16/2026, 4:57:29 PM
+  source_timezone: unspecified
+  previous_path: AI-log/Member-C/session-ses_e1c6.md
+  path_note: Repository rename; content hash unchanged. Filename year is not asserted as session date; original
+    recorded creation metadata retained.
+- id: C-01
+  member: C
+  path: AI-log/Member-C/2016_11_17_test_live.md
+  kind: ai_use_record
+  sha256: 8cd5087f4d237cf2cf8fce00b9f19484e56ca43c6f193521920a03984ef8060e
+  created_as_recorded: 11/17/2026, 12:55:26 AM
+  source_timezone: unspecified
+  previous_path: AI-log/Member-C/session-ses_e1ab.md
+  path_note: Repository rename; content hash unchanged. Filename year is not asserted as session date; original
+    recorded creation metadata retained.
+- id: C-03
+  member: C
+  path: AI-log/Member-C/2026_11_25_test_upate_on_renew_requirements.md
+  kind: ai_use_record
+  date_note: Export header supplies 2026-11-25 Asia/Shanghai; no timestamp is invented for individual turns.
+  sha256: 6a5b73a84f41c98a0cea23f4d29bbf8025ee12117be6be58ac671c2d61fc03e6
+- id: D-01
+  member: D
+  path: AI-log/Member-D/2026-11-13_05-02-00.md
+  kind: ai_use_record
+  sha256: 7bb874bfbd0bc70c86fae78b03d65e1640b7a8ceaa61eac53b529471d2185e44
+  record_date: '2026-11-13'
+  date_basis: filename; session may span later actions
+- id: D-02
+  member: D
+  path: AI-log/Member-D/2026-11-23_15-25-00.md
+  kind: ai_use_record
+  sha256: 8803b4341288f62d9741a7279dd517ecfdc8a1b8abdc8cca44cca132501d31bf
+  record_date: '2026-11-23'
+  date_basis: filename; session may span later actions
+- id: D-03
+  member: D
+  path: AI-log/Member-D/2026-11-23_16-15-00.md
+  kind: ai_use_record
+  sha256: da0b6fe6dca3c3d66e973f15814f0ea5b34867831e721b960dca1c331cc31ae9
+  record_date: '2026-11-23'
+  date_basis: filename; session may span later actions
+- id: E-01
+  member: E
+  path: AI-log/Member-E/2026-11-10.md
+  kind: ai_use_record
+  sha256: 29123d2f9a037271b50b76a9868397807643544ed73821c6a08378ee795cc17f
+  record_date: '2026-11-10'
+  date_basis: filename; session may span later actions
+- id: E-02
+  member: E
+  path: AI-log/Member-E/2026-11-11.md
+  kind: ai_use_record
+  sha256: 65b86b6a0ba7578382062a35b70a68e390d26fe7c3f0fd9c4db55b406cf17bf3
+  record_date: '2026-11-11'
+  date_basis: filename; session may span later actions
+- id: E-03
+  member: E
+  path: AI-log/Member-E/2026-11-13.md
+  kind: ai_use_record
+  sha256: 73dbf0337b1edeaf114a0a2f4e009781688e264407ed2fe3477fb69a24e2a166
+  record_date: '2026-11-13'
+  date_basis: filename; session may span later actions
+- id: E-04
+  member: E
+  path: AI-log/Member-E/2026-11-15.md
+  kind: ai_use_record
+  sha256: fbcbd98b9513276756a623cdc8612188de9c784ebee292a419bd01f3c2ca1208
+  record_date: '2026-11-15'
+  date_basis: filename; session may span later actions
+- id: E-05
+  member: E
+  path: AI-log/Member-E/2026-11-20_00-56-11.md
+  kind: ai_use_record
+  sha256: a10516c372a9a826f45d339898eb88c28337b512ab62715477c8d00c9ab4a9b7
+  record_date: '2026-11-20'
+  date_basis: filename; session may span later actions
+- id: E-06
+  member: E
+  path: AI-log/Member-E/2026-11-20_18-23-52.md
+  kind: ai_use_record
+  sha256: d383e203a0648d61097428e2116e2d922ef849a842240c59c164109009ab1548
+  record_date: '2026-11-20'
+  date_basis: filename; session may span later actions
+- id: E-07
+  member: E
+  path: AI-log/Member-E/2026-11-21_02-59-22.md
+  kind: ai_use_record
+  sha256: 35a0859e01a9f85805c22544c906734820b18bd3d1e4340f040890da09d2cfc5
+  record_date: '2026-11-21'
+  date_basis: filename; session may span later actions
+- id: E-08
+  member: E
+  path: AI-log/Member-E/2026-11-22_CI-CD-gates.md
+  kind: ai_use_record
+  sha256: edcd54de7b34ea0aea5d887e6d9a1953e3766dbb2b2321762319e6842f82ad00
+  record_date: '2026-11-22'
+  date_basis: filename; session may span later actions
+- id: E-09
+  member: E
+  path: AI-log/Member-E/2026-11-23_CI-CD-gates.md
+  kind: ai_use_record
+  sha256: 2e05d55897fda2d0e5e6a66201f7855365d4d2bc82aaa41138a0c44fa67fd81e
+  record_date: '2026-11-23'
+  date_basis: filename; session may span later actions
+- id: E-10
+  member: E
+  path: AI-log/Member-E/2026-11-23_CI-dependency-audit-follow-up.md
+  kind: ai_use_record
+  sha256: c4d71e6e936ab8207851b7944126816a38100360b1c6dc257a9252b8eed00e49
+  record_date: '2026-11-23'
+  date_basis: filename; session may span later actions
+- id: E-11
+  member: E
+  path: AI-log/Member-E/2026-11-23_self-review-and-merge-policy.md
+  kind: ai_use_record
+  sha256: 1b9eb09b38b7cde56677d4937d57cf6f078b8f7d68c1c0cb0089570c63654030
+  record_date: '2026-11-23'
+  date_basis: filename; session may span later actions
+- id: E-12
+  member: E
+  path: AI-log/Member-E/2026-11-23_test-approval-gate-deployment.md
+  kind: ai_use_record
+  sha256: 90ed98db51483e6f5229f65f361134b408db61be87a3c3e79765784cdad7d563
+  record_date: '2026-11-23'
+  date_basis: filename; session may span later actions
+- id: E-13
+  member: E
+  path: AI-log/Member-E/2026-11-23_test-approval-gate-review-and-fixes.md
+  kind: ai_use_record
+  sha256: fce0aebbd5e04a3b8454e41732cb82e64aa0d4062588e2f10dece4f798aafc50
+  record_date: '2026-11-23'
+  date_basis: filename; session may span later actions
+- id: E-14
+  member: E
+  path: AI-log/Member-E/2026-11-23_test-approval-team-reviewers.md
+  kind: ai_use_record
+  sha256: 3201115bd1e90b45ae13692b8f2c69a435b33773d35820e5b96bf139b0b768cf
+  record_date: '2026-11-23'
+  date_basis: filename; session may span later actions
+- id: E-15
+  member: E
+  path: AI-log/Member-E/2026-11-23_test-approval-workflow-validation-fix.md
+  kind: ai_use_record
+  sha256: 3cb2292c561dd67f2b7113ce30de7d25f18e8dabc254675b23ebf8dff91d1962
+  record_date: '2026-11-23'
+  date_basis: filename; session may span later actions
+- id: E-16
+  member: E
+  path: AI-log/Member-E/2026-11-23_test-plan-self-approval-and-review-records.md
+  kind: ai_use_record
+  sha256: eb94be360639b411af8dd281f04d7311ba2e49a3eda56444c79ebadd352210f3
+  record_date: '2026-11-23'
+  date_basis: filename; session may span later actions
+- id: E-17
+  member: E
+  path: AI-log/Member-E/2026-11-24_requirements-schema-gate.md
+  kind: ai_use_record
+  sha256: cf7c9b32b0cfb637bd29e0e56745c6a8ebd1089e64d9253e875cb8842d090baf
+  record_date: '2026-11-24'
+  date_basis: filename; session may span later actions
+- id: E-18
+  member: E
+  path: AI-log/Member-E/2026-11-24_token-input-reduction.md
+  kind: ai_use_record
+  sha256: ba04bf74c5713fe45e574dbb3e473e5dc1b6b2f528fc63a639294bc383ed02eb
+  record_date: '2026-11-24'
+  date_basis: filename; session may span later actions
+- id: E-19
+  member: E
+  path: AI-log/Member-E/2026-11-25_agents-startup.md
+  kind: ai_use_record
+  sha256: bec6a7f3235d6e97361a46a5ec367c018d2aec1d6a0956e20bc35349e54ea1b4
+  record_date: '2026-11-25'
+  date_basis: filename; session may span later actions
+- id: E-32
+  member: E
+  path: AI-log/Member-E/2026-11-25_ai-use-index.md
+  kind: ai_use_record
+  record_date: '2026-11-25'
+  date_basis: record filename; multi-day events and native source timestamps remain as stated in the record
+  sha256: 1607d8dcbd110cb134cad781d93d28ca136114a54cc811116a31242f417c5a54
+- id: E-33
+  member: E
+  path: AI-log/Member-E/2026-11-25_delivery-cleanup.md
+  kind: ai_use_record
+  record_date: '2026-11-25'
+  date_basis: record filename; multi-day events and native source timestamps remain as stated in the record
+  sha256: 44fe896969932a582ef3200ce81e11348c5c34aab635878897ea1d7a0fe3bc5c
+- id: E-34
+  member: E
+  path: AI-log/Member-E/2026-11-25_e1-trace-matrix.md
+  kind: ai_use_record
+  record_date: '2026-11-25'
+  date_basis: record filename; multi-day events and native source timestamps remain as stated in the record
+  sha256: f30b6d1f0bd71c1969d84ae56e34bf9302f49de19c2eaaaf313f50c536315831
+- id: E-20
+  member: E
+  path: AI-log/Member-E/2026-11-25_governance-upload.md
+  kind: ai_use_record
+  sha256: 3c066bca7986ed9d40e8e47c5e761fca3420ec4127a9cb62097b418ee642d2be
+  record_date: '2026-11-25'
+  date_basis: filename; session may span later actions
+- id: E-35
+  member: E
+  path: AI-log/Member-E/2026-11-25_h1-call-budget.md
+  kind: ai_use_record
+  record_date: '2026-11-25'
+  date_basis: record filename; multi-day events and native source timestamps remain as stated in the record
+  sha256: 813cb286b360643c932396663061f82eb260fd3b798088ee3651238ba4fb54f5
+- id: E-36
+  member: E
+  path: AI-log/Member-E/2026-11-25_h2-corrected-findings.md
+  kind: ai_use_record
+  record_date: '2026-11-25'
+  date_basis: record filename; multi-day events and native source timestamps remain as stated in the record
+  sha256: 0a856f164415d4d7cc041344d4a64b8afdbc002657e2182bb84960956f2a7f25
+- id: E-37
+  member: E
+  path: AI-log/Member-E/2026-11-25_h3-h5-follow-up.md
+  kind: ai_use_record
+  record_date: '2026-11-25'
+  date_basis: record filename; multi-day events and native source timestamps remain as stated in the record
+  sha256: 5315ebe8354cc34708c33a2e1db20fff19c01f57fe57fdcbb48407c35343aed7
+- id: E-38
+  member: E
+  path: AI-log/Member-E/2026-11-25_h4-review-result-fix.md
+  kind: ai_use_record
+  record_date: '2026-11-25'
+  date_basis: record filename; multi-day events and native source timestamps remain as stated in the record
+  sha256: b53ca6cbc92c3dbba324149aee341675e755484ec96ee99415adaa29c792dc02
+- id: E-39
+  member: E
+  path: AI-log/Member-E/2026-11-25_local-github-integration.md
+  kind: ai_use_record
+  record_date: '2026-11-25'
+  date_basis: record filename; multi-day events and native source timestamps remain as stated in the record
+  sha256: cc2efe80f8b6f74e7fdf3efe74a7db550375ff03238e1ae2ca862f4a05234a79
+- id: E-21
+  member: E
+  path: AI-log/Member-E/2026-11-25_mcp-tool-manifest.md
+  kind: ai_use_record
+  sha256: aaf9fac692f4e3a43d93879c5e3bae1d5ccf2cb9db1a9227e1366b7cf9ea5810
+  record_date: '2026-11-25'
+  date_basis: filename; session may span later actions
+- id: E-40
+  member: E
+  path: AI-log/Member-E/2026-11-25_member-handoff-requests.md
+  kind: ai_use_record
+  record_date: '2026-11-25'
+  date_basis: record filename; multi-day events and native source timestamps remain as stated in the record
+  sha256: e401c755282ca8a1fb9eef60ebdf5a5abd11624a1f536232f02d06a0faccb043
+- id: E-22
+  member: E
+  path: AI-log/Member-E/2026-11-25_opencode-permissions.md
+  kind: ai_use_record
+  sha256: 6d176af07dd1bb0daf276fd9edc52a3b7f8fc6e0259c3d2efba12339d9e7aeca
+  record_date: '2026-11-25'
+  date_basis: filename; session may span later actions
+- id: E-23
+  member: E
+  path: AI-log/Member-E/2026-11-25_opencode-rules.md
+  kind: ai_use_record
+  sha256: a1b48e76dce52cfa54c79a74452c7d2dad08a8ed4029a6c49bc35ed354e24710
+  record_date: '2026-11-25'
+  date_basis: filename; session may span later actions
+- id: E-24
+  member: E
+  path: AI-log/Member-E/2026-11-25_project-covenant.md
+  kind: ai_use_record
+  sha256: be10c27c5b4bafc9e790b5f4e0bd79e9432507f6c0813dd0c2f26badf2534d7a
+  record_date: '2026-11-25'
+  date_basis: filename; session may span later actions
+- id: E-25
+  member: E
+  path: AI-log/Member-E/2026-11-25_static-launch-prompt.md
+  kind: ai_use_record
+  sha256: 85a117c8a81fb9ac53358bfc831a65c587c17e3e3ab680841aad2ef10e4dc3b4
+  record_date: '2026-11-25'
+  date_basis: filename; session may span later actions
+- id: E-26
+  member: E
+  path: AI-log/Member-E/2026-11-25_structural-constraints.md
+  kind: ai_use_record
+  sha256: 379a3cf4d9d97155d9b680f4e1453cc76f2af9aa0e6b731306de1c8b76ac3053
+  record_date: '2026-11-25'
+  date_basis: filename; session may span later actions
+- id: E-27
+  member: E
+  path: AI-log/Member-E/2026-11-25_types-and-security-gates.md
+  kind: ai_use_record
+  sha256: 2434f394cdfd908e0d6c379cd788d35f920ef992cc2c4b90fdd76d24612475e8
+  record_date: '2026-11-25'
+  date_basis: filename; session may span later actions
+- id: E-28
+  member: E
+  path: AI-log/Member-E/transcript-index-2026-11-20-21.json
+  kind: provenance_index
+  sha256: 2a013022cdcc19d46325a06332c3e488ad4a6cf39f84fae63ffc7cff9454e266
+  record_date: '2026-11-20'
+  date_basis: filename; session may span later actions
+- id: E-29
+  member: E
+  path: AI-log/Member-E/transcript-index-2026-11-22-23-ci.json
+  kind: provenance_index
+  sha256: ccd359308accb09eb6671593ffe9e57af1528c5e6c1abd42ca0b445d84723949
+  record_date: '2026-11-22'
+  date_basis: filename; session may span later actions
+- id: E-30
+  member: E
+  path: AI-log/Member-E/transcript-index-2026-11-23-test-approval.json
+  kind: provenance_index
+  sha256: 7c4d7464e3ba55ab482d07202d4f0690bf454875aa03ca56942c06ee1772004e
+  record_date: '2026-11-23'
+  date_basis: filename; session may span later actions
+- id: E-31
+  member: E
+  path: AI-log/Member-E/transcript-index-2026-11-24-token.json
+  kind: provenance_index
+  sha256: 470dd90ed3ca0ef5bab011168196e79f3e9443971ca3a51f858940230000ff22
+  record_date: '2026-11-24'
+  date_basis: filename; session may span later actions
+events:
+- id: B-REVIEW
+  member: B
+  title: Integration review and explicit-empty ownership defect
+  source_records:
+  - B-01
+  task: Review the v0.7.1 integration and exercise live cases.
+  intervention: The human chose diagnostics with saved provider settings and continuation with the defect recorded;
+    interruption remained in the population.
+  changes: 'Documented F9: a known-flat portfolio could receive existing-exposure language despite Q1–Q4 PASSED.'
+  verification:
+    basis: reported_in_linked_records; not rerun for this index
+    summary: 1,500 offline tests passed; five live cases completed and one interrupted start was retained.
+  limitations: Diagnostic configuration differed from formal scorer settings; no formal semantic acceptance or source
+    repair was established.
+  reported_metrics:
+    offline_passed: 1500
+    live_completed: 5
+    live_interrupted: 1
+  artifacts:
+  - path: docs/reviews/project-review-2026-11-18.md
+    availability: present
+    purpose: integration review
+  - path: docs/reviews/evidence/live-diagnostic-2026-11-18.json
+    availability: present
+    purpose: sanitized diagnostic evidence
+- id: B-REPAIR
+  member: B
+  title: R1–R5 repairs and supervised prompt/harness corrections
+  source_records:
+  - B-02
+  task: Repair redaction, evidence validation, replay accounting, portfolio wording and publication events.
+  intervention: A supervising conversation approved the unchanged 31-criterion plan; native user-role turns include
+    delegated instructions, not only direct human input.
+  changes: Implemented remediation plus bounded Trader arithmetic/Fundamentals source-date prompt repairs and harness
+    fixes. A numeric-validation extension remained a plan.
+  verification:
+    basis: reported_in_linked_records; not rerun for this index
+    summary: The record retains failed tests, subsequent corrections and fresh live diagnostic material.
+  limitations: Later arithmetic/price-anchor and fiscal-period errors remain visible. Developer/regression fixtures
+    do not establish independent C acceptance.
+  artifacts:
+  - path: docs/reviews/remediation-r1-r5-2026-11-21.md
+    availability: present
+    purpose: repair and residual-defect record
+  - path: docs/reviews/evidence/live-verification-2026-11-21/README.md
+    availability: present
+    purpose: fresh diagnostic population
+- id: B-DESIGN
+  member: B
+  title: As-built architecture and extended evidence/budget designs
+  source_records:
+  - B-03
+  task: Align architecture, traceability and extended checker/budget contracts with source.
+  intervention: Supervising/human review refined token-ledger state handling, raw usage, supported routes and authority
+    boundaries.
+  changes: Updated architecture/ADRs; documented integrated concise-context and schema gate separately from proposed
+    cumulative-token/evidence mechanisms.
+  verification:
+    basis: reported_in_linked_records; not rerun for this index
+    summary: The publication summary reports 51 local links checked across 17 documents and 36 registry entries,
+      three withdrawn, zero validator errors/warnings.
+  limitations: Session began on 24 November; not every later action occurred then. Token admission/evidence contracts
+    are proposed, not runtime implementation; full supervising conversation is not included.
+  artifacts:
+  - path: architecture-blueprint.md
+    availability: present
+    purpose: canonical architecture
+  - path: docs/architecture/interface-contracts.md
+    availability: present
+    purpose: contracts and proposed extensions
+  - path: docs/architecture/traceability-inputs-member-b.md
+    availability: present
+    purpose: B traceability input
+- id: C-OFFLINE
+  member: C
+  title: Independent contract, layering and privacy-test strengthening
+  source_records:
+  - C-02
+  task: Review the verification plan and exercise full publish-path boundary behavior.
+  intervention: Review requested non-vacuous secret-marker checks, valid controls and explicit distinction from
+    semantic evaluation.
+  changes: Added provenance/fail-closed checks, labelled-stage/single-rating assertions and model/CLI/data-error/narrative
+    redaction cases.
+  verification:
+    basis: reported_in_linked_records; not rerun for this index
+    summary: The retained export ends with 74 offline tests passed and Ruff clean; application code was reported
+      unchanged.
+  limitations: Export creation metadata is 16 November; timezone is not established here. It starts mid-conversation.
+    GOV-004 remained NOT RUN at that stage.
+  reported_metrics:
+    offline_passed_at_recorded_stage: 74
+  artifacts:
+  - path: tests/member_c_verification/offline
+    availability: present
+    purpose: current test location
+  - path: docs/verification/requirement-test-mapping.md
+    availability: present
+    purpose: test mapping
+  - path: docs/code-governance/verification-constraints.md
+    availability: present
+    purpose: criteria and later corrections
+- id: C-LIVE
+  member: C
+  title: Replay harness, historical semantic claim and test-tree integration
+  source_records:
+  - C-01
+  task: Prepare replay/scoring behavior and integrate verification tests into default collection.
+  intervention: Review separated deterministic Q4 NEEDS_REVIEW from human semantic judgement and retained opt-in
+    live execution.
+  changes: Added scorer exit-code handling and moved the verification tree under tests/member_c_verification with
+    network isolation and explicit live opt-in.
+  verification:
+    basis: reported_in_linked_records; not rerun for this index
+    summary: The export reports 10/10 completed and 28/28 applicable rubric items; collection reported 74 offline
+      passes and a known Bedrock environmental failure in the broader suite.
+  limitations: These are historical reported claims, subsequently challenged by B/E evidence/eligibility review
+    (F3/F4/F8). Do not treat the recorded PASS as currently auditable formal acceptance. Export creation metadata
+    is 17 November with timezone unspecified; beginning is partial.
+  reported_metrics:
+    historical_claim_completed: 10
+    historical_claim_applicable_score_items: 28
+    current_formal_acceptance: pending_auditable_evidence
+  artifacts:
+  - path: docs/verification/gov004-evidence-package.md
+    availability: present
+    purpose: corrected evidence requirements
+  - path: tests/member_c_verification/live
+    availability: present
+    purpose: current replay/scoring tooling
+- id: D-BASELINE
+  member: D
+  title: Original token/latency baseline and reporting gaps
+  source_records:
+  - D-01
+  task: Measure the original configuration and identify requirement gaps.
+  intervention: Used callback totals rather than the undercounting CLI panel.
+  changes: Recorded absent status/action labels and undisclosed data gaps as requirement evidence.
+  verification:
+    basis: reported_in_linked_records; not rerun for this index
+    summary: Two NVDA runs at source 2c22ef9 reported 139011 and 138782 total tokens, 117.6 and 110.6 seconds.
+  limitations: Original record says run status was not emitted; a later comparison labels them complete. Callback
+    records/harnesses are local-only. Two samples do not prove universal stability.
+  reported_metrics:
+    source_revision: 2c22ef9
+    ticker: NVDA
+    analysis_date: '2026-01-09'
+    analysts:
+    - market
+    - news
+    - social
+    - fundamentals
+    research_rounds: 1
+    risk_rounds: 1
+    provider: deepseek
+    deep_and_quick_model: CS5351/DeepSeek-V4-Flash
+    total_tokens:
+    - 139011
+    - 138782
+    mean_total_tokens: 138896.5
+    seconds:
+    - 117.6
+    - 110.6
+    entry: direct graph callback measurement; exact method in source
+    memory_state: not established by index
+  artifacts: []
+- id: D-AFTER
+  member: D
+  title: Post-build token comparison and stalled attempts
+  source_records:
+  - D-02
+  task: Remeasure the documented configuration after member changes.
+  intervention: Excluded two stalled attempts from completed-run averages while retaining their existence and network
+    caveats.
+  changes: Reported increased input context and remaining legacy-path reporting/data-disclosure gaps.
+  verification:
+    basis: reported_in_linked_records; not rerun for this index
+    summary: Three completed totals were 153439,154514,137223; the record rounds their mean to 148392 (+6.8% versus
+      its baseline).
+  limitations: Source revision/configuration and raw local harnesses require contributor confirmation. Stalls, network-path
+    changes and absent memory detail limit causal attribution; not directly interchangeable with E's later optimization
+    series.
+  reported_metrics:
+    completed_runs: 3
+    excluded_stalled_runs: 2
+    total_tokens:
+    - 153439
+    - 154514
+    - 137223
+    reported_mean_total_tokens: 148392
+    reported_total_increase_percent: 6.8
+    reported_input_increase_percent: 8.3
+  artifacts: []
+- id: D-ATTRIBUTION
+  member: D
+  title: Per-node attribution identifies repeated input context
+  source_records:
+  - D-03
+  task: Locate the largest token consumers for targeted optimization.
+  intervention: Kept one attribution run separate from the three-run after-build average.
+  changes: Attributed input growth to the analyst tool loop and repeated upstream context in risk/research stages.
+  verification:
+    basis: reported_in_linked_records; not rerun for this index
+    summary: At source 98b82c9 the diagnostic reported 144966 tokens,16 calls,113.5 seconds; Market Analyst accounted
+      for 24.2% of total.
+  limitations: One diagnostic run is not a budget; owner tags were reconstructed from checkpoint metadata and harness/raw
+    JSON remain local-only.
+  reported_metrics:
+    source_revision: 98b82c9
+    input_tokens: 122324
+    output_tokens: 22642
+    total_tokens: 144966
+    calls: 16
+    seconds: 113.5
+    market_analyst_share_percent: 24.2
+  artifacts: []
+- id: E-REQ-DISCUSSION
+  member: E
+  title: Requirement conflicts, budget measurability and architecture scope
+  source_records:
+  - E-01
+  - E-02
+  - E-03
+  - E-04
+  task: Review requirement consistency and portfolio-aware architecture.
+  intervention: Human questions drove separation of status/rating/action, unknown-versus-flat semantics, missing-data
+    disclosure and measured budget targets.
+  changes: Proposed requirement clarifications, baseline conditions and component responsibilities.
+  verification:
+    basis: reported_in_linked_records; not rerun for this index
+    summary: Available records are selected discussions/explanations, not adoption or implementation evidence.
+  limitations: Do not attribute A's formal requirement ownership or approval to E; some attached source documents
+    are outside these extracts.
+  artifacts:
+  - path: docs/req/requirements.yaml
+    availability: present
+    purpose: current candidate registry, not proof of adoption
+  - path: architecture-blueprint.md
+    availability: present
+    purpose: current architecture reference
+- id: E-FINDINGS
+  member: E
+  title: F1–F9 review and initial cleanup/redaction work
+  source_records:
+  - E-05
+  - E-06
+  task: Interpret B's findings and repair unsafe publication/redaction behavior.
+  intervention: Review distinguished synthetic bypasses from evidence of real credential leakage and separated diagnostic
+    runs from formal evaluation.
+  changes: Addressed F1 cleanup ownership/path safety and F2 redaction; classified remaining scoring, denominator,
+    layering, input-error, context and evidence issues.
+  verification:
+    basis: reported_in_linked_records; not rerun for this index
+    summary: The extracts preserve source changes and public verification/status reports.
+  limitations: F7 per-prompt/context guard is not a cumulative run budget. F8 historical missing evidence cannot
+    be recreated by a new run.
+  artifacts:
+  - path: tests/member_d_verification/test_f1_publish_run.py
+    availability: present
+    purpose: publication ownership regression
+  - path: tests/member_d_verification/test_f2_redaction.py
+    availability: present
+    purpose: redaction regression
+  - path: docs/reviews/project-review-2026-11-18.md
+    availability: present
+    purpose: original findings
+- id: E-FIX-COHORT
+  member: E
+  title: Combined F1–F9 regression/harness/context remediation
+  source_records:
+  - E-07
+  task: Repair remaining documented findings and package reproducible verification.
+  intervention: Retained all started attempts and distinguished failed DNS/model access from successful real-model
+    validation.
+  changes: Updated scorer eligibility, replay population accounting, nonempty layering scans, CLI error ordering,
+    explicit context propagation and no-portfolio prompts; added evidence packaging.
+  verification:
+    basis: reported_in_linked_records; not rerun for this index
+    summary: The record reports cumulative 39-file repair scope, including earlier F1/F2 work.
+  limitations: The cumulative scope must not be added again as a separate day-only change. Prompt fixes do not certify
+    all arithmetic/evidence/ownership semantics.
+  artifacts:
+  - path: tests/member_d_verification/test_review_regressions.py
+    availability: present
+    purpose: developer regression probes
+  - path: tests/member_c_verification/live/package_gov004.py
+    availability: present
+    purpose: evidence package tooling
+  - path: tests/member_c_verification/offline/test_nfr005_layering.py
+    availability: present
+    purpose: nonempty structural checks
+- id: E-CI-BASE
+  member: E
+  title: Initial four merge-gate categories and fail-closed audit correction
+  source_records:
+  - E-08
+  - E-09
+  - E-10
+  task: Implement tests/install, lint, dependency and AI-log merge checks.
+  intervention: Review rejected empty/skipped/incomplete audits, expanded important paths and introduced a stable
+    tests aggregator.
+  changes: Implemented dependency exception/review checks, AI-log update detection and required tests aggregation;
+    diagnosed the editable project distribution audit issue.
+  verification:
+    basis: reported_in_linked_records; not rerun for this index
+    summary: Records describe valid and invalid probes; installation consistency and review/audit behavior are checked
+      separately.
+  limitations: Categories are not job counts; local snapshots preceding hosted activation do not prove protection.
+    Latest seven-check state is a later event.
+  artifacts:
+  - path: .github/workflows/ci.yml
+    availability: present
+    purpose: current workflow
+  - path: scripts/ci/check_dependencies.py
+    availability: present
+    purpose: audit/review checker
+  - path: scripts/ci/check_ai_log_updated.py
+    availability: present
+    purpose: log update checker
+  - path: scripts/ci/check_required_tests.py
+    availability: present
+    purpose: test aggregation checker
+- id: E-PREAPPROVAL
+  member: E
+  title: Trusted test-approval receipts and workflow hardening
+  source_records:
+  - E-13
+  - E-12
+  - E-14
+  - E-15
+  task: Implement scoped test/governance approval verification and demonstrate workflow behavior.
+  intervention: Human decisions supplied reviewer identities and one-time initialization scope; review corrected
+    provenance/revocation and early-success risks.
+  changes: Bound receipts to exact comments/revisions/fingerprints, preserved withdrawal/history, rejected unplanned
+    tests and fixed workflow validation/publication ordering.
+  verification:
+    basis: reported_in_linked_records; not rerun for this index
+    summary: The records retain verification summaries and separate preparation from hosted deployment.
+  limitations: Later policy changes supersede initial no-self-approval behavior. Current test approval is paused
+    as a required merge check; these logs are not approval receipts for unrelated code.
+  artifacts:
+  - path: scripts/ci/check_test_approval.py
+    availability: present
+    purpose: verifier
+  - path: .github/workflows/test-approval.yml
+    availability: present
+    purpose: trusted workflow
+  - path: docs/code-governance/test-approval-policy.yaml
+    availability: present
+    purpose: role/policy settings
+- id: E-SELFREVIEW
+  member: E
+  title: Self-approval policy and implementation review records
+  source_records:
+  - E-11
+  - E-16
+  task: Allow correctly labelled self-review while preserving PR/check provenance.
+  intervention: The human chose test-plan self-approval and a separate post-implementation self-review record.
+  changes: Implemented schema-2 self/peer labels and automatic review artifacts; described removing mandatory native
+    peer Reviews rather than forging self-approval.
+  verification:
+    basis: reported_in_linked_records; not rerun for this index
+    summary: Code behavior and repository setting changes were treated as separate verification steps.
+  limitations: Self-review is not independent verification. Source records do not establish that every later PR
+    retained its generated review artifact.
+  artifacts:
+  - path: docs/code-governance/self-review-workflow.md
+    availability: present
+    purpose: current review mechanism
+  - path: scripts/ci/build_pr_self_review.py
+    availability: present
+    purpose: review artifact builder
+- id: E-TOKEN
+  member: E
+  title: Concise intermediate context and live token measurement
+  source_records:
+  - E-18
+  task: Reduce repeated context without relying on missing prices.
+  intervention: After network/price failures, the human requested a retry and evidence comparing the original and
+    optimized configurations.
+  changes: Added concise intermediate guidance and exact opponent-reference handling with an original-text restoration
+    safeguard; retained a reversible legacy switch.
+  verification:
+    basis: reported_in_linked_records; not rerun for this index
+    summary: Three reported live NVDA totals were 99532,103120,110725; mean 104459, approximately 24.8% below the
+      historical mean and 35.0% below a same-day 160826 control.
+  limitations: Only this case/profile was measured; some data channels remained unavailable. Memory, entry/configuration
+    and raw artifacts need cross-series checking; not universal quality acceptance or a hard ceiling. This extract
+    ends at PR upload, not merge.
+  reported_metrics:
+    units: input plus output tokens
+    total_tokens:
+    - 99532
+    - 103120
+    - 110725
+    mean_total_tokens: 104459
+    historical_mean_total_tokens: 138896.5
+    same_day_legacy_control: 160826
+    reported_regression_passed: 1797
+  artifacts:
+  - path: tradingagents/agents/context.py
+    availability: present
+    purpose: context handling
+  - path: docs/architecture/adr/003-concise-intermediate-context.md
+    availability: present
+    purpose: retrospective design analysis
+  - path: docs/reviews/evidence/token-context-reference-probe-2026-11-24.json
+    availability: present
+    purpose: reference-boundary limitation
+- id: E-SCHEMA
+  member: E
+  title: Requirement-registry JSON Schema gate
+  source_records:
+  - E-17
+  task: Validate the actual registry with A's schema/validator.
+  intervention: Kept requirements content/adoption separate from governance validation.
+  changes: Added wrapper, positive/negative probes and the requirements schema CI job.
+  verification:
+    basis: reported_in_linked_records; not rerun for this index
+    summary: Reported 36 requirements,three withdrawn and zero validator errors/warnings; negative invalid-priority
+      behavior was exercised.
+  limitations: Schema correctness does not establish requirement adoption or semantic completeness.
+  artifacts:
+  - path: scripts/ci/check_requirement_schema.py
+    availability: present
+    purpose: gate wrapper
+  - path: docs/code-governance/requirements-schema-gate.md
+    availability: present
+    purpose: coverage/activation notes
+- id: E-TYPES-SECURITY
+  member: E
+  title: Incremental typing and safety-specific coverage
+  source_records:
+  - E-27
+  task: Add practical typing and verify safety/API/permission coverage.
+  intervention: Selected a 14-file boundary scope after a 187-error whole-application exploration; corrected the
+    NumPy-stub/Python-target mismatch without suppressing errors.
+  changes: Added complete application Bandit-report checks, API snapshot and workflow permission probes; repaired
+    XML, initial URL and checkpoint SQL handling.
+  verification:
+    basis: reported_in_linked_records; not rerun for this index
+    summary: Final recorded local regression:1840 passed,2 skipped,1 deselected,100 subtests; mypy14 files clean
+      and scanner105 files with zero medium/high findings.
+  limitations: Broad legacy typing remains outstanding; precise URL suppressions and initial-URL guards are not
+    complete DNS/redirect isolation. Hosted activation at the source snapshot remained a separate claim.
+  reported_metrics:
+    regression_passed: 1840
+    skipped: 2
+    deselected: 1
+    subtests_passed: 100
+    typed_files: 14
+    scanned_application_files: 105
+  artifacts:
+  - path: docs/code-governance/types-and-security-coverage.md
+    availability: present
+    purpose: coverage and limitations
+  - path: scripts/ci/check_security_scan.py
+    availability: present
+    purpose: scanner wrapper
+  - path: tests/member_d_verification/test_security_gate_boundaries.py
+    availability: present
+    purpose: negative probes
+- id: E-STARTUP
+  member: E
+  title: Root agent entry and structural/tool scope documentation
+  source_records:
+  - E-19
+  - E-26
+  - E-21
+  task: Deliver E2–E4 startup, dependency restrictions and actual-capability inventory.
+  intervention: Kept design intent distinct from installed enforcement and avoided fabricated integrations.
+  changes: Added architecture reading order, writable/frozen scopes, module constraints, tool/role inventory and
+    explicit coverage gaps.
+  verification:
+    basis: reported_in_linked_records; not rerun for this index
+    summary: Records report link/content checks, and E3's seven existing layering tests passed after disabling an
+      environment-blocked rerun plugin.
+  limitations: Documentation and local tool availability do not prove installed OS ACLs, course-wide compliance
+    or full semantic acceptance.
+  artifacts:
+  - path: AGENTS.md
+    availability: present
+    purpose: startup instructions
+  - path: docs/code-governance/structural-constraints.md
+    availability: present
+    purpose: structural specification
+  - path: docs/code-governance/mcp-tool-manifest.md
+    availability: present
+    purpose: actual-scope tool inventory
+- id: E-ROLES
+  member: E
+  title: Executable local role permissions and operating-rule loading
+  source_records:
+  - E-22
+  - E-23
+  task: Deliver E5–E6 native role permission and shared-rule loading.
+  intervention: Matched installed V1 syntax and explicit configuration loading; tested actual native allow/deny
+    outcomes.
+  changes: Added five role profiles, version-pinned launcher, prompt consistency guard and synthetic verification
+    runner; kept operating-rule writes denied.
+  verification:
+    basis: reported_in_linked_records; not rerun for this index
+    summary: E5 retained 50 probes and E6 retained 62, each bound to its own configuration hash.
+  limitations: These are successive snapshots, not additive coverage totals. No model inference or OS identity enforcement
+    was demonstrated.
+  artifacts:
+  - path: .opencode/permissions.jsonc
+    availability: present
+    purpose: current policy
+  - path: .opencode/rules.md
+    availability: present
+    purpose: operating rules
+  - path: docs/verification/opencode-permission-probes-2026-11-25.json
+    availability: present
+    purpose: historical E5 evidence
+  - path: docs/verification/opencode-rules-probes-2026-11-25.json
+    availability: present
+    purpose: historical E6 evidence
+- id: E-COVENANT
+  member: E
+  title: Project covenant and static human-gated launch instruction
+  source_records:
+  - E-24
+  - E-25
+  task: Deliver E7–E8 abstraction limits, independent negative tests, safety review, freshness and plan-first launch.
+  intervention: Specified human plan approval before build, conditional material-scope decisions and honest final
+    acceptance without reinstating a paused merge check.
+  changes: Added covenant, root Prompt.md, startup references and all-role covenant reads with E-only default writes.
+  verification:
+    basis: reported_in_linked_records; not rerun for this index
+    summary: E7 reports 69 native probes; E8 reports content/links and existing role-read checks.
+  limitations: Human checkpoint completion and independent acceptance cannot be inferred from these files or CI.
+    The launch instruction is not a product runtime prompt.
+  artifacts:
+  - path: .agent/rules.md
+    availability: present
+    purpose: project covenant
+  - path: Prompt.md
+    availability: present
+    purpose: static launch instruction
+  - path: docs/verification/project-covenant-probes-2026-11-25.json
+    availability: present
+    purpose: 69-case snapshot evidence
+- id: E-DELIVERY
+  member: E
+  title: Combined E3–E8 integration and selected-log audit
+  source_records:
+  - E-20
+  task: Integrate scoped governance artifacts and audit misleading tool-use wording.
+  intervention: The human requested upload/merge and removal of unsupported framing; the E5 request was explicitly
+    marked as an excerpt.
+  changes: Combined six deliverables and their tooling/evidence/logs without changing application/dependency/workflow/protection
+    behavior.
+  verification:
+    basis: reported_in_linked_records; not rerun for this index
+    summary: The source log reports a repeat 69-probe pass, Ruff, links and matching hashes; actual remote delivery
+      can be cross-checked separately.
+  limitations: Preserved real validation evidence; source log was written before merge and must not be read as a
+    future approval or merge receipt.
+  artifacts:
+  - path: docs/verification/project-covenant-probes-2026-11-25.json
+    availability: present
+    purpose: current role/rule/covenant evidence
+- id: A-DRAFT
+  member: A
+  title: Requirements registry drafting and no-holdings scope
+  source_records:
+  - A-01
+  task: Draft the registry and clarify research-only/holdings scope.
+  intervention: Human requests and review interventions are recorded in the linked selected sources; no independent
+    approval is inferred.
+  changes: Compared source material and drafted requirement structure.
+  verification:
+    basis: reported_in_linked_records and attributed repository artifacts; no new product/model acceptance in this
+      index refresh
+    summary: See the source-specific reported commands, dates, outcomes and exclusions; existence is not approval.
+  limitations: Selected session excerpts; current registry is not claimed to be the same initial draft.
+  artifacts:
+  - path: docs/req/requirements.yaml
+    availability: present
+    purpose: related repository artifact; current bytes do not recreate the original measured snapshot
+  - path: docs/req/change-log.md
+    availability: present
+    purpose: related repository artifact; current bytes do not recreate the original measured snapshot
+- id: A-COMPARE
+  member: A
+  title: Cross-document requirement comparison
+  source_records:
+  - A-02
+  task: Compare requirement draft obligations and conflicts.
+  intervention: Human requests and review interventions are recorded in the linked selected sources; no independent
+    approval is inferred.
+  changes: Recorded cross-document comparison and follow-up decisions.
+  verification:
+    basis: reported_in_linked_records and attributed repository artifacts; no new product/model acceptance in this
+      index refresh
+    summary: See the source-specific reported commands, dates, outcomes and exclusions; existence is not approval.
+  limitations: A short recorded comparison is not implementation acceptance.
+  artifacts:
+  - path: docs/req/requirements.yaml
+    availability: present
+    purpose: related repository artifact; current bytes do not recreate the original measured snapshot
+  - path: docs/req/change-log.md
+    availability: present
+    purpose: related repository artifact; current bytes do not recreate the original measured snapshot
+- id: A-SCOPE
+  member: A
+  title: Final scope and cross-member questions
+  source_records:
+  - A-03
+  task: Resolve scope, conflicts and questions for other roles.
+  intervention: Human requests and review interventions are recorded in the linked selected sources; no independent
+    approval is inferred.
+  changes: Recorded scope and requirement/governance decisions with unresolved items.
+  verification:
+    basis: reported_in_linked_records and attributed repository artifacts; no new product/model acceptance in this
+      index refresh
+    summary: See the source-specific reported commands, dates, outcomes and exclusions; existence is not approval.
+  limitations: No five-member adoption record is inferred.
+  artifacts:
+  - path: docs/req/requirements.yaml
+    availability: present
+    purpose: related repository artifact; current bytes do not recreate the original measured snapshot
+  - path: docs/req/change-log.md
+    availability: present
+    purpose: related repository artifact; current bytes do not recreate the original measured snapshot
+- id: A-RECONCILE
+  member: A
+  title: Registry reconciliation and uploads
+  source_records:
+  - A-04
+  task: Reconcile IDs, review comments and registry publication.
+  intervention: Human requests and review interventions are recorded in the linked selected sources; no independent
+    approval is inferred.
+  changes: Recorded registry/schema/validator and governance reconciliation.
+  verification:
+    basis: reported_in_linked_records and attributed repository artifacts; no new product/model acceptance in this
+      index refresh
+    summary: See the source-specific reported commands, dates, outcomes and exclusions; existence is not approval.
+  limitations: Historic proposals may be superseded; use current requirement text and change log.
+  artifacts:
+  - path: docs/req/requirements.yaml
+    availability: present
+    purpose: related repository artifact; current bytes do not recreate the original measured snapshot
+  - path: docs/req/change-log.md
+    availability: present
+    purpose: related repository artifact; current bytes do not recreate the original measured snapshot
+- id: A-REVIEWS
+  member: A
+  title: External requirement review rounds
+  source_records:
+  - A-05
+  task: Address external defect/follow-up reviews of requirements.
+  intervention: Human requests and review interventions are recorded in the linked selected sources; no independent
+    approval is inferred.
+  changes: Recorded review corrections and remaining residue.
+  verification:
+    basis: reported_in_linked_records and attributed repository artifacts; no new product/model acceptance in this
+      index refresh
+    summary: See the source-specific reported commands, dates, outcomes and exclusions; existence is not approval.
+  limitations: Requirement validation does not certify implementation or live quality.
+  artifacts:
+  - path: docs/req/requirements.yaml
+    availability: present
+    purpose: related repository artifact; current bytes do not recreate the original measured snapshot
+  - path: docs/req/change-log.md
+    availability: present
+    purpose: related repository artifact; current bytes do not recreate the original measured snapshot
+- id: A-HANDOFF
+  member: A
+  title: AI-use and traceability handoff to E
+  source_records:
+  - A-06
+  - A-07
+  task: Prepare attributable AI-use extracts and final identity handoff.
+  intervention: Human requests and review interventions are recorded in the linked selected sources; no independent
+    approval is inferred.
+  changes: Supplied selected dated logs, provenance index and A2 handoff.
+  verification:
+    basis: reported_in_linked_records and attributed repository artifacts; no new product/model acceptance in this
+      index refresh
+    summary: See the source-specific reported commands, dates, outcomes and exclusions; existence is not approval.
+  limitations: A2 is partial; OQ-10/OQ-16 and contributor confirmation remain open.
+  artifacts:
+  - path: docs/req/requirements.yaml
+    availability: present
+    purpose: related repository artifact; current bytes do not recreate the original measured snapshot
+  - path: docs/req/change-log.md
+    availability: present
+    purpose: related repository artifact; current bytes do not recreate the original measured snapshot
+  - path: docs/req/a2-handoff-to-member-e-2026-11-25.md
+    availability: present
+    purpose: related repository artifact; current bytes do not recreate the original measured snapshot
+- id: C-REGISTRY-VERIFY
+  member: C
+  title: Registry verification, classified gaps and repair reruns
+  source_records:
+  - C-03
+  task: Update verification against the 36-entry registry and investigate failures.
+  intervention: Human requests and review interventions are recorded in the linked selected sources; no independent
+    approval is inferred.
+  changes: Recorded coverage mapping, negative probes, H1-H5 classification and dated reruns.
+  verification:
+    basis: reported_in_linked_records and attributed repository artifacts; no new product/model acceptance in this
+      index refresh
+    summary: See the source-specific reported commands, dates, outcomes and exclusions; existence is not approval.
+  limitations: An export snapshot can end before later work; later repair results are attributed to dated repository
+    verification records, not invented missing conversation. Historical semantic PASS remains pending audit.
+  artifacts:
+  - path: docs/verification/requirement-test-mapping.md
+    availability: present
+    purpose: related repository artifact; current bytes do not recreate the original measured snapshot
+  - path: docs/verification/registry-test-update-2026-11-25.md
+    availability: present
+    purpose: related repository artifact; current bytes do not recreate the original measured snapshot
+- id: E-CALL-BUDGET
+  member: E
+  title: H1 opt-in model-request admission
+  source_records:
+  - E-35
+  task: Implement a per-run call cap with failure-safe refusal.
+  intervention: Human requests and review interventions are recorded in the linked selected sources; no independent
+    approval is inferred.
+  changes: Added controller/transport metering, retry/fallback/settlement propagation, BUDGET results and matching
+    reader controls; narrowed PR36 to H1.
+  verification:
+    basis: reported_in_linked_records and attributed repository artifacts; no new product/model acceptance in this
+      index refresh
+    summary: See the source-specific reported commands, dates, outcomes and exclusions; existence is not approval.
+  limitations: Call-count limit only; synchronous declared providers; no token/time ceiling or independent semantic
+    acceptance.
+  artifacts:
+  - path: docs/code-governance/h1-call-budget.md
+    availability: present
+    purpose: related repository artifact; current bytes do not recreate the original measured snapshot
+  - path: docs/verification/h1-call-budget-2026-11-25.json
+    availability: present
+    purpose: related repository artifact; current bytes do not recreate the original measured snapshot
+- id: E-RESULT-REPAIR
+  member: E
+  title: Local H2/H4 developer probes and C implementation reconciliation
+  source_records:
+  - E-36
+  - E-38
+  task: Investigate corrected-only results and REVIEW validity.
+  intervention: Human requests and review interventions are recorded in the linked selected sources; no independent
+    approval is inferred.
+  changes: Ran local repairs/probes; later retained C PR34 production implementation and archived duplicate local
+    tests/evidence.
+  verification:
+    basis: reported_in_linked_records and attributed repository artifacts; no new product/model acceptance in this
+      index refresh
+    summary: See the source-specific reported commands, dates, outcomes and exclusions; existence is not approval.
+  limitations: Historical local work, not exclusive authorship of current result.py; original local snapshots archived,
+    not current acceptance.
+  artifacts:
+  - path: tradingagents/runapi/result.py
+    availability: present
+    purpose: related repository artifact; current bytes do not recreate the original measured snapshot
+  - path: tests/member_c_verification/test_registry_result_repairs.py
+    availability: present
+    purpose: related repository artifact; current bytes do not recreate the original measured snapshot
+- id: E-POPULATION-EXPORT
+  member: E
+  title: H3 validated counts and H5 legacy exports
+  source_records:
+  - E-37
+  task: Repair population identity, actual scorer output and direct complete-report notices.
+  intervention: Human requests and review interventions are recorded in the linked selected sources; no independent
+    approval is inferred.
+  changes: Implemented explicit controls, duplicate/blank rejection, scorer population checks/output and metadata-independent
+    complete exports; PR37 merged.
+  verification:
+    basis: reported_in_linked_records and attributed repository artifacts; no new product/model acceptance in this
+      index refresh
+    summary: See the source-specific reported commands, dates, outcomes and exclusions; existence is not approval.
+  limitations: 1974-pass recorded offline run is not a model replay or independent C acceptance; five-case formal
+    profile is not provisional twenty-case acceptance.
+  artifacts:
+  - path: docs/code-governance/h3-h5-follow-up.md
+    availability: present
+    purpose: related repository artifact; current bytes do not recreate the original measured snapshot
+  - path: docs/verification/h3-h5-follow-up-2026-11-25.json
+    availability: present
+    purpose: related repository artifact; current bytes do not recreate the original measured snapshot
+- id: E-INTEGRATION
+  member: E
+  title: Preserve concurrent local/team changes
+  source_records:
+  - E-39
+  task: Integrate local fixes with A/B/C updates without replacement.
+  intervention: Human requests and review interventions are recorded in the linked selected sources; no independent
+    approval is inferred.
+  changes: Preserved C result/report changes and later narrowed publication to H1.
+  verification:
+    basis: reported_in_linked_records and attributed repository artifacts; no new product/model acceptance in this
+      index refresh
+    summary: See the source-specific reported commands, dates, outcomes and exclusions; existence is not approval.
+  limitations: 1985-pass intermediate scope predates the final H1-only PR36; do not sum these runs as independent
+    acceptance.
+  artifacts:
+  - path: AI-log/Member-E/2026-11-25_h1-call-budget.md
+    availability: present
+    purpose: related repository artifact; current bytes do not recreate the original measured snapshot
+- id: E-TRACE-INDEX
+  member: E
+  title: Canonical trace matrix and structured AI-use index
+  source_records:
+  - E-34
+  - E-32
+  task: Assemble course repository artifacts from original sources.
+  intervention: Human requests and review interventions are recorded in the linked selected sources; no independent
+    approval is inferred.
+  changes: Created the canonical 36-row matrix and event index, then refreshed current evidence/identity after PR37/38.
+  verification:
+    basis: reported_in_linked_records and attributed repository artifacts; no new product/model acceptance in this
+      index refresh
+    summary: See the source-specific reported commands, dates, outcomes and exclusions; existence is not approval.
+  limitations: Contributor confirmation/adoption is pending; an index cannot recreate missing conversations or evidence.
+  artifacts:
+  - path: docs/architecture/trace-matrix.md
+    availability: present
+    purpose: related repository artifact; current bytes do not recreate the original measured snapshot
+  - path: docs/verification/trace-matrix-e1-2026-11-25.json
+    availability: present
+    purpose: related repository artifact; current bytes do not recreate the original measured snapshot
+  - path: docs/ai-use-log.yaml
+    availability: present
+    purpose: related repository artifact; current bytes do not recreate the original measured snapshot
+- id: E-HANDOFF
+  member: E
+  title: Member-specific evidence collection request
+  source_records:
+  - E-40
+  task: Prepare A/B/C contribution requests and an authentic-log prompt.
+  intervention: Human requests and review interventions are recorded in the linked selected sources; no independent
+    approval is inferred.
+  changes: Drafted handoff requests; later archived the old request as A logs and other material arrived.
+  verification:
+    basis: reported_in_linked_records and attributed repository artifacts; no new product/model acceptance in this
+      index refresh
+    summary: See the source-specific reported commands, dates, outcomes and exclusions; existence is not approval.
+  limitations: No message sent or member sign-off invented by this task.
+  artifacts:
+  - path: docs/req/a2-handoff-to-member-e-2026-11-25.md
+    availability: present
+    purpose: related repository artifact; current bytes do not recreate the original measured snapshot
+- id: E-DELIVERY-CLEANUP
+  member: E
+  title: Refresh and submit usable delivery materials
+  source_records:
+  - E-33
+  task: Update E1/E9 and remove outdated/duplicate material from the deliverable.
+  intervention: Human requests and review interventions are recorded in the linked selected sources; no independent
+    approval is inferred.
+  changes: Backed up untracked materials, archived nine old files, removed seven system files, appended historical
+    status notes and corrected source inventory.
+  verification:
+    basis: reported_in_linked_records and attributed repository artifacts; no new product/model acceptance in this
+      index refresh
+    summary: See the source-specific reported commands, dates, outcomes and exclusions; existence is not approval.
+  limitations: Document verification only; no new product/model acceptance, signatures or governance activation.
+  artifacts:
+  - path: docs/architecture/trace-matrix.md
+    availability: present
+    purpose: related repository artifact; current bytes do not recreate the original measured snapshot
+  - path: docs/ai-use-log.yaml
+    availability: present
+    purpose: related repository artifact; current bytes do not recreate the original measured snapshot
+  - path: docs/verification/token-optimization-architecture-and-measurement-report-2026-11-24.md
+    availability: present
+    purpose: related repository artifact; current bytes do not recreate the original measured snapshot
+  - path: docs/verification/delivery-cleanup-2026-11-25.json
+    availability: present
+    purpose: document-only coverage/link/hash and preservation verification
+outstanding_records:
+- id: G-A
+  owner: A
+  status: records_received; confirmation_pending
+  request: Confirm the six dated extracts/provenance and A2 attribution; resolve remaining adoption/ID questions.
+  reason: Six selected records and a provenance index now exist; A2 records unresolved OQ-10/OQ-16 and no team adoption.
+  collection_state: repository_material_inspected; contributor_confirmation_pending; no message sent by cleanup
+- id: G-B
+  owner: B
+  status: partial
+  request: Confirm completeness of the three session exports and provide relevant missing supervising approvals/decisions
+    or mark them unavailable.
+  reason: Native delegated user turns must not all be attributed to independent human typing; hidden/private supervising
+    history is not reconstructed.
+  collection_state: repository_material_inspected; contributor_confirmation_pending; no message sent by cleanup
+- id: G-C
+  owner: C
+  status: partial
+  request: Provide missing conversation beginnings, timezone provenance and independently auditable scoring/approval/report/manifest
+    records; identify superseded PASS statements.
+  reason: Two original exports are content-identical under renamed filenames; the new registry verification export
+    is available. The older exports are partial and their filename year is unreliable; formal historical scoring
+    evidence is still not restored.
+  collection_state: repository_material_inspected; contributor_confirmation_pending; no message sent by cleanup
+- id: G-D
+  owner: D
+  status: partial
+  request: No new D submission requested in this round per user instruction; use merged code/architecture and available
+    measurement records; retain any unverifiable historical gaps.
+  reason: E can use existing code and sanitized compact token measurements; raw historical evidence and formal acceptance
+    are not invented.
+  collection_state: repository_material_inspected; contributor_confirmation_pending; no message sent by cleanup
+- id: G-E
+  owner: E
+  status: selected_extracts
+  request: Confirm selected-extract/provenance coverage and retain accessible sanitized raw optimization evidence
+    and hosted activation references.
+  reason: An index cannot recover omitted turns, private original sessions or missing measurement artifacts.
+  collection_state: repository_material_inspected; contributor_confirmation_pending; no message sent by cleanup
+- id: G-ALL
+  owner: ABCDE
+  status: pending_confirmation
+  request: Each member verifies attributed tasks, intervention wording, source/evidence links and remaining gaps
+    before final delivery.
+  reason: No member has been contacted or signed off by this aggregation task; no consent or missing record is invented.
+  collection_state: repository_material_inspected; contributor_confirmation_pending; no message sent by cleanup
+integrity:
+  source_paths_and_sha256: Recomputed against all current source bytes; C identical-content renames and prior changed
+    hashes explicitly retained.
+  artifact_links: Present/missing explicitly recorded per event; a present path does not validate its contents
+  current_measurement_warning: D baseline/after/attribution and E optimization are separate populations. Freeze
+    all six settings and distinguish input/output/total before setting a budget.
+  formal_evaluation_warning: Historical formal PASS remains PENDING independent audit. PR37 fixes population checks
+    and exports, not new human semantic acceptance; registry thresholds and adoption remain separate.
+  snapshot_baseline: 761918e plus this authorized delivery documentation change
+  counts:
+    source_records: 56
+    events: 35
+    member_confirmation_groups: 6
+  archive_policy: Nine obsolete/duplicate untracked files retained under ignored local archive with original hashes;
+    not delivered as current rules/tests. No original historical AI excerpt deleted.

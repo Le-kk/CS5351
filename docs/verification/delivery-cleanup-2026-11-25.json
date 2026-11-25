@@ -1,0 +1,31 @@
+{
+  "date": "2026-11-25",
+  "baseline": "761918e",
+  "scope": "documentation assembly, selected historical logs and historical measurement packaging",
+  "source_records": 56,
+  "events": 35,
+  "active_requirements": 36,
+  "withdrawn_ids": 3,
+  "verified_local_markdown_links": 213,
+  "source_paths_and_hashes": "all valid",
+  "artifact_references": "all declared present targets exist",
+  "archived_untracked_files": 9,
+  "deleted_untracked_system_files": 7,
+  "tracked_source_or_test_deletions": 0,
+  "archive_preservation": "All 21 original substantive untracked files retained byte-for-byte in ignored local archive; original manifest verified",
+  "historical_token_values_and_configuration": "unchanged; compared entire original JSON excluding newly added delivery_metadata",
+  "registry_schema": "36 active, 3 withdrawn, zero errors/warnings",
+  "registry_negative_fixtures": "32/32 rejected for expected reasons",
+  "product_or_live_model_tests": "not rerun for documentation-only change; existing CI remains enabled",
+  "sha256": {
+    "docs/architecture/trace-matrix.md": "42782a6158a4ed12ff5d59d06657c7b83c2b79481568a0b71f6abc43c3efbdab",
+    "docs/ai-use-log.yaml": "fdf3d19eb89a8c7b24b2a37975e30a714afa7cadaf4842b5e2810d8080fa0f93",
+    "docs/req/requirements.yaml": "1df45e8ac59fa355faeeec7236c2cc79b2179bb5400c5362e4631958506898a4",
+    "tests/member_d_verification/evidence/token-input-reduction-2026-11-24.json": "8a56ac9b31354667a27987be51c9a67b9f06fa5d4036fc2fbd592fdecf8a4410"
+  },
+  "limitations": [
+    "No contributor sign-off or team adoption inferred",
+    "Formal semantic acceptance remains pending; historical numbers are not a new quality or budget measurement",
+    "External ownership CSV document was unavailable; repository Markdown canonical path is explicit"
+  ]
+}
