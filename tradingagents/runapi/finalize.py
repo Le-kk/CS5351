@@ -2,10 +2,16 @@
 
 from __future__ import annotations
 
+from .budget import RunBudgetExhausted, budget_cause
 from .result import CheckResult, Finding, InputModeValue, Rating, RunResult, StopReason
 
 
 def classify_exception(exc: BaseException) -> StopReason:
+    cause = budget_cause(exc)
+    if isinstance(cause, RunBudgetExhausted):
+        return "BUDGET"
+    if cause is not None:
+        return "INTERNAL_ERROR"
     if isinstance(exc, (KeyboardInterrupt, InterruptedError)):
         return "INTERRUPTED"
     name = type(exc).__name__.casefold()

@@ -152,5 +152,17 @@ def create_tier_client(config: dict, tier: str, **extra) -> BaseLLMClient:
     else:
         base_url = config.get(f"{tier}_think_backend_url")
     kwargs = build_llm_kwargs({**config, "llm_provider": provider})
+    from tradingagents.runapi.budget import ACTIVE_BUDGET
+    budget = ACTIVE_BUDGET.get()
+    if config.get("call_cap") is not None:
+        if budget is None:
+            raise ValueError("call_cap requires the shared run_analysis_api boundary")
+        if provider not in {"deepseek", "openai_compatible"}:
+            raise ValueError("call_cap supports deepseek/openai_compatible tiers only")
+        from .budget_transport import budget_http_clients
+        sync, asynchronous = budget_http_clients(budget)
+        kwargs.update(extra)
+        extra = {}
+        kwargs.update(max_retries=0, http_client=sync, http_async_client=asynchronous)
     return create_llm_client(provider=provider, model=config[f"{tier}_think_llm"], base_url=base_url,
                              **kwargs, **extra)

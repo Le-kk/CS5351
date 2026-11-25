@@ -13,6 +13,13 @@ import tradingagents
 from tradingagents.agents.rating import run_rating
 from tradingagents.default_config import DEFAULT_CONFIG
 
+from .budget import (
+    ACTIVE_BUDGET,
+    BudgetProtocolError,
+    RunBudgetController,
+    RunBudgetExhausted,
+    budget_cause,
+)
 from .checks import OutputChecker
 from .context import ConsentState
 from .events import EventSink
@@ -164,7 +171,17 @@ def run_analysis_api(
     graph = None
     final_state: dict = {}
     engine_error = None
+    budget = None
+    budget_audit = None
+    budget_scope = None
     try:
+        cap = config.get("call_cap")
+        if cap is not None:
+            if isinstance(cap, str) and cap.strip().isdigit():
+                cap = int(cap.strip())
+            budget = RunBudgetController(cap, run_context.run_id)
+            config["call_cap"] = cap
+        budget_scope = ACTIVE_BUDGET.set(budget)
         factory = graph_factory or _default_graph_factory
         graph = factory(selected_analysts=selected_analysts, config=config, callbacks=callbacks or [])
         runner = engine_runner or (lambda engine, context: _default_engine_runner(engine, context, config))
@@ -177,6 +194,24 @@ def run_analysis_api(
             raise RuntimeError("Analysis returned no usable final state.")
     except BaseException as exc:
         engine_error = exc
+    finally:
+        if budget_scope is not None:
+            ACTIVE_BUDGET.reset(budget_scope)
+
+    if budget is None and engine_error is not None and budget_cause(engine_error) is not None:
+        engine_error = BudgetProtocolError("Budget exception outside a configured budget run")
+    if budget is not None:
+        budget_audit = budget.seal()
+        try:
+            budget.close()
+        except Exception as exc:
+            logger.warning("Budget client cleanup failed: %s", redactor.diagnostic(exc))
+        if budget_audit["denied"]:
+            engine_error = RunBudgetExhausted(f"calls limit reached (call_cap={budget.call_cap})")
+        event_sink.emit("engine", "run.budget",
+                        ("BUDGET calls limit " if budget_audit["denied"] else "WITHIN_LIMIT ")
+                        + str(budget_audit))
+        logger.info("Call budget for run %s: %s", run_context.run_id, budget_audit)
 
     trusted = run_context.safe_input_metadata()
     final_rating = run_rating(final_state) if engine_error is None else None
@@ -233,7 +268,11 @@ def run_analysis_api(
         envelope = build_envelope(trusted, "INCOMPLETE", "INTERNAL_ERROR", None,
                                   "NOT_RUN", (), redactor)
 
+    if budget_audit is not None:
+        body += "\n\n## Call budget\n\n" + str(budget_audit) + "\n"
     settings = _effective_config(config, graph)
+    if budget_audit is not None:
+        settings["call_cap"] = budget_audit["call_cap"]
     selected_for_hash = settings.get("analysts") or selected_analysts
     end = datetime.now(UTC)
     manifest = {
@@ -246,6 +285,8 @@ def run_analysis_api(
         "start_ts_utc": start.isoformat().replace("+00:00", "Z"),
         "end_ts_utc": end.isoformat().replace("+00:00", "Z"),
     }
+    if budget_audit is not None:
+        manifest.update(schema_version=2, check_rules_version=1, run_budget=budget_audit)
     final_state_for_html = state_for_html
     final_state_for_html["final_trade_decision"] = (
         final_state_for_html.get("final_trade_decision") or
@@ -309,6 +350,8 @@ def run_analysis_api(
             str(artifacts.report_path),
         )
     except PersistenceError:
+        if budget_audit and budget_audit["denied"]:
+            logger.warning("Publication failed; secondary stop cause: BUDGET calls limit, audit=%s", budget_audit)
         failed = finalizer.incomplete(
             run_id=run_context.run_id, ticker=run_context.ticker,
             analysis_date=run_context.analysis_date, input_mode=run_context.mode.value,

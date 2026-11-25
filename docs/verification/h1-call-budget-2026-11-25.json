@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "task": "H1 per-run call budget",
+  "baseline": "345d983 plus existing local H4 guard",
+  "status": "local developer verification passed; not committed or hosted",
+  "configuration": {
+    "default_enabled": false,
+    "option": "call_cap / TRADINGAGENTS_CALL_CAP",
+    "example_cap": 8,
+    "example_is_production_default": false,
+    "supported_providers": [
+      "deepseek",
+      "openai_compatible"
+    ],
+    "supported_dispatch": "synchronous in-tree tier clients",
+    "async": "explicitly rejected before transport",
+    "token_budget_implemented": false
+  },
+  "clean_environment": {
+    "openai": "3.59.0",
+    "langchain-openai": "1.8.5",
+    "langchain-core": "1.8.4",
+    "langgraph": "1.2.24",
+    "httpx2": "2.16.2",
+    "pytest": "9.2.0",
+    "bandit": "1.9.4",
+    "mypy": "1.20.2",
+    "ruff": "0.17.6"
+  },
+  "verification": {
+    "focused": {
+      "passed": 37,
+      "command": "python -m pytest -p no:cacheprovider -q tests/member_d_verification/test_h1_call_budget.py"
+    },
+    "full_default": {
+      "passed": 1884,
+      "skipped": 2,
+      "deselected": 1,
+      "subtests_passed": 100,
+      "command": "python -m pytest -p no:cacheprovider -q",
+      "skips": [
+        "opt-in live semantic replay",
+        "optional Bedrock dependency unavailable"
+      ]
+    },
+    "dependency_consistency": "pip check passed in isolated clean environment",
+    "ruff": "full repository passed",
+    "mypy": {
+      "files": 15,
+      "issues": 0
+    },
+    "security": {
+      "application_files": 107,
+      "medium_high_findings": 0
+    },
+    "live_model_calls": 0,
+    "semantic_acceptance": "not performed; synthetic scorer fixtures only"
+  },
+  "boundaries_verified": [
+    "six StopReason values",
+    "atomic last-slot grant; no refund; no reuse/cross-controller tokens",
+    "same controller across quick/deep and native plain/tools/structured/reflection calls",
+    "SDK HTTP 500 no hidden retry",
+    "isolated concurrent API runs",
+    "real default graph construction without copied lock state",
+    "required refusal yields INCOMPLETE/BUDGET/NOT_RUN/null rating",
+    "memory and structured fallbacks preserve refusal",
+    "publication error primary with secondary budget event/diagnostic",
+    "legacy manifest path preserved; malformed/new/unknown audit versions rejected",
+    "formal budget manifests require matching frozen cap and model configuration",
+    "unsupported async/provider paths rejected before sending"
+  ],
+  "limitations": [
+    "Call count only; cumulative token/time limits remain separate",
+    "Gateway-internal retries and arbitrary custom integrations outside in-tree factory not covered",
+    "No production cap, requirement adoption or independent C acceptance inferred",
+    "Already-issued streams must finish; no new wall-clock deadline",
+    "Current formal runner/profile must be prepared with frozen cap before budgeted acceptance"
+  ],
+  "files": [
+    {
+      "path": "tests/member_c_verification/live/score_gov004.py",
+      "sha256": "df00b85273005401eca55b369c53de8e59f68704e7e2b76b71de4ca606996e7b"
+    },
+    {
+      "path": "tradingagents/agents/structured.py",
+      "sha256": "a64d0d5f5aa2fe187f1d28ec4967985ff8b954319c338fffd1ef2764d0d6187d"
+    },
+    {
+      "path": "tradingagents/default_config.py",
+      "sha256": "224e2ca654c74a9a53b7a12ada290cfbd10cd2c8409c84812084920d4d250d8a"
+    },
+    {
+      "path": "tradingagents/graph/trading_graph.py",
+      "sha256": "ac17c29b79b6da21120b542be8824a9e13e17751df5060b86d189332d8b3d783"
+    },
+    {
+      "path": "tradingagents/llm_clients/factory.py",
+      "sha256": "4096f0a09f9660f8c03f46e1ccc325896f1064f0f66dbf50e4f0d67fc3b826d2"
+    },
+    {
+      "path": "tradingagents/memory/settlement.py",
+      "sha256": "cf3f2f9ec8be7c2d644a7ddc73db4494f60e99861874f5a38a98c3736e346c88"
+    },
+    {
+      "path": "tradingagents/runapi/execution.py",
+      "sha256": "6e486adc0c2493fa5e636a0012ab439d6a687cf1011d31bb66c0243e4006fc97"
+    },
+    {
+      "path": "tradingagents/runapi/finalize.py",
+      "sha256": "808747d311f903906c809beac57fe20587f998fb82431b2eb9ac233ac0b3dbe9"
+    },
+    {
+      "path": "tradingagents/runapi/result.py",
+      "sha256": "61898717a3af42abdc6901eca174bd00a8fbc348efd9dacd6f937b74a07ed067"
+    },
+    {
+      "path": "tradingagents/runapi/budget.py",
+      "sha256": "7e3bd4dfb69ce40c2734e84068b44716a3ab033c11ffabdb9b89c0af108cb3e1"
+    },
+    {
+      "path": "tradingagents/llm_clients/budget_transport.py",
+      "sha256": "e223ac5a863bda5ad4d2ec0c9f8022a953a65de3d11000336790d81a082ed5f7"
+    },
+    {
+      "path": "tests/member_d_verification/test_h1_call_budget.py",
+      "sha256": "148140f34120246345170b129ee9030b13d025704b064726e2fc38b6e0dd1145"
+    }
+  ]
+}
