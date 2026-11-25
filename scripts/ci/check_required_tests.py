@@ -56,6 +56,7 @@ def main(argv: list[str] | None = None) -> int:
         {
             "pytest": os.environ.get("PYTEST_RESULT", ""),
             "clean-install smoke": os.environ.get("SMOKE_RESULT", ""),
+            "frontend build": os.environ.get("FRONTEND_RESULT", ""),
         }
     )
     if problems:

@@ -48,3 +48,17 @@ def test_frontend_failure_or_missing_result_blocks_required_summary():
     for state in ['failure', 'cancelled', 'skipped', '']:
         assert gate.unsuccessful({**good, 'frontend build': state})
     assert gate.unsuccessful({k: v for k, v in good.items() if k != 'frontend build'})
+
+
+def test_required_summary_reads_frontend_environment(monkeypatch):
+    spec = importlib.util.spec_from_file_location('layout_summary_environment', ROOT / 'scripts/ci/check_required_tests.py')
+    gate = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(gate)
+    monkeypatch.setenv('PYTEST_RESULT', 'success')
+    monkeypatch.setenv('SMOKE_RESULT', 'success')
+    monkeypatch.setenv('FRONTEND_RESULT', 'success')
+    assert gate.main([]) == 0
+    monkeypatch.delenv('FRONTEND_RESULT')
+    assert gate.main([]) == 1
+    monkeypatch.setenv('FRONTEND_RESULT', 'failure')
+    assert gate.main([]) == 1
