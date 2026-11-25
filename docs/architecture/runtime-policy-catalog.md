@@ -41,9 +41,9 @@ Status: architecture draft (implementation-aligned 2026-11-24). Maps each suppor
 ## As-built status at `a62b801` (verified 2026-11-24)
 Rows R3–R5 (`MODEL_FAILURE`/`DATA_FAILURE`/`INTERNAL_ERROR`) and R12 (`INTERRUPTED`) map to `runapi/finalize.py::classify_exception`; R13a/R13c/R14 map to `runapi/persist.py` (single `os.rename`, truthful `terminal_event.durable`) and `runapi/events.py` (stage-private tentative terminal). R9–R11, R15 map to `runapi/checks.py` (`Q1–Q4`, `CHECK_ERROR`). The vocabulary is **five** stop reasons; there is **no `BUDGET` row** implemented. Proposed budget rows (`REQ-TA-NFR-PERF-002`/`COST-001/002` → `BUDGET`) are **not** in this catalog as implemented behaviour; they would require a sixth `stop_reason` and every reader updated.
 
-## Proposed rows for the extended checks (2026-11-24; **PROPOSED, not implemented**)
+## Extended-check rows (R17 as-built implemented; R18–R21 proposed)
 
-These are **catalog triggers** (the `R*` prefix here is the catalog namespace, **not** ARCH-002 rules or Q1–Q4). They accompany interface-contracts §13–§15 and ADR 002.
+These are **catalog triggers** (the `R*` prefix here is the catalog namespace, **not** ARCH-002 rules or Q1–Q4). They accompany interface-contracts §13–§15 and ADR 002. **R17 (call-cap `BUDGET`) is now implemented** for the bounded profile (`runapi/budget.py` + `llm_clients/budget_transport.py`, `finalize` emits `BUDGET`; `PERSISTENCE_ERROR` primary). R18–R21 (coverage/sentiment/corrected) remain **proposed, not implemented** — the checker emits only Q1–Q4. Cumulative **token/time** caps are the separate, still-proposed §15A/R23–R24.
 
 | # | Trigger | Responsible component | Fallback / action | Output | Diagnostic / monitor |
 |---|---|---|---|---|---|

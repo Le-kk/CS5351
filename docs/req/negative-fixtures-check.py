@@ -205,7 +205,7 @@ CASES = [
     ("28 requirement entry is null", "entry_is_null", "not a mapping"),
     ("29 invariant names no enforcer", "invariant_without_enforcer", "does not name enforced_components"),
     # Added 2026-11-25 for Member C's H5: "starts with" must not decay to "contains".
-    ("30 disclaimer weakened to 'contains'", "disclaimer_contains_only", "weaker than 'starts with'"),
+    ("30 disclaimer weakened to 'contains'", "disclaimer_contains_only", "weaker than 'first'"),
 ]
 
 

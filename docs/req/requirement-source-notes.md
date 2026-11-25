@@ -328,7 +328,7 @@ The registry states profile membership twice: structured `fixture_profiles.assig
 
 ---
 
-## OQ-18 — Which layout satisfies "the disclaimer is the first element"? — OPEN 2026-11-25
+## OQ-18 — Which layout satisfies "the disclaimer is the first element"? — CLOSED FOR THE MARKDOWN AND HTML EXPORTERS, ONE PATH REMAINS (2026-11-25)
 
 **Asked by:** A, after Member C's H5. **Owner:** B (layout), with A confirming meaning and D implementing.
 
@@ -347,12 +347,69 @@ A third option is refused: rewriting the requirement to "contains". Validator ru
 2. **Footer compatibility copy.** Retaining the existing footer disclaimer as a compatibility copy is permitted and does not weaken the rule, provided the leading disclaimer is present and byte-identical to the frozen string. The footer copy is not a substitute: a report carrying only the footer copy fails. Removing it later is a layout decision for B and needs no requirements change.
 3. **Entry points.** The rule applies to every report the system writes to disk or displays — the delivered document, however produced — including the CLI/RunAPI path and legacy direct-export paths. Internal renderings count only insofar as they are published. A does not enumerate function names: naming the wrong entry point is the error this registry already made twice with `INV-014`.
 
-**Until B decides:** the twenty H5 fixtures should stay failing rather than be adjusted to whatever the code currently does. A failing test against a stated requirement is information; a test rewritten to match the implementation is not.
+**Until B decides:** the H5 fixtures should stay failing rather than be adjusted to whatever the code currently does. A failing test against a stated requirement is information; a test rewritten to match the implementation is not.
+
+**Amendment:** where this entry says "first non-blank element", read **first rendered visible content** (Markdown: first non-blank line; HTML: first visible element, structure markup excluded). The original wording could not be satisfied by any valid HTML document, and A corrected it on 2026-11-25 after E's implementation made the conflict visible. The mechanism options above are unchanged in substance.
 
 ## OQ-19 — Which entry point reports `distinct_case_count`? — OPEN 2026-11-25
 
-**Asked by:** A, after Member C's H3. **Owner:** B (interface), D implementing, C binding the test.
+**Asked by:** A, after Member C's H3. **Owner:** B (interface), D implementing, C binding the test. **Status 2026-11-25: answered in code and adopted by A as the requirement.** `summarize_records(records, *, population=None)` produces the two fields; see the status note below. B does not need to answer the "where" question again.
 
 A has written the arithmetic into `REQ-TA-NFR-EVAL-001` rule 7: the evaluation report carries `distinct_case_count` and `population_result_count`, and `N_EVAL` is checked against the case count rather than the attempt total. C's tests currently read a summary that reports attempts only.
 
 What remains open is where the two fields are produced: a new field on the existing summary, a separate population summary object, or a projection in the report layer. A deliberately did not name a function, because the last time this registry named an enforcer it named the wrong one. B's interface contract should name whichever object owns it; D implements; C binds the twenty-case test to that object once it exists.
+
+### Status of OQ-18 and OQ-19 after E's implementation (`dc6f2ee`)
+
+- **OQ-18 (layout mechanism) — closed for the Markdown and HTML exporters; the concatenated document is the one path still open.** E's implementation puts the disclaimer first in `complete_report.md` and as the first element inside `<body>` in HTML, so for those two exporters the mechanism is fixed: "first body element, structure markup excluded". **Corrected 2026-11-25 (A, on D's scope question).** This entry previously read that "the runapi path still builds `envelope + body` with the disclaimer at the foot of the body", and implied that `build_envelope` was not compliant. Only the second half is true, and it is about a different document:
+  - `build_envelope` (`tradingagents/runapi/reporting.py`) emits the frozen `DISCLAIMER` as its **first line**, before the title and provenance. **The envelope header is compliant.** Nothing there needs re-implementing.
+  - The document that is not compliant is `envelope + body` as concatenated in `tradingagents/runapi/execution.py` and written to `reports/complete_report.md`. `render_body` appends the disclaimer as a **footer** section, so the delivered file carries it twice, and the visible content — title, provenance, rating, findings — comes between the envelope's leading copy and the footer copy. Rule 19's "contains" test cannot see this, and the requirement is still "first rendered visible content", so it is a real gap, but the fix is **removing the footer copy from `render_body`**, not changing the envelope.
+  - Because the HTML exporter now always emits the leading notice, `render_report` satisfies the rule even when `run_metadata is None`; the earlier condition that suppressed it for the direct-export path is gone.
+  - **Owner unchanged: B decides** whether the footer copy is deleted or retained as a compatibility copy (allowed, not a substitute). A has not written the fix and does not claim the concatenated path passes C's fixtures.
+- **OQ-19 (entry point) — closed for observation, open for comparison.** `summarize_records(records, *, population=None)` in `tradingagents/runapi/result.py` is the object that produces `distinct_case_count` and `population_result_count`, and `score_gov004.py` prints them. C can bind her twenty-case test to that pair. The comparison fixtures of rule 6 are **not** produced by that function (it raises on `controlled_change`); they are produced by the script's comparison path, which C must verify separately.
+
+---
+
+## OQ-20 — Delivery scope: phases, trial evaluation size, and which behaviours are acceptance-critical — OPEN 2026-11-25
+
+**Asked by:** D. **Answered in part by A on 2026-11-25** (items 1-3 below); item 4 was a correction to A's own notes and is done.
+
+### 1. Phased delivery — **A confirms**
+
+The registry already says this and does not need changing: `REQ-TA-GOV-001`'s **Start-up rule** is "Until Member D fixes `QUALITY_THRESHOLD` from a baseline measurement, the job runs and reports but does not block merges", and `QUALITY_THRESHOLD` is `state: open`, owner D and E.
+
+So, as a statement of what is expected of the system, not as an acceptance grant:
+
+- **Phase 1** — run the suite, save the evidence, report the scores. A score below the threshold does **not** block a merge while `QUALITY_THRESHOLD` is open. This is the requirement's own text, not a waiver A is issuing.
+- **Phase 2** — once D fixes `QUALITY_THRESHOLD` from a baseline measurement and the suite has been run against it, a below-threshold score on a `GOV_PATHS` change blocks the merge.
+
+**What A cannot do:** A cannot grant an exemption from a gate that does not exist yet, and cannot approve anyone else's merge. What A can state is the requirement side: **GOV-001 does not block while its threshold parameter is open, and switching it on is D's parameter decision plus a change-log entry, not a requirements change.** That is already the written rule.
+
+**One distinction that must not be blurred:** "does not block merges" is about the *gate*. It is not a statement that any behaviour below is untested or optional. FR-005, FR-007, SEC-001 and SEC-003 are graded against stated criteria in both phases; only the merge gate is deferred.
+
+### 2. Trial size — **allowed as a trial, not as acceptance**
+
+- Reusing the **existing 5 cases, two runs each**, as a **trial run** to shake out the harness is **allowed**, provided the output says it is a trial.
+- It **does not satisfy** `N_EVAL`. `N_EVAL` is `state: provisional`, value **20 cases**, owner D. Five cases at any number of attempts is **5 cases**, and `REQ-TA-NFR-EVAL-001` rule 5 and rule 7 say `N_EVAL` is checked against **case count, never the attempt total**. Writing up 10 attempts as "10 of 20" would be the exact error H3 was answered to stop.
+- **Changing `N_EVAL` to 5 is D's decision**, not A's, and it is a **requirements change** with a recorded reason: `N_EVAL` is a provisional parameter owned by D, so the change belongs in the parameter appendix and in `change-log.md`, with the reason stated. A will record it when D makes it. A does not lower the population to match what the harness can currently run, because that is the reverse of the order the registry was built in.
+
+### 3. Behaviours that are acceptance-critical — **A confirms the four**
+
+These four are named as the minimum suite contents of `REQ-TA-GOV-001` and are in the offline profile `A-A` in all four cases:
+
+| Behaviour | Requirement | Where it is in the registry |
+|---|---|---|
+| Missing-data disclosure | `REQ-TA-FR-005` | profile `A-A`; absence-wording check is a named suite content of GOV-001 |
+| Holdings/ownership wording | `REQ-TA-FR-007` | profile `A-A`; `NO_PORTFOLIO_NOTICE` and the ownership-wording check |
+| Prompt injection | `REQ-TA-SEC-001` | profile `A-A`; the injection cases are a named suite content of GOV-001 |
+| Promise of guaranteed returns | `REQ-TA-SEC-003` (invariant `REQ-TA-INV-008`) | profile `A-A`; the guarantee prompts are a named suite content of GOV-001 |
+
+So the answer to "which are formally required" is: **all four**, for any delivered report, and they stay required while `QUALITY_THRESHOLD` is open. What is deferred is only the merge gate on the *score*, not the checks themselves.
+
+**What A is not claiming:** that any of the four passes today. Each is `status: proposed` or `partial`, and whether C's and D's current fixtures exercise them is a verification result. A is confirming the list of what must be tested, not the outcome.
+
+**One caveat worth stating:** these four are the *minimum*, not the whole acceptance population. The registry has 36 active entries; `GOV-001` calls this list its minimum suite contents, and the rest of the population is in Appendix A. Treating "the four pass" as "the requirement set is met" would understate it.
+
+### 4. Stale description corrected — **done**
+
+OQ-18 had said the runapi path "still builds `envelope + body` with the disclaimer at the foot of the body", which read as if the envelope header were non-compliant. Corrected above: `build_envelope` emits the disclaimer first and is compliant; the **concatenated document** is what is not, because `render_body` appends a footer copy. The fix is removing that footer copy, not re-implementing the envelope.

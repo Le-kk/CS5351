@@ -1,0 +1,89 @@
+{
+  "date_hkt": "2026-11-25",
+  "head": "6b57aadff96798a8832baa0215f37ef407b356dc",
+  "previous_head": "f83aaf70caf2c230e57f6ea8762a8a525dc96b80",
+  "incoming_paths": 49,
+  "preexisting_files_preserved_on_sync": 29,
+  "registry": {
+    "schema_version": "1.2.0",
+    "document_status": "proposed_for_adoption",
+    "active_entries": 36
+  },
+  "signature": "(records: 'list[RunRecord]', *, population: 'EvaluationPopulation | None' = None) -> 'dict'",
+  "synthetic_accounting_probes": {
+    "unscoped_known_case": {
+      "distinct_case_count": 1,
+      "population_result_count": null,
+      "status": "AVAILABLE",
+      "started_count": 1,
+      "completed_count": 1,
+      "completion_fraction": 1.0,
+      "needs_review_count": 0,
+      "incomplete_reason_counts": {},
+      "pre_run_rejected": 0,
+      "pre_run_cancelled": 0
+    },
+    "empty_declared": {
+      "distinct_case_count": null,
+      "population_result_count": 0,
+      "status": "INSUFFICIENT_EVIDENCE",
+      "started_count": 0,
+      "completed_count": 0,
+      "completion_fraction": null,
+      "needs_review_count": 0,
+      "incomplete_reason_counts": {},
+      "pre_run_rejected": 0,
+      "pre_run_cancelled": 0
+    },
+    "declared_subset": {
+      "distinct_case_count": 1,
+      "population_result_count": 1,
+      "status": "AVAILABLE",
+      "started_count": 1,
+      "completed_count": 1,
+      "completion_fraction": 1.0,
+      "needs_review_count": 0,
+      "incomplete_reason_counts": {},
+      "pre_run_rejected": 0,
+      "pre_run_cancelled": 0
+    }
+  },
+  "checks": {
+    "requirements_schema": "PASS: 36 requirements, 3 withdrawn, 0 errors, 0 warnings",
+    "negative_fixtures": "32/32 expected rejections",
+    "focused_pytest": {
+      "passed": 75,
+      "command": ".venv/bin/python -m pytest -q tests/member_d_verification/test_h1_call_budget.py tests/member_d_verification/test_h3_h5_integration.py tests/member_c_verification/offline/test_nfr006_population.py tests/member_c_verification/test_registry_result_repairs.py tests/member_c_verification/live/test_score_gov004_exitcodes.py"
+    },
+    "default_pytest": {
+      "command": ".venv/bin/python -m pytest -q",
+      "passed": 1974,
+      "skipped": 2,
+      "deselected": 1,
+      "warnings": 24,
+      "subtests_passed": 100,
+      "seconds": 36.89,
+      "skips": [
+        "opt-in live semantic replay",
+        "optional langchain_aws not installed"
+      ]
+    }
+  },
+  "limits": [
+    "Focused and full selections overlap; do not sum unique passes",
+    "No paid application model tests or independent semantic acceptance",
+    "Compact review facts, not a raw pytest transcript",
+    "No canonical architecture/source/test/requirements/CI changes made in this review"
+  ],
+  "source_sha256": {
+    "tradingagents/runapi/result.py": "c10a9365308371ce9a30397807d8a430d73d1dc3cfdc83f5fac5109e841b2795",
+    "tradingagents/runapi/budget.py": "7e3bd4dfb69ce40c2734e84068b44716a3ab033c11ffabdb9b89c0af108cb3e1",
+    "tradingagents/runapi/execution.py": "6e486adc0c2493fa5e636a0012ab439d6a687cf1011d31bb66c0243e4006fc97",
+    "tradingagents/runapi/finalize.py": "808747d311f903906c809beac57fe20587f998fb82431b2eb9ac233ac0b3dbe9",
+    "tradingagents/llm_clients/budget_transport.py": "e223ac5a863bda5ad4d2ec0c9f8022a953a65de3d11000336790d81a082ed5f7",
+    "tradingagents/report_html.py": "3b9d6f76c3df2995164e9fb6d3ee48735b628e025a46e1b9deea6357bcb890c0",
+    "tradingagents/reporting.py": "1579917709d40d26989880cba852cd22e615f4895da1c8e12e539e6e2be3bd8c",
+    "tests/member_c_verification/live/score_gov004.py": "36756fae110faaedda94d737321e5e7d5760d8cff22130149b3e0d27bdf705a8",
+    "docs/req/requirements.yaml": "9150df34aec912d2fa61d9654d778338bd56a4ec9014c5f7b000b3ee402140c5"
+  }
+}

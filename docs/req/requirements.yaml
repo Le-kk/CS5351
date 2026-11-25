@@ -948,20 +948,24 @@ requirements:
     script runs, then it reports a completion rate of 6/10, a quality denominator of 6, `NEEDS_REVIEW`
     = 2, and stop reasons `DATA_FAILURE` 1, `MODEL_FAILURE` 2, `BUDGET` 1, with 0 records dropped; and
     the output states that these 10 records are a counting fixture, not an acceptance run under `N_EVAL`.
-    Given 2 records that differ in `prompt_hash` and declare no changed factor, the script refuses to
-    compare them (1/1); given 2 records differing only in `prompt_hash` that declare `prompt` as the changed
-    factor, it reports exactly 1 controlled-change comparison naming `prompt` (1/1); given 2 records differing
-    in both `prompt_hash` and `model` with no declaration, it refuses (1/1); given 20 cases scored twice
-    under identical `config` and `prompt_hash`, then `N_EVAL` is reported as 20 cases and not 40 attempts,
-    and exactly 1 result is counted; and in every case the output carries `distinct_case_count` and `population_result_count`
-    beside the completion rate and the `NEEDS_REVIEW` count.'
+    Given 2 records that differ in `prompt_hash` and declare no changed factor, the evaluation either
+    refuses to compare them (1/1) or raises the specified error recorded in the implementation follow-up;
+    given 2 records differing only in `prompt_hash` that declare `prompt` as the changed factor, it reports
+    exactly 1 controlled-change comparison naming `prompt` (1/1); given 2 records differing in both `prompt_hash`
+    and `model` with no declaration, it refuses (1/1); given 20 cases scored twice under a single declared
+    population, then `N_EVAL` is reported as 20 cases and not 40 attempts, `distinct_case_count` reads
+    20 and `population_result_count` reads 1. Given started records with **no** declared population, or
+    attempts with no case identity, then `distinct_case_count` and `population_result_count` are `null`
+    (unknown) rather than guessed, and the report still shows the attempt total. In every case the output
+    carries both fields beside the completion rate and the `NEEDS_REVIEW` count.'
   tradeoff: Reporting completed-only quality next to a low completion rate can look worse than a single
     blended number. That is intended.
   metric: agreement between reported evaluation numbers and a recomputation from the same run records
   threshold: 100% of reported counts equal the recomputed values; 0 runs silently removed from the completion
     denominator; 0 undeclared multi-factor comparisons accepted; `distinct_case_count` equals `N_EVAL`
-    on the 20-case cohort while the attempt total is 40; `population_result_count` matches rule 6 in all
-    4 fixtures; 0 reports omit either field
+    on the 20-case cohort while the attempt total is 40; `population_result_count` reads 1 exactly when
+    a declared population binds every started record, and `null` (never a guessed number) otherwise; 0
+    reports omit either field
   verification: recompute every reported figure from the stored run records of a fixed evidence set; the
     two population fields are read from the report itself, not from any proposed API
   dependencies:
@@ -997,7 +1001,19 @@ requirements:
     \ so no private function name, module or layout is fixed. What A still does **not** fix is the entry\
     \ point B must design and the rubric, critical items, profile and `QUALITY_THRESHOLD` D and E own.\
     \ `COUNTS_CASES` is declared in the parameter appendix as a fixed counting rule. That row is the registry's\
-    \ only mention of it, so this entry is its sole declared user."
+    \ only mention of it, so this entry is its sole declared user.\n\n**Reconciled 2026-11-25 with the\
+    \ implementation (E's H3/H5 follow-up).** Both fields are now computed in `tradingagents/runapi/result.py`:\
+    \ `summarize_records(records, *, population=None)` returns `distinct_case_count` as the number of\
+    \ distinct case identities, or `null` when any started attempt lacks one, and `population_result_count`\
+    \ as `1` when an explicit `EvaluationPopulation` binds every started record, `null` when records are\
+    \ started but no population is declared, and `0` when nothing started. `score_gov004.py` prints both\
+    \ in a machine-readable `Evaluation counts:` line beside the completion figures.\n\nA revised the\
+    \ fit criterion and threshold to match, because the earlier wording (a guessed `2` for refused comparisons,\
+    \ and `matches rule 6 in all 4 fixtures`) described an API that does not exist. **One gap is recorded\
+    \ rather than papered over:** the single-configuration API raises on a `controlled_change` record\
+    \ instead of reporting a refused comparison, so rule 6's comparison fixtures are exercised by the\
+    \ script's comparison path, not by `summarize_records`. Whether that path satisfies them is C's verification,\
+    \ not A's claim."
 - id: REQ-TA-SEC-001
   title: Prompt-injection resistance
   type: security
@@ -1065,19 +1081,23 @@ requirements:
   type: security
   priority: Should
   status: proposed
-  statement: '**First element of the delivered document** shall be the disclaimer; the ordering of everything
-    after it is not constrained by this requirement. The report shall not claim guaranteed returns, guaranteed
-    profit or capital protection. ''First element'' is not ''contains'': a disclaimer placed after a title
+  statement: 'The **first rendered visible content** of the delivered report shall be the disclaimer;
+    document structure (doctype, html/head, stylesheet links, title element, wrapper divs) may precede
+    it, and nothing else may. The report shall not claim guaranteed returns, guaranteed profit or capital
+    protection. ''First visible content'' is not ''contains'': a disclaimer placed after a title, banner
     or header does not satisfy this requirement (A, 2026-11-25, on Member C''s H5).'
-  fit_criterion: Given the offline profile, when (a) 20 reports are rendered, then 20/20 have the disclaimer
-    as the first non-blank element of the delivered document, with no run metadata, title, header or provenance
-    block before it; (b) 5 scripted final decisions that each contain a phrase from `fixtures/sec003/guarantee_phrases.txt`
-    are checked, then 5/5 get `NEEDS_REVIEW` with finding R8.
+  fit_criterion: Given the offline profile, when (a) 20 reports are rendered through both complete-report
+    exporters, then 20/20 have the disclaimer as their first rendered visible content — for Markdown the
+    first non-blank line, for HTML the first visible element inside `body` with structure markup excluded
+    and no logo, title, banner or provenance block before it; (b) 5 scripted final decisions that each
+    contain a phrase from `fixtures/sec003/guarantee_phrases.txt` are checked, then 5/5 get `NEEDS_REVIEW`
+    with finding R8.
   tradeoff: The phrase list flags "guaranteed" even inside a quoted source.
-  metric: reports whose first non-blank element is the disclaimer, and guarantee phrases caught by rule
-    R8
-  threshold: 20/20 reports have the disclaimer as their first non-blank element; 5/5 guarantee fixtures
-    get NEEDS_REVIEW with finding R8
+  metric: reports whose first rendered visible content is the disclaimer, and guarantee phrases caught
+    by rule R8
+  threshold: 20/20 reports have the disclaimer as their first rendered visible content — for Markdown
+    the first non-blank line, for HTML the first visible element with structure markup excluded — and
+    5/5 guarantee fixtures get NEEDS_REVIEW with finding R8
   verification: offline profile; 20 rendered reports and 5 scripted decisions containing listed phrases
   semantic_part: 5 live prompts that directly ask for a guarantee are in the GOV-001 suite.
   dependencies:
@@ -1092,15 +1112,26 @@ requirements:
   - kind: baseline_observation
     ref: Le-kk/CS5351@c0081cb
     locator: baseline statement verified against the team repository
-  note: '**Amended 2026-11-25 — Member C''s H5.** C''s twenty disclaimer fixtures show the delivered report
-    beginning with the provenance/envelope header and ending with the disclaimer, and C correctly refused
-    to reinterpret "starts" as "contains" or to relax the test. The choice belongs to A, so A has made
-    it: the disclaimer is the first element of the delivered document. The consequence is a constraint
-    on B''s layout contract, which currently places the envelope header first, and on D''s renderer. Two
-    ways to comply exist and A does not choose between them — emit the disclaimer inside the envelope
-    before the provenance lines, or render it as the first body element and build the envelope after it.
-    A third option, weakening this requirement to "contains", is rejected. The nine non-disclaimer checks
-    (Q1-Q4, R1-R8 and their readers) are unaffected by position and remain valid.'
+  note: "**Amended 2026-11-25 — Member C's H5.** C's twenty disclaimer fixtures showed the delivered report\
+    \ beginning with the provenance/envelope header and ending with the disclaimer, and C correctly refused\
+    \ to read \"starts with\" as \"contains\". The choice belongs to A, so A made it: the disclaimer is\
+    \ the first rendered visible content of the delivered report.\n\n**Reconciled 2026-11-25 with the\
+    \ implementation (E's H3/H5 follow-up).** The first wording was \"first non-blank element\", which\
+    \ is right for Markdown and wrong for HTML: element-wise the first element in a rendered page is the\
+    \ wrapper div, and doctype/html/head/style necessarily precede any body content, so no valid HTML\
+    \ report could satisfy it. Both entries now say **first rendered visible content** — Markdown measured\
+    \ as the first non-blank line, HTML as the first visible element with structure markup excluded.\n\
+    \nWhat the implementation now does, checked in `tradingagents/reporting.py` and `tradingagents/report_html.py`:\
+    \ `write_report_tree` writes the frozen `DISCLAIMER` before the header in `complete_report.md`, and\
+    \ `render_report` emits the leading notice as the first element inside `<body>`, before the masthead\
+    \ logo, title and provenance list. **That path complies.** The runapi envelope header also complies:\
+    \ `build_envelope` emits the frozen `DISCLAIMER` as its first line. What is **not** compliant is the\
+    \ concatenated document `envelope + body` in `tradingagents/runapi/execution.py`: `render_body` appends\
+    \ the disclaimer as a footer section, so the delivered file carries it twice and the visible content\
+    \ sits between the two copies. The fix is removing that footer copy, not changing the envelope, and\
+    \ the choice remains B's (OQ-18).\n\nA retained footer copy is permitted as a compatibility copy and\
+    \ is not a substitute. The nine non-disclaimer checks (Q1-Q4, R1-R8 and their readers) are unaffected\
+    \ by position."
 - id: REQ-TA-ARCH-001
   title: Vendors behind one routing point
   type: architectural_constraint
@@ -1475,12 +1506,12 @@ requirements:
     ref: docs/architecture/invariants.md
     locator: no counterpart (B, 2026-11-23)
 - id: REQ-TA-INV-008
-  title: Disclaimer first non-blank element, no guarantee phrase
+  title: Disclaimer is the first visible content, no guarantee phrase
   type: invariant
   priority: Must
   status: proposed
-  statement: The system shall hold that the first non-blank element of every report is the disclaimer;
-    no prohibited guarantee phrase appears.
+  statement: The system shall hold that the first rendered visible content of every delivered report is
+    the disclaimer; no prohibited guarantee phrase appears.
   zero_tolerance: true
   enforced_by: REQ-TA-ARCH-002
   enforced_components:
@@ -1489,10 +1520,12 @@ requirements:
   - tradingagents/agents/rating.py parse_rating
   rule_owner: REQ-TA-SEC-003
   amended_by: []
-  fit_criterion: Given 20 rendered reports, when each is checked, then 20/20 have the disclaimer as their
-    first non-blank element and the 5 guarantee fixtures each raise 1 blocking finding (R8). A report
-    whose disclaimer appears only later in the document is a violation of this entry, not a wording gap.
-    A single observed violation is 1 blocking defect; no run is exempt.
+  fit_criterion: Given 20 rendered reports from both complete-report exporters, when each is checked,
+    then 20/20 have the disclaimer as their first rendered visible content and the 5 guarantee fixtures
+    each raise 1 blocking finding (R8). A report whose disclaimer appears only later, or an HTML page
+    whose first visible element is a logo, title, banner or provenance block, is a violation of this entry.
+    A single observed violation is 1 blocking defect; no run is exempt. A single observed violation is
+    1 blocking defect; no run is exempt.
   tradeoff: A zero-tolerance invariant fails the build on one counterexample, which costs time when the
     counterexample is a fixture bug rather than a product bug.
   dependencies:
