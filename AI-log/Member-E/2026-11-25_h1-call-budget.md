@@ -25,3 +25,22 @@ Full code/write payloads and internal reasoning are omitted. Final file scope, s
 37 H1 developer probes passed. Full default regression passed in both the existing tools environment and a fresh declared-dependency installation: 1,884 passed, two existing skips, one integration deselection and 100 passing subtests. Clean `pip check`, full-repository Ruff, mypy (15 files) and Bandit (107 application files, zero medium/high) passed. Clean native versions include OpenAI 3.59.0/LangChain OpenAI 1.8.5/httpx2 2.16.2; the existing environment used 3.16.2/1.6.3/2.13.0. The clean check was necessary because several shared-environment packages were below declared minima; the shared environment and project dependency declarations were not upgraded.
 
 H1 scope is nine existing source/scorer files, three new implementation/test files, this log, one implementation guide and one verification JSON. The result-file baseline includes the previously verified H4 guard. Other local E9/handoff documents and original member logs remain outside scope. Source hashes are recorded; no raw provider payload, secret, full patch or invented human score is included.
+
+## Publication scope correction — 2026-11-25
+
+User request (verbatim):
+
+> 请问PR36的内容有哪些，我只想提交H1的更新，其他的按照C的来
+
+PR36 was narrowed to H1 only. The earlier broad integration is preserved on a
+local backup branch and excluded materials retained locally. C PR34's result
+model, H2/H4 repairs, H3 counters and H5 report changes remain exactly as in main
+f83aaf7. No duplicate H2/H4 code, tests or unrelated governance/token reports
+remain in the PR diff. The H1 verification JSON above is an earlier snapshot;
+its hashes and counts are not relabelled as current publication evidence.
+
+Narrowed-scope verification before push: 1954 passed, 2 skipped, 1 deselected,
+100 subtests passed; full Ruff and mypy (15 files) passed. The reduction from
+1985 is exactly the 24 local H2 and 7 local H4 developer probes removed from
+this PR; C's tests remain. C's result.py, reporting.py and report_html.py match
+main byte-for-byte. GitHub CI for the new commit is checked separately.
