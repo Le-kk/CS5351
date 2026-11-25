@@ -1,6 +1,8 @@
 # Staged implementation prompt pack (Member B) — UNEXECUTED TEMPLATES
 
-Status: **unexecuted templates, 2026-11-24.** These are drafting artifacts for a *future* implementation handoff. **Architecture approval does not authorize code implementation.** Each slice's execution plan and test criteria still require prior human approval before any build, and the model-provider access constraint is stated below. No template here has been run; no code, tests, approvals or results are claimed.
+Status: **unexecuted templates, 2026-11-24; approval-protocol status reconciled 2026-11-25.** These are drafting artifacts for a *future* implementation handoff. **Architecture approval does not authorize code implementation.** Each slice's execution plan and test criteria still require prior human approval before any build, and the model-provider access constraint is stated below. No template here has been run; no code, tests, approvals or results are claimed.
+
+> **Approval-protocol status (reconciled with root `AGENTS.md`).** Root `AGENTS.md` states that **test-plan pre-approval is paused as a required merge check** by the user's instruction. The `/approve-tests <SHA>` receipt protocol described in Template 2 below is therefore **inactive/historical for current use** — it can still run and show a result, but it must **not** be imposed as a mandatory prerequisite for the current development workflow, and it must **not** be reactivated until explicitly instructed. What remains required today: **human supervision, explicit authorization for any commit/PR/build, and defined proposed test criteria** (Templates 1/4/5). The receipt workflow is preserved as a documented, executable mechanism for a possible later re-enable; **no prior approval may be fabricated** and the paused-policy gap must be recorded separately, not erased. This reconciliation changes no requirement, course obligation, or runtime contract.
 
 Scope of these templates: the prioritised slices in [interface-contracts.md](../interface-contracts.md) §13–§16 and [ADR 002](../adr/002-extended-result-evidence-budget.md):
 - **Slice C — run budget controller + `BUDGET`** (first handoff; §15).
@@ -63,7 +65,7 @@ You may inspect code/tests read-only; do not run the suite or live tests.
 
 ## Template 2 — Human checkpoint via the installed approval protocol
 
-This is a **human gate** that uses the **repository's actual test-approval protocol**, not a chat checkbox. It has two sub-stages: (2a) prepare plan + proposed tests, then (2b) approve them through the trusted workflow. A filled chat block is **not** the workflow receipt the checker verifies.
+This is a **human gate**. Sub-stage **(2a) prepare plan + proposed tests + human review** remains required. Sub-stage **(2b) the `/approve-tests` receipt protocol** is **inactive/historical for current use** (pre-approval is paused per `AGENTS.md`); it is documented as a possible later re-enable and must not be imposed as a mandatory prerequisite today. A filled chat block is **not** a workflow receipt, and no approval may be fabricated.
 
 ```
 2a — AUTHORIZED PREPARATION (before product implementation)
@@ -80,7 +82,7 @@ run during a documentation task):
 - implementation_paths[] = the exact approved write set (no vague categories).
 Reviewer reads the plan + proposed tests and records adequacy, incl. negatives.
 
-2b — APPROVAL THROUGH THE TRUSTED WORKFLOW (not chat)
+2b — APPROVAL THROUGH THE TRUSTED WORKFLOW (not chat) — INACTIVE/HISTORICAL unless explicitly re-enabled
 - The authorized reviewer posts the EXACT comment command **on the OPEN FEATURE PR**
   (its `issue_comment`; the workflow requires `github.event.issue.pull_request`):
       /approve-tests <FULL 40-CHARACTER COMMIT SHA>
@@ -89,7 +91,7 @@ Reviewer reads the plan + proposed tests and records adequacy, incl. negatives.
 - The trusted workflow (test-approval.yml -> test-approval-complete.yml) produces
   a RECEIPT bound to the comment, the approved commit and the test-file
   fingerprints. Archive the accepted record under docs/verification/approvals/.
-- Product implementation starts ONLY after a successful receipt for that commit.
+- **Unless re-enabled by explicit instruction, pre-approval is paused:** product implementation is gated on **explicit human authorization for this change**, not on the (inactive) receipt. If re-enabled, implementation starts only after a successful receipt for that commit.
 - **Approved test files are FROZEN during product implementation.** Do not edit
   them to make implementation pass; changed test fingerprints are rejected. If a
   test must change, use the policy's RENEWED / SPLIT-SCOPE procedure (re-approve
@@ -115,24 +117,26 @@ explicit authorization when executed and is not performed in a documentation tas
 
 ---
 
-## Template 3 — Build prompt (only after a successful Template 2 receipt)
+## Template 3 — Build prompt (only after explicit human authorization; receipt gated only if re-enabled)
 
 ```
 You are implementing an APPROVED, bounded slice in CS5351 TradingAgents.
-Proceed ONLY if a successful test-approval RECEIPT exists for this exact commit
-(recorded via the trusted workflow; the reviewer posts `/approve-tests <FULL
-40-CHAR SHA>` on the OPEN FEATURE PR, receipt archived under
-docs/verification/approvals/). If the receipt is absent, for a different commit,
-or the test-file fingerprints differ, STOP — do not implement.
-APPROVED TEST FILES ARE FROZEN: do not edit them during implementation; a needed
-test change uses the renewed/split-scope procedure (re-approve), never a silent
-rewrite.
+Pre-approval is PAUSED (per AGENTS.md): proceed ONLY with EXPLICIT human
+authorization for this change. If the `/approve-tests` receipt protocol is
+re-enabled by instruction, also require a successful receipt for this exact
+commit (trusted workflow; `/approve-tests <FULL 40-CHAR SHA>` on the OPEN FEATURE
+PR; archived under docs/verification/approvals/) and reject absent/mismatched
+receipts or differing test-file fingerprints.
+APPROVED TEST FILES ARE FROZEN during implementation (when a plan/test set was
+approved): a needed test change uses the renewed/split-scope procedure, never a
+silent rewrite.
 Do not expand scope. Do not edit files outside the APPROVED implementation_paths[]
 from the plan. Do not touch canonical requirements, other members' tests/CI/
 evidence, or secrets. Work offline with the scripted/offline profile; no paid/live.
 
 Slice: <C_budget | A_evidence_coverage | B_checker_v2>
-Approval receipt: approval_id ______  approved_commit (40) ______
+Authorization: explicit human authorization ______ (required today)
+Approval receipt: OPTIONAL/INACTIVE while paused — approval_id ______  approved_commit (40) ______ (fill only if `/approve-tests` is explicitly re-enabled)
 
 PERMITTED FILES = the EXACT implementation_paths[] from the approved plan plus the
 approved test_files[]. Do not use category names. The approved set must explicitly
@@ -199,7 +203,7 @@ implementer. Verify against the approved plan and acceptance criteria. Do not
 modify application code or the implementation's tests to make them pass.
 
 Slice: <C_budget | A_evidence_coverage | B_checker_v2>
-Approved plan/acceptance revision/hash: <from Template 2/3>
+Approved plan/acceptance revision/hash: <from Template 2/3> (receipt only if `/approve-tests` re-enabled)
 
 CHECKS TO RUN (offline; scripted model; record exact commands + results):
 - Targeted slice tests, then the prior offline suite, Ruff, dependency and
@@ -272,6 +276,6 @@ minimum approval needed. Do not proceed past the approved scope without it.
 - Run per slice; do not bundle all three into one unapproved mega-change.
 - **First handoff = Slice C (budget + BUDGET)** (interface-contracts §16.1): most isolated, offline-testable, unblocks a Must plus `BUDGET`.
 - **Evidence/coverage data contracts (Slice A §13) must be agreed before** Slice B's R2/R7 checker integration (approved dependency order).
-- These are **unexecuted templates**: no build, test, approval or result has occurred. Each single in a new interaction, with the **pinned approval protocol** between Template 2 and Template 3 (front-matter plan + named tests committed, then `/approve-tests <full 40-char SHA>` receipt).
+- These are **unexecuted templates**: no build, test, approval or result has occurred. Each single in a new interaction with **explicit human authorization**; the (currently **paused**) `/approve-tests <full 40-char SHA>` receipt protocol (Template 2b) is preserved as inactive/historical and applies only if explicitly re-enabled.
 - **Do not claim a runtime metering guarantee** (or any "exactly once" property) before the verification probes pass; before that, ≤1-attempt intent and the tests are the only evidence.
 - Preserve authentic interactions for D5; do not backdate approvals; a handoff summary is not a raw transcript.

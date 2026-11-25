@@ -1,0 +1,114 @@
+{
+  "review_date_hkt": "2026-11-25",
+  "before": "3de2f1cdb9f546fe6c6cb7256114a1477203515b",
+  "after": "32ec858bc6af2abf387f29e65439cc1d45936d8b",
+  "upstream_e_revision": "345d98354bf0448048c93ed67512c906c4c8bdce",
+  "incoming_files": [
+    ".agent/rules.md",
+    ".opencode/permissions.jsonc",
+    ".opencode/rules.md",
+    "AGENTS.md",
+    "AI-log/Member-E/2026-11-25_governance-upload.md",
+    "AI-log/Member-E/2026-11-25_mcp-tool-manifest.md",
+    "AI-log/Member-E/2026-11-25_opencode-permissions.md",
+    "AI-log/Member-E/2026-11-25_opencode-rules.md",
+    "AI-log/Member-E/2026-11-25_project-covenant.md",
+    "AI-log/Member-E/2026-11-25_static-launch-prompt.md",
+    "AI-log/Member-E/2026-11-25_structural-constraints.md",
+    "Prompt.md",
+    "docs/code-governance/mcp-tool-manifest.md",
+    "docs/code-governance/opencode-operating-rules.md",
+    "docs/code-governance/opencode-permissions.md",
+    "docs/code-governance/structural-constraints.md",
+    "docs/verification/opencode-permission-probes-2026-11-25.json",
+    "docs/verification/opencode-rules-probes-2026-11-25.json",
+    "docs/verification/project-covenant-probes-2026-11-25.json",
+    "scripts/run_role_agent.py",
+    "scripts/verify_role_permissions.py"
+  ],
+  "local_drafts_preserved": 17,
+  "application_requirements_ci_changed": false,
+  "retained_evidence": {
+    "opencode-permission": {
+      "passed": true,
+      "cases": 50,
+      "failed_cases": 0,
+      "version": "1.19.5",
+      "hash_matches_current": {
+        "policy_sha256": false
+      }
+    },
+    "opencode-rules": {
+      "passed": true,
+      "cases": 62,
+      "failed_cases": 0,
+      "version": "1.19.5",
+      "hash_matches_current": {
+        "policy_sha256": false,
+        "rules_sha256": true
+      }
+    },
+    "project-covenant": {
+      "passed": true,
+      "cases": 69,
+      "failed_cases": 0,
+      "version": "1.19.5",
+      "hash_matches_current": {
+        "policy_sha256": true,
+        "rules_sha256": true,
+        "covenant_sha256": true
+      }
+    }
+  },
+  "local_activation": {
+    "version": {
+      "exit_code": 0,
+      "output": "1.18.34\n"
+    },
+    "role_check": {
+      "exit_code": 1,
+      "output": "Role startup refused: Expected OpenCode 1.19.5; validate migrations before using another version.\n"
+    },
+    "native_probes": {
+      "not_run": "Role activation refused; no false PASS or model session attempted."
+    }
+  },
+  "independent_checks": {
+    "helper_ruff": "passed",
+    "requirements_schema": "36 requirements; 3 withdrawn; 0 errors; 0 warnings",
+    "layering_regressions": "7 passed",
+    "native_permission_probes": "not rerun: version gate refused activation",
+    "live_model_calls": 0
+  },
+  "strict_b_scope_limits": {
+    "shell_git_tests": "denied; use authorized external verification",
+    "edits_denied": [
+      "docs/architecture/proposals/implementation-prompt-pack-2026-11-24.md",
+      "docs/req/README.md"
+    ],
+    "review_directory_read": "not explicitly allowed; use a human-provided facts handoff or recorded configuration exception"
+  },
+  "source_sha256": {
+    ".agent/rules.md": "0e005e90fde4698c5d68e36da0e76cd1f0f440ff93ed1f6564c04011cc6c4140",
+    ".opencode/permissions.jsonc": "f102fe742f1a30ec84177d41bc5923b3b0e86ef83f08e053dbd6aa81956fb195",
+    ".opencode/rules.md": "47ce83d3780b8e46473e654af397f43e681116e0cffcb36cf579ca8f80279252",
+    "AGENTS.md": "5f3fac5f8dc9c39267b833a8a4a4b1ad1cd728268fb0d382b47fa4bbb3c04394",
+    "AI-log/Member-E/2026-11-25_governance-upload.md": "3c066bca7986ed9d40e8e47c5e761fca3420ec4127a9cb62097b418ee642d2be",
+    "AI-log/Member-E/2026-11-25_mcp-tool-manifest.md": "aaf9fac692f4e3a43d93879c5e3bae1d5ccf2cb9db1a9227e1366b7cf9ea5810",
+    "AI-log/Member-E/2026-11-25_opencode-permissions.md": "6d176af07dd1bb0daf276fd9edc52a3b7f8fc6e0259c3d2efba12339d9e7aeca",
+    "AI-log/Member-E/2026-11-25_opencode-rules.md": "a1b48e76dce52cfa54c79a74452c7d2dad08a8ed4029a6c49bc35ed354e24710",
+    "AI-log/Member-E/2026-11-25_project-covenant.md": "be10c27c5b4bafc9e790b5f4e0bd79e9432507f6c0813dd0c2f26badf2534d7a",
+    "AI-log/Member-E/2026-11-25_static-launch-prompt.md": "85a117c8a81fb9ac53358bfc831a65c587c17e3e3ab680841aad2ef10e4dc3b4",
+    "AI-log/Member-E/2026-11-25_structural-constraints.md": "379a3cf4d9d97155d9b680f4e1453cc76f2af9aa0e6b731306de1c8b76ac3053",
+    "Prompt.md": "3a188154cd2ef72e9eb631305504e7e8b706c4b3a77fb85968c5395b903b1b78",
+    "docs/code-governance/mcp-tool-manifest.md": "a9d9a31be8e6031dc1d8552526201bfad885387fedb24c7dbfcea26648b14411",
+    "docs/code-governance/opencode-operating-rules.md": "801dce2f5e4ac95559379f25948cf13a33dfa43058b1fac6f49cf12bf6e21a0a",
+    "docs/code-governance/opencode-permissions.md": "5a5f882a8284bd2bcb37a2f1383bca524128c5599a54c94ed271ddb91d3435f4",
+    "docs/code-governance/structural-constraints.md": "39a2f0d0e5f4bf95b1fadc679b4e097ddd8b6e0e2c102579ed5418eb9461c18e",
+    "docs/verification/opencode-permission-probes-2026-11-25.json": "6d9bbdb14b747eabf7df488bf1b8623de18fed333ddd3ca3c8aaeb9f6bb23a47",
+    "docs/verification/opencode-rules-probes-2026-11-25.json": "47d607ed464a3070952de566bfb320ae935bd3cf67e04c0ea4c0e4600d6d84f2",
+    "docs/verification/project-covenant-probes-2026-11-25.json": "6b4359b1f7090870cdd1dc076e7f5324e5a0f475d0ed9b15198aff3cb17f3ab6",
+    "scripts/run_role_agent.py": "dd190a41eb5a64de653255eccc21d71ae8a05a7f5603beb8d6008109701db5eb",
+    "scripts/verify_role_permissions.py": "177eaec5e14461ac1c3c8934db924b64f2c94efc3e5336a0f56160c2da54b92f"
+  }
+}
