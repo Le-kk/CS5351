@@ -1,233 +1,297 @@
+# Every PR produces the same seven required names. Explicit docs-only changes
+# run document validation without package installation; all other PRs and pushes
+# run complete CI. Summaries fail on unknown classification or unexpected skips.
 name: CI
-
-# Required checks after activation: required tests; ruff (strict, full repo);
-# dependency check; ai-log updated; requirements schema; type check; security checks.
-# Regression/install is summarized by required tests. Static analysis includes
-# lint, scoped type checking, dependency audit and security/contract/permission probes.
-# Check names are not a count of course gate categories or workflow jobs.
-# Type checking currently covers runapi, portfolio, rating and output schemas;
-# legacy modules and third-party typing are not claimed as fully checked.
-# requirements schema includes A's schema and cross-record rules, not adoption.
-# Live semantic evaluation is opt-in. Test approval remains separately administered
-# and paused as a required check; this change does not re-enable prior approval.
-
-on:
-  push:
-    branches: [main, 'v[0-9]+.[0-9]+.[0-9]+']
-  pull_request:
-
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
-
 permissions:
   contents: read
-
 jobs:
+  scope:
+    name: classify changes
+    runs-on: ubuntu-latest
+    outputs:
+      mode: ${{ steps.scope.outputs.mode }}
+      base: ${{ steps.scope.outputs.base }}
+      head: ${{ steps.scope.outputs.head }}
+    steps:
+    - uses: actions/checkout@v7
+      with:
+        fetch-depth: 0
+    - name: Classify complete PR diff (pushes always full)
+      id: scope
+      env:
+        GATE_EVENT: ${{ github.event_name }}
+        GATE_BASE: ${{ github.event.pull_request.base.sha }}
+        GATE_HEAD: ${{ github.event.pull_request.head.sha }}
+      run: python3 scripts/ci/ci_scope.py --output "$GITHUB_OUTPUT"
+  documents:
+    name: document validation
+    needs:
+    - scope
+    if: needs.scope.outputs.mode == 'docs'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v7
+      with:
+        fetch-depth: 0
+    - name: Check formats, links and content consistency (no dependency installation)
+      env:
+        GATE_BASE: ${{ needs.scope.outputs.base }}
+        GATE_HEAD: ${{ needs.scope.outputs.head }}
+      run: python3 scripts/ci/check_documents.py
   type-check:
-    name: type check
+    name: type check (worker)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-python@v7
-        with:
-          python-version: "3.12"
-      - name: Install declared dev dependencies
-        run: pip install -e ".[dev]"
-      - name: Check shared API and safety-critical types
-        run: python -m mypy --config-file pyproject.toml
-      - name: Prove invalid types are rejected
-        run: python -m pytest -q test/offline/member_d_verification/test_type_gate.py
-
+    - uses: actions/checkout@v7
+    - uses: actions/setup-python@v7
+      with:
+        python-version: '3.12'
+    - name: Install declared dev dependencies
+      run: pip install -e ".[dev]"
+    - name: Check shared API and safety-critical types
+      run: python -m mypy --config-file pyproject.toml
+    - name: Prove invalid types are rejected
+      run: python -m pytest -q test/offline/member_d_verification/test_type_gate.py
+    needs:
+    - scope
+    if: needs.scope.outputs.mode == 'full'
   security-checks:
-    name: security checks
+    name: security checks (worker)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-python@v7
-        with:
-          python-version: "3.12"
-      - name: Install declared dev dependencies
-        run: pip install -e ".[dev]"
-      - name: Check workflow permission boundaries
-        run: python scripts/ci/check_workflow_permissions.py
-      - name: Scan all application Python files
-        run: python scripts/ci/check_security_scan.py --output "$RUNNER_TEMP/bandit.json"
-      - name: Verify contracts, API surface, privacy and permissions
-        run: >-
-          python -m pytest -q
-          test/offline/member_c_verification/offline
-          test/offline/test_layering.py
-          test/offline/member_d_verification/test_f2_redaction.py
-          test/offline/member_d_verification/test_review_regressions.py
-          test/offline/member_d_verification/test_security_gate_boundaries.py
-          test/offline/member_b_remediation/test_r1_logging_redaction.py
-          test/offline/member_b_remediation/test_r3_replay_durability.py
-          test/offline/member_b_remediation/test_r5_terminal_visibility.py
-          test/offline/test_reddit_fallback.py
-          test/offline/test_stocktwits_resilience.py
-      - name: Retain scanner report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: application-security-scan
-          path: ${{ runner.temp }}/bandit.json
-          if-no-files-found: warn
-
+    - uses: actions/checkout@v7
+    - uses: actions/setup-python@v7
+      with:
+        python-version: '3.12'
+    - name: Install declared dev dependencies
+      run: pip install -e ".[dev]"
+    - name: Check workflow permission boundaries
+      run: python scripts/ci/check_workflow_permissions.py
+    - name: Scan all application Python files
+      run: python scripts/ci/check_security_scan.py --output "$RUNNER_TEMP/bandit.json"
+    - name: Verify contracts, API surface, privacy and permissions
+      run: python -m pytest -q test/offline/member_c_verification/offline test/offline/test_layering.py test/offline/member_d_verification/test_f2_redaction.py
+        test/offline/member_d_verification/test_review_regressions.py test/offline/member_d_verification/test_security_gate_boundaries.py
+        test/offline/member_b_remediation/test_r1_logging_redaction.py test/offline/member_b_remediation/test_r3_replay_durability.py
+        test/offline/member_b_remediation/test_r5_terminal_visibility.py test/offline/test_reddit_fallback.py test/offline/test_stocktwits_resilience.py
+    - name: Retain scanner report
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: application-security-scan
+        path: ${{ runner.temp }}/bandit.json
+        if-no-files-found: warn
+    needs:
+    - scope
+    if: needs.scope.outputs.mode == 'full'
   requirements-schema:
-    name: requirements schema
+    name: requirements schema (worker)
     runs-on: ubuntu-latest
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-python@v7
-        with:
-          python-version: "3.12"
-      - name: Install declared validation and test dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -e ".[dev]"
-      - name: Validate current registry, schema and cross-record rules
-        run: python scripts/ci/check_requirement_schema.py
-      - name: Prove valid, invalid and execution-error outcomes
-        run: python -m pytest -q test/offline/member_d_verification/test_requirement_schema_gate.py
+    - uses: actions/checkout@v7
+    - uses: actions/setup-python@v7
+      with:
+        python-version: '3.12'
+    - name: Install declared validation and test dependencies
+      run: 'python -m pip install --upgrade pip
 
+        pip install -e ".[dev]"
+
+        '
+    - name: Validate current registry, schema and cross-record rules
+      run: python scripts/ci/check_requirement_schema.py
+    - name: Prove valid, invalid and execution-error outcomes
+      run: python -m pytest -q test/offline/member_d_verification/test_requirement_schema_gate.py
+    needs:
+    - scope
+    if: needs.scope.outputs.mode == 'full'
   test:
     name: tests (py${{ matrix.python-version }}${{ matrix.tz && format(', {0}', matrix.tz) || '' }})
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.11", "3.12", "3.13", "3.14"]
-        # One run away from UTC, so a test that only passes in UTC fails here.
+        python-version:
+        - '3.11'
+        - '3.12'
+        - '3.13'
+        - '3.14'
         include:
-          - python-version: "3.12"
-            tz: America/New_York
+        - python-version: '3.12'
+          tz: America/New_York
     env:
       TZ: ${{ matrix.tz }}
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-python@v7
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Install (with dev extras)
-        run: |
-          python -m pip install --upgrade pip
-          pip install -e ".[dev]"
-      - name: Run test suite
-        run: pytest -q
+    - uses: actions/checkout@v7
+    - uses: actions/setup-python@v7
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install (with dev extras)
+      run: 'python -m pip install --upgrade pip
 
+        pip install -e ".[dev]"
+
+        '
+    - name: Run test suite
+      run: pytest -q
+    needs:
+    - scope
+    if: needs.scope.outputs.mode == 'full'
   smoke-install:
-    name: clean-install smoke
+    name: clean-install smoke (worker)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-python@v7
-        with:
-          python-version: "3.12"
-      - name: Fresh install (no dev extras) and import
-        run: |
-          python -m pip install --upgrade pip
-          pip install .
-          # Catches undeclared runtime deps (e.g. #994 python-dotenv): a bare
-          # install must import the package and the CLI module.
-          python -c "import tradingagents, cli.main; print('clean-install import OK')"
+    - uses: actions/checkout@v7
+    - uses: actions/setup-python@v7
+      with:
+        python-version: '3.12'
+    - name: Fresh install (no dev extras) and import
+      run: 'python -m pip install --upgrade pip
 
-  required-tests:
-    name: required tests
-    needs: [test, smoke-install]
+        pip install .
+
+        # Catches undeclared runtime deps (e.g. #994 python-dotenv): a bare
+
+        # install must import the package and the CLI module.
+
+        python -c "import tradingagents, cli.main; print(''clean-install import OK'')"
+
+        '
+    needs:
+    - scope
+    if: needs.scope.outputs.mode == 'full'
+  lint:
+    name: ruff (strict, full repo) (worker)
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v7
+    - uses: actions/setup-python@v7
+      with:
+        python-version: '3.12'
+    - name: Install ruff
+      run: pip install "ruff>=0.16"
+    - name: Lint the repository
+      run: ruff check .
+    needs:
+    - scope
+    if: needs.scope.outputs.mode == 'full'
+  dependency-check:
+    name: dependency check (worker)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+    - uses: actions/checkout@v7
+      with:
+        fetch-depth: 0
+    - name: Fetch pull request commits
+      if: github.event_name == 'pull_request'
+      run: "git fetch --no-tags origin ${{ github.event.pull_request.base.sha }}\ngit fetch --no-tags origin ${{ github.event.pull_request.head.sha\
+        \ }} \\\n  || git fetch --no-tags ${{ github.event.pull_request.head.repo.clone_url }} ${{ github.event.pull_request.head.sha\
+        \ }}\n"
+    - uses: actions/setup-python@v7
+      with:
+        python-version: '3.12'
+    - name: Self-test the dependency rules
+      run: python scripts/ci/check_dependencies.py --self-test
+    - name: Install and verify the project dependencies
+      run: 'python -m pip install --upgrade pip
+
+        pip install -e ".[dev]"
+
+        pip install pip-audit
+
+        # Check the project''s declared requirements before removing only its
+
+        # local distribution. pip uninstall leaves runtime/dev dependencies
+
+        # installed for the audit; this repository is checked by tests/lint,
+
+        # not by looking up an unrelated public package with the same name.
+
+        python -m pip check
+
+        python -m pip uninstall --yes tradingagents
+
+        '
+    - name: Check dependencies
+      env:
+        GATE_EVENT: ${{ github.event_name }}
+        GATE_BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+        GATE_HEAD: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+      run: python scripts/ci/check_dependencies.py
+    needs:
+    - scope
+    if: needs.scope.outputs.mode == 'full'
+  ai-log-updated:
+    name: ai-log updated (worker)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+    - uses: actions/checkout@v7
+      with:
+        fetch-depth: 0
+    - name: Fetch pull request commits
+      if: github.event_name == 'pull_request'
+      run: "git fetch --no-tags origin ${{ github.event.pull_request.base.sha }}\ngit fetch --no-tags origin ${{ github.event.pull_request.head.sha\
+        \ }} \\\n  || git fetch --no-tags ${{ github.event.pull_request.head.repo.clone_url }} ${{ github.event.pull_request.head.sha\
+        \ }}\n"
+    - uses: actions/setup-python@v7
+      with:
+        python-version: '3.12'
+    - name: Self-test the update rule
+      run: python scripts/ci/check_ai_log_updated.py --self-test
+    - name: Require an AI-log update when code or prompts change
+      env:
+        GATE_EVENT: ${{ github.event_name }}
+        GATE_BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+        GATE_HEAD: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+      run: python scripts/ci/check_ai_log_updated.py
+    needs:
+    - scope
+    if: needs.scope.outputs.mode == 'full'
+  required-gates:
+    name: ${{ matrix.check }}
+    needs:
+    - scope
+    - documents
+    - type-check
+    - security-checks
+    - requirements-schema
+    - test
+    - smoke-install
+    - lint
+    - dependency-check
+    - ai-log-updated
     if: always()
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        check:
+        - required tests
+        - ruff (strict, full repo)
+        - dependency check
+        - ai-log updated
+        - requirements schema
+        - type check
+        - security checks
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-python@v7
-        with:
-          python-version: "3.12"
-      - name: Self-test the summary rule
-        run: python scripts/ci/check_required_tests.py --self-test
-      - name: Require pytest and clean-install smoke to succeed
-        env:
-          PYTEST_RESULT: ${{ needs.test.result }}
-          SMOKE_RESULT: ${{ needs.smoke-install.result }}
-        run: python scripts/ci/check_required_tests.py
-
-  lint:
-    name: ruff (strict, full repo)
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-python@v7
-        with:
-          python-version: "3.12"
-      - name: Install ruff
-        run: pip install "ruff>=0.16"
-      - name: Lint the repository
-        # The repo is fully clean under the strict select, so we lint everything
-        # (generated results/ is excluded via pyproject extend-exclude).
-        run: ruff check .
-
-  dependency-check:
-    name: dependency check
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
-      - name: Fetch pull request commits
-        if: github.event_name == 'pull_request'
-        run: |
-          git fetch --no-tags origin ${{ github.event.pull_request.base.sha }}
-          git fetch --no-tags origin ${{ github.event.pull_request.head.sha }} \
-            || git fetch --no-tags ${{ github.event.pull_request.head.repo.clone_url }} ${{ github.event.pull_request.head.sha }}
-      - uses: actions/setup-python@v7
-        with:
-          python-version: "3.12"
-      - name: Self-test the dependency rules
-        run: python scripts/ci/check_dependencies.py --self-test
-      - name: Install and verify the project dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -e ".[dev]"
-          pip install pip-audit
-          # Check the project's declared requirements before removing only its
-          # local distribution. pip uninstall leaves runtime/dev dependencies
-          # installed for the audit; this repository is checked by tests/lint,
-          # not by looking up an unrelated public package with the same name.
-          python -m pip check
-          python -m pip uninstall --yes tradingagents
-      - name: Check dependencies
-        env:
-          GATE_EVENT: ${{ github.event_name }}
-          GATE_BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
-          GATE_HEAD: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
-        run: python scripts/ci/check_dependencies.py
-
-  ai-log-updated:
-    name: ai-log updated
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
-      - name: Fetch pull request commits
-        if: github.event_name == 'pull_request'
-        run: |
-          git fetch --no-tags origin ${{ github.event.pull_request.base.sha }}
-          git fetch --no-tags origin ${{ github.event.pull_request.head.sha }} \
-            || git fetch --no-tags ${{ github.event.pull_request.head.repo.clone_url }} ${{ github.event.pull_request.head.sha }}
-      - uses: actions/setup-python@v7
-        with:
-          python-version: "3.12"
-      - name: Self-test the update rule
-        run: python scripts/ci/check_ai_log_updated.py --self-test
-      - name: Require an AI-log update when code or prompts change
-        env:
-          GATE_EVENT: ${{ github.event_name }}
-          GATE_BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
-          GATE_HEAD: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
-        run: python scripts/ci/check_ai_log_updated.py
+    - uses: actions/checkout@v7
+    - name: Verify full results or intentional document-only skips
+      env:
+        CI_NEEDS: ${{ toJSON(needs) }}
+        CI_GATE: ${{ matrix.check }}
+      run: python3 scripts/ci/check_ci_results.py
+'on':
+  push:
+    branches:
+    - main
+    - v[0-9]+.[0-9]+.[0-9]+
+  pull_request: null
