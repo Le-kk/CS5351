@@ -1,3 +1,7 @@
+> Latest Bedrock isolation follow-up (2026-11-25): Bedrock 6 passed, including conflicting AWS settings; full suite 1918 passed / 0 failed / 1 skipped / 1 deselected. Formal semantic acceptance remains pending.
+
+> Latest post-repair rerun (2026-11-25): focused 237 passed; full 1917 passed / 1 failed; semantic harness/scorer 8 passed. See the post-repair verification section below. Formal semantic acceptance remains pending.
+
 > Latest results: Linux rerun below reports 1882 passed / 26 failed; earlier Windows counts remain historical.
 
 # Requirement-aligned test update — 2026-11-25
@@ -153,3 +157,51 @@ H6 replay locking, H7 schema-gate fixtures, H8 symlink isolation and H10 loopbac
 Only verification documentation was changed in this rerun; prior test edits are preserved. No live model replay, human semantic scoring, remote CI/branch-protection inspection, commit or publication occurred. Full registry acceptance remains blocked; prior historical records are retained.
 
 Documentation check: default Linux git diff --check flags CRLF in pre-existing dirty files; the CR-at-EOL-aware check is recorded separately. No test line endings were changed.
+
+## Post-repair verification — 2026-11-25
+
+User-authorized rerun on local main `1bf6e17dd0ecdd5e5f38b157fafc4c632105a933` plus pre-existing dirty application files `tradingagents/report_html.py`, `tradingagents/runapi/reporting.py`, `tradingagents/runapi/result.py` and untracked repair regression tests. Existing D AI-log preserved. Origin remains hedyliu-574/CS5351, not the instructed team repository; no team-main equivalence claimed. Existing WSL Ubuntu-24.04 Python 3.12 `.venv` reused without installation/upgrades. Registry 1.2.0 remains proposed_for_adoption, 36 active/3 withdrawn.
+
+### Registry and repaired-node checks
+
+`.venv/bin/python -m pytest -q -p no:cacheprovider --tb=short tests/member_c_verification/offline tests/member_c_verification/test_registry_result_repairs.py tests/test_checkpoint_lifecycle.py tests/test_checkpoint_resume.py tests/member_b_remediation/test_r3_replay_durability.py tests/member_b_remediation/test_r2_r3_differential_pins.py tests/member_d_verification/test_requirement_schema_gate.py`
+
+**237 passed**, 4.34 s, exit 0, no skips. The former 25 H1–H5 failures pass. This verifies the exercised vocabulary, finding/result validation, population arithmetic and disclaimer layout; it does not establish full registry implementation, budget admission or correction mechanisms. Evidence: `.local-review/rerun-focused-20261125.txt`.
+
+### Full regression check
+
+`.venv/bin/python -m pytest -q -p no:cacheprovider --tb=short`
+
+**1917 passed, 1 failed, 1 skipped, 1 deselected; 100 subtests passed, 24 warnings**, 16.78 s, exit 1. Remaining failure: `tests/test_bedrock_provider.py::test_construction_when_extra_installed` (H9/BD-001), AWS credential discovery failing against the configured localhost proxy. Full-suite green status remains blocked. Skip: live semantic replay not opted in. Default integration exclusion remains. Evidence: `.local-review/rerun-full-20261125.txt`.
+
+### Semantic harness and scorer checks
+
+`.venv/bin/python -m pytest -q -p no:cacheprovider tests/member_c_verification/live/test_harness_selfcheck.py tests/member_c_verification/live/test_score_gov004_exitcodes.py`
+
+**8 passed**, 1.69 s, exit 0. Evidence: `.local-review/rerun-semantic-20261125.txt`. These scripted checks verify capture/injection restoration and synthetic PASS/FAIL/PENDING exits. No paid/live replay, new cohort, human scores or sign-off occurred. Formal GOV-004 acceptance remains **PENDING independent audit** under gov004-evidence-package.md; a reviewed frozen cohort and genuine human scores remain necessary. Offline results do not establish narrative quality or restore missing historical evidence.
+
+### Required static checks
+
+All PASS using `.venv/bin/python`: `-m ruff check .`; `-m mypy --config-file pyproject.toml` (14 files); `scripts/ci/check_requirement_schema.py` (36 active/3 withdrawn); `scripts/ci/check_workflow_permissions.py` (5 workflows); `scripts/ci/check_security_scan.py` (105 application files, zero medium/high). Dependency audit, remote CI and branch protection not checked. No implementation/test edits, relaxed assertions, commit, push or publication. Independent human acceptance remains pending. Earlier results are preserved; this addendum supersedes counts only for this checkout and scope.
+
+Dirty application diff SHA256 (`git diff --binary -- tradingagents cli`): `06fda0250500f69c82641c93691a38ed0107c9bd33d3d8d7cf1a38a8587aaf6a`. Untracked repair-test SHA256: `e41aa13600505e83420093d1ccaccd83a11151ee472b4657f476f7aa2763374a`.
+
+## Bedrock isolation follow-up — 2026-11-25
+
+Supersedes the preceding unresolved H9/BD-001 result for this local checkout. User explicitly requested fixing Bedrock test isolation, rerunning tests and updating evidence. Baseline remains local main `1bf6e17dd0ecdd5e5f38b157fafc4c632105a933`, origin hedyliu-574/CS5351 (not team remote), with all previously staged H1–H5 repairs/tests/documents and untracked D isolation log preserved. No team-main equivalence or independent human acceptance claimed.
+
+`tests/test_bedrock_provider.py` now has a module-local autouse fixture removing ambient AWS overrides, supplying synthetic credentials, disabling metadata discovery and pointing AWS/Boto config paths at an empty temporary file. Real construction resets boto3's cached default session and rejects botocore HTTP sends. Monkeypatch restores state after each test. Original real-class/region assertions and optional-extra skip remain unchanged. No application authentication or proxy settings changed.
+
+### Bedrock checks
+
+Existing WSL Ubuntu-24.04 Python 3.12 environment reused. `.venv/bin/python -m pytest -q -p no:cacheprovider tests/test_bedrock_provider.py`: **6 passed**, 0.84 s, exit 0. Same command with synthetic conflicting AWS_PROFILE, AWS_DEFAULT_PROFILE, AWS_REGION, AWS_BEARER_TOKEN_BEDROCK and AWS_WEB_IDENTITY_TOKEN_FILE: **6 passed**, 0.75 s, exit 0. This retains real offline construction and verifies ambient override isolation. Local evidence: `.local-review/bedrock-isolation-focused-final.txt` and `.local-review/bedrock-isolation-conflicting-env-final.txt`.
+
+The initial construction-only repair left the bearer-token test vulnerable to ambient AWS_REGION: the first conflicting-environment probe recorded **1 failed, 5 passed**. That diagnostic remains in `.local-review/bedrock-isolation-conflicting-env.txt`; the final module-wide fixture resolves the observed leak without weakening assertions.
+
+### Full regression check
+
+`.venv/bin/python -m pytest -q -p no:cacheprovider --tb=short`: **1918 passed, 1 skipped, 1 deselected; 100 subtests passed, 24 warnings**, 15.52 s, exit 0. H9/BD-001 now passes on this Linux environment. Skip is opt-in live semantic replay; configured integration exclusion retained. Local evidence: `.local-review/bedrock-isolation-full-final.txt`. The final pipeline used bash pipefail, preserving pytest status.
+
+### Static checks and limits
+
+Ruff full repository and mypy (14 configured files) passed after the final fixture change. Requirements schema (36 active/3 withdrawn), workflow permissions (5 workflows) and security scan (105 application files, zero medium/high) passed during this repair; the later change was confined to the test fixture. No dependency changes/audit, live AWS/model calls, formal cohort/scoring, remote CI/protection inspection or delivery. Formal semantic acceptance remains PENDING independent audit; these are developer regression results. Registry adoption and broader implementation gaps are unchanged. Historical failures remain preserved. Final test-file SHA256: `3794f02e0a704d710941dc78c18fde3c1e917a9120ad6719ed9dbdf936aba6d2`.
