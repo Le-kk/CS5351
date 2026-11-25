@@ -41,6 +41,18 @@ The [bug diary](../bug-diary.md) records repair dispositions. The [mapping](requ
 
 The [document index](README.md) lists the verification materials prepared for E. [Review memo](../review-memo.md) and [debt register](../debt-register.md) provide the quality decisions and follow-up owners.
 
+## Addendum — INV-008 negative disclaimer-position probe (25 November 2026)
+
+The H5 reconciliation (`REQ-TA-SEC-003` / `REQ-TA-INV-008`) states that a report whose disclaimer appears only later is a blocking violation, not merely a "contains" gap. The recorded twenty leading-disclaimer nodes were positive-only. A negative probe was added: `TC-SEC003-c` in `tests/member_c_verification/offline/test_registry_gaps.py::test_inv008_disclaimer_only_later_is_a_violation` (parametrized Markdown / HTML).
+
+It renders a document whose disclaimer is present but placed after a title/header and asserts the position contract is violated — Markdown first non-blank line, HTML first visible element inside `<body>` with structure markup excluded — matching the requirement's own measurement. It also records that presence-only checking (rule Q3) cannot catch this, so the invariant is upheld at the exporter layout the positive nodes assert.
+
+| Verification | Recorded outcome | Evidence |
+|---|---|---|
+| `test_registry_gaps.py` (whole module, incl. `TC-SEC003-c`) | 42 passed | developer regression, this checkout |
+
+This is a developer regression for the exercised offline module, not independent C acceptance, not a live/semantic result, and not a claim that the full guarantee-phrase / R8 corpus is covered. Registry status for both entries remains `partial` / `proposed`, not adopted. The 40 positive nodes and 2 new negative nodes are unit-level assertions over the shared boundary.
+
 ## Historical reference
 
 [Earlier records](history/verification-report-2026-11-25.md)
