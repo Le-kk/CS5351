@@ -45,7 +45,7 @@ members:
   coverage: available_selected_records; contributor_confirmation_pending
   directory: AI-log/Member-D/
 - member: E
-  records: 41
+  records: 42
   provenance_indexes: 4
   coverage: available_selected_records; contributor_confirmation_pending
   directory: AI-log/Member-E/
@@ -514,6 +514,13 @@ source_records:
   record_date: '2026-11-25'
   date_basis: current authorized integration session; no precise timestamp invented
   sha256: b813f6a58def0e21e17dcb17cd39076b0eeb13dd8f53204ac2edef4783185cf8
+- id: E-46
+  member: E
+  path: AI-log/Member-E/2026-11-25-e14-contents-and-build.md
+  kind: ai_use_record
+  record_date: '2026-11-25'
+  date_basis: current authorized documentation task
+  sha256: cd368011b22a2e9d7bd64d32a00de87c3318d1f74d87a6687fcfe5e054ae36a8
 events:
 - id: B-REVIEW
   member: B
@@ -1463,6 +1470,24 @@ events:
   - path: report-assets/integration-verification.json
     availability: present
     purpose: integrated report or verifiable assembly metadata
+- id: E14-SUBMISSION-GUIDE
+  member: E
+  title: Submission contents and build guide
+  source_records:
+  - E-46
+  task: Complete E14 supporting delivery documentation.
+  intervention: User explicitly requested completion after the missing-file check.
+  changes: Added package inventory, clean installation/startup, test commands, limits, secret handling and revision-bound
+    archive procedure; linked from README/checklist.
+  verification:
+    basis: local source/configuration inspection and non-model entrypoint/archive checks
+    summary: Relative links, imports/help, baseline archive exclusions and symlinks checked; no paid replay.
+  limitations: Guide is not a completed frozen archive or owner acceptance; publication subsequently authorized
+    and submitted through normal PR checks.
+  artifacts:
+  - path: docs/submission/contents-and-build.md
+    availability: present
+    purpose: E14 supporting guide
 outstanding_records:
 - id: G-A
   owner: A
@@ -1525,12 +1550,12 @@ integrity:
   archive_policy: Nine obsolete/duplicate untracked files retained under ignored local archive with original hashes;
     not delivered as current rules/tests. No original historical AI excerpt deleted.
   current_counts:
-    source_records: 65
-    events: 40
+    source_records: 66
+    events: 41
 integration_refresh:
   date: '2026-11-25'
-  source_records: 65
-  events: 40
+  source_records: 66
+  events: 41
   remote_baseline: f103e4e
   new_delivery_status: Five identities, user-confirmed contributions and five original reflections integrated in
     Report.md/PDF. D5 collection and independent technical acceptance remain separate.
