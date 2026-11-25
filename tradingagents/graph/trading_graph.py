@@ -272,6 +272,7 @@ class TradingAgentsGraph:
             "max_risk_discuss_rounds": cfg.get("max_risk_discuss_rounds"),
             "output_language": cfg.get("output_language"),
             "concise_intermediate_reports": cfg.get("concise_intermediate_reports", True),
+            "compact_evidence_handoff": cfg.get("compact_evidence_handoff", False),
             "context_cap_tokens": cfg.get("context_cap_tokens", 24000),
             "compaction_threshold_tokens": cfg.get("compaction_threshold_tokens", 19200),
             "data_vendors": dict(cfg.get("data_vendors") or {}),

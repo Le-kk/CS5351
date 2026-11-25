@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from tradingagents.agents.context import (
+    compact_handoff_instruction,
     get_instrument_context_from_state,
     get_language_instruction,
     get_portfolio_context_from_state,
@@ -64,7 +65,7 @@ Write these sections, in this order, starting with the recommendation on its own
 - **Rationale**: which arguments decided it
 - **Strategic Actions**: concrete steps for the trader, sized against a standard allocation
 
-{NO_EXTERNAL_TOOLS}""" + get_language_instruction()
+{NO_EXTERNAL_TOOLS}""" + get_language_instruction() + compact_handoff_instruction("research_manager")
 
         investment_plan = invoke_structured_or_freetext(
             structured_llm,

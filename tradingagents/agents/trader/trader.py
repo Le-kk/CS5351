@@ -5,6 +5,7 @@ from __future__ import annotations
 from langchain_core.messages import AIMessage
 
 from tradingagents.agents.context import (
+    compact_handoff_instruction,
     get_instrument_context_from_state,
     get_language_instruction,
     get_portfolio_context_from_state,
@@ -93,6 +94,7 @@ def create_trader(llm):
                     "ownership assumptions in the investment plan.\n"
                     "- **Reasoning**: why, against the plan and the price structure\n"
                     "- **Entry Price**, **Stop Loss**, **Position Sizing**: when you can state them"
+                    + compact_handoff_instruction("trader")
                 ),
             },
         ]

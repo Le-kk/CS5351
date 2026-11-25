@@ -210,6 +210,9 @@ def concise_analysis_instruction(stage: str = "analyst") -> str:
     from tradingagents.dataflows.config import get_config
     if not get_config().get("concise_intermediate_reports", True):
         return ""
+    compact = compact_handoff_instruction(stage)
+    if compact:
+        return "\nEvidence-first brevity: " + compact
     target = 450 if stage == "analyst" else 220
     return (
         f"\nEvidence-first brevity: aim for about {target} words, exceeding this when "
@@ -221,6 +224,39 @@ def concise_analysis_instruction(stage: str = "analyst") -> str:
         "add your distinct argument and specific rebuttals rather than retelling all inputs. "
         "Preserve every required labelled field, table, safety rule and portfolio condition. "
         "Brevity never permits invented evidence or omission of a material caveat."
+    )
+
+
+
+def compact_handoff_instruction(stage: str) -> str:
+    """An opt-in writing format, not a lossy post-processing/summarizer stage.
+
+    Keep the entire generated report in state. Facts, mandatory schemas and
+    disclosures outrank these advisory lengths; tool messages are untouched.
+    """
+    from tradingagents.dataflows.config import get_config
+    cfg = get_config()
+    if not cfg.get("compact_evidence_handoff", False) or not cfg.get("concise_intermediate_reports", True):
+        return ""
+    targets = {"analyst": 300, "debate": 140, "research_manager": 220, "trader": 250}
+    target = targets[stage]
+    return (
+        f"\nCompact evidence handoff: target {target} words for this intermediate output. "
+        "Use short evidence bullets instead of introductory, transitional or concluding prose. "
+        "Keep the required output schema, labelled fields and required tables unchanged. "
+        "For analyst reports, organize the required content into verdict/confidence, "
+        "decision-relevant evidence, conflicting evidence, and missing data/limitations; "
+        "these can be subsections within the required format. Each evidence bullet should "
+        "pair a material fact with source, observation date or fiscal period, units/basis, "
+        "and its decision implication. Cite a fact once rather than restating it in a "
+        "second summary or duplicating a required table in prose. For downstream roles, "
+        "name the decisive upstream facts and new reasoning only; do not retell each "
+        "analyst's report. Preserve contrary evidence, uncertainty, unavailable-data "
+        "notices, price anchors, conditional triggers, cash/position constraints and "
+        "the distinction between unknown holdings and an explicitly empty book. "
+        "Retain every material safety or factual qualification even if this exceeds "
+        "the target. Never invent a source, replace an unknown with zero, or cut "
+        "evidence merely to hit the word target. No extra summary or model call is needed."
     )
 
 

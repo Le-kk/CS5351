@@ -23,6 +23,7 @@ from langchain_core.messages import AIMessage
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
 from tradingagents.agents.context import (
+    compact_handoff_instruction,
     get_instrument_context_from_state,
     get_language_instruction,
     protect_context,
@@ -114,6 +115,11 @@ def create_sentiment_analyst(llm):
         # and free-text paths receive the same input. No bind_tools — the
         # data is already in the prompt.
         formatted_messages = prompt.format_messages(messages=state["messages"])
+        compact = compact_handoff_instruction("analyst")
+        if compact:
+            formatted_messages[0] = formatted_messages[0].model_copy(
+                update={"content": formatted_messages[0].content + compact}
+            )
 
         report_text = invoke_structured_or_freetext(
             structured_llm,

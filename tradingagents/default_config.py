@@ -27,6 +27,7 @@ _ENV_OVERRIDES = {
     "TRADINGAGENTS_LLM_MAX_RETRIES":      "llm_max_retries",
     "TRADINGAGENTS_MAX_TOKENS":           "max_tokens",
     "TRADINGAGENTS_CONCISE_INTERMEDIATE_REPORTS": "concise_intermediate_reports",
+    "TRADINGAGENTS_COMPACT_EVIDENCE_HANDOFF": "compact_evidence_handoff",
     # Provider-specific reasoning/thinking knobs (None = each provider's own
     # default). Settable here for non-interactive runs; the CLI also offers an
     # interactive choice, which is skipped when the matching var is set.
@@ -129,6 +130,8 @@ def build_default_config() -> dict:
         "max_tokens": None,
         # Concise evidence-first intermediate reports; disable for legacy prose.
         "concise_intermediate_reports": True,
+        # Opt-in compact writing within existing calls; no report truncation.
+        "compact_evidence_handoff": False,
         "context_cap_tokens": 24000,
         "compaction_threshold_tokens": 19200,
         # Checkpoint/resume: when True, LangGraph saves state after each node
