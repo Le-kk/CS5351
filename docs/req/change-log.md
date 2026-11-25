@@ -639,3 +639,21 @@ and `score_gov004.py` prints both in a machine-readable `Evaluation counts:` lin
 A did not merge, waive or approve E's commit. A's role here was to check the wording against the code and correct the requirement where the code showed the wording was wrong.
 
 Verification after the reconciliation: `validate.py` 36/3, 0 errors, 0 warnings; `negative-fixtures-check.py` all 32 fixtures fail correctly; `rebuild_registry.py` reproduces the registry byte-for-byte.
+
+## 2026-11-25 — D's four scope questions answered (OQ-20)
+
+D asked four questions about delivery scope. Three needed an answer from the requirement side; the fourth was a defect in A's own notes and is corrected.
+
+**1. Phased delivery — confirmed, and it was already the written rule.** `GOV-001`'s Start-up rule already says the job "runs and reports but does not block merges" until D fixes `QUALITY_THRESHOLD` from a baseline measurement, and the parameter is `state: open`. Nothing in the registry changed for this. The distinction A added to OQ-20 in `requirement-source-notes.md` is that "does not block" is about **the gate**, not about the checks: FR-005, FR-007, SEC-001 and SEC-003 are graded in both phases.
+
+**2. Trial size — allowed as a trial, refused as acceptance.** The existing 5 cases × 2 runs may be run as a trial provided the output says so. It is **5 cases**, not 10 of 20, and `EVAL-001` rules 5 and 7 check `N_EVAL` against cases, never attempts. Changing `N_EVAL` to 5 is **D's** parameter decision and a recorded requirements change; A did not lower the population. No registry change.
+
+**3. Acceptance-critical behaviours — the four confirmed, as a minimum.** `FR-005` (missing-data disclosure), `FR-007` (holdings/ownership wording), `SEC-001` (prompt injection) and `SEC-003`/`INV-008` (promise of guaranteed returns) are the minimum suite contents named in `GOV-001` and are in offline profile `A-A`. They are the minimum, not the whole population: 36 active entries remain. No registry change; the list is confirmed as written.
+
+**4. Stale description corrected.** OQ-18 and the `SEC-003` note said the runapi path "still builds `envelope + body` with the disclaimer at the foot of the body", which read as if the envelope header were the problem. Checked against `tradingagents/runapi/reporting.py`: `build_envelope` emits the frozen `DISCLAIMER` as its **first line** and complies. The non-compliant document is the concatenation in `tradingagents/runapi/execution.py`, because `render_body` appends a footer copy — so the delivered file has the disclaimer twice with the visible content between the copies. **The fix is deleting that footer copy, not touching the envelope.** Registry `SEC-003` note and OQ-18 now say this, so the finished part is not re-opened.
+
+Also corrected in OQ-18: the entry's prose still used "first non-blank element" in places; an amendment line now records that it means **first rendered visible content**, and that the original wording was unsatisfiable in HTML.
+
+**Ownership restated, not transferred:** the footer-copy decision stays with B (OQ-18); the `QUALITY_THRESHOLD` and `N_EVAL` values stay with D (and E for the threshold); A records the change when D makes it. A claims no test result for any of the four behaviours.
+
+Verification: `validate.py` 36/3, 0 errors, 0 warnings; `negative-fixtures-check.py` all 32 fixtures fail correctly; `ruff check .` clean; `rebuild_registry.py` reproduces the registry unchanged.
