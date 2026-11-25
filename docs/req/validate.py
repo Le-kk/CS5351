@@ -432,10 +432,10 @@ def main(argv=None) -> int:
     for r in reqs:
         if r["id"] in ("REQ-TA-INV-008", "REQ-TA-SEC-003"):
             fc = (r.get("fit_criterion") or "").lower()
-            if "first non-blank element" not in fc:
+            if "first rendered visible content" not in fc:
                 problems.append(
                     f"{r['id']}: fit criterion no longer requires the disclaimer to be the "
-                    "first non-blank element; 'contains' is weaker than 'starts with'")
+                    "first rendered visible content; 'contains' is weaker than 'first'")
 
     for line in problems:
         print(("ERROR " if not line.startswith("warning:") else "") + line)
