@@ -424,6 +424,19 @@ def main(argv=None) -> int:
             "document.status is 'adopted' but this script cannot verify the five-member "
             "adoption record; set it to adopted only when that record is actually signed")
 
+    # 19. The disclaimer must be the first element of the report, not merely present.
+    #     Member C's H5 (2026-11-25): the delivered report began with the envelope
+    #     header and ended with the disclaimer, and C correctly refused to read
+    #     "starts with" as "contains". The failure mode is a later edit that softens
+    #     the wording, so the wording itself is checked here.
+    for r in reqs:
+        if r["id"] in ("REQ-TA-INV-008", "REQ-TA-SEC-003"):
+            fc = (r.get("fit_criterion") or "").lower()
+            if "first non-blank element" not in fc:
+                problems.append(
+                    f"{r['id']}: fit criterion no longer requires the disclaimer to be the "
+                    "first non-blank element; 'contains' is weaker than 'starts with'")
+
     for line in problems:
         print(("ERROR " if not line.startswith("warning:") else "") + line)
     hard = [p for p in problems if not p.startswith("warning:")]

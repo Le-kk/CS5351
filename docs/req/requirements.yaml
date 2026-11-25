@@ -953,13 +953,17 @@ requirements:
     factor, it reports exactly 1 controlled-change comparison naming `prompt` (1/1); given 2 records differing
     in both `prompt_hash` and `model` with no declaration, it refuses (1/1); given 20 cases scored twice
     under identical `config` and `prompt_hash`, then `N_EVAL` is reported as 20 cases and not 40 attempts,
-    and exactly 1 result is counted.'
+    and exactly 1 result is counted; and in every case the output carries `distinct_case_count` and `population_result_count`
+    beside the completion rate and the `NEEDS_REVIEW` count.'
   tradeoff: Reporting completed-only quality next to a low completion rate can look worse than a single
     blended number. That is intended.
   metric: agreement between reported evaluation numbers and a recomputation from the same run records
   threshold: 100% of reported counts equal the recomputed values; 0 runs silently removed from the completion
-    denominator; 0 undeclared multi-factor comparisons accepted
-  verification: recompute every reported figure from the stored run records of a fixed evidence set
+    denominator; 0 undeclared multi-factor comparisons accepted; `distinct_case_count` equals `N_EVAL`
+    on the 20-case cohort while the attempt total is 40; `population_result_count` matches rule 6 in all
+    4 fixtures; 0 reports omit either field
+  verification: recompute every reported figure from the stored run records of a fixed evidence set; the
+    two population fields are read from the report itself, not from any proposed API
   dependencies:
   - REQ-TA-RUN-001
   - REQ-TA-NFR-REPRO-001
@@ -976,14 +980,24 @@ requirements:
   - kind: baseline_observation
     ref: Le-kk/CS5351@c0081cb
     locator: baseline statement verified against the team repository
-  note: 'Amended 2026-11-23 on Member B''s question. B asked whether `N_EVAL` counts cases or attempts
-    and whether the existing five cases and two trials establish acceptance under `N_EVAL=20` with an
-    open threshold. B was right that they do not, and A found a second defect of A''s own: the parameter
-    appendix says `N_EVAL` = 20 cases, while this criterion originally exercised 10 records without saying
-    they were not acceptance. Rule 5 is new and says both things explicitly. A did **not** fix the remainder,
-    because the rubric, the critical items, the evaluation profile and `QUALITY_THRESHOLD` are owned by
-    D and E and two of them are still open parameters; writing them here would have made `GOV-001` look
-    decided when it is not. Not implemented: no evaluation script exists in the baseline.'
+  note: "Amended 2026-11-23 on Member B's question. B asked whether `N_EVAL` counts cases or attempts\
+    \ and whether the existing five cases and two trials establish acceptance under `N_EVAL=20` with an\
+    \ open threshold. B was right that they do not, and A found a second defect of A's own: the parameter\
+    \ appendix says `N_EVAL` = 20 cases, while this criterion originally exercised 10 records without\
+    \ saying they were not acceptance. Rule 5 is new and says both things explicitly. A did **not** fix\
+    \ the remainder, because the rubric, the critical items, the evaluation profile and `QUALITY_THRESHOLD`\
+    \ are owned by D and E and two of them are still open parameters; writing them here would have made\
+    \ `GOV-001` look decided when it is not. Not implemented: no evaluation script exists in the baseline.\n\
+    \n**Answered 2026-11-25 — Member C's H3.** C's offline tests require twenty cases scored twice to\
+    \ remain twenty cases while the observed report counts attempts. C recorded this as an interface ambiguity\
+    \ and declined to treat the proposed keys as evidence of an adopted API, which was correct: an unwritten\
+    \ interface cannot be an implementation defect. A now fixes the arithmetic, which is this requirement's\
+    \ own subject, in a new rule 7: `distinct_case_count` and `population_result_count` must appear in\
+    \ the evaluation report with the values rule 6 produces. The obligation is placed on the report output,\
+    \ so no private function name, module or layout is fixed. What A still does **not** fix is the entry\
+    \ point B must design and the rubric, critical items, profile and `QUALITY_THRESHOLD` D and E own.\
+    \ `COUNTS_CASES` is declared in the parameter appendix as a fixed counting rule. That row is the registry's\
+    \ only mention of it, so this entry is its sole declared user."
 - id: REQ-TA-SEC-001
   title: Prompt-injection resistance
   type: security
@@ -1051,15 +1065,19 @@ requirements:
   type: security
   priority: Should
   status: proposed
-  statement: Reports shall start with a disclaimer and shall not claim guaranteed returns, guaranteed
-    profit or capital protection.
-  fit_criterion: Given the offline profile, when (a) 20 reports are rendered, then 20/20 start with the
-    disclaimer string; (b) 5 scripted final decisions that each contain a phrase from `fixtures/sec003/guarantee_phrases.txt`
+  statement: '**First element of the delivered document** shall be the disclaimer; the ordering of everything
+    after it is not constrained by this requirement. The report shall not claim guaranteed returns, guaranteed
+    profit or capital protection. ''First element'' is not ''contains'': a disclaimer placed after a title
+    or header does not satisfy this requirement (A, 2026-11-25, on Member C''s H5).'
+  fit_criterion: Given the offline profile, when (a) 20 reports are rendered, then 20/20 have the disclaimer
+    as the first non-blank element of the delivered document, with no run metadata, title, header or provenance
+    block before it; (b) 5 scripted final decisions that each contain a phrase from `fixtures/sec003/guarantee_phrases.txt`
     are checked, then 5/5 get `NEEDS_REVIEW` with finding R8.
   tradeoff: The phrase list flags "guaranteed" even inside a quoted source.
-  metric: reports starting with the disclaimer, and guarantee phrases caught by rule R8
-  threshold: 20/20 reports start with the disclaimer; 5/5 guarantee fixtures get NEEDS_REVIEW with finding
+  metric: reports whose first non-blank element is the disclaimer, and guarantee phrases caught by rule
     R8
+  threshold: 20/20 reports have the disclaimer as their first non-blank element; 5/5 guarantee fixtures
+    get NEEDS_REVIEW with finding R8
   verification: offline profile; 20 rendered reports and 5 scripted decisions containing listed phrases
   semantic_part: 5 live prompts that directly ask for a guarantee are in the GOV-001 suite.
   dependencies:
@@ -1074,6 +1092,15 @@ requirements:
   - kind: baseline_observation
     ref: Le-kk/CS5351@c0081cb
     locator: baseline statement verified against the team repository
+  note: '**Amended 2026-11-25 — Member C''s H5.** C''s twenty disclaimer fixtures show the delivered report
+    beginning with the provenance/envelope header and ending with the disclaimer, and C correctly refused
+    to reinterpret "starts" as "contains" or to relax the test. The choice belongs to A, so A has made
+    it: the disclaimer is the first element of the delivered document. The consequence is a constraint
+    on B''s layout contract, which currently places the envelope header first, and on D''s renderer. Two
+    ways to comply exist and A does not choose between them — emit the disclaimer inside the envelope
+    before the provenance lines, or render it as the first body element and build the envelope after it.
+    A third option, weakening this requirement to "contains", is rejected. The nine non-disclaimer checks
+    (Q1-Q4, R1-R8 and their readers) are unaffected by position and remain valid.'
 - id: REQ-TA-ARCH-001
   title: Vendors behind one routing point
   type: architectural_constraint
@@ -1448,12 +1475,12 @@ requirements:
     ref: docs/architecture/invariants.md
     locator: no counterpart (B, 2026-11-23)
 - id: REQ-TA-INV-008
-  title: Disclaimer present, no guarantee phrase
+  title: Disclaimer first non-blank element, no guarantee phrase
   type: invariant
   priority: Must
   status: proposed
-  statement: The system shall hold that every report starts with the disclaimer and contains no prohibited
-    guarantee phrase.
+  statement: The system shall hold that the first non-blank element of every report is the disclaimer;
+    no prohibited guarantee phrase appears.
   zero_tolerance: true
   enforced_by: REQ-TA-ARCH-002
   enforced_components:
@@ -1462,9 +1489,10 @@ requirements:
   - tradingagents/agents/rating.py parse_rating
   rule_owner: REQ-TA-SEC-003
   amended_by: []
-  fit_criterion: Given 20 rendered reports, when each is checked, then 20/20 start with the disclaimer
-    and the 5 guarantee fixtures each raise 1 blocking finding (R8). A single observed violation is 1
-    blocking defect; no run is exempt.
+  fit_criterion: Given 20 rendered reports, when each is checked, then 20/20 have the disclaimer as their
+    first non-blank element and the 5 guarantee fixtures each raise 1 blocking finding (R8). A report
+    whose disclaimer appears only later in the document is a violation of this entry, not a wording gap.
+    A single observed violation is 1 blocking defect; no run is exempt.
   tradeoff: A zero-tolerance invariant fails the build on one counterexample, which costs time when the
     counterexample is a fixture bug rather than a product bug.
   dependencies:
@@ -1857,4 +1885,10 @@ parameter_appendix:
   owner: D
   used_by:
   - REQ-TA-GOV-001
+  - REQ-TA-NFR-EVAL-001
+- name: COUNTS_CASES
+  value: one result per distinct case, never per attempt
+  state: fixed
+  owner: A
+  used_by:
   - REQ-TA-NFR-EVAL-001

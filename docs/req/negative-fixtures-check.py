@@ -155,6 +155,16 @@ def mutate_doc(doc: dict, case: dict) -> None:
     elif kind == "invariant_without_enforcer":
         # F24-03: an invariant that names no component cannot be traced.
         reqs["REQ-TA-INV-014"].pop("enforced_components", None)
+    elif kind == "disclaimer_contains_only":
+        # H5 (2026-11-25): the old wording said "starts with" and the layout puts
+        # the disclaimer last. If a future edit weakens it to "contains", the
+        # requirement no longer distinguishes the two, so the registry must not
+        # be able to express that weakening silently. Mutation: reword INV-008's
+        # fit criterion back to "contains".
+        r = reqs["REQ-TA-INV-008"]
+        r["fit_criterion"] = (
+            "Given 20 rendered reports, when each is checked, then 20/20 contain the "
+            "disclaimer and the 5 guarantee fixtures each raise 1 blocking finding (R8).")
     else:
         raise AssertionError(f"unknown mutation {kind}")
 
@@ -194,6 +204,8 @@ CASES = [
     ("27 requirement entry missing its id", "entry_missing_id", "has no 'id' string"),
     ("28 requirement entry is null", "entry_is_null", "not a mapping"),
     ("29 invariant names no enforcer", "invariant_without_enforcer", "does not name enforced_components"),
+    # Added 2026-11-25 for Member C's H5: "starts with" must not decay to "contains".
+    ("30 disclaimer weakened to 'contains'", "disclaimer_contains_only", "weaker than 'starts with'"),
 ]
 
 
