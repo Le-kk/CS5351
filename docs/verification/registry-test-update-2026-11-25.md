@@ -1,0 +1,207 @@
+> Latest Bedrock isolation follow-up (2026-11-25): Bedrock 6 passed, including conflicting AWS settings; full suite 1918 passed / 0 failed / 1 skipped / 1 deselected. Formal semantic acceptance remains pending.
+
+> Latest post-repair rerun (2026-11-25): focused 237 passed; full 1917 passed / 1 failed; semantic harness/scorer 8 passed. See the post-repair verification section below. Formal semantic acceptance remains pending.
+
+> Latest results: Linux rerun below reports 1882 passed / 26 failed; earlier Windows counts remain historical.
+
+# Requirement-aligned test update — 2026-11-25
+
+Baseline: `14b06a57e3e779435614d066dfd6ab94510b0d2b`, local main, origin hedyliu-574/CS5351. The prior test-plan and mapping edits were already dirty and preserved. Registry schema 1.2.0 remains proposed for adoption. This is user-authorized C test work, not implementation or independent human acceptance.
+
+Updated existing tests for stop-reason vocabulary, corrected-only/mixed finding severity, critical publication precedence over model/interruption/internal failure, six reason logging with credential redaction, safe original/corrected diagnostic projection, checkpoint clear followed by fresh execution, the registry's 6/10 reason distribution, unresolved starts and 20 cases with two attempts each. No existing valid regression tests were removed. No tests were identified as unused: pytest collects them, and legacy Q1-Q4/privacy/checkpoint checks still protect current behavior. No skips or xfails were added.
+
+New evaluation output keys `distinct_case_count` and `population_result_count` are C's proposed observable test interface for the registry's arithmetic; not an existing adopted application API. This test deliberately exposes missing reporting. Q1 severity probes exercise the generic envelope only, not sentiment R5 implementation. The rerun test exercises checkpoint clearing, not an absent CLI rerun/list feature. Resume run-ID ownership remains unresolved in A/B documentation. BUDGET execution/admission, secondary-cause retention, full R1-R8 correction persistence and comparison-mode rejection remain implementation/verification gaps; the tests do not claim full registry coverage.
+
+Verification (Windows, local Python 3.12): declared editable dev installation succeeded after retrying with network access. Initial collection failed without defusedxml; installation resolved that dependency error.
+
+- `.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider --tb=no tests/member_c_verification/offline tests/test_checkpoint_lifecycle.py tests/test_checkpoint_resume.py`: **120 passed, 3 failed, 1 skipped**. Failures: BUDGET absent from StopReason; PASSED rejects CORRECTED findings; summarize_records omits distinct case counts. Skip: existing symlink privilege limitation.
+- Earlier affected run including `tests/member_b_remediation/test_r3_replay_durability.py`: **128 passed, 32 failed, 1 skipped** (before eight added privacy cases). Additional 29 failures: replay store requires POSIX fcntl locking and fails closed on Windows; tests preserved.
+- Ruff full repository, mypy (14 configured source files), requirement schema (36 active/3 withdrawn), workflow permissions (5 files), security scan (105 files, zero medium/high), and git diff whitespace checks: passed.
+
+No live models, external-data replay or human semantic scoring performed. Required CI/branch protection not inspected. Application source unchanged.
+
+Full-suite supplementary run: `.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider --tb=no` reported **1814 passed, 40 failed, 7 skipped, 1 deselected, 25 warnings, 100 subtests passed** in 90.92 seconds. It started before the final eight privacy tests were added; their result is included in the final focused run above. Additional failures shown in the summary include schema-gate duplicate-YAML handling, symlink-escape setup, Bedrock construction and loopback authentication. These broader failures have not been independently diagnosed or waived. The shell wrapper returned zero because it printed the redirected summary afterward; pytest itself reported failure. The temporary full-output file was not available across subsequent sandbox sessions, so no durable raw full-suite log is claimed.
+
+## Missing-test follow-up
+
+Same baseline and pre-existing dirty edits preserved. Added `tests/member_c_verification/offline/test_registry_gaps.py`, reusing GOOD_STATE, make_engine, confirmed_context and tmp_path. Forty offline parameterized cases: seven full publication/frozen-input probes, eleven result serialization positives, two public result negatives, twenty required disclaimer-placement renders. No application changes, live calls, added skips or expected-failure markers.
+
+New module command: `.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider --tb=short tests/member_c_verification/offline/test_registry_gaps.py`: **18 passed, 22 failed**. Six source/consumer mutation cases plus no-input/empty distinction pass. Public REVIEW/PASSED is incorrectly accepted; corrected-only PASSED is rejected; all twenty reports put the disclaimer at the end. These are three observed defect categories, not 22 distinct defects.
+
+Combined command: `.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider --tb=no tests/member_c_verification/offline tests/test_checkpoint_lifecycle.py tests/test_checkpoint_resume.py`: **138 passed, 25 failed, 1 skipped** in 11.45 seconds. Three earlier registry failures remain. Existing symlink skip reflects Windows privilege availability.
+
+Ruff, mypy, registry schema, workflow permissions and security scan rerun: all passed with the same coverage counts above. Pending implementation/offline acceptance and live-model work are listed separately in the current mapping. Full coverage of the registry is not claimed.
+
+Follow-up full suite: `.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider --tb=no` (exit 1): **1840 passed, 62 failed, 7 skipped, 1 deselected, 25 warnings, 100 subtests passed**, 91.91 seconds. Raw output retained locally in ignored `.local-review/registry-full-suite-2026-11-25.txt`. Compared with the prior run, the eight privacy probes and eighteen new passing probes account for +26 passes, and the twenty disclaimer plus two public-result negatives account for +22 failures. The other full-suite failures remain unwaived. This arithmetic is a comparison of observed runs, not proof of independent baseline acceptance.
+
+Mapping validation: exactly 36 unique active registry rows, all referenced test/source paths exist; `git diff --check` passed.
+
+## Failure investigation and owner handoff — 2026-11-25
+
+Prepared locally only; not sent, published, committed or represented as owner approval. Baseline remains 14b06a57e3e779435614d066dfd6ab94510b0d2b with prior test/document changes. Product source unchanged. Scope is C-owned test corrections and evidence; non-C tests and platform policy remain owner handoffs.
+
+### Failure-set reconciliation
+
+The retained full-suite log has 62 distinct failing node IDs. The focused set has 25, all present in that full set; full minus focused is exactly 37. Parameterizations do not define independent defects: the focused set represents **five root-cause groups** (including one interface ambiguity), and the extra set represents **five groups**. Thus ten tracked cause groups, not 62 product defects. The C fixture error below overlays H2; it is not another product defect.
+
+| Group | Nodes | Classification / requirement basis | Expected versus observed | Owner / dependencies | Acceptance / next evidence |
+|---|---:|---|---|---|---|
+| H1 | 1 | Implementation gap; REQ-TA-RUN-001, NFR-COST-002 | Six stop reasons including BUDGET; type declares five | D; B budget/finalizer contract | Six-reason contract plus real admission refusal, no extra dispatch, no INTERNAL_ERROR relabel, persistence precedence with safe secondary cause |
+| H2 | 2 | Implementation gap plus corrected C fixture; REQ-TA-ARCH-002, INV-005/006 | Corrected-only PASSED retained in CheckResult and RunResult; both reject findings | D; B corrected schema/rule-version migration | R5/R6 corrected-only passes and retains safe details; mixed blocking stays NEEDS_REVIEW; privacy/persistence/scorer readers agree |
+| H3 | 1 | Requirement/interface ambiguity; REQ-TA-NFR-EVAL-001 | Twenty cases/two attempts must remain twenty cases; summarize_records reports attempts only | B primary; A confirms population semantics, D implements reporting | Agree evaluator entry point and output schema, then bind test to it: 20 distinct cases, 40 attempts, one population result; preserve completion denominator and comparison rejection. Missing evidence: adopted case-aware reporting interface. Current proposed distinct_case_count/population_result_count keys are NOT evidence of an adopted API defect |
+| H4 | 1 | Implementation defect; REQ-TA-RUN-001 validity table, INV-001 | REVIEW must imply NEEDS_REVIEW; public RunResult permits REVIEW/PASSED | D; B public contract | Reject invalid public combination and preserve checker/end-to-end REVIEW behaviour |
+| H5 | 20 | Requirement/architecture alignment gap; REQ-TA-SEC-003, INV-008 | Registry says report starts with disclaimer; actual report starts with envelope and ends with disclaimer | A primary, B layout/header contract, D implementation | A/B resolve leading disclaimer versus frozen leading-envelope readers; then 20 reports satisfy agreed leading disclaimer contract and existing provenance readers remain valid. Do not silently reinterpret 'starts' as 'contains' |
+| H6 | 30 | Environment; REQ-TA-NFR-EVAL-001/GOV-001 integrity evidence | Exclusive durable claims before dispatch; POSIX-only harness refuses claims on Windows | E primary, B platform policy; C harness follow-up only if Windows support approved | Run all 30 unchanged on supported POSIX environment. Windows portability unresolved: need supported-platform decision and real cross-process locking design/tests; never replace lock with no-op |
+| H7 | 4 | Non-C test error; REQ-TA-GOV-004 | Invalid registry reaches gate and produces named failure; fixture read crashes under GBK | E primary coordinating D test ownership | Explicit UTF-8 fixture I/O, all 16 gate tests pass in default Windows locale and UTF-8/Linux. Gate itself passes valid registry; no validator defect established |
+| H8 | 1 | Environment; REQ-TA-NFR-REPRO-001 isolation, historical persistence boundary | Symlink escape rejected and outside sentinel intact; fixture cannot create symlink | E; capable runner privilege | Unchanged test passes on runner supporting directory symlinks. Missing evidence: actual escape branch execution on this machine; next run on capable Linux/Windows worker |
+| H9 / BD-001 | 1 | Non-C test-isolation error with environment trigger; NFR-001 regression support | Offline client construction/region assertion; ambient credential discovery contacts stale proxy | E coordinates D/upstream fixture; existing BD-001, not a new bug | Supply synthetic credentials and disable metadata in test fixture; preserve client class/region assertions and prohibit network. Controlled probe passes; no real AWS credential needed |
+| H10 | 1 | Environment; authentication regression support (no direct adopted registry ID) | Local callback yields [400,200] and synthetic email; socket permission blocks connection, timeout follows | E | Unchanged synthetic test passes when loopback allowed (observed 1/1). Keep network denied beyond loopback; no product auth defect established |
+
+### Each additional failing node
+
+Every row below was individually selected in the 37-node rerun; all 37 failed again. Exact trace evidence is retained locally in `.local-review/extra-investigation.txt`. Two H6 concurrency failures manifest as zero CLAIMED assertions; worker results explicitly report the same missing-lock refusal, so they are not separate races. H6/H8 product assertions remain unexecuted in this environment; supported-platform evidence is still needed.
+
+| Test node | Group | Classification | Observed evidence | Owner action / next step |
+|---|---|---|---|---|
+| `tests/member_b_remediation/test_r2_r3_differential_pins.py::test_r3_fixed_loop_persists_first_start_before_later_abort` | H6 | Environment | ReplayError: fcntl locking unavailable; concurrent probes get 0 successful claims | E: reproduce on supported POSIX runner; B: decide whether Windows replay is supported; no lock bypass |
+| `tests/member_b_remediation/test_r3_replay_durability.py::test_r3_01_preflight_rejects_whole_cohort_before_dispatch` | H6 | Environment | ReplayError: fcntl locking unavailable; concurrent probes get 0 successful claims | E: reproduce on supported POSIX runner; B: decide whether Windows replay is supported; no lock bypass |
+| `tests/member_b_remediation/test_r3_replay_durability.py::test_r3_02_start_is_durable_before_runner_entered` | H6 | Environment | ReplayError: fcntl locking unavailable; concurrent probes get 0 successful claims | E: reproduce on supported POSIX runner; B: decide whether Windows replay is supported; no lock bypass |
+| `tests/member_b_remediation/test_r3_replay_durability.py::test_r3_03_later_failure_keeps_first_and_retains_later_start` | H6 | Environment | ReplayError: fcntl locking unavailable; concurrent probes get 0 successful claims | E: reproduce on supported POSIX runner; B: decide whether Windows replay is supported; no lock bypass |
+| `tests/member_b_remediation/test_r3_replay_durability.py::test_r3_04_unresolved_start_stays_noncompleted_and_blocks_reuse` | H6 | Environment | ReplayError: fcntl locking unavailable; concurrent probes get 0 successful claims | E: reproduce on supported POSIX runner; B: decide whether Windows replay is supported; no lock bypass |
+| `tests/member_b_remediation/test_r3_replay_durability.py::test_r3_06_unique_files_and_exclusive_claim_in_one_second` | H6 | Environment | ReplayError: fcntl locking unavailable; concurrent probes get 0 successful claims | E: reproduce on supported POSIX runner; B: decide whether Windows replay is supported; no lock bypass |
+| `tests/member_b_remediation/test_r3_replay_durability.py::test_r3_07_normal_multi_case_run_saves_all_outcomes` | H6 | Environment | ReplayError: fcntl locking unavailable; concurrent probes get 0 successful claims | E: reproduce on supported POSIX runner; B: decide whether Windows replay is supported; no lock bypass |
+| `tests/member_b_remediation/test_r3_replay_durability.py::test_r3_05_scorer_ingests_unresolved_start_into_denominator` | H6 | Environment | ReplayError: fcntl locking unavailable; concurrent probes get 0 successful claims | E: reproduce on supported POSIX runner; B: decide whether Windows replay is supported; no lock bypass |
+| `tests/member_b_remediation/test_r3_replay_durability.py::test_r3_02_concurrent_same_id_claims_are_exclusive` | H6 | Environment | ReplayError: fcntl locking unavailable; concurrent probes get 0 successful claims | E: reproduce on supported POSIX runner; B: decide whether Windows replay is supported; no lock bypass |
+| `tests/member_b_remediation/test_r3_replay_durability.py::test_r3_06_concurrent_distinct_id_claims_all_retained` | H6 | Environment | ReplayError: fcntl locking unavailable; concurrent probes get 0 successful claims | E: reproduce on supported POSIX runner; B: decide whether Windows replay is supported; no lock bypass |
+| `tests/member_b_remediation/test_r3_replay_durability.py::test_r3_03_unclaimed_and_duplicate_outcomes_are_refused` | H6 | Environment | ReplayError: fcntl locking unavailable; concurrent probes get 0 successful claims | E: reproduce on supported POSIX runner; B: decide whether Windows replay is supported; no lock bypass |
+| `tests/member_b_remediation/test_r3_replay_durability.py::test_r3_03_conflicting_case_or_trial_is_refused` | H6 | Environment | ReplayError: fcntl locking unavailable; concurrent probes get 0 successful claims | E: reproduce on supported POSIX runner; B: decide whether Windows replay is supported; no lock bypass |
+| `tests/member_b_remediation/test_r3_replay_durability.py::test_r3_05_keyboard_interrupt_stops_after_preserving_start` | H6 | Environment | ReplayError: fcntl locking unavailable; concurrent probes get 0 successful claims | E: reproduce on supported POSIX runner; B: decide whether Windows replay is supported; no lock bypass |
+| `tests/member_b_remediation/test_r3_replay_durability.py::test_r3_05_unresolved_start_is_harness_metadata_not_invented_outcome` | H6 | Environment | ReplayError: fcntl locking unavailable; concurrent probes get 0 successful claims | E: reproduce on supported POSIX runner; B: decide whether Windows replay is supported; no lock bypass |
+| `tests/member_b_remediation/test_r3_replay_durability.py::test_r3_05_per_start_timestamps` | H6 | Environment | ReplayError: fcntl locking unavailable; concurrent probes get 0 successful claims | E: reproduce on supported POSIX runner; B: decide whether Windows replay is supported; no lock bypass |
+| `tests/member_b_remediation/test_r3_replay_durability.py::test_r3_05_resolved_start_with_missing_outcome_not_completed` | H6 | Environment | ReplayError: fcntl locking unavailable; concurrent probes get 0 successful claims | E: reproduce on supported POSIX runner; B: decide whether Windows replay is supported; no lock bypass |
+| `tests/member_b_remediation/test_r3_replay_durability.py::test_r3_08_nine_completed_plus_one_control_bound_pending` | H6 | Environment | ReplayError: fcntl locking unavailable; concurrent probes get 0 successful claims | E: reproduce on supported POSIX runner; B: decide whether Windows replay is supported; no lock bypass |
+| `tests/member_b_remediation/test_r3_replay_durability.py::test_r3_08_unknown_config_pending_is_flagged_not_invented` | H6 | Environment | ReplayError: fcntl locking unavailable; concurrent probes get 0 successful claims | E: reproduce on supported POSIX runner; B: decide whether Windows replay is supported; no lock bypass |
+| `tests/member_b_remediation/test_r3_replay_durability.py::test_r3_08_extra_pending_wrong_provider_fails` | H6 | Environment | ReplayError: fcntl locking unavailable; concurrent probes get 0 successful claims | E: reproduce on supported POSIX runner; B: decide whether Windows replay is supported; no lock bypass |
+| `tests/member_b_remediation/test_r3_replay_durability.py::test_r3_08_extra_pending_wrong_deep_tier_provider_fails` | H6 | Environment | ReplayError: fcntl locking unavailable; concurrent probes get 0 successful claims | E: reproduce on supported POSIX runner; B: decide whether Windows replay is supported; no lock bypass |
+| `tests/member_b_remediation/test_r3_replay_durability.py::test_r3_08_extra_pending_wrong_quick_tier_provider_fails` | H6 | Environment | ReplayError: fcntl locking unavailable; concurrent probes get 0 successful claims | E: reproduce on supported POSIX runner; B: decide whether Windows replay is supported; no lock bypass |
+| `tests/member_b_remediation/test_r3_replay_durability.py::test_r3_08_extra_pending_matching_tier_providers_pass` | H6 | Environment | ReplayError: fcntl locking unavailable; concurrent probes get 0 successful claims | E: reproduce on supported POSIX runner; B: decide whether Windows replay is supported; no lock bypass |
+| `tests/member_b_remediation/test_r3_replay_durability.py::test_r3_08_extra_pending_missing_config_fails` | H6 | Environment | ReplayError: fcntl locking unavailable; concurrent probes get 0 successful claims | E: reproduce on supported POSIX runner; B: decide whether Windows replay is supported; no lock bypass |
+| `tests/member_b_remediation/test_r3_replay_durability.py::test_r3_08_extra_pending_wrong_control_fails` | H6 | Environment | ReplayError: fcntl locking unavailable; concurrent probes get 0 successful claims | E: reproduce on supported POSIX runner; B: decide whether Windows replay is supported; no lock bypass |
+| `tests/member_b_remediation/test_r3_replay_durability.py::test_r3_08_extra_pending_missing_controls_fails` | H6 | Environment | ReplayError: fcntl locking unavailable; concurrent probes get 0 successful claims | E: reproduce on supported POSIX runner; B: decide whether Windows replay is supported; no lock bypass |
+| `tests/member_b_remediation/test_r3_replay_durability.py::test_r3_08_control_bound_pending_still_passes` | H6 | Environment | ReplayError: fcntl locking unavailable; concurrent probes get 0 successful claims | E: reproduce on supported POSIX runner; B: decide whether Windows replay is supported; no lock bypass |
+| `tests/member_b_remediation/test_r3_replay_durability.py::test_r3_08_wrong_config_pending_stays_rejected_after_package` | H6 | Environment | ReplayError: fcntl locking unavailable; concurrent probes get 0 successful claims | E: reproduce on supported POSIX runner; B: decide whether Windows replay is supported; no lock bypass |
+| `tests/member_b_remediation/test_r3_replay_durability.py::test_r3_04_package_handles_start_ledger_and_rescores_portably` | H6 | Environment | ReplayError: fcntl locking unavailable; concurrent probes get 0 successful claims | E: reproduce on supported POSIX runner; B: decide whether Windows replay is supported; no lock bypass |
+| `tests/member_b_remediation/test_r3_replay_durability.py::test_r3_04_runner_propagates_keyboardinterrupt` | H6 | Environment | ReplayError: fcntl locking unavailable; concurrent probes get 0 successful claims | E: reproduce on supported POSIX runner; B: decide whether Windows replay is supported; no lock bypass |
+| `tests/member_b_remediation/test_r3_replay_durability.py::test_r3_04_returned_interrupted_result_stops_dispatch` | H6 | Environment | ReplayError: fcntl locking unavailable; concurrent probes get 0 successful claims | E: reproduce on supported POSIX runner; B: decide whether Windows replay is supported; no lock bypass |
+| `tests/member_d_verification/test_requirement_schema_gate.py::test_five_required_negative_fixtures[missing_key]` | H7 | Test error (locale-dependent fixture I/O) | GBK UnicodeDecodeError before gate assertion; entire module passes 16/16 under -X utf8 | E coordinates D-owned test repair: explicit UTF-8 reads/writes; retest default locale and UTF-8 |
+| `tests/member_d_verification/test_requirement_schema_gate.py::test_five_required_negative_fixtures[invalid_priority]` | H7 | Test error (locale-dependent fixture I/O) | GBK UnicodeDecodeError before gate assertion; entire module passes 16/16 under -X utf8 | E coordinates D-owned test repair: explicit UTF-8 reads/writes; retest default locale and UTF-8 |
+| `tests/member_d_verification/test_requirement_schema_gate.py::test_schema_valid_but_cross_record_invalid_still_fails` | H7 | Test error (locale-dependent fixture I/O) | GBK UnicodeDecodeError before gate assertion; entire module passes 16/16 under -X utf8 | E coordinates D-owned test repair: explicit UTF-8 reads/writes; retest default locale and UTF-8 |
+| `tests/member_d_verification/test_requirement_schema_gate.py::test_incomplete_or_broken_audits_fail_closed[duplicate_yaml]` | H7 | Test error (locale-dependent fixture I/O) | GBK UnicodeDecodeError before gate assertion; entire module passes 16/16 under -X utf8 | E coordinates D-owned test repair: explicit UTF-8 reads/writes; retest default locale and UTF-8 |
+| `tests/member_d_verification/test_review_regressions.py::test_symlink_escape_preserves_outside` | H8 | Environment | WinError 1314 creating staging symlink, before publish_run | E: rerun unchanged test on symlink-capable runner; outside sentinel must survive |
+| `tests/test_bedrock_provider.py::test_construction_when_extra_installed` | H9 / BD-001 | Test error (ambient credential isolation), environment-triggered | Credential discovery hits stale proxy; synthetic AWS credentials plus disabled metadata probe passes 1/1 | E coordinates upstream D test fixture isolation; retain real construction/region assertions |
+| `tests/test_chatgpt_auth.py::test_the_browser_answer_reaches_the_loopback_and_strays_are_ignored` | H10 | Environment | WinError 10013 loopback connection, then auth timeout; unrestricted synthetic test passes 1/1 | E: permit local loopback in test runner; retain stray-request and successful callback assertions |
+
+### C-owned corrections and retests
+
+`test_fr007_output_check.py`: changed the invalid corrected Q1 fixture to corrected R5 and blocking R3; mixed case now uses R5/R8. These are the proposed architecture's actual severity classes. Assertions, test count and expected verdicts retained. `test_registry_gaps.py`: removed blanket claim that every failed probe is an implementation defect. The evaluation interface and disclaimer/header alignment require owner decisions; their failing assertions remain visible, not skipped/xfailed or silently relaxed. No product or non-C test edited in this investigation.
+
+Focused command: `.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider --tb=no tests/member_c_verification/offline tests/test_checkpoint_lifecycle.py tests/test_checkpoint_resume.py` → **138 passed, 25 failed, 1 skipped**, 11.87 s (exit 1), unchanged counts. The skip is the pre-existing symlink privilege case. There is no claimed green acceptance.
+
+Investigation: exact full-minus-focused nodes run with `--tb=short` → **37 failed**, 15.12 s. Schema module under `-X utf8` → **16 passed**, 6.20 s. Bedrock with subprocess-only synthetic AWS credentials and metadata disabled → **1 passed**, 2.61 s. Loopback unrestricted probe initially hit a system pytest-temp ACL setup error; retry with a fresh workspace basetemp → **1 passed**, 1.70 s. Neither controlled probe changes the default full-suite environment or waives its failure.
+
+Required checks rerun: Ruff PASS; mypy PASS (14 configured source files); requirement schema PASS (36 active/3 withdrawn); workflow permission boundaries PASS (5 files); security scan PASS (105 files, no medium/high). Exact commands are the repository-prescribed `.venv/Scripts/python.exe -m ruff check .`, `-m mypy --config-file pyproject.toml`, and `scripts/ci/check_requirement_schema.py`, `scripts/ci/check_workflow_permissions.py`, `scripts/ci/check_security_scan.py`. Live branch protection/dependency audit not asserted.
+
+### Consolidation with remaining work (no duplicate issue creation)
+
+H1/H2/H3/H4/H5 replace the earlier unclassified registry-failure entries; H9 links existing BD-001. H6 links the existing replay portability/independent-acceptance limitation. The mapping's pending lists remain authoritative for unexecuted work:
+
+| Pending work / basis | Owner and dependency | Acceptance criteria |
+|---|---|---|
+| Evidence, coverage, no-look-ahead, freshness: FR-001/004/005/006, INV-002/007 | A channel/core catalog; B data contracts; D enforcers | C then captures ten dated controls/markers, withheld live-only data, six freshness boundaries and exact report/record equality; evidence retained after failure |
+| Ownership/sentiment: FR-007/008, INV-003..006 | A phrase/source policy; B correction interfaces; D implementation | Banned ownership corpus blocks, sentiment caps/bands/no-data correction fixtures and safe original/corrected persistence pass; connects H2 |
+| Injection/guarantees: SEC-001/003, INV-008 | A authoritative corpus; B/D report/check pipeline | Twenty offline injection fixtures and five guarantee phrases with correct blocking findings; H5 leading-placement contract resolved |
+| Time/call/token/convergence: PERF-001/002, COST-001..003 | B admission/cancellation design; D limits/implementation; A thresholds | Offline reservation/race/retry/UNKNOWN accounting and eight debate fixtures; separate twenty-run live cost/time cohort, agreed budget and quality threshold |
+| Checkpoint list/resume/rerun: FR-003, REPRO-001 | A/B same-run versus fresh-run identity; D CLI/checkpoint implementation | Four saved analyst branches invoke zero times on resume, all execute on rerun, list statuses correct, original attempts immutable |
+| Logging/privacy/publication: OBS-001, REPRO-001, SEC-002 | A conditional-null wording; B schema; D sinks | Both sinks and A-A/B/C profiles cover new reasons/corrections; safe secondary cause retained, critical failure wins, no contradictory terminal or credential leak |
+| Analyst extensibility/vendor routing: NFR-002, ARCH-001 | B boundary; D implementation | Measured add/remove change-cost experiment and complete direct-vendor import/call audit with no widened exception |
+| Governance: GOV-002/003/004 | A paused-preapproval reconciliation; E CI and path matrix | Keep preapproval paused; positive/negative governed-path checks and independently read required-check settings; UTF-8 repair H7 |
+| Live acceptance: GOV-001, EVAL-001, PERF-001/COST-001 | A rubric/population; D run collection; E durable integration; C independent scoring | Fixed distinct-case cohort and controls, all starts retained, portable evidence, genuine human scores; no scripted/offline result substitutes for live acceptance |
+
+No outside owner has approved these assignments; they are prepared handoff recommendations. Linux replay, symlink execution and adopted population/report interfaces remain explicit missing evidence, not assumed passes.
+
+### Final before/after verification
+
+| Run | Before | After C correction | Result |
+|---|---|---|---|
+| Focused | 138 passed / 25 failed / 1 skipped | 138 passed / 25 failed / 1 skipped | Same assertions and unresolved causes; corrected fixture semantics |
+| Full | 1840 passed / 62 failed / 7 skipped / 1 deselected | 1840 passed / 62 failed / 7 skipped / 1 deselected | 100 subtests passed, 25 warnings; exit 1; 94.23 s |
+
+After logs retained in ignored `.local-review/handoff-focused.txt` and `.local-review/handoff-full.txt`; the original full log is preserved. Programmatic set comparison confirms 62 full failures, 25 focused failures, 25 shared and exactly 37 additional. Required static/security checks and `git diff --check` passed. No implementation changes, new skip/xfail, relaxed assertion, test deletion, external message, commit or publication. Unresolved platform coverage is recorded above, not waived.
+
+## Linux registry verification rerun — 2026-11-25
+
+This dated addendum supersedes the earlier Windows-only missing-evidence statements for H6/H8/H10, without changing their historical results. Tested local main `14b06a57e3e779435614d066dfd6ab94510b0d2b` plus the pre-existing dirty C tests/documents (including untracked `test_registry_gaps.py`); origin is `hedyliu-574/CS5351`, not the instructed team remote. No current team-main equivalence is claimed. Ubuntu-24.04 WSL, Python 3.12.3, declared editable `.[dev]` install succeeded. Registry remains schema 1.2.0, proposed_for_adoption, 36 active/3 withdrawn.
+
+Commands use `.venv/bin/python` from the repository root:
+
+- `-m pytest -q -p no:cacheprovider --tb=short tests/member_c_verification/offline tests/test_checkpoint_lifecycle.py tests/test_checkpoint_resume.py tests/member_b_remediation/test_r3_replay_durability.py tests/member_b_remediation/test_r2_r3_differential_pins.py tests/member_d_verification/test_requirement_schema_gate.py`: **202 passed, 25 failed**, no skips, 4.40 s. Raw local evidence: `.local-review/registry-linux-20261125.txt`. Pytest reports failure; the surrounding shell wrapper returned zero, so that wrapper status is not a passing verdict.
+- `-m pytest -q -p no:cacheprovider --tb=short`: **1882 passed, 26 failed, 1 skipped, 1 deselected, 24 warnings, 100 subtests passed**, 16.83 s, exit 1. Raw local evidence: `.local-review/registry-linux-full-20261125.txt`. Skip is the opt-in live semantic replay; integration deselection remains in force.
+- `scripts/ci/check_requirement_schema.py`: PASS, 36 requirements/3 withdrawn, zero errors/warnings. Ruff full repository PASS; mypy PASS (14 configured files); workflow permissions PASS (5 workflows); security scan PASS (105 application files, zero medium/high).
+
+### Mapping and bug disposition
+
+H1–H5 remain open with exactly the same 25 failing nodes: BUDGET vocabulary (1), corrected-only findings rejected (2), distinct-case population interface ambiguity (1), REVIEW/PASSED accepted (1), leading-disclaimer contract mismatch (20). Existing requirement-row coverage classifications remain unchanged; passing schema validation does not establish implementation or adoption. Owners and next acceptance evidence remain as in the classified handoff.
+
+H6 replay locking, H7 schema-gate fixtures, H8 symlink isolation and H10 loopback authentication now execute successfully on Linux in the full run. This supplies the missing Linux evidence, not Windows portability or a Windows fixture repair. The remaining additional full-suite failure is H9 / BD-001: Bedrock construction still attempts ambient credential discovery and fails against the stale localhost proxy. No waiver, implementation fix or new defect category is claimed. E/D test-isolation follow-up remains open.
+
+Only verification documentation was changed in this rerun; prior test edits are preserved. No live model replay, human semantic scoring, remote CI/branch-protection inspection, commit or publication occurred. Full registry acceptance remains blocked; prior historical records are retained.
+
+Documentation check: default Linux git diff --check flags CRLF in pre-existing dirty files; the CR-at-EOL-aware check is recorded separately. No test line endings were changed.
+
+## Post-repair verification — 2026-11-25
+
+User-authorized rerun on local main `1bf6e17dd0ecdd5e5f38b157fafc4c632105a933` plus pre-existing dirty application files `tradingagents/report_html.py`, `tradingagents/runapi/reporting.py`, `tradingagents/runapi/result.py` and untracked repair regression tests. Existing D AI-log preserved. Origin remains hedyliu-574/CS5351, not the instructed team repository; no team-main equivalence claimed. Existing WSL Ubuntu-24.04 Python 3.12 `.venv` reused without installation/upgrades. Registry 1.2.0 remains proposed_for_adoption, 36 active/3 withdrawn.
+
+### Registry and repaired-node checks
+
+`.venv/bin/python -m pytest -q -p no:cacheprovider --tb=short tests/member_c_verification/offline tests/member_c_verification/test_registry_result_repairs.py tests/test_checkpoint_lifecycle.py tests/test_checkpoint_resume.py tests/member_b_remediation/test_r3_replay_durability.py tests/member_b_remediation/test_r2_r3_differential_pins.py tests/member_d_verification/test_requirement_schema_gate.py`
+
+**237 passed**, 4.34 s, exit 0, no skips. The former 25 H1–H5 failures pass. This verifies the exercised vocabulary, finding/result validation, population arithmetic and disclaimer layout; it does not establish full registry implementation, budget admission or correction mechanisms. Evidence: `.local-review/rerun-focused-20261125.txt`.
+
+### Full regression check
+
+`.venv/bin/python -m pytest -q -p no:cacheprovider --tb=short`
+
+**1917 passed, 1 failed, 1 skipped, 1 deselected; 100 subtests passed, 24 warnings**, 16.78 s, exit 1. Remaining failure: `tests/test_bedrock_provider.py::test_construction_when_extra_installed` (H9/BD-001), AWS credential discovery failing against the configured localhost proxy. Full-suite green status remains blocked. Skip: live semantic replay not opted in. Default integration exclusion remains. Evidence: `.local-review/rerun-full-20261125.txt`.
+
+### Semantic harness and scorer checks
+
+`.venv/bin/python -m pytest -q -p no:cacheprovider tests/member_c_verification/live/test_harness_selfcheck.py tests/member_c_verification/live/test_score_gov004_exitcodes.py`
+
+**8 passed**, 1.69 s, exit 0. Evidence: `.local-review/rerun-semantic-20261125.txt`. These scripted checks verify capture/injection restoration and synthetic PASS/FAIL/PENDING exits. No paid/live replay, new cohort, human scores or sign-off occurred. Formal GOV-004 acceptance remains **PENDING independent audit** under gov004-evidence-package.md; a reviewed frozen cohort and genuine human scores remain necessary. Offline results do not establish narrative quality or restore missing historical evidence.
+
+### Required static checks
+
+All PASS using `.venv/bin/python`: `-m ruff check .`; `-m mypy --config-file pyproject.toml` (14 files); `scripts/ci/check_requirement_schema.py` (36 active/3 withdrawn); `scripts/ci/check_workflow_permissions.py` (5 workflows); `scripts/ci/check_security_scan.py` (105 application files, zero medium/high). Dependency audit, remote CI and branch protection not checked. No implementation/test edits, relaxed assertions, commit, push or publication. Independent human acceptance remains pending. Earlier results are preserved; this addendum supersedes counts only for this checkout and scope.
+
+Dirty application diff SHA256 (`git diff --binary -- tradingagents cli`): `06fda0250500f69c82641c93691a38ed0107c9bd33d3d8d7cf1a38a8587aaf6a`. Untracked repair-test SHA256: `e41aa13600505e83420093d1ccaccd83a11151ee472b4657f476f7aa2763374a`.
+
+## Bedrock isolation follow-up — 2026-11-25
+
+Supersedes the preceding unresolved H9/BD-001 result for this local checkout. User explicitly requested fixing Bedrock test isolation, rerunning tests and updating evidence. Baseline remains local main `1bf6e17dd0ecdd5e5f38b157fafc4c632105a933`, origin hedyliu-574/CS5351 (not team remote), with all previously staged H1–H5 repairs/tests/documents and untracked D isolation log preserved. No team-main equivalence or independent human acceptance claimed.
+
+`tests/test_bedrock_provider.py` now has a module-local autouse fixture removing ambient AWS overrides, supplying synthetic credentials, disabling metadata discovery and pointing AWS/Boto config paths at an empty temporary file. Real construction resets boto3's cached default session and rejects botocore HTTP sends. Monkeypatch restores state after each test. Original real-class/region assertions and optional-extra skip remain unchanged. No application authentication or proxy settings changed.
+
+### Bedrock checks
+
+Existing WSL Ubuntu-24.04 Python 3.12 environment reused. `.venv/bin/python -m pytest -q -p no:cacheprovider tests/test_bedrock_provider.py`: **6 passed**, 0.84 s, exit 0. Same command with synthetic conflicting AWS_PROFILE, AWS_DEFAULT_PROFILE, AWS_REGION, AWS_BEARER_TOKEN_BEDROCK and AWS_WEB_IDENTITY_TOKEN_FILE: **6 passed**, 0.75 s, exit 0. This retains real offline construction and verifies ambient override isolation. Local evidence: `.local-review/bedrock-isolation-focused-final.txt` and `.local-review/bedrock-isolation-conflicting-env-final.txt`.
+
+The initial construction-only repair left the bearer-token test vulnerable to ambient AWS_REGION: the first conflicting-environment probe recorded **1 failed, 5 passed**. That diagnostic remains in `.local-review/bedrock-isolation-conflicting-env.txt`; the final module-wide fixture resolves the observed leak without weakening assertions.
+
+### Full regression check
+
+`.venv/bin/python -m pytest -q -p no:cacheprovider --tb=short`: **1918 passed, 1 skipped, 1 deselected; 100 subtests passed, 24 warnings**, 15.52 s, exit 0. H9/BD-001 now passes on this Linux environment. Skip is opt-in live semantic replay; configured integration exclusion retained. Local evidence: `.local-review/bedrock-isolation-full-final.txt`. The final pipeline used bash pipefail, preserving pytest status.
+
+### Static checks and limits
+
+Ruff full repository and mypy (14 configured files) passed after the final fixture change. Requirements schema (36 active/3 withdrawn), workflow permissions (5 workflows) and security scan (105 application files, zero medium/high) passed during this repair; the later change was confined to the test fixture. No dependency changes/audit, live AWS/model calls, formal cohort/scoring, remote CI/protection inspection or delivery. Formal semantic acceptance remains PENDING independent audit; these are developer regression results. Registry adoption and broader implementation gaps are unchanged. Historical failures remain preserved. Final test-file SHA256: `3794f02e0a704d710941dc78c18fde3c1e917a9120ad6719ed9dbdf936aba6d2`.

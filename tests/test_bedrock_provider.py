@@ -4,6 +4,7 @@ Auth uses the AWS credential chain (no single key env); the model is a Bedrock
 model ID / inference profile ID; langchain-aws is imported lazily with a clear
 install hint when the [bedrock] extra is absent.
 """
+import os
 import sys
 
 import pytest
@@ -11,6 +12,22 @@ import pytest
 from tradingagents.llm_clients.api_key_env import get_api_key_env
 from tradingagents.llm_clients.factory import create_llm_client
 from tradingagents.llm_clients.validators import validate_model
+
+
+@pytest.fixture(autouse=True)
+def _isolated_aws_environment(monkeypatch, tmp_path):
+    """Keep these offline tests independent of local AWS identity and region."""
+    for name in tuple(os.environ):
+        if name.startswith("AWS_"):
+            monkeypatch.delenv(name)
+    config = tmp_path / "aws-config"
+    config.write_text("", encoding="utf-8")
+    for name in ("AWS_CONFIG_FILE", "AWS_SHARED_CREDENTIALS_FILE", "BOTO_CONFIG"):
+        monkeypatch.setenv(name, str(config))
+    monkeypatch.setenv("AWS_ACCESS_KEY_ID", "synthetic-access-key")
+    monkeypatch.setenv("AWS_SECRET_ACCESS_KEY", "synthetic-secret-key")
+    monkeypatch.setenv("AWS_SESSION_TOKEN", "synthetic-session-token")
+    monkeypatch.setenv("AWS_EC2_METADATA_DISABLED", "true")
 
 
 @pytest.mark.unit
@@ -72,7 +89,18 @@ def test_no_bearer_token_omits_api_key(monkeypatch):
 @pytest.mark.unit
 def test_construction_when_extra_installed(monkeypatch):
     pytest.importorskip("langchain_aws")
+    import boto3
+    from botocore.httpsession import URLLib3Session
+
     import tradingagents.llm_clients.bedrock_client as bc
+
+    # Reset any cached ambient session while retaining the real constructor.
+    monkeypatch.setattr(boto3, "DEFAULT_SESSION", None)
+
+    def refuse_http(*args, **kwargs):
+        pytest.fail("Bedrock construction attempted an HTTP request")
+
+    monkeypatch.setattr(URLLib3Session, "send", refuse_http)
     monkeypatch.setattr(bc, "_BEDROCK_CLASS", None)
     monkeypatch.setenv("AWS_DEFAULT_REGION", "eu-west-1")
     llm = create_llm_client("bedrock", "us.anthropic.claude-sonnet-5").get_llm()

@@ -1,3 +1,5 @@
+> Latest results: Linux rerun below reports 1882 passed / 26 failed; earlier Windows counts remain historical.
+
 # Bug Diary (Member C)
 
 Significant defects and verification-relevant discrepancies: symptom,
@@ -62,3 +64,27 @@ entries supported by observed evidence are listed; nothing is inferred.
   `TimeoutError` for MODEL_FAILURE; added TC-NFR001-d2 pinning
   `ConnectionError → INTERNAL_ERROR`. **Closed** (no code change needed).
 - **Invariant gap:** none; documents the intended classification boundary.
+
+## 2026-11-25 investigation addendum (preserves original entries)
+
+BD-001 reproduced with ambient proxy/credential discovery. A subprocess-only synthetic credential and disabled-metadata probe passes without a real AWS call. Do not follow the historical suggestion to skip when proxy is set: retain assertions and repair offline fixture isolation through E/D ownership. Full root-cause reconciliation, all 37 additional node IDs, owner dependencies and acceptance criteria: [classified handoff](verification/registry-test-update-2026-11-25.md#failure-investigation-and-owner-handoff--2026-11-25). No exemption or acceptance granted.
+
+## Linux registry verification rerun — 2026-11-25
+
+This dated addendum supersedes the earlier Windows-only missing-evidence statements for H6/H8/H10, without changing their historical results. Tested local main `14b06a57e3e779435614d066dfd6ab94510b0d2b` plus the pre-existing dirty C tests/documents (including untracked `test_registry_gaps.py`); origin is `hedyliu-574/CS5351`, not the instructed team remote. No current team-main equivalence is claimed. Ubuntu-24.04 WSL, Python 3.12.3, declared editable `.[dev]` install succeeded. Registry remains schema 1.2.0, proposed_for_adoption, 36 active/3 withdrawn.
+
+Commands use `.venv/bin/python` from the repository root:
+
+- `-m pytest -q -p no:cacheprovider --tb=short tests/member_c_verification/offline tests/test_checkpoint_lifecycle.py tests/test_checkpoint_resume.py tests/member_b_remediation/test_r3_replay_durability.py tests/member_b_remediation/test_r2_r3_differential_pins.py tests/member_d_verification/test_requirement_schema_gate.py`: **202 passed, 25 failed**, no skips, 4.40 s. Raw local evidence: `.local-review/registry-linux-20261125.txt`. Pytest reports failure; the surrounding shell wrapper returned zero, so that wrapper status is not a passing verdict.
+- `-m pytest -q -p no:cacheprovider --tb=short`: **1882 passed, 26 failed, 1 skipped, 1 deselected, 24 warnings, 100 subtests passed**, 16.83 s, exit 1. Raw local evidence: `.local-review/registry-linux-full-20261125.txt`. Skip is the opt-in live semantic replay; integration deselection remains in force.
+- `scripts/ci/check_requirement_schema.py`: PASS, 36 requirements/3 withdrawn, zero errors/warnings. Ruff full repository PASS; mypy PASS (14 configured files); workflow permissions PASS (5 workflows); security scan PASS (105 application files, zero medium/high).
+
+### Mapping and bug disposition
+
+H1–H5 remain open with exactly the same 25 failing nodes: BUDGET vocabulary (1), corrected-only findings rejected (2), distinct-case population interface ambiguity (1), REVIEW/PASSED accepted (1), leading-disclaimer contract mismatch (20). Existing requirement-row coverage classifications remain unchanged; passing schema validation does not establish implementation or adoption. Owners and next acceptance evidence remain as in the classified handoff.
+
+H6 replay locking, H7 schema-gate fixtures, H8 symlink isolation and H10 loopback authentication now execute successfully on Linux in the full run. This supplies the missing Linux evidence, not Windows portability or a Windows fixture repair. The remaining additional full-suite failure is H9 / BD-001: Bedrock construction still attempts ambient credential discovery and fails against the stale localhost proxy. No waiver, implementation fix or new defect category is claimed. E/D test-isolation follow-up remains open.
+
+Only verification documentation was changed in this rerun; prior test edits are preserved. No live model replay, human semantic scoring, remote CI/branch-protection inspection, commit or publication occurred. Full registry acceptance remains blocked; prior historical records are retained.
+
+Documentation check: default Linux git diff --check flags CRLF in pre-existing dirty files; the CR-at-EOL-aware check is recorded separately. No test line endings were changed.

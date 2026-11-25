@@ -213,3 +213,18 @@ def test_tc_nfr004_i_r14_terminal_event_failure_marks_non_durable(tmp_path, monk
     assert data["terminal_event"]["durable"] is False
     # A completed run is still a real, published artifact.
     assert (tmp_path / "AAPL" / result.run_id / "reports" / "complete_report.md").exists()
+
+
+@pytest.mark.parametrize("exc", [TimeoutError("model"), InterruptedError("cancel"), RuntimeError("internal")])
+def test_failed_run_commit_failure_has_precedence(tmp_path, monkeypatch, exc):
+    from tradingagents.runapi import persist
+    def fail(*args, **kwargs):
+        raise OSError("synthetic commit failure")
+    monkeypatch.setattr(persist.os, "rename", fail)
+    result = _run(tmp_path, raises=exc)
+    assert result.stop_reason == "PERSISTENCE_ERROR"
+    assert result.output_check == "NOT_RUN"
+    assert result.final_rating is None
+    assert result.report_path is None
+    assert result.manifest_path is None
+    assert not (tmp_path / "AAPL" / result.run_id).exists()

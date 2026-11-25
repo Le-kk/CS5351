@@ -81,3 +81,19 @@ def test_tc_nfr001_e_no_exception_escapes(tmp_path):
     except Exception as exc:  # noqa: BLE001 - the point of the test
         pytest.fail(f"run_analysis_api leaked {type(exc).__name__}: {exc}")
     assert result.run_outcome == "INCOMPLETE"
+
+
+def test_registry_budget_stop_reason():
+    from typing import get_args
+
+    from tradingagents.runapi.result import StopReason
+    assert set(get_args(StopReason)) == {"MODEL_FAILURE", "DATA_FAILURE", "BUDGET", "INTERNAL_ERROR", "PERSISTENCE_ERROR", "INTERRUPTED"}
+
+
+@pytest.mark.parametrize("exc", [TimeoutError("model"), InterruptedError("cancel"), RuntimeError("internal")])
+def test_persistence_precedence_over_initiating_failure(exc):
+    from tradingagents.runapi.finalize import OutcomeFinalizer
+    result = OutcomeFinalizer().finalize(run_id="precedence", ticker="AAPL", analysis_date="2026-01-09", input_mode="NO_PORTFOLIO", exc=exc, persistence_error=True)
+    assert (result.run_outcome, result.stop_reason, result.output_check) == ("INCOMPLETE", "PERSISTENCE_ERROR", "NOT_RUN")
+    assert result.final_rating is None
+    assert result.findings == ()

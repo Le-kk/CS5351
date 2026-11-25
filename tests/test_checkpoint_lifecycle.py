@@ -168,3 +168,30 @@ def test_clearing_removes_the_database_sidecars(tmp_path):
 
     assert cleared == 1
     assert list(cp.iterdir()) == []
+
+
+@pytest.mark.unit
+def test_clear_checkpoint_forces_fresh_execution(tmp_path, monkeypatch):
+    """REQ-TA-FR-003 rerun primitive; not a claim of a CLI rerun command."""
+    import sys
+
+    from tradingagents.graph.checkpointer import clear_all_checkpoints
+    monkeypatch.setattr(sys.modules[__name__], "_should_crash", True)
+    args = ("AAPL", "2026-05-08", "stock")
+    first = _bare_graph(str(tmp_path))
+    tid = first.begin_checkpoint(*args)
+    try:
+        with pytest.raises(RuntimeError, match="simulated"):
+            first.graph.invoke({"count": 0}, config={"configurable": {"thread_id": tid}})
+    finally:
+        first.end_checkpoint()
+    assert clear_all_checkpoints(str(tmp_path)) == 1
+    monkeypatch.setattr(sys.modules[__name__], "_should_crash", False)
+    rerun = _bare_graph(str(tmp_path))
+    tid = rerun.begin_checkpoint(*args)
+    try:
+        assert not rerun._resuming
+        result = rerun.graph.invoke(rerun.checkpoint_input({"count": 100}), config={"configurable": {"thread_id": tid}})
+        assert result["count"] == 111
+    finally:
+        rerun.end_checkpoint()
