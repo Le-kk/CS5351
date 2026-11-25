@@ -1,0 +1,124 @@
+{
+  "schema_version": "1.0",
+  "timezone": "Asia/Hong_Kong",
+  "requested_dates": [
+    "2026-11-10",
+    "2026-11-11",
+    "2026-11-22",
+    "2026-11-23",
+    "2026-11-24",
+    "2026-11-25"
+  ],
+  "archive_owner": "A",
+  "original_authorship_preserved": true,
+  "scope": "Original user questions and assistant visible text replies from six dates of one OpenCode project session used for the CS5351 requirements work. Not a complete lifetime transcript; tool calls, results, file bodies and internal reasoning are excluded.",
+  "exclusions": [
+    "tool calls and tool results",
+    "file-write payloads and command output",
+    "internal reasoning",
+    "assistant messages that contained no text (tool-only turns)",
+    "the tail of any assistant message longer than the excerpt limit, marked in place",
+    "days with no activity in this session"
+  ],
+  "sources": [
+    {
+      "kind": "local_tool_history",
+      "tool": "OpenCode 2.2.6",
+      "model": "custom-foundry/CS5351/DeepSeek-V4-Flash",
+      "session_id": "ses_e3ab87f90ffeoj2aQB4OX3mA0h",
+      "read_only": true,
+      "source_modified": false,
+      "note": "Opened read-only. Sessions for other directories and unrelated personal material were not read or exported."
+    }
+  ],
+  "exports": [
+    {
+      "file": "2026-11-10_19-46-00.md",
+      "date": "2026-11-10",
+      "session_id": "ses_e3ab87f90ffeoj2aQB4OX3mA0h",
+      "first_included_user_timestamp": "2026-11-10T19:46:00.034000+08:00",
+      "counts": {
+        "user_messages": 4,
+        "assistant_messages": 35,
+        "assistant_messages_truncated": 1
+      },
+      "sanitized_markdown_sha256": "e591c5ab7e98b35a3b81cfcb5c8538f5ccb401f922c45ecb05296654cc25af6c",
+      "bytes": 11891
+    },
+    {
+      "file": "2026-11-11_09-42-10.md",
+      "date": "2026-11-11",
+      "session_id": "ses_e3ab87f90ffeoj2aQB4OX3mA0h",
+      "first_included_user_timestamp": "2026-11-11T09:42:10.370000+08:00",
+      "counts": {
+        "user_messages": 2,
+        "assistant_messages": 8,
+        "assistant_messages_truncated": 2
+      },
+      "sanitized_markdown_sha256": "963779155191b6e73fbad7d524983c04a7da5a7d021c4c6af33e3a5ffe01bf40",
+      "bytes": 6758
+    },
+    {
+      "file": "2026-11-22_19-17-32.md",
+      "date": "2026-11-22",
+      "session_id": "ses_e3ab87f90ffeoj2aQB4OX3mA0h",
+      "first_included_user_timestamp": "2026-11-22T19:17:32.304000+08:00",
+      "counts": {
+        "user_messages": 11,
+        "assistant_messages": 108,
+        "assistant_messages_truncated": 13
+      },
+      "sanitized_markdown_sha256": "965d354f6eb08b6e5631b6a87297765e63706c3cbdcc594fc8209ecf04afd77e",
+      "bytes": 54287
+    },
+    {
+      "file": "2026-11-23_01-03-05.md",
+      "date": "2026-11-23",
+      "session_id": "ses_e3ab87f90ffeoj2aQB4OX3mA0h",
+      "first_included_user_timestamp": "2026-11-23T01:03:05.944000+08:00",
+      "counts": {
+        "user_messages": 37,
+        "assistant_messages": 192,
+        "assistant_messages_truncated": 37
+      },
+      "sanitized_markdown_sha256": "e27dfc68537bf8cbfb30a68ce90c9f4fa11570368ed6d76a0d2f368ba743369c",
+      "bytes": 138175
+    },
+    {
+      "file": "2026-11-24_16-23-49.md",
+      "date": "2026-11-24",
+      "session_id": "ses_e3ab87f90ffeoj2aQB4OX3mA0h",
+      "first_included_user_timestamp": "2026-11-24T16:23:49.479000+08:00",
+      "counts": {
+        "user_messages": 32,
+        "assistant_messages": 225,
+        "assistant_messages_truncated": 25
+      },
+      "sanitized_markdown_sha256": "5852054e4a6e06b6e144a64fb293a5918dc023300d938dbb6464c8d98fee77a8",
+      "bytes": 111636
+    },
+    {
+      "file": "2026-11-25_11-10-46.md",
+      "date": "2026-11-25",
+      "session_id": "ses_e3ab87f90ffeoj2aQB4OX3mA0h",
+      "first_included_user_timestamp": "2026-11-25T11:10:46.942000+08:00",
+      "counts": {
+        "user_messages": 1,
+        "assistant_messages": 5,
+        "assistant_messages_truncated": 0
+      },
+      "sanitized_markdown_sha256": "e5257676ae842266f4f2052b21890b23a09933f4278f7f442a5103abc09e6e99",
+      "bytes": 2469
+    }
+  ],
+  "text_policy": "User text is verbatim apart from path/secret redaction. Assistant text is verbatim up to the excerpt limit; any truncation is marked in place with an omission notice.",
+  "redactions_total": {
+    "local_path": 61,
+    "account_or_token_shape": 1
+  },
+  "omitted_media_total": 0,
+  "code_display_policy": "No code is displayed; file bodies and command output are omitted.",
+  "display_policy": "Fenced text blocks, original languages and wording preserved.",
+  "coverage_note": "One project session was found in the tool history for this workspace. Sessions for unrelated directories and unrelated personal material were not read or exported. Messages after 2026-11-25 11:xx local time cannot be included.",
+  "generated": "2026-11-25"
+}
