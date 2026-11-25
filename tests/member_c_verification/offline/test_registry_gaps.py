@@ -122,3 +122,57 @@ def test_sec003_rendered_report_starts_with_disclaimer(tmp_path, case):
     assert result.run_outcome == "COMPLETED"
     report = Path(result.report_path).read_text(encoding="utf-8")
     assert report.startswith(DISCLAIMER)
+
+
+def _first_markdown_visible_line(document: str) -> str:
+    """Markdown 'first rendered visible content' = first non-blank line."""
+    return next(line for line in document.splitlines() if line.strip())
+
+
+def _first_html_visible_element(document: str) -> str:
+    """HTML 'first rendered visible content' = first element inside <body>,
+    structure markup (doctype, html/head, styles, wrapper divs) excluded."""
+    body = document[document.index("<body"):]
+    body = body[body.index(">") + 1:]
+    for raw in body.split("<"):
+        element = "<" + raw
+        if element.startswith(("<div", "</div", "<header", "<nav", "<main", "<footer")):
+            continue
+        return element
+    raise AssertionError("no visible element inside <body>")
+
+
+# TC-SEC003-c: disclaimer present but not first is a blocking violation, not a pass.
+@pytest.mark.parametrize("exporter", ["markdown", "html"])
+def test_inv008_disclaimer_only_later_is_a_violation(exporter):
+    """REQ-TA-INV-008 / REQ-TA-SEC-003: 'first visible content', not 'contains'.
+
+    A disclaimer that is present but placed after a title, banner or header is a
+    blocking violation. The positive probes prove the exporters lead with it; this
+    negative probe proves the position contract actually rejects the failure mode
+    Member C warned about ('starts with' != 'contains').
+    """
+    if exporter == "markdown":
+        document = f"# AAPL report\n\n## Analysis\n\nHold the line.\n\n## Disclaimer\n\n{DISCLAIMER}"
+        first_visible = _first_markdown_visible_line(document)
+    else:
+        document = (
+            "<!doctype html><html><head><title>Report</title></head><body>"
+            f'<header class="masthead"><h1>AAPL</h1></header>'
+            f'<p class="disclaimer">{DISCLAIMER}</p></body></html>'
+        )
+        first_visible = _first_html_visible_element(document)
+    assert DISCLAIMER in document  # satisfied 'contains'
+    assert DISCLAIMER not in first_visible  # violates 'first visible content'
+    # Presence-only checking (OutputChecker rule Q3) cannot catch this; the
+    # invariant is upheld at the exporter layout that the positive probes assert.
+    from tradingagents.runapi.checks import OutputChecker, render_provenance
+
+    trusted = {
+        "run_id": "2026-11-12T09:00:00Z-abcdef", "ticker": "AAPL",
+        "analysis_date": DATE, "input_mode": "NO_PORTFOLIO", "basename": None,
+        "fingerprint_sha256": None, "portfolio_as_of": None, "as_of_basis": None,
+    }
+    body = document if exporter == "markdown" else f"## Analysis\n\nHold.\n\n## Disclaimer\n\n{DISCLAIMER}"
+    result = OutputChecker().evaluate(trusted, render_provenance(trusted), "Hold", body)
+    assert "Q3" not in [finding.rule for finding in result.findings]

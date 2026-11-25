@@ -70,3 +70,10 @@ configuration/IDs, unknown cases, unsupported comparisons, unresolved starts,
 20/40 counting, and empty evidence. The existing synthetic PASS test asserts
 actual scorer output: 10 started / 5 cases / 1 validated population.
 No paid model calls or fresh human semantic judgments are implied.
+
+The H5 position contract also has a negative probe, `TC-SEC003-c`
+(`tests/member_c_verification/offline/test_registry_gaps.py::test_inv008_disclaimer_only_later_is_a_violation`,
+Markdown + HTML): a disclaimer that is present but appears only after a
+title/header is rejected as a violation of "first rendered visible content",
+not accepted as "contains". Presence-only checking (rule Q3) cannot detect this,
+so compliance rests on the exporter layout the positive nodes assert.
