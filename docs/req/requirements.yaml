@@ -1124,10 +1124,14 @@ requirements:
     \nWhat the implementation now does, checked in `tradingagents/reporting.py` and `tradingagents/report_html.py`:\
     \ `write_report_tree` writes the frozen `DISCLAIMER` before the header in `complete_report.md`, and\
     \ `render_report` emits the leading notice as the first element inside `<body>`, before the masthead\
-    \ logo, title and provenance list. **That path complies.** The runapi path still builds `envelope\
-    \ + body` with the disclaimer at the foot of the body, so it is **not compliant** and the work remains\
-    \ with B (OQ-18).\n\nA retained footer copy is permitted as a compatibility copy and is not a substitute.\
-    \ The nine non-disclaimer checks (Q1-Q4, R1-R8 and their readers) are unaffected by position."
+    \ logo, title and provenance list. **That path complies.** The runapi envelope header also complies:\
+    \ `build_envelope` emits the frozen `DISCLAIMER` as its first line. What is **not** compliant is the\
+    \ concatenated document `envelope + body` in `tradingagents/runapi/execution.py`: `render_body` appends\
+    \ the disclaimer as a footer section, so the delivered file carries it twice and the visible content\
+    \ sits between the two copies. The fix is removing that footer copy, not changing the envelope, and\
+    \ the choice remains B's (OQ-18).\n\nA retained footer copy is permitted as a compatibility copy and\
+    \ is not a substitute. The nine non-disclaimer checks (Q1-Q4, R1-R8 and their readers) are unaffected\
+    \ by position."
 - id: REQ-TA-ARCH-001
   title: Vendors behind one routing point
   type: architectural_constraint
