@@ -770,6 +770,70 @@ def _score_fraction(scores_path, selected=None):
     return passed / len(expected), passed, len(expected), critical
 
 
+
+def evaluation_counts(attempts, controls):
+    """Count every started attempt; assert one population only after validation."""
+    import hashlib
+    from dataclasses import replace
+
+    from tradingagents.runapi.result import EvaluationPopulation, RunRecord, summarize_records
+
+    records = [RunRecord(
+        a.run_id, "STARTED", None if a.pending_start else a.outcome,
+        a.output_check, a.stop_reason, case_id=a.case_id,
+    ) for a in attempts]
+    population = None
+    if controls and attempts and all(a.eligible for a in attempts):
+        # Existing verifier checks slot identity, frozen chronology and revisions;
+        # eligibility already checked effective configs and pending-start bindings.
+        _cohort(attempts, controls)
+        cohort = _read(EVIDENCE_ROOT / "cohort.json")
+        if validate_formal_cohort(cohort) != controls:
+            raise ValueError("Cohort controls changed during evaluation")
+        def digest(value):
+            return hashlib.sha256(
+                json.dumps(value, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+        population = EvaluationPopulation(
+            digest(cohort), controls["source_revision"], controls["prompt_hash"],
+            digest({"configuration": FIXED_CONFIG, "controls": controls}), FIXED_CASES,
+        )
+        bound_records = []
+        for record, attempt in zip(records, attempts, strict=True):
+            manifest = getattr(attempt, "manifest", None)
+            captured = attempt.record.get("controls")
+            if manifest is None and not attempt.pending_start and attempt.manifest_path:
+                path = _artifact_path(attempt.manifest_path)
+                if _digest(path) != attempt.record.get("manifest_sha256"):
+                    raise ValueError("Incomplete artifact integrity mismatch")
+                manifest = _read(path)
+                if manifest.get("run_id") != attempt.run_id:
+                    raise ValueError("Incomplete artifact identity mismatch")
+                if (not _tier_providers_match_fixed(manifest.get("effective_config", {})) or
+                        any(manifest.get("effective_config", {}).get(k) != v
+                            for k, v in FIXED_CONFIG.items())):
+                    raise ValueError("Incomplete artifact configuration mismatch")
+            if manifest is not None:
+                binding = manifest
+            elif isinstance(captured, dict) and captured:
+                binding = captured
+            else:
+                # Count failed/unresolved slots, but do not invent their bindings.
+                population = None
+                break
+            if any(binding.get(key) != value for key, value in controls.items()
+                   if key != "call_cap"):
+                raise ValueError("Attempt outside frozen population controls")
+            if "call_cap" in controls and attempt.model_config.get("call_cap") != controls["call_cap"]:
+                raise ValueError("Attempt outside frozen budget controls")
+            bound_records.append(replace(
+                record, population_id=population.population_id,
+                source_revision=binding["source_revision"], prompt_hash=binding["prompt_hash"],
+                configuration_fingerprint=population.configuration_fingerprint))
+        if population is not None:
+            records = bound_records
+    return summarize_records(records, population=population)
+
+
 def main(argv):
     import argparse
     parser = argparse.ArgumentParser(description=__doc__)
@@ -784,6 +848,8 @@ def main(argv):
         attempts = _load_attempts()
         for attempt in attempts:
             _check_eligibility(attempt, controls)
+        counts = evaluation_counts(attempts, controls)
+        print("Evaluation counts: " + json.dumps(counts, sort_keys=True))
         started = len(attempts)
         completed = sum(a.outcome == "COMPLETED" for a in attempts)
         review = sum(a.output_check == "NEEDS_REVIEW" for a in attempts)
@@ -809,7 +875,8 @@ def main(argv):
         # record is still noncompleted and never a quality sample.
         no_bad_evidence = all(a.eligible for a in attempts)
         ok = (len(valid) >= MIN_COMPLETED and per_case and overall_ok and
-              frac >= args.threshold and not critical and exposed and no_bad_evidence)
+              frac >= args.threshold and not critical and exposed and no_bad_evidence and
+              counts["population_result_count"] == 1)
         print(f"Semantic score: {passed}/{applicable}; critical violations: {len(critical)}")
         verdict = "PASS" if ok else "FAIL"
         print(f"FINAL VERDICT: {verdict}")
