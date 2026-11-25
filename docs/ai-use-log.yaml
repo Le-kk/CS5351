@@ -45,7 +45,7 @@ members:
   coverage: available_selected_records; contributor_confirmation_pending
   directory: AI-log/Member-D/
 - member: E
-  records: 42
+  records: 43
   provenance_indexes: 4
   coverage: available_selected_records; contributor_confirmation_pending
   directory: AI-log/Member-E/
@@ -521,6 +521,13 @@ source_records:
   record_date: '2026-11-25'
   date_basis: current authorized documentation task
   sha256: cd368011b22a2e9d7bd64d32a00de87c3318d1f74d87a6687fcfe5e054ae36a8
+- id: E-47
+  member: E
+  path: AI-log/Member-E/2026-11-25-document-only-ci.md
+  kind: ai_use_record
+  record_date: '2026-11-25'
+  date_basis: current authorized CI change
+  sha256: c45b0500235f4d45d9d49f23b5bb38d6d172715ca9eb624abc909407f2e48a07
 events:
 - id: B-REVIEW
   member: B
@@ -1488,6 +1495,40 @@ events:
   - path: docs/submission/contents-and-build.md
     availability: present
     purpose: E14 supporting guide
+- id: E-DOCS-CI
+  member: E
+  title: Document-only PR checks and stable summaries
+  source_records:
+  - E-47
+  task: Skip application installation/tests on verified document-only PRs without losing required check names.
+  intervention: Explicit user request for separate document/full routes.
+  changes: Added conservative Git classification, document validation, strict fixed-name summaries and negative
+    tests.
+  verification:
+    basis: actual local regression and E14 diff replay
+    summary: 40 focused cases and full 2074-pass suite; Ruff, workflow boundaries and actionlint passed; E14 docs
+      replay passed without dependency installation.
+  limitations: Hosted document-route behavior awaits post-deployment verification; external links/heading fragments
+    and semantic truth not certified.
+  artifacts:
+  - path: .github/workflows/ci.yml
+    availability: present
+    purpose: CI routing implementation or coverage
+  - path: scripts/ci/ci_scope.py
+    availability: present
+    purpose: CI routing implementation or coverage
+  - path: scripts/ci/check_documents.py
+    availability: present
+    purpose: CI routing implementation or coverage
+  - path: scripts/ci/check_ci_results.py
+    availability: present
+    purpose: CI routing implementation or coverage
+  - path: test/offline/member_d_verification/test_docs_ci.py
+    availability: present
+    purpose: CI routing implementation or coverage
+  - path: docs/code-governance/document-only-ci.md
+    availability: present
+    purpose: CI routing implementation or coverage
 outstanding_records:
 - id: G-A
   owner: A
@@ -1550,12 +1591,12 @@ integrity:
   archive_policy: Nine obsolete/duplicate untracked files retained under ignored local archive with original hashes;
     not delivered as current rules/tests. No original historical AI excerpt deleted.
   current_counts:
-    source_records: 66
-    events: 41
+    source_records: 67
+    events: 42
 integration_refresh:
   date: '2026-11-25'
-  source_records: 66
-  events: 41
+  source_records: 67
+  events: 42
   remote_baseline: f103e4e
   new_delivery_status: Five identities, user-confirmed contributions and five original reflections integrated in
     Report.md/PDF. D5 collection and independent technical acceptance remain separate.
