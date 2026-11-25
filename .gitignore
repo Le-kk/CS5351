@@ -231,3 +231,7 @@ reports/
 /src/frontend/build/
 /src/*.egg-info/
 /test/live/member_c_verification/evidence/
+
+# Frontend source helpers are not Python build libraries.
+!src/frontend/src/lib/
+!src/frontend/src/lib/**
