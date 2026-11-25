@@ -14,3 +14,5 @@ Course source: CS5351-2026-2027-project.pdf, pages 5–9. Snapshot: origin/main 
 History policy: archive superseded entry/export files, preserve raw AI conversations and authenticated evidence at their cited paths. Keep C's existing docs/verification/history; do not rewrite it as current PASS. Member D formal report/reflection now live under docs/submission/member-d, with old-location notices. Source hashes and index links are refreshed against current files without changing historical event claims.
 
 The external local nocode folder is retained. Presentation frontend and prototype interface assets are local-only and excluded from the current repository tree. Runtime credentials, user portfolio files, node_modules, generated builds, caches and private run records are excluded.
+
+Supporting E14: [contents-and-build.md](contents-and-build.md) now consolidates inventory, installation/startup, verification, limitations, privacy and revision-bound archive/extraction steps. The guide is written; final frozen archive creation and fresh-extraction acceptance remain separate pending steps.

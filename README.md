@@ -19,7 +19,7 @@ Recent local additions include an English real-model console, an opt-in compact 
 - `test/offline/`: deterministic tests and independent/developer verification. `test/live/`: opt-in live evaluation and its harness self-checks.
 - `prompts/`: versioned snapshots of actual intermediate instruction fragments, not a replacement runtime loader.
 - `transcripts/`: annotated D5 submission evidence. Collection is incomplete; see its index.
-- `docs/submission/`: member reports/reflections and the delivery checklist.
+- `docs/submission/`: member reports/reflections, the delivery checklist and [submission contents/build instructions](docs/submission/contents-and-build.md).
 - `history/`: superseded entry documents/export artifacts, with original paths and hashes. Dated review evidence stays at its cited location.
 
 The root `tradingagents`, `cli`, `demo` and `tests` paths are compatibility symlinks to the canonical directories. The old C-live test path is also an alias excluded from recursive offline collection. There is one physical copy of each source/test. New edits should use `src/` and `test/`. Windows checkouts must support Git symlinks; otherwise use canonical installed package/test paths. Do not flatten links into competing editable source copies.
