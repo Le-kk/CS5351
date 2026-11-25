@@ -1,0 +1,114 @@
+{
+  "date_hkt": "2026-11-25",
+  "reviewed_local_commit": "b33fe41ce7b2d93c5625a9e4bcee90c0486155f9",
+  "team_main_commit": "1b3310f4de39bef12291deada5f476db0b2655f1",
+  "team_merge": "PR42 includes b33fe41; identical tree",
+  "scope": "B1/B2 architecture handoff only; C owns independent test/acceptance claims",
+  "historical_selection_rows": 19,
+  "active_matrix_rows": 36,
+  "static_literal_event_emitters": [
+    {
+      "path": "tradingagents/runapi/execution.py",
+      "line": 136,
+      "symbol": "_emit_terminal_once",
+      "event": "run.terminal",
+      "node": "output"
+    },
+    {
+      "path": "tradingagents/runapi/execution.py",
+      "line": 167,
+      "symbol": "run_analysis_api",
+      "event": "input.mode_resolved",
+      "node": "input"
+    },
+    {
+      "path": "tradingagents/runapi/execution.py",
+      "line": 168,
+      "symbol": "run_analysis_api",
+      "event": "input.consent",
+      "node": "input"
+    },
+    {
+      "path": "tradingagents/runapi/execution.py",
+      "line": 169,
+      "symbol": "run_analysis_api",
+      "event": "run.started",
+      "node": "engine"
+    },
+    {
+      "path": "tradingagents/runapi/execution.py",
+      "line": 211,
+      "symbol": "run_analysis_api",
+      "event": "run.budget",
+      "node": "engine"
+    },
+    {
+      "path": "tradingagents/runapi/execution.py",
+      "line": 233,
+      "symbol": "run_analysis_api",
+      "event": "output.check",
+      "node": "output"
+    },
+    {
+      "path": "tradingagents/runapi/execution.py",
+      "line": 311,
+      "symbol": "run_analysis_api",
+      "event": "message_log.capture",
+      "node": "output"
+    },
+    {
+      "path": "tradingagents/runapi/persist.py",
+      "line": 121,
+      "symbol": "publish_run",
+      "event": "output.persist",
+      "node": "output"
+    },
+    {
+      "path": "tradingagents/runapi/persist.py",
+      "line": 122,
+      "symbol": "publish_run",
+      "event": "output.persist",
+      "node": "output"
+    },
+    {
+      "path": "tradingagents/runapi/persist.py",
+      "line": 192,
+      "symbol": "_reveal_terminal_after_commit",
+      "event": "run.terminal",
+      "node": "output"
+    }
+  ],
+  "design_monitor_labels_not_emitted": [
+    "input.selection",
+    "output.provenance",
+    "security.redaction",
+    "api.entry"
+  ],
+  "csv_reference": {
+    "source_basename": "Deliverables-and-Ownership.pdf",
+    "source_sha256": "b3d820af1975209c343fd99a0125244b2656d0756c2db65b2c4c4841f361e82d",
+    "pages": 4,
+    "csv_reference_page": 4,
+    "csv_reference": "docs/traceability/trace-matrix.csv",
+    "owner": "E"
+  },
+  "observed_gaps": [
+    "B trace/invariant monitor labels lack implemented-vs-proposed classification",
+    "B extended rollout section contains historical call-cap-first/proposed model-object seam text that needs a current-status annotation",
+    "E matrix historical crosswalk FR-003, NFR-001 and GOV-003 is older than A2/B updated crosswalk",
+    "E matrix still requests final B H5 layout confirmation/OQ19 acknowledgement despite merged B clarification"
+  ],
+  "checks": [
+    "Static Python AST inventory of literal EventSink-style emits in tradingagents/ and cli/",
+    "19 unique working rows and 36 unique active matrix headings",
+    "Compared exact source symbols, ADR/contract references and canonical Markdown matrix ownership",
+    "Read ownership PDF relevant pages; page4 explicitly names CSV with E owner"
+  ],
+  "limits": [
+    "No new tests or model runs",
+    "Static emission sites are not proof that every run executes every event",
+    "Dynamic emission aliases and build/commit terminal methods inspected separately from literal inventory",
+    "No human sign-off, independent C acceptance or current administrative protection audit is inferred",
+    "No canonical/source/governance/E matrix edits; draft handoff only"
+  ]
+}
