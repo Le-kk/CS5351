@@ -119,15 +119,72 @@ class RunRecord:
     stop_reason: StopReason | None = None
     controlled_change: dict | None = None
     case_id: str | None = None
+    population_id: str | None = None
+    source_revision: str | None = None
+    prompt_hash: str | None = None
+    configuration_fingerprint: str | None = None
 
 
-def summarize_records(records: list[RunRecord]) -> dict:
+@dataclass(frozen=True)
+class EvaluationPopulation:
+    """Explicit single-configuration population, not an acceptance verdict.
+
+    The caller freezes these controls before execution and binds every started
+    record to them. This validates declarations, not signatures or human approval.
+    Comparisons require a separate agreed design and are refused here.
+    """
+    population_id: str
+    source_revision: str
+    prompt_hash: str
+    configuration_fingerprint: str
+    case_ids: tuple[str, ...]
+
+    def __post_init__(self):
+        import re
+
+        for value in (self.population_id, self.source_revision):
+            if not isinstance(value, str) or not value.strip():
+                raise ValueError("Population needs nonblank identity and revision")
+        for value in (self.prompt_hash, self.configuration_fingerprint):
+            if not isinstance(value, str) or not re.fullmatch(r"[0-9a-f]{64}", value):
+                raise ValueError("Population controls require SHA-256 fingerprints")
+        if (not isinstance(self.case_ids, tuple) or not self.case_ids or
+                any(not isinstance(case, str) or not case.strip() for case in self.case_ids) or
+                len(set(self.case_ids)) != len(self.case_ids)):
+            raise ValueError("Population requires unique nonblank case identities")
+
+
+def summarize_records(records: list[RunRecord], *,
+                      population: EvaluationPopulation | None = None) -> dict:
     """Summarize one population, keeping case identity separate from attempts.
 
     Legacy attempts without a case ID cannot establish a distinct-case count.
-    Never infer case IDs from attempt ID spelling.
+    Never infer case IDs from attempt ID spelling. Without explicit frozen
+    population controls the population count is unknown, not a validated one.
     """
+    seen = set()
+    for record in records:
+        if not isinstance(record.attempt_id, str) or not record.attempt_id.strip():
+            raise ValueError("Invalid attempt identity")
+        if record.attempt_id in seen:
+            raise ValueError("Duplicate attempt identity")
+        seen.add(record.attempt_id)
+        if record.category not in ("STARTED", "PRE_RUN_REJECTED", "PRE_RUN_CANCELLED"):
+            raise ValueError("Unknown attempt category")
+        case = getattr(record, "case_id", None)
+        if case is not None and (not isinstance(case, str) or not case.strip()):
+            raise ValueError("Invalid case identity")
     started = [r for r in records if r.category == "STARTED"]
+    if population is not None:
+        for record in started:
+            if getattr(record, "case_id", None) not in population.case_ids:
+                raise ValueError("Case outside frozen population")
+            for name in ("population_id", "source_revision", "prompt_hash",
+                         "configuration_fingerprint"):
+                if getattr(record, name, None) != getattr(population, name):
+                    raise ValueError("Mixed or unbound population controls")
+            if record.controlled_change:
+                raise ValueError("Comparison populations require a separate approved interface")
     completed = [r for r in started if r.run_outcome == "COMPLETED"]
     incomplete = [r for r in started if r.run_outcome == "INCOMPLETE"]
     reasons: dict[str, int] = {}
@@ -138,7 +195,7 @@ def summarize_records(records: list[RunRecord]) -> dict:
     case_ids = [getattr(r, "case_id", None) for r in started]
     return {
         "distinct_case_count": len(set(case_ids)) if case_ids and all(case_ids) else None,
-        "population_result_count": 1 if started else 0,
+        "population_result_count": (1 if population is not None else None) if started else 0,
         "status": "INSUFFICIENT_EVIDENCE" if not completed else "AVAILABLE",
         "started_count": len(started), "completed_count": len(completed),
         "completion_fraction": len(completed) / len(started) if started else None,

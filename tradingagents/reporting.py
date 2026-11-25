@@ -126,8 +126,10 @@ def write_report_tree(final_state: dict, ticker: str, save_path, settings: dict 
         content = "\n\n".join(f"### {agent}\n{text}" for agent, _filename, text in written)
         sections.append(f"## {heading}\n\n{content}")
 
+    from tradingagents.runapi.checks import DISCLAIMER
+
     (save_path / "complete_report.md").write_text(
-        _header(ticker, final_state, settings) + "\n\n".join(sections), encoding="utf-8"
+        DISCLAIMER + "\n\n" + _header(ticker, final_state, settings) + "\n\n".join(sections), encoding="utf-8"
     )
     if html:
         from tradingagents.report_html import render_report
