@@ -23,3 +23,14 @@ The following original-language extracts preserve all selected user questions an
 - [2026-11-23_test-approval-gate-review-and-fixes.md](2026-11-23_test-approval-gate-review-and-fixes.md) — original request/public replies, file-length summary and verification for the test-approval gate corrections; [integrity index](transcript-index-2026-11-23-test-approval.json).
 
 - [2026-11-23_test-approval-gate-deployment.md](2026-11-23_test-approval-gate-deployment.md) — deployment request, confirmed reviewer account, bootstrap scope and self-approval limitation.
+
+## Delivery assembly and historical follow-up — 2026-11-25
+
+The following selected records retain original user questions and public assistant replies. Dated addenda explain later adoption of C repairs, narrowed PR scope and superseded inventory snapshots; earlier results are not rewritten.
+
+- [AI-use index assembly](2026-11-25_ai-use-index.md) and [E1 matrix assembly](2026-11-25_e1-trace-matrix.md).
+- [Local H2 probes](2026-11-25_h2-corrected-findings.md) and [local H4 probes](2026-11-25_h4-review-result-fix.md): historical developer work; C's implementation is retained, duplicate local probes archived.
+- [Intermediate integration](2026-11-25_local-github-integration.md) and [handoff requests](2026-11-25_member-handoff-requests.md): historical scope, not current missing-material instructions.
+- [Delivery cleanup](2026-11-25_delivery-cleanup.md): current document/source integrity scope and archive policy.
+
+The canonical event index is [docs/ai-use-log.yaml](../../docs/ai-use-log.yaml); actual requirements adoption, semantic acceptance and contributor sign-offs remain separate.
